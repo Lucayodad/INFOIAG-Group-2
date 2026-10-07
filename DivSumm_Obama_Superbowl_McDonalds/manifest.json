@@ -1,0 +1,146 @@
+{
+  "repository": "https://github.com/PortNLP/DivSumm",
+  "source": "User-uploaded DivSumm-main.zip",
+  "source_archive_sha256": "a90bc1927cd4f08ccc4688f857351e281aedf2c35bd1818647d2c4e6badef231",
+  "repository_commit": null,
+  "topics": {
+    "Obama": {
+      "tweets": 90,
+      "dialect_counts": {
+        "White": 30,
+        "AA": 30,
+        "Hisp": 30
+      },
+      "input_decoding": "mac_roman (inferred; not declared upstream)",
+      "abstractive_references": 2,
+      "extractive_references": 2
+    },
+    "Superbowl": {
+      "tweets": 90,
+      "dialect_counts": {
+        "White": 30,
+        "Hisp": 30,
+        "AA": 30
+      },
+      "input_decoding": "mac_roman (inferred; not declared upstream)",
+      "abstractive_references": 2,
+      "extractive_references": 2
+    },
+    "McDonalds": {
+      "tweets": 90,
+      "dialect_counts": {
+        "White": 30,
+        "Hisp": 30,
+        "AA": 30
+      },
+      "input_decoding": "mac_roman (inferred; not declared upstream)",
+      "abstractive_references": 2,
+      "extractive_references": 2
+    }
+  },
+  "original_files": [
+    {
+      "archive_path": "DivSumm-main/README.md",
+      "bundle_path": "original/README.md",
+      "bytes": 1328,
+      "sha256": "3e19c7a30deefc7bbfb522f679a049e8e8d324ac7a61f3ea6b06a85e878c0d42"
+    },
+    {
+      "archive_path": "DivSumm-main/input_docs/Obama.txt",
+      "bundle_path": "original/input_docs/Obama.txt",
+      "bytes": 8396,
+      "sha256": "e4133c361637e613a4b9556ef00df332f62b2812a154e22d52c9b45edd866bea"
+    },
+    {
+      "archive_path": "DivSumm-main/abstractive/Obama_Annotator1.txt",
+      "bundle_path": "original/abstractive/Obama_Annotator1.txt",
+      "bytes": 715,
+      "sha256": "0e8f679028b1f473920fd67d83841a93bc44a78f22f30ef1e084c3955636ded5"
+    },
+    {
+      "archive_path": "DivSumm-main/abstractive/Obama_Annotator2.txt",
+      "bundle_path": "original/abstractive/Obama_Annotator2.txt",
+      "bytes": 445,
+      "sha256": "c8bea3c824c0295e34004c48e02ed5ebcfcf71874fe8b9b882523c179bdba13b"
+    },
+    {
+      "archive_path": "DivSumm-main/extractive/Obama_Annotator1.txt",
+      "bundle_path": "original/extractive/Obama_Annotator1.txt",
+      "bytes": 532,
+      "sha256": "a385f91ac18fa5d90de0eee4f77c472bc146037d207cabd9ed42d922c11ee6f4"
+    },
+    {
+      "archive_path": "DivSumm-main/extractive/Obama_Annotator2.txt",
+      "bundle_path": "original/extractive/Obama_Annotator2.txt",
+      "bytes": 483,
+      "sha256": "90c3ed76cc447dd03ba9067a1dde114220dfff4f587d44ea4f403fea7dce269c"
+    },
+    {
+      "archive_path": "DivSumm-main/input_docs/Superbowl.txt",
+      "bundle_path": "original/input_docs/Superbowl.txt",
+      "bytes": 8579,
+      "sha256": "c15d8e0786d9d6bf57ab09eef6269a1c69178b44ae002526bdbace6d6669a05a"
+    },
+    {
+      "archive_path": "DivSumm-main/abstractive/Superbowl_Annotator1.txt",
+      "bundle_path": "original/abstractive/Superbowl_Annotator1.txt",
+      "bytes": 300,
+      "sha256": "3938577da6c1d60b6908e939929f76ad3e98e791d521ff2e8949e4c5716811ac"
+    },
+    {
+      "archive_path": "DivSumm-main/abstractive/Superbowl_Annotator2.txt",
+      "bundle_path": "original/abstractive/Superbowl_Annotator2.txt",
+      "bytes": 245,
+      "sha256": "e9456c9085936785aed6eeb0ae38fdafa3bcc6a59811579fa514be7de0b5d31b"
+    },
+    {
+      "archive_path": "DivSumm-main/extractive/Superbowl_Annotator1.txt",
+      "bundle_path": "original/extractive/Superbowl_Annotator1.txt",
+      "bytes": 346,
+      "sha256": "7bce64e5b5cfcf7014372713ec3d28490429226c15f274a7b519ec8c04b5660b"
+    },
+    {
+      "archive_path": "DivSumm-main/extractive/Superbowl_Annotator2.txt",
+      "bundle_path": "original/extractive/Superbowl_Annotator2.txt",
+      "bytes": 436,
+      "sha256": "ff2436011c43eb6dd6ef777901b4d39b5ab62d5b2a72d2c3bbd5a9853e2f4fef"
+    },
+    {
+      "archive_path": "DivSumm-main/input_docs/McDonalds.txt",
+      "bundle_path": "original/input_docs/McDonalds.txt",
+      "bytes": 8178,
+      "sha256": "0e7fa5b90c9e0f32b06be99e27d0a9c52374ad6f89cf85de1a3d3285b9c5d71f"
+    },
+    {
+      "archive_path": "DivSumm-main/abstractive/McDonalds_Annotator1.txt",
+      "bundle_path": "original/abstractive/McDonalds_Annotator1.txt",
+      "bytes": 236,
+      "sha256": "7d5116a54ba287d876618d63a6dd13b26a4f5af79a5783cdd2173baf59772e66"
+    },
+    {
+      "archive_path": "DivSumm-main/abstractive/McDonalds_Annotator2.txt",
+      "bundle_path": "original/abstractive/McDonalds_Annotator2.txt",
+      "bytes": 292,
+      "sha256": "416e4673268749ce7246d087151104b1cd845dd7ce856001f851267065069ce6"
+    },
+    {
+      "archive_path": "DivSumm-main/extractive/McDonalds_Annotator1.txt",
+      "bundle_path": "original/extractive/McDonalds_Annotator1.txt",
+      "bytes": 366,
+      "sha256": "67470fa37b7be4f40e6ed7b181642007a3cf2701956d37d1e58f591b191589e6"
+    },
+    {
+      "archive_path": "DivSumm-main/extractive/McDonalds_Annotator2.txt",
+      "bundle_path": "original/extractive/McDonalds_Annotator2.txt",
+      "bytes": 341,
+      "sha256": "a1ab58950dcf335a143c60c328f1bf1811a20780a1188f9a5918e41dcfb27b3a"
+    }
+  ],
+  "notes": [
+    "Original selected files are preserved byte-for-byte.",
+    "No tweet filtering, spelling correction, HTML unescaping, or dialect normalization.",
+    "Source encoding is not documented. Non-UTF-8 text is decoded with inferred Mac Roman.",
+    "Generated IDs are local row identifiers, not original Twitter IDs.",
+    "Dialect labels are source-provided categories, not verified author demographics."
+  ]
+}

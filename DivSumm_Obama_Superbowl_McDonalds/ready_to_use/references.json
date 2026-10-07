@@ -1,0 +1,92 @@
+{
+  "Obama": {
+    "abstractive": [
+      {
+        "annotator": "Annotator1",
+        "text": "All tweets presented contain “Obama” regardless of time, context, or any other denoting remarks if not explicitly stated within the tweet.\nMany people found President Obama a contentious president due to policies enacted during his tenure, covering subjects in Medical, Financial, and Gun control legislation.\nAnytime there was a direct reference to a ‘female’ Obama, the comments were more about their appearance only.\nA majority of the tweets were negative, often featuring racial slurs, or coded-language referencing racist derogatives like “monkey” or “Uncle”.\nMost people concluded that President Obama “took” things away such as guns, Rights, or freedoms, if they were not explicitly stated, heavily implied.\n",
+        "source_file": "abstractive/Obama_Annotator1.txt",
+        "source_decoding": "mac_roman (inferred; not declared upstream)"
+      },
+      {
+        "annotator": "Annotator2",
+        "text": "Obama was just reelected to a second term as US President.\nObama has supported stricter gun control, higher taxes, expanding healthcare, and more government spending.\nThere are a lot of opposing opinions regarding Obama's political positions.\nConservatives tend to oppose Obama, whereas liberals tend to support him or criticize him for not changing things enough.\nObama’s wife is Michelle Obama and people often talk about her fashion choices.\n",
+        "source_file": "abstractive/Obama_Annotator2.txt",
+        "source_decoding": "mac_roman (inferred; not declared upstream)"
+      }
+    ],
+    "extractive": [
+      {
+        "annotator": "Annotator1",
+        "text": "Obama speeches make my head spin ! Mandela is beautiful!. Obama when he talks.It's ROUND n Round we go.\nObama is regulating gun control to protect the innocent people, yet he believes that woman can kill their own innocent children? #DamnLibs\nYou're a good little liberal lap dog! You make me sick! Go ahead a kiss Obamas ring! You already kissed his ass!\nI love Michelle Obama. I love everything about her. The way she carry herself, her style and her love for the president.\nWe knew that was coming. Scary Obama emperor for life.\n",
+        "source_file": "extractive/Obama_Annotator1.txt",
+        "source_decoding": "utf-8"
+      },
+      {
+        "annotator": "Annotator2",
+        "text": "Listen to the tone Obama is the chief divider in this country he will never be the work together president\nTeabaggers/RWNJs just can't stand that President Obama won a second term. Bless their tiny little hating heats.\nThe SS tax increase was necessary for the life of the program, but isn't it wonderful that it came in Obama's tax bill.\nThey're trying to impeach President Obama over gun control...for real?! C'mon son…\nThese people talkin bout Michelle Obama and wat she wore omg\n",
+        "source_file": "extractive/Obama_Annotator2.txt",
+        "source_decoding": "mac_roman (inferred; not declared upstream)"
+      }
+    ]
+  },
+  "Superbowl": {
+    "abstractive": [
+      {
+        "annotator": "Annotator1",
+        "text": "There were many tweets expressing boredom and disappointment from the superbowl. Some tweets were discussing commercials. There are many Ravens and 49er supporters among these tweets. Some tweets were just excited about it's superbowl day. There were few tweets discussing the halftime show singers.\n",
+        "source_file": "abstractive/Superbowl_Annotator1.txt",
+        "source_decoding": "utf-8"
+      },
+      {
+        "annotator": "Annotator2",
+        "text": "Some people are so excited about the superbowl. There are many others who don't watch superbowl. They would like 49ers and Raven to play. Beyonce and Madonna should not be at future superbowl half-times. Ravens are a popular team at superbowl. \n",
+        "source_file": "abstractive/Superbowl_Annotator2.txt",
+        "source_decoding": "utf-8"
+      }
+    ],
+    "extractive": [
+      {
+        "annotator": "Annotator1",
+        "text": "Idk who gonna win the superbowl and im not goin for no team im just gonna watch. Am I the only one not watching the superbowl ? Plans for today work, superbowl, sleep that's it...tho its all subject to change. Fuck Atlanta let's go 49ers and ravens superbowl brother vs. Brother. Congrats ravens, now kick the 49ers ass in the superbowl #SBXLVII\n",
+        "source_file": "extractive/Superbowl_Annotator1.txt",
+        "source_decoding": "utf-8"
+      },
+      {
+        "annotator": "Annotator2",
+        "text": "Am I the only who doesn't get excited about the superbowl? It's like eh. I hope its 49ers and Ravens superbowl at this point. Anything else would just be unacceptable. I wish Nicki Minaj can get on the superbowl again don't nobody got time for Beyonce screaming ass. Idk who gonna win the superbowl and im not goin for no team im just gonna watch. Beyonce and madonna should be banned from future #superbowl halftime show performances.\n",
+        "source_file": "extractive/Superbowl_Annotator2.txt",
+        "source_decoding": "utf-8"
+      }
+    ]
+  },
+  "McDonalds": {
+    "abstractive": [
+      {
+        "annotator": "Annotator1",
+        "text": "Many people act like they are digusted by McDonald, yet they still eat it. Mnay people have express their drinks have too much ice. A lot of people love McDonald's fries. Lastly, People generally think McDonald's food are not healthy. \n",
+        "source_file": "abstractive/McDonalds_Annotator1.txt",
+        "source_decoding": "utf-8"
+      },
+      {
+        "annotator": "Annotator2",
+        "text": "McDonalds makes people sick and disgusted but they still love it. People wish McDonalds was open until later for breakfast. Fries, chicken nuggets, and burger seem popular at McDonalds. People go to McDonalds with family or friends. People really really want to go to McDonalds 'right now'. \n",
+        "source_file": "abstractive/McDonalds_Annotator2.txt",
+        "source_decoding": "utf-8"
+      }
+    ],
+    "extractive": [
+      {
+        "annotator": "Annotator1",
+        "text": "McDonalds makes me sick to my stomach. I don't see how people eat it on the daily. Hungry af , but this McDonalds in sunset line too long. Man if somebody take me to McDonalds ill buy them anything they want from there :hundred_points: :OK_hand: All this reading about McDonalds makes me want it. -.-. I'm always at McDonalds I need to change my diet :pensive_face:\n",
+        "source_file": "extractive/McDonalds_Annotator1.txt",
+        "source_decoding": "utf-8"
+      },
+      {
+        "annotator": "Annotator2",
+        "text": "McDonalds makes me sick to my stomach. I don't see how people eat it on the daily. Eating McDonald's.. OMG McDonalds done got Nasty like what is this. Will someone pick me up &amp; take me to McDonalds right now? I can't say McDonalds should serve breakfast all day, but at least until noon. I want some chicken nuggets from McDonalds ! ' .\n",
+        "source_file": "extractive/McDonalds_Annotator2.txt",
+        "source_decoding": "utf-8"
+      }
+    ]
+  }
+}
