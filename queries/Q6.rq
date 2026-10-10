@@ -1,0 +1,12 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+# Implemented from the report's Q6 example (which is not itself a SELECT query).
+# Only detects membership in a declared pair of disjoint named classes,
+# including membership through named subclass paths. Not a full OWL reasoner.
+SELECT DISTINCT ?entity ?class1 ?class2 WHERE {
+    ?class1 owl:disjointWith ?class2 .
+    ?entity rdf:type/rdfs:subClassOf* ?class1 .
+    ?entity rdf:type/rdfs:subClassOf* ?class2 .
+}
+ORDER BY ?entity ?class1 ?class2

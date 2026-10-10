@@ -1,0 +1,9 @@
+PREFIX : <http://www.semanticweb.org/group2/ontology#>
+# Report Q3, with SuperBowlMatch1 replaced by the bound variable ?match.
+SELECT DISTINCT ?winner ?loser ?ritual WHERE {
+    ?match :partOf ?competition ;
+           :hasWon ?winner ;
+           :hasLost ?loser .
+    ?competition :hasRitual ?ritual .
+}
+ORDER BY ?winner ?loser ?ritual

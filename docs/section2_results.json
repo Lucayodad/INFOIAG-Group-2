@@ -1,0 +1,151 @@
+{
+  "ontology_sha256": "2f9d6bc535743508d3136425eb05cf13ea92c62e4e652693c603ebda8817e564",
+  "statistics": {
+    "asserted_triples": 567,
+    "triples_after_limited_inference": 591,
+    "added_triples": 24,
+    "named_classes": 81,
+    "object_properties": 60,
+    "datatype_properties": 26,
+    "named_individuals": 20,
+    "claim_assessments": 0
+  },
+  "queries": {
+    "Q1": {
+      "query_id": "Q1",
+      "bindings": {
+        "company": "http://www.semanticweb.org/group2/ontology#McDonalds"
+      },
+      "reasoning": "limited",
+      "status": "matches",
+      "rows": [
+        {
+          "person": {
+            "type": "uri",
+            "value": "http://www.semanticweb.org/group2/ontology#chef1",
+            "label": "chef1"
+          }
+        },
+        {
+          "person": {
+            "type": "uri",
+            "value": "http://www.semanticweb.org/group2/ontology#waitress1",
+            "label": "waitress1"
+          }
+        }
+      ],
+      "evidence_note": "Results describe the supplied ontology, not independently verified reality. It includes illustrative entities and undated assertions. No match means unknown or absent in this graph; it does not mean false."
+    },
+    "Q2": {
+      "query_id": "Q2",
+      "bindings": {
+        "target": "http://www.semanticweb.org/group2/ontology#McDonalds"
+      },
+      "reasoning": "limited",
+      "status": "matches",
+      "rows": [
+        {
+          "company": {
+            "type": "uri",
+            "value": "http://www.semanticweb.org/group2/ontology#OtherCompany",
+            "label": "OtherCompany"
+          }
+        }
+      ],
+      "evidence_note": "Results describe the supplied ontology, not independently verified reality. It includes illustrative entities and undated assertions. No match means unknown or absent in this graph; it does not mean false."
+    },
+    "Q3": {
+      "query_id": "Q3",
+      "bindings": {
+        "match": "http://www.semanticweb.org/group2/ontology#SuperBowlMatch1"
+      },
+      "reasoning": "limited",
+      "status": "matches",
+      "rows": [
+        {
+          "winner": {
+            "type": "uri",
+            "value": "http://www.semanticweb.org/group2/ontology#team1",
+            "label": "team1"
+          },
+          "loser": {
+            "type": "uri",
+            "value": "http://www.semanticweb.org/group2/ontology#team2",
+            "label": "team2"
+          },
+          "ritual": {
+            "type": "uri",
+            "value": "http://www.semanticweb.org/group2/ontology#HalftimeShow",
+            "label": "HalftimeShow"
+          }
+        }
+      ],
+      "evidence_note": "Results describe the supplied ontology, not independently verified reality. It includes illustrative entities and undated assertions. No match means unknown or absent in this graph; it does not mean false."
+    },
+    "Q4": {
+      "query_id": "Q4",
+      "bindings": {
+        "person": "http://www.semanticweb.org/group2/ontology#Obama"
+      },
+      "reasoning": "limited",
+      "status": "matches",
+      "rows": [
+        {
+          "occupation": {
+            "type": "uri",
+            "value": "http://www.semanticweb.org/group2/ontology#president",
+            "label": "president"
+          },
+          "friend": {
+            "type": "uri",
+            "value": "http://www.semanticweb.org/group2/ontology#Person1",
+            "label": "Person1"
+          }
+        }
+      ],
+      "evidence_note": "Results describe the supplied ontology, not independently verified reality. It includes illustrative entities and undated assertions. No match means unknown or absent in this graph; it does not mean false."
+    },
+    "Q5": {
+      "query_id": "Q5",
+      "bindings": {},
+      "reasoning": "limited",
+      "status": "no_matches",
+      "rows": [],
+      "evidence_note": "Results describe the supplied ontology, not independently verified reality. It includes illustrative entities and undated assertions. No match means unknown or absent in this graph; it does not mean false."
+    },
+    "Q6": {
+      "query_id": "Q6",
+      "bindings": {},
+      "reasoning": "limited",
+      "status": "no_matches",
+      "rows": [],
+      "evidence_note": "Results describe the supplied ontology, not independently verified reality. It includes illustrative entities and undated assertions. No match means unknown or absent in this graph; it does not mean false."
+    }
+  },
+  "q6_isolated_example": {
+    "query_id": "Q6",
+    "status": "conflicts_found",
+    "rows": [
+      {
+        "entity": {
+          "type": "uri",
+          "value": "http://www.semanticweb.org/group2/ontology#ExampleCondition",
+          "label": "ExampleCondition"
+        },
+        "class1": {
+          "type": "uri",
+          "value": "http://www.semanticweb.org/group2/ontology#Allergy",
+          "label": "Allergy"
+        },
+        "class2": {
+          "type": "uri",
+          "value": "http://www.semanticweb.org/group2/ontology#Injury",
+          "label": "Injury"
+        }
+      }
+    ],
+    "candidate_count": 2,
+    "scope": "Named disjoint classes only; not complete OWL consistency or bias checking."
+  },
+  "tests_passed": 8
+}

@@ -1,79 +1,151 @@
-# DivSumm: Obama, Super Bowl, and McDonald's
+# Ontology-assisted summarization agent: sections 1, 2, and 3
 
-This package contains all input tweets and human reference summaries for the three selected topics in your uploaded DivSumm-main.zip.
+Section 1 loads the tweets. Section 2 exposes ontology query tools. Section 3
+now defaults to local Ollama with `qwen3.5:4b`, without an API key or paid calls.
+OpenAI remains an explicit optional backend. The checking/revision loop is not
+implemented yet. Use Python 3.10 or newer.
 
-| Topic/file name | Input tweets | AA | Hisp | White | Abstractive references | Extractive references |
-|---|---:|---:|---:|---:|---:|---:|
-| Obama | 90 | 30 | 30 | 30 | 2 | 2 |
-| Superbowl | 90 | 30 | 30 | 30 | 2 | 2 |
-| McDonalds | 90 | 30 | 30 | 30 | 2 | 2 |
-| Total | 270 | 90 | 90 | 90 | 6 | 6 |
+## Section 3: local generation
 
-## What to use
+Install Ollama from https://ollama.com/download and open its Mac application.
+Download the local model in your terminal (a several-GB download):
 
-- `DivSumm_Obama_Superbowl_McDonalds/ready_to_use/Obama.jsonl`, `Superbowl.jsonl`, and `McDonalds.jsonl`: recommended inputs for your Python agent. One JSON object per tweet, in original order, with dialect labels preserved.
-- `DivSumm_Obama_Superbowl_McDonalds/ready_to_use/all_topics.jsonl`: the same 270 records combined for convenience. Group by `topic` to run the three datasets separately; this is not an additional dataset.
-- `DivSumm_Obama_Superbowl_McDonalds/ready_to_use/references.json`: both annotators' abstractive and extractive summaries, organized by topic. Keep these separate from agent inputs and use them for later evaluation.
-- `DivSumm_Obama_Superbowl_McDonalds/utf8/input_docs`: UTF-8 text copies in the original label-tab-tweet layout.
-- `DivSumm_Obama_Superbowl_McDonalds/utf8/abstractive` and `utf8/extractive/`: UTF-8 reference copies.
-- `DivSumm_Obama_Superbowl_McDonalds/original`: the 15 selected data/reference files and original repository README, preserved byte-for-byte.
-- `DivSumm_Obama_Superbowl_McDonalds/manifest.json`: original-file checksums, counts, provenance, and decoding details.
+```bash
+ollama pull qwen3.5:4b
+```
 
-## Labels and fields
+From this extracted `bias_summary_agent` directory, preview a request:
 
-The source README describes three dialect categories: African-American (`AA`), Hispanic (`Hisp`), and White (`White`). These are dataset-provided dialect labels, not independently verified race or ethnicity of tweet authors. The labels are already attached to individual tweets; there is no need to infer them from the text. No separate label file is included in the supplied archive.
+```bash
+python3 main.py --section draft --topic Obama --prompt-id 1 --dry-run
+```
 
-JSONL fields: `id`, `topic`, `dialect_label`, `text`, `source_file`, and `source_line`. The `id` field is generated from topic and original line number; it is not a Twitter ID. No author identifiers, tweet timestamps, train/validation/test splits, or original Twitter IDs were added.
+Generate one summary, then all six topic/prompt combinations:
 
-## Loading in Python
+```bash
+python3 main.py --section draft --topic Obama --prompt-id 1
+python3 main.py --section draft --topic all --prompt-id all
+```
 
-Run from this package's root folder:
+If the local server is unavailable, open Ollama or run `ollama serve` in a
+separate terminal. Local generation uses Python's standard library and needs
+no OpenAI package, key, or API billing. The ontology stage still needs the
+packages in `requirements.txt`.
+
+Results are JSON and plain text in `results/drafts/<unique-run-id>/`. Dry runs
+save request previews only. These are initial unchecked drafts, not verified
+bias-free summaries. See [docs/SECTION_3.md](docs/SECTION_3.md) for details,
+optional OpenAI usage, model settings, and troubleshooting.
+
+## Section 2: setup and run
+
+From the extracted `bias_summary_agent` directory:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install -r requirements.txt
+python3 main.py --section ontology
+```
+
+The supplied ontology and report are already included. You do not need to copy
+them again. To run one query or compare with asserted triples only:
+
+```bash
+python3 main.py --section ontology --query Q1
+python3 main.py --section ontology --query Q1 --asserted-only
+python3 -m unittest discover -s tests -v
+```
+
+See [docs/SECTION_2.md](docs/SECTION_2.md) for the tool interfaces, expected
+results, reasoning scope, and remaining ontology limitations.
+
+## Run
+
+Extract the ZIP, open a terminal in `bias_summary_agent`, and run:
+
+```bash
+python3 main.py
+```
+
+To load only one topic:
+
+```bash
+python3 main.py --topic Obama
+python3 main.py --topic Superbowl
+python3 main.py --topic McDonalds
+```
+
+Expected output for all topics:
+
+```text
+Obama: 90 tweets | AA=30 | Hisp=30 | White=30 | OK
+Superbowl: 90 tweets | AA=30 | Hisp=30 | White=30 | OK
+McDonalds: 90 tweets | AA=30 | Hisp=30 | White=30 | OK
+
+Section 1 complete: 270 tweets across 3 topic(s).
+```
+
+## Files and responsibilities
+
+| File or directory | Purpose |
+|---|---|
+| `data_loader.py` | Tweet record type, JSONL loader, schema checks, and dataset-count validation |
+| `main.py` | Command-line entry point for this section |
+| `data/divsumm/ready_to_use/` | UTF-8 JSONL inputs and separately stored reference summaries |
+| `data/divsumm/original/` | Original selected source files, unchanged |
+| `data/divsumm/utf8/` | Convenient UTF-8 text copies |
+| `data/divsumm/manifest.json` | Dataset provenance, encoding notes, and original-file checksums |
+| `data/divsumm/README.md` | Dataset documentation and paper citation |
+| `ontology/group2_Ontology.owl` | Your original ontology, unchanged |
+| `ontology_tools.py` | Query tools and limited inference |
+| `queries/Q1.rq` through `Q6.rq` | Local SPARQL templates |
+| `tests/test_ontology_tools.py` | Eight tests using the ontology and isolated fixtures |
+| `docs/SECTION_2.md` | Explanation of section 2 and its limitations |
+| `docs/section2_results.json` | Results captured from this version |
+| `docs/report_AI.pdf` | Supplied Intermediate Report 1 |
+| `prompts.py` | The report's two summary prompts and fixed system instructions |
+| `summarizer.py` | Request construction, API call, output validation, and saving |
+| `tests/test_summarizer.py` | Seven offline checks including the optional OpenAI SDK |
+| `ollama_backend.py` | Local HTTP transport and response normalization |
+| `tests/test_ollama_backend.py` | Six local transport and validation checks |
+| `docs/SECTION_3.md` | Model choice, setup, and generation-stage explanation |
+
+## How the code works
+
+1. `load_tweets(topic)` opens that topic's JSONL file using UTF-8.
+2. Each record is checked for required fields, matching topic, recognized label,
+   a valid source line, and unique identifiers/source references.
+3. Valid rows become `Tweet` objects in their original order. Tweet text is not
+   cleaned, normalized, unescaped, or stripped.
+4. `validate_dataset(tweets)` verifies the expected 90 tweets and 30 rows per
+   dialect label. It reports damaged/incomplete input instead of changing it.
+5. `main.py` prints the counts. It reads no reference summaries.
+
+You can reuse the loader in the next sections:
 
 ```python
-import json
-from pathlib import Path
+from data_loader import load_tweets
 
-topic = "Obama"  # or "Superbowl" or "McDonalds"
-path = Path("ready_to_use") / f"{topic}.jsonl"
-with path.open(encoding="utf-8") as f:
-    records = [json.loads(line) for line in f if line.strip()]
-
-texts = [row["text"] for row in records]
-groups = [row["dialect_label"] for row in records]
-
-# Reference summaries are for evaluation, not generation:
-with Path("ready_to_use/references.json").open(encoding="utf-8") as f:
-    reference_summaries = json.load(f)[topic]
+tweets = load_tweets("Obama")
+first_tweet = tweets[0]
+print(first_tweet.id)
+print(first_tweet.dialect_label)
+print(first_tweet.text)
 ```
 
-## Text preservation and encoding
+Labels `AA`, `Hisp`, and `White` are the source dataset's dialect categories,
+not independently verified author demographics. The generated IDs are local
+record identifiers, not Twitter IDs. Reference summaries stay separate for
+later evaluation; they are not evidence supplied to the agent for rewriting.
 
-No tweets were removed or rewritten. Spelling, dialect, offensive wording, quoted content, HTML entities such as `&amp;`, and literal backslash-n sequences are preserved. Actual file line endings are normalized only in the UTF-8 convenience copies.
+Some original source files use a legacy encoding. This project includes the
+previously prepared UTF-8 copies and the original bytes. The inferred Mac Roman
+conversion and its limitations are documented in `data/divsumm/README.md`.
 
-Some files in the uploaded archive are not valid UTF-8. For convenience copies, valid UTF-8 is decoded directly; other files are decoded as Mac Roman, inferred from consistent smart-quote, apostrophe, ellipsis, and accented-character byte patterns. This encoding is not declared in the repository README. The original bytes and checksums are included so this conversion can be audited or changed. In Obama.txt, the legacy byte 0xF0 becomes the Mac Roman private-use Apple glyph U+F8FF; it is retained rather than silently removed.
+## Next section, after your review
 
-## Project use
-
-Use each topic's 90 tweets as one input dataset and apply your two prompts to it. This gives six topic/prompt combinations. Preserve the dialect labels for fair-representation analysis. The reference files are human-authored summaries, not independently verified factual ground truth or guaranteed unbiased targets. These historical tweets contain opinions and claims; do not treat them as verified current facts for the ontology.
-
-Your ontology export and the two prompts from Intermediate Report 1 are project-specific and are not part of this repository package.
-
-## Source and citation
-
-Repository: https://github.com/PortNLP/DivSumm
-
-Paper: https://aclanthology.org/2022.coling-1.542/
-
-Olabisi, Olubusayo; Hudson, Aaron; Jetter, Antonie; Agrawal, Ameeta. "Analyzing the Dialect Diversity in Multi-document Summaries." COLING 2022.
-
-```bibtex
-@inproceedings{olabisi-etal-2022-analyzing,
-    title = "Analyzing the Dialect Diversity in Multi-document Summaries",
-    author = "Olabisi, Olubusayo and Hudson, Aaron and Jetter, Antonie and Agrawal, Ameeta",
-    booktitle = "Proceedings of the 29th International Conference on Computational Linguistics",
-    month = oct,
-    year = "2022"
-}
-```
-
-The original repository README is included at `DivSumm_Obama_Superbowl_McDonalds/original/README.md`. No standalone license file was present in the uploaded archive, and this package does not add a license. The supplied ZIP does not establish a Git commit identifier; its SHA-256 is recorded instead.
+Section 4 will extract claims from the tweets and initial summary and connect
+them to the ontology tools. Internal checking, coverage analysis, rewriting,
+and the agent graph remain later sections. Pause after section 3 for the user's
+review before implementing these.

@@ -1,0 +1,6 @@
+PREFIX : <http://www.semanticweb.org/group2/ontology#>
+# Report Q1, with McDonalds replaced by the bound variable ?company.
+SELECT DISTINCT ?person WHERE {
+    ?person :worksFor ?company .
+}
+ORDER BY ?person

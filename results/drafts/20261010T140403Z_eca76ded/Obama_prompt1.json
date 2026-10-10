@@ -1,0 +1,158 @@
+{
+  "status": "draft_unchecked",
+  "provider": "ollama",
+  "topic": "Obama",
+  "summary": "The tweets contain a wide range of opinions about Barack Obama, from praise for his speeches and appearance to criticism regarding his policies on guns, healthcare, and taxes. Many users focus on the First Lady, Michelle Obama, commenting on her fashion choices and style while some make humorous comparisons to pop culture figures. A significant portion of the content expresses skepticism or hostility toward Obama's leadership, with some users labeling him as a puppet or comparing him negatively to religious figures. Several tweets make jokes about Obama's physical appearance, such as his hair or voice, and reference pop culture references like the TV show Boondocks. The collection also includes requests for Obama to take action on specific issues like gun control and immigration reform, alongside comments on his relationship with the military.",
+  "sentences": [
+    {
+      "text": "The tweets contain a wide range of opinions about Barack Obama, from praise for his speeches and appearance to criticism regarding his policies on guns, healthcare, and taxes.",
+      "source_ids": [
+        "Obama_001",
+        "Obama_002",
+        "Obama_003",
+        "Obama_004",
+        "Obama_005",
+        "Obama_006",
+        "Obama_007",
+        "Obama_008",
+        "Obama_009",
+        "Obama_010",
+        "Obama_011",
+        "Obama_012",
+        "Obama_013",
+        "Obama_014",
+        "Obama_015",
+        "Obama_016",
+        "Obama_017",
+        "Obama_018",
+        "Obama_019",
+        "Obama_020"
+      ]
+    },
+    {
+      "text": "Many users focus on the First Lady, Michelle Obama, commenting on her fashion choices and style while some make humorous comparisons to pop culture figures.",
+      "source_ids": [
+        "Obama_002",
+        "Obama_021",
+        "Obama_022",
+        "Obama_027",
+        "Obama_029",
+        "Obama_032",
+        "Obama_036",
+        "Obama_041",
+        "Obama_047",
+        "Obama_052",
+        "Obama_080",
+        "Obama_085",
+        "Obama_090"
+      ]
+    },
+    {
+      "text": "A significant portion of the content expresses skepticism or hostility toward Obama's leadership, with some users labeling him as a puppet or comparing him negatively to religious figures.",
+      "source_ids": [
+        "Obama_006",
+        "Obama_008",
+        "Obama_012",
+        "Obama_015",
+        "Obama_018",
+        "Obama_023",
+        "Obama_026",
+        "Obama_028",
+        "Obama_030",
+        "Obama_033",
+        "Obama_034",
+        "Obama_037",
+        "Obama_040",
+        "Obama_043",
+        "Obama_044",
+        "Obama_053",
+        "Obama_054",
+        "Obama_059",
+        "Obama_060",
+        "Obama_061",
+        "Obama_063",
+        "Obama_070",
+        "Obama_071",
+        "Obama_072",
+        "Obama_074",
+        "Obama_075",
+        "Obama_076",
+        "Obama_077",
+        "Obama_078",
+        "Obama_082",
+        "Obama_083",
+        "Obama_084",
+        "Obama_087"
+      ]
+    },
+    {
+      "text": "Several tweets make jokes about Obama's physical appearance, such as his hair or voice, and reference pop culture references like the TV show Boondocks.",
+      "source_ids": [
+        "Obama_010",
+        "Obama_024",
+        "Obama_037",
+        "Obama_039",
+        "Obama_043",
+        "Obama_051",
+        "Obama_065",
+        "Obama_081",
+        "Obama_089"
+      ]
+    },
+    {
+      "text": "The collection also includes requests for Obama to take action on specific issues like gun control and immigration reform, alongside comments on his relationship with the military.",
+      "source_ids": [
+        "Obama_003",
+        "Obama_014",
+        "Obama_020",
+        "Obama_042",
+        "Obama_058",
+        "Obama_067",
+        "Obama_069",
+        "Obama_073",
+        "Obama_088"
+      ]
+    }
+  ],
+  "summary_prompt": "Below are 90 tweets about Barack Obama. Write a 5-sentence summary for someone who has not followed this topic, so they get a quick picture of what people are saying.",
+  "requested_model": "qwen3.5:4b",
+  "returned_model": "qwen3.5:4b",
+  "response_id": null,
+  "generation_settings": {
+    "temperature": 0,
+    "seed": 42,
+    "num_ctx": 16384,
+    "num_predict": 2000
+  },
+  "backend_metadata": {
+    "created_at": "2026-10-10T14:06:29.046834Z",
+    "total_duration": 145745987209,
+    "load_duration": 5476913584,
+    "prompt_eval_duration": 50447002750,
+    "eval_duration": 88993053625,
+    "done_reason": "stop"
+  },
+  "usage": {
+    "input_tokens": 4250,
+    "output_tokens": 841,
+    "total_tokens": 5091
+  },
+  "execution_seconds": 145.768304,
+  "created_at_utc": "2026-10-10T14:06:29.062597+00:00",
+  "input_sha256": "2f8c62fc6b98af2dc3bfe6311455b477450237eea22f3ded4edcf8ea28e25c68",
+  "request_sha256": "8efbf254bec0f8fedfce1aba4b90f96cab7f276038b7795e3c2e4ebfd4dbeab0",
+  "ontology_used": false,
+  "reference_summaries_used": false,
+  "checks_completed": [
+    "JSON structure",
+    "five entries",
+    "source ID membership"
+  ],
+  "checks_pending": [
+    "semantic grounding",
+    "sentence boundaries",
+    "bias and coverage",
+    "ontology checks"
+  ],
+  "prompt_id": "1"
+}

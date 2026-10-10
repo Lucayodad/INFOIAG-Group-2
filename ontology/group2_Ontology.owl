@@ -1,0 +1,1757 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://www.semanticweb.org/group2/ontology#"
+     xml:base="http://www.semanticweb.org/group2/ontology"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/group2/ontology"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#aboutLocation -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#aboutLocation">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Claim"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Location"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#affects -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#affects">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#HealthCondition"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Food"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#assessedBy -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#assessedBy">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#ClaimAssessment"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Source"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#assessmentOf -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#assessmentOf">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#ClaimAssessment"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Claim"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#basedOn -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#basedOn">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Ranking"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#MatchResult"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#belongsTo -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#belongsTo">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Country"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#InternationalOrganization"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#belongsToCategory -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#belongsToCategory">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Food"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#FoodCategory"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#belongsToCountry -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#belongsToCountry">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#City"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Country"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#belongsToTeam -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#belongsToTeam">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Person"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Team"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#competesWith -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#competesWith">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#SymmetricProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Team"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Team"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#createdBy -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#createdBy">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Advertisement"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Company"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#employs -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#employs">
+        <owl:inverseOf rdf:resource="http://www.semanticweb.org/group2/ontology#worksFor"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Company"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#famousFor -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#famousFor">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#City"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Food"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#friendsWith -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#friendsWith">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#SymmetricProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Person"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasBranch -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasBranch">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Company"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Branch"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasCapital -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasCapital">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#InverseFunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Country"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#City"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasCharacterTrait -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasCharacterTrait">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Person"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#CharacterTrait"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasCitizenship -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasCitizenship">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Person"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Country"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasCity -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasCity">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Country"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#City"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasCountryOfOrigin -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasCountryOfOrigin">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Person"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Country"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasDescendant -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasDescendant">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Person"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasEthnicity -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasEthnicity">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Person"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Ethnicity"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasGovernmentForm -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasGovernmentForm">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Country"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#GovernmentForm"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasHeadOfState -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasHeadOfState">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#InverseFunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Country"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasLandmark -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasLandmark">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#City"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Landmark"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasLanguage -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasLanguage">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Advertisement"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Language"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasLost -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasLost">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Match"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Team"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasNeighbor -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasNeighbor">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#SymmetricProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Country"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Country"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasOccupation -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasOccupation">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Person"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Occupation"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasOfficialLanguage -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasOfficialLanguage">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Country"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Language"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasOutcome -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasOutcome">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Match"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Outcome"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasParticipantTeam -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasParticipantTeam">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Match"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Team"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasRanking -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasRanking">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Competition"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Ranking"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasRitual -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasRitual">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Competition"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Ritual"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasRole -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasRole">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Person"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Role"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasWinnerDetermination -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasWinnerDetermination">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Sport"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#WinnerDetermination"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasWon -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasWon">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Match"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Team"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#headquarteredIn -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#headquarteredIn">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Company"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Country"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hosts -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#hosts">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Country"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Event"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#investsIn -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#investsIn">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Company"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#ResearchAndDevelopment"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#isPlayedBy -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#isPlayedBy">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Match"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Team"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#locatedIn -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#locatedIn">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+        <rdfs:range>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.semanticweb.org/group2/ontology#City"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/group2/ontology#Country"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/group2/ontology#Location"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:range>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#madeBy -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#madeBy">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Claim"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Person"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#marriedTo -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#marriedTo">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#SymmetricProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Adult"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Adult"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#operatesIn -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#operatesIn">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Company"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Industry"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#originatesIn -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#originatesIn">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Disease"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#City"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#partOf -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#partOf">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#participatesIn -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#participatesIn">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Player"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Sport"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#partnersWith -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#partnersWith">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#SymmetricProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Company"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Company"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#produces -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#produces">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Company"/>
+        <rdfs:range>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.semanticweb.org/group2/ontology#Product"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/group2/ontology#Service"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:range>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#prohibits -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#prohibits">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Allergy"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#FoodCategory"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#promotes -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#promotes">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Advertisement"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Product"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#recognizes -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#recognizes">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Country"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Holiday"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#relatedTo -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#relatedTo">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Claim"/>
+        <rdfs:range>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.semanticweb.org/group2/ontology#Company"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/group2/ontology#Event"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/group2/ontology#Person"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/group2/ontology#Sport"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:range>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#shownAt -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#shownAt">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Advertisement"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Location"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#spreadsTo -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#spreadsTo">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Disease"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Region"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#spreadsToRegion -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#spreadsToRegion">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Region"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Region"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#targetsAgeGroup -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#targetsAgeGroup">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Advertisement"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#AgeGroup"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#uses -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#uses">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Country"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Currency"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#worksFor -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/group2/ontology#worksFor">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Person"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/group2/ontology#Company"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasAge -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasAge">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Person"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasAwayTeamScore -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasAwayTeamScore">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Match"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasBudget -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasBudget">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Advertisement"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasCalories -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasCalories">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Food"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasDate -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasDate">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Claim"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasDuration -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasDuration">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Advertisement"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasHeight -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasHeight">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Landmark"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasHomeTeamScore -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasHomeTeamScore">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Match"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasName -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasName">
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasNumberOfEmployees -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasNumberOfEmployees">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Company"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasPopulation -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasPopulation">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Country"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasPosition -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasPosition">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Player"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasPublicationDate -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasPublicationDate">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Advertisement"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasRevenue -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasRevenue">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Company"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasRules -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasRules">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Sport"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasSeverity -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasSeverity">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Disease"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasSkillLevel -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasSkillLevel">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Player"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasText -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasText">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Claim"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasTypicalDuration -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasTypicalDuration">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Disease"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasViewCount -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasViewCount">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Advertisement"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#hasYearBuilt -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/group2/ontology#hasYearBuilt">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Landmark"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#isApproved -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/group2/ontology#isApproved">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Advertisement"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#isContagious -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/group2/ontology#isContagious">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Disease"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#isPublic -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/group2/ontology#isPublic">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Company"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#isValid -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/group2/ontology#isValid">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#ClaimAssessment"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#isVegetarian -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/group2/ontology#isVegetarian">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/group2/ontology#Food"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Adult -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Adult">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.semanticweb.org/group2/ontology#Person"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://www.semanticweb.org/group2/ontology#hasAge"/>
+                        <owl:someValuesFrom>
+                            <rdfs:Datatype>
+                                <owl:onDatatype rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+                                <owl:withRestrictions rdf:parseType="Collection">
+                                    <rdf:Description>
+                                        <xsd:minInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">18</xsd:minInclusive>
+                                    </rdf:Description>
+                                </owl:withRestrictions>
+                            </rdfs:Datatype>
+                        </owl:someValuesFrom>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/group2/ontology#Person"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Advertisement -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Advertisement">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#AfricanCountry -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#AfricanCountry">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/group2/ontology#Country"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#AgeGroup -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#AgeGroup">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Allergy -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Allergy">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/group2/ontology#HealthCondition"/>
+        <owl:disjointWith rdf:resource="http://www.semanticweb.org/group2/ontology#Injury"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#AsianCountry -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#AsianCountry">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/group2/ontology#Country"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#BallSport -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#BallSport">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/group2/ontology#Sport"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#BillboardAdvertisement -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#BillboardAdvertisement">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/group2/ontology#Advertisement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Branch -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Branch">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#BusinessClaim -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#BusinessClaim">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/group2/ontology#Claim"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#COVID -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#COVID">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/group2/ontology#Disease"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#CharacterTrait -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#CharacterTrait">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Chef -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Chef">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/group2/ontology#Person"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Child -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Child">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/group2/ontology#Person"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#City -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#City">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Claim -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Claim">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#ClaimAssessment -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#ClaimAssessment">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/group2/ontology#assessedBy"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onClass rdf:resource="http://www.semanticweb.org/group2/ontology#Source"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/group2/ontology#assessmentOf"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onClass rdf:resource="http://www.semanticweb.org/group2/ontology#Claim"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/group2/ontology#isValid"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#CoffeeShopCompany -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#CoffeeShopCompany">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/group2/ontology#Company"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Company -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Company">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Competition -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Competition">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Country -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Country">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Currency -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Currency">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Disease -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Disease">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/group2/ontology#Health"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Draw -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Draw">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/group2/ontology#Ethnicity"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Ethnicity -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Ethnicity"/>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#EuropeanCountry -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#EuropeanCountry">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/group2/ontology#Country"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Event -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Event">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Father -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Father">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/group2/ontology#Person"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Flu -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Flu">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/group2/ontology#Disease"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Food -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Food">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#FoodCategory -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#FoodCategory">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#GoodHearted -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#GoodHearted">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/group2/ontology#CharacterTrait"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#GovernmentForm -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#GovernmentForm">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Headache -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Headache">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/group2/ontology#Pain"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Health -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Health">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#HealthCondition -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#HealthCondition">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/group2/ontology#Health"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Holiday -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Holiday">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#IceSport -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#IceSport">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/group2/ontology#Sport"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Industry -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Industry">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Injury -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Injury">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/group2/ontology#HealthCondition"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#InternationalOrganization -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#InternationalOrganization">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Introvert -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Introvert">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/group2/ontology#CharacterTrait"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Landmark -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Landmark">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Language -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Language">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#League -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#League"/>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Location -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Location">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Loss -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Loss"/>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Lovable -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Lovable">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/group2/ontology#CharacterTrait"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Match -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Match">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#MatchResult -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#MatchResult">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#MobileAdvertisement -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#MobileAdvertisement">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/group2/ontology#Advertisement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#MuscleAche -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#MuscleAche">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/group2/ontology#Pain"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Occupation -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Occupation">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Outcome -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Outcome">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Pain -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Pain">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/group2/ontology#Symptom"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Person -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Person">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/group2/ontology#hasAge"/>
+                <owl:allValuesFrom>
+                    <rdfs:Datatype>
+                        <owl:onDatatype rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+                        <owl:withRestrictions rdf:parseType="Collection">
+                            <rdf:Description>
+                                <xsd:maxInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">110</xsd:maxInclusive>
+                            </rdf:Description>
+                        </owl:withRestrictions>
+                    </rdfs:Datatype>
+                </owl:allValuesFrom>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Player -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Player">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/group2/ontology#Person"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#PoliticalClaim -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#PoliticalClaim">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/group2/ontology#Claim"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Position -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Position">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Product -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Product">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Ranking -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Ranking">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Region -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Region">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#ResearchAndDevelopment -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#ResearchAndDevelopment">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Reserved -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Reserved">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/group2/ontology#Introvert"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Ritual -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Ritual">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Role -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Role">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Rule -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Rule">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Service -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Service">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#SkillLevel -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#SkillLevel">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Source -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Source">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Sport -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Sport">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#SportsClaim -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#SportsClaim">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/group2/ontology#Claim"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#StateOwnedCompany -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#StateOwnedCompany">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/group2/ontology#Company"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Symptom -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Symptom">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/group2/ontology#Health"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#TVCommercial -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#TVCommercial">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/group2/ontology#Advertisement"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Team -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Team">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Tournament -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Tournament"/>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#TransportationCompany -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#TransportationCompany">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/group2/ontology#Company"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#WaterSport -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#WaterSport">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/group2/ontology#Sport"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Win -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#Win"/>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#WinnerDetermination -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/group2/ontology#WinnerDetermination">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#America -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/group2/ontology#America">
+        <rdf:type rdf:resource="http://www.semanticweb.org/group2/ontology#Country"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Chef -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/group2/ontology#Chef">
+        <rdf:type rdf:resource="http://www.semanticweb.org/group2/ontology#Role"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#FastFoodIndustry -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/group2/ontology#FastFoodIndustry">
+        <rdf:type rdf:resource="http://www.semanticweb.org/group2/ontology#Industry"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#FastFoodProduct -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/group2/ontology#FastFoodProduct">
+        <rdf:type rdf:resource="http://www.semanticweb.org/group2/ontology#Product"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#HalftimeShow -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/group2/ontology#HalftimeShow">
+        <rdf:type rdf:resource="http://www.semanticweb.org/group2/ontology#Ritual"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#McDonalds -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/group2/ontology#McDonalds">
+        <rdf:type rdf:resource="http://www.semanticweb.org/group2/ontology#Company"/>
+        <employs rdf:resource="http://www.semanticweb.org/group2/ontology#chef1"/>
+        <employs rdf:resource="http://www.semanticweb.org/group2/ontology#waitress1"/>
+        <hasBranch rdf:resource="http://www.semanticweb.org/group2/ontology#branch1"/>
+        <headquarteredIn rdf:resource="http://www.semanticweb.org/group2/ontology#America"/>
+        <investsIn rdf:resource="http://www.semanticweb.org/group2/ontology#RnD_Project1"/>
+        <operatesIn rdf:resource="http://www.semanticweb.org/group2/ontology#FastFoodIndustry"/>
+        <partnersWith rdf:resource="http://www.semanticweb.org/group2/ontology#OtherCompany"/>
+        <produces rdf:resource="http://www.semanticweb.org/group2/ontology#FastFoodProduct"/>
+        <hasName>McDonald&apos;s</hasName>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Obama -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/group2/ontology#Obama">
+        <rdf:type rdf:resource="http://www.semanticweb.org/group2/ontology#Person"/>
+        <friendsWith rdf:resource="http://www.semanticweb.org/group2/ontology#Person1"/>
+        <hasCharacterTrait rdf:resource="http://www.semanticweb.org/group2/ontology#Rational"/>
+        <hasCountryOfOrigin rdf:resource="http://www.semanticweb.org/group2/ontology#America"/>
+        <hasOccupation rdf:resource="http://www.semanticweb.org/group2/ontology#president"/>
+        <hasAge rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">55</hasAge>
+        <hasName>Obama</hasName>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#OtherCompany -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/group2/ontology#OtherCompany">
+        <rdf:type rdf:resource="http://www.semanticweb.org/group2/ontology#Company"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Person1 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/group2/ontology#Person1">
+        <rdf:type rdf:resource="http://www.semanticweb.org/group2/ontology#Person"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Rational -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/group2/ontology#Rational">
+        <rdf:type rdf:resource="http://www.semanticweb.org/group2/ontology#CharacterTrait"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#RnD_Project1 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/group2/ontology#RnD_Project1">
+        <rdf:type rdf:resource="http://www.semanticweb.org/group2/ontology#ResearchAndDevelopment"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#SuperBowl1 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/group2/ontology#SuperBowl1">
+        <rdf:type rdf:resource="http://www.semanticweb.org/group2/ontology#Competition"/>
+        <hasRitual rdf:resource="http://www.semanticweb.org/group2/ontology#HalftimeShow"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#SuperBowlMatch1 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/group2/ontology#SuperBowlMatch1">
+        <rdf:type rdf:resource="http://www.semanticweb.org/group2/ontology#Match"/>
+        <hasLost rdf:resource="http://www.semanticweb.org/group2/ontology#team2"/>
+        <hasParticipantTeam rdf:resource="http://www.semanticweb.org/group2/ontology#team1"/>
+        <hasParticipantTeam rdf:resource="http://www.semanticweb.org/group2/ontology#team2"/>
+        <hasWon rdf:resource="http://www.semanticweb.org/group2/ontology#team1"/>
+        <partOf rdf:resource="http://www.semanticweb.org/group2/ontology#SuperBowl1"/>
+        <hasAwayTeamScore rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</hasAwayTeamScore>
+        <hasHomeTeamScore rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</hasHomeTeamScore>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#Waitress -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/group2/ontology#Waitress">
+        <rdf:type rdf:resource="http://www.semanticweb.org/group2/ontology#Role"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#branch1 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/group2/ontology#branch1">
+        <rdf:type rdf:resource="http://www.semanticweb.org/group2/ontology#Branch"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#chef1 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/group2/ontology#chef1">
+        <rdf:type rdf:resource="http://www.semanticweb.org/group2/ontology#Person"/>
+        <hasRole rdf:resource="http://www.semanticweb.org/group2/ontology#Chef"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#president -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/group2/ontology#president">
+        <rdf:type rdf:resource="http://www.semanticweb.org/group2/ontology#Occupation"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#team1 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/group2/ontology#team1">
+        <rdf:type rdf:resource="http://www.semanticweb.org/group2/ontology#Team"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#team2 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/group2/ontology#team2">
+        <rdf:type rdf:resource="http://www.semanticweb.org/group2/ontology#Team"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/group2/ontology#waitress1 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/group2/ontology#waitress1">
+        <rdf:type rdf:resource="http://www.semanticweb.org/group2/ontology#Person"/>
+        <hasRole rdf:resource="http://www.semanticweb.org/group2/ontology#Waitress"/>
+    </owl:NamedIndividual>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi -->
+

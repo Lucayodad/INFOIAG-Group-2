@@ -1,0 +1,6 @@
+PREFIX : <http://www.semanticweb.org/group2/ontology#>
+# Report Q2, with McDonalds replaced by the bound variable ?target.
+SELECT DISTINCT ?company WHERE {
+    ?target :partnersWith ?company .
+}
+ORDER BY ?company

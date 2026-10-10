@@ -1,0 +1,9 @@
+PREFIX : <http://www.semanticweb.org/group2/ontology#>
+# Report Q5: source-specific false assessments, not universal truth labels.
+SELECT DISTINCT ?claim ?text ?source WHERE {
+    ?assessment :assessmentOf ?claim ;
+                :assessedBy ?source ;
+                :isValid false .
+    ?claim :hasText ?text .
+}
+ORDER BY ?claim ?source ?text
