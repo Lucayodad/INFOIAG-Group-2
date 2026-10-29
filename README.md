@@ -98,6 +98,10 @@ Section 1 complete: 270 tweets across 3 topic(s).
 | `data/divsumm/manifest.json` | Dataset provenance, encoding notes, and original-file checksums |
 | `data/divsumm/README.md` | Dataset documentation and paper citation |
 | `ontology/group2_Ontology.owl` | Your original ontology, unchanged |
+| `ontology/evidence_schema.ttl` | Tweet/topic classes and source-evidence properties, including dialect labels |
+| `populate_ontology.py` | Validate saved extractions and populate a fresh RDF graph per run |
+| `queries/source_evidence.rq` | Query evidence by topic/group, including tweets without claims |
+| `tests/test_populate_ontology.py` | Provenance, validation, run isolation, SPARQL and CLI checks |
 | `ontology_tools.py` | Query tools and limited inference |
 | `queries/Q1.rq` through `Q6.rq` | Local SPARQL templates |
 | `tests/test_ontology_tools.py` | Eight tests using the ontology and isolated fixtures |
@@ -143,9 +147,82 @@ Some original source files use a legacy encoding. This project includes the
 previously prepared UTF-8 copies and the original bytes. The inferred Mac Roman
 conversion and its limitations are documented in `data/divsumm/README.md`.
 
-## Next section, after your review
+## Source evidence in RDF
 
-Section 4 will extract claims from the tweets and initial summary and connect
-them to the ontology tools. Internal checking, coverage analysis, rewriting,
-and the agent graph remain later sections. Pause after section 3 for the user's
-review before implementing these.
+Run these commands from the repository directory with the project environment
+active. First extract the complete topic, then populate its evidence graph:
+
+```bash
+python run_source_extraction.py --topic Obama --limit 90
+python populate_ontology.py --topic Obama
+```
+
+Population reads `results/source_claims/Obama.json`; it does not call the LLM.
+Use `--claims path/to/extractions.json` to select a different extraction file.
+The default command requires all 90 tweets with exactly one extraction result
+per tweet. To inspect an explicitly incomplete extraction checkpoint:
+
+```bash
+python populate_ontology.py --topic Obama --sample
+```
+
+Each invocation writes `results/ontology/<unique-run-id>/Obama.ttl` and a
+`manifest.json` with the source paths, run ID, tweet/claim/status counts and
+whether this is complete topic evidence or a sample. Generated results are
+ignored by Git. Sample graphs are for inspection, not complete coverage analysis.
+
+The graph contains a fresh copy of the original OWL ontology, the local
+`ontology/evidence_schema.ttl` extension, and the selected source evidence:
+
+- Every tweet retains its original ID, exact text, source file/line, extraction
+  status, topic link and dataset dialect label as a literal `dialectLabel` property.
+- `containsClaim` connects tweets to per-tweet `Claim` records. Claims retain
+  their original IDs, interpretation, actual source quotation, target and stance.
+  Claim text uses the ontology's existing `hasText` property.
+- `unclear` and `no_claim` tweets remain in the graph without claim links.
+- Unknown/missing/duplicate tweet results, dialect mismatches, duplicate claim
+  IDs, inconsistent statuses and quotations absent from the source are rejected.
+- Tweet/claim IRIs are scoped to the run. Each function call loads a fresh graph,
+  with no shared mutable evidence graph or edits to the base OWL file.
+
+Following the team's architecture decision, dialect is tweet metadata:
+`<tweet-iri> :dialectLabel "AA"`. There is no `DialectGroup` class, group individual
+or `belongsToDialectGroup` object property. Group-specific queries filter this
+literal directly, keeping the labels available for later coverage calculations.
+The report's architecture description should be updated to match this decision.
+
+The population function can also be called by a future controller:
+
+```python
+import json
+from pathlib import Path
+from rdflib import Literal
+from data_loader import load_tweets
+from ontology_tools import NS
+from populate_ontology import populate_ontology
+
+tweets = load_tweets("Obama")
+records = json.loads(Path("results/source_claims/Obama.json").read_text(encoding="utf-8"))
+graph = populate_ontology(tweets, records)
+query = Path("queries/source_evidence.rq").read_text(encoding="utf-8")
+rows = graph.query(query, initBindings={
+    "topic": NS.Topic_Obama,
+    "dialect_label": Literal("AA"),
+})
+for row in rows:
+    print(row.tweet_id, row.status, row.claim_text, row.quote)
+```
+
+The function requires one record per supplied tweet; the CLI additionally
+enforces full-topic completeness unless `--sample` is used. The query uses
+`OPTIONAL` so tweets without claims are included. Saved Turtle graphs can be
+reopened with `rdflib.Graph().parse(path, format="turtle")`; the existing
+`main.py --section ontology` command still queries the original RDF/XML input.
+
+`evidence_store.py` remains an optional JSON entity-link report. RDF population
+uses the original extraction records and does not depend on that report.
+Extracted statements describe what authors express, not verified world facts;
+population creates no `ClaimAssessment` or `isValid` labels. Quotation matching
+checks provenance, not whether the interpretation is semantically correct.
+Claim aggregation, factual/representation checking, revision and the LangGraph
+controller remain to be implemented.

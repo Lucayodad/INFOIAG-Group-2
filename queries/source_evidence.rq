@@ -1,0 +1,22 @@
+PREFIX : <http://www.semanticweb.org/group2/ontology#>
+# Optional initBindings: topic (IRI), dialect_label (literal).
+# Keep tweets with unclear/no_claim status through OPTIONAL.
+SELECT ?tweet ?tweet_id ?text ?topic ?dialect_label ?status
+       ?claim ?claim_id ?claim_text ?quote ?target ?stance
+WHERE {
+    ?tweet a :Tweet ;
+           :tweetId ?tweet_id ;
+           :tweetText ?text ;
+           :aboutTopic ?topic ;
+           :dialectLabel ?dialect_label ;
+           :extractionStatus ?status .
+    OPTIONAL {
+        ?tweet :containsClaim ?claim .
+        ?claim :claimId ?claim_id ;
+               :hasText ?claim_text ;
+               :sourceQuote ?quote ;
+               :targetText ?target ;
+               :stance ?stance .
+    }
+}
+ORDER BY ?dialect_label ?tweet_id ?claim_id

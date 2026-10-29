@@ -4,3 +4,7 @@ __pycache__/
 results/drafts/
 results/evidence/
 results/source_claims/
+results/ontology/
+
+.venv/
+results/summary_claims/

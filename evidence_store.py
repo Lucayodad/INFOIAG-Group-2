@@ -4,6 +4,9 @@ Connect extracted tweet claims to existing ontology entities.
 
 This module does NOT verify whether claims are true.
 It creates an auditable evidence representation.
+
+This optional JSON entity-link report is not RDF population. Use
+populate_ontology.py with the original extraction records for the run's RDF graph.
 """
 
 import json
