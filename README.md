@@ -2,8 +2,10 @@
 
 Section 1 loads the tweets. Section 2 exposes ontology query tools. Section 3
 now defaults to local Ollama with `qwen3.5:4b`, without an API key or paid calls.
-OpenAI remains an explicit optional backend. The checking/revision loop is not
-implemented yet. Use Python 3.10 or newer.
+OpenAI remains an explicit optional backend. Factual checking now has a bounded
+agent and summary wrapper; representation checking provides group retrieval,
+auditable matching and weighted coverage. The outer controller and revision
+remain pending. Use Python 3.10 or newer.
 
 ## Section 3: local generation
 
@@ -100,6 +102,10 @@ Section 1 complete: 270 tweets across 3 topic(s).
 | `ontology/group2_Ontology.owl` | Your original ontology, unchanged |
 | `ontology/evidence_schema.ttl` | Tweet/topic classes and source-evidence properties, including dialect labels |
 | `populate_ontology.py` | Validate saved extractions and populate a fresh RDF graph per run |
+| `fact_check.py` / `fact_agent.py` | Shared factual verification and the bounded agent, including `fact_check_summary` |
+| `representation_tools.py` | SPARQL source evidence retrieval by literal dialect label |
+| `representation_check.py` | Bounded semantic aggregation/matching and deterministic coverage with uncertainty bounds |
+| `docs/CHECK_COMPONENTS.md` | Checking interfaces, severity rules, thresholds, completeness and research limitations |
 | `queries/source_evidence.rq` | Query evidence by topic/group, including tweets without claims |
 | `tests/test_populate_ontology.py` | Provenance, validation, run isolation, SPARQL and CLI checks |
 | `ontology_tools.py` | Query tools and limited inference |
@@ -224,5 +230,10 @@ uses the original extraction records and does not depend on that report.
 Extracted statements describe what authors express, not verified world facts;
 population creates no `ClaimAssessment` or `isValid` labels. Quotation matching
 checks provenance, not whether the interpretation is semantically correct.
-Claim aggregation, factual/representation checking, revision and the LangGraph
-controller remain to be implemented.
+Factual and representation checking are described in
+[docs/CHECK_COMPONENTS.md](docs/CHECK_COMPONENTS.md). Representation matching uses
+deterministic batches and a shared canonical registry to reconcile equivalent
+claims across batches. The input limit applies per request; the default total
+budget is 64 model calls and `batch_size` defaults to 8. Unresolved matching or
+budget exhaustion remains UNKNOWN. Revision and the LangGraph controller remain
+to be implemented.

@@ -116,6 +116,47 @@ def extract_sentence(sentence, number, client):
     }
 
 
+def flatten_summary_claims(records):
+    """Validate the existing five-sentence extraction format and attach sentence IDs.
+
+    Returns copies; preserves the input. Unclear sentences remain visible in the
+    original records for the checking components to flag as unresolved.
+    """
+    if not isinstance(records, list) or len(records) != 5:
+        raise ValueError("Expected extraction records for exactly five summary sentences.")
+    sentences, claim_ids, claims = set(), set(), []
+    for record in records:
+        if not isinstance(record, dict):
+            raise ValueError("Each sentence extraction must be an object.")
+        for field in ("sentence_id", "sentence", "status"):
+            if not isinstance(record.get(field), str) or not record[field].strip():
+                raise ValueError(f"Missing or invalid sentence {field}.")
+        if record["sentence_id"] in sentences:
+            raise ValueError("Duplicate summary sentence ID.")
+        sentences.add(record["sentence_id"])
+        entries = record.get("claims")
+        if record["status"] not in {"extracted", "unclear", "no_claim"} or not isinstance(entries, list):
+            raise ValueError("Invalid summary extraction status or claims list.")
+        if (record["status"] == "extracted") != bool(entries):
+            raise ValueError("Inconsistent summary extraction status and claims.")
+        for claim in entries:
+            if not isinstance(claim, dict):
+                raise ValueError("Each summary claim must be an object.")
+            for field in ("claim_id", "claim", "summary_quote"):
+                if not isinstance(claim.get(field), str) or not claim[field].strip():
+                    raise ValueError(f"Missing or invalid summary claim {field}.")
+            if claim["claim_id"] in claim_ids:
+                raise ValueError("Duplicate summary claim ID.")
+            claim_ids.add(claim["claim_id"])
+            citations = claim.get("cited_source_ids")
+            if not isinstance(citations, list) or any(not isinstance(x, str) or not x.strip() for x in citations):
+                raise ValueError("Invalid summary claim citations.")
+            if find_source_quote(claim["summary_quote"], record["sentence"]) is None:
+                raise ValueError("Summary quotation is absent from its sentence.")
+            claims.append({**claim, "sentence_id": record["sentence_id"]})
+    return claims
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("draft", type=Path)
