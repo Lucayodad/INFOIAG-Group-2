@@ -100,6 +100,20 @@ class OllamaTests(unittest.TestCase):
     def test_default_client_requires_no_api_key(self):
         self.assertIsInstance(make_client(), OllamaClient)
 
+    def test_local_embedding_transport_disables_truncation(self):
+        with server({"embeddings": [[1, 0], [0, 1]]}) as (client, received):
+            client.embedding_endpoint = client.endpoint.replace("/chat", "/embed")
+            self.assertEqual(client.embed(["Source one", "Source two"]), [[1, 0], [0, 1]])
+        self.assertEqual(received[0][0], "/api/embed")
+        self.assertEqual(received[0][1], {"model": "all-minilm", "input": ["Source one", "Source two"], "truncate": False})
+
+    def test_invalid_embedding_vectors_are_rejected(self):
+        for vectors in ([], [[0, 0]], [[float("nan"), 1]], [[1, 2], [1]]):
+            with self.subTest(vectors=vectors), server({"embeddings": vectors}) as (client, _):
+                client.embedding_endpoint = client.endpoint.replace("/chat", "/embed")
+                with self.assertRaises(GenerationError):
+                    client.embed(["One source"])
+
 
 if __name__ == '__main__':
     unittest.main()

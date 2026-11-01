@@ -17,7 +17,9 @@
 :tweetId a owl:DatatypeProperty ;
     rdfs:domain :Tweet ; rdfs:range xsd:string .
 :tweetText a owl:DatatypeProperty ;
-    rdfs:domain :Tweet ; rdfs:range xsd:string .
+    rdfs:domain :Tweet ; rdfs:range xsd:string ;
+    owl:equivalentProperty :tweetHasText ;
+    rdfs:comment "Legacy spelling. New population uses tweetHasText from the base ontology; readers explicitly accept both." .
 :extractionStatus a owl:DatatypeProperty ;
     rdfs:domain :Tweet ; rdfs:range xsd:string ;
     rdfs:comment "extracted, unclear, or no_claim. This describes extraction, not truth." .

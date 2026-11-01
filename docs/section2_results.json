@@ -1,14 +1,14 @@
 {
-  "ontology_sha256": "2f9d6bc535743508d3136425eb05cf13ea92c62e4e652693c603ebda8817e564",
+  "ontology_sha256": "186df030f75160bebc14ebff2d4d6151873928a99c1a2b53f5f5d881736743c4",
   "statistics": {
-    "asserted_triples": 567,
-    "triples_after_limited_inference": 591,
-    "added_triples": 24,
-    "named_classes": 81,
-    "object_properties": 60,
-    "datatype_properties": 26,
-    "named_individuals": 20,
-    "claim_assessments": 0
+    "asserted_triples": 644,
+    "triples_after_limited_inference": 676,
+    "added_triples": 32,
+    "named_classes": 83,
+    "object_properties": 69,
+    "datatype_properties": 29,
+    "named_individuals": 31,
+    "claim_assessments": 1
   },
   "queries": {
     "Q1": {

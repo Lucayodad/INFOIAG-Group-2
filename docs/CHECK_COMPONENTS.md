@@ -19,7 +19,24 @@ representation = representation_check(
 ```
 
 The caller owns the Ollama-compatible client. Results are JSON-serializable.
-No outer controller, revision or experimental evaluation metrics are implemented.
+The [LangGraph controller](SUMMARY_AGENT.md) now connects extraction and these
+checks, evidence-guided targeted revision and bounded rechecking. Experimental
+evaluation metrics remain pending. The checking agents themselves are reused.
+
+Build checking inputs with `populate_ontology`, which excludes illustrative
+base tweets, claims (including named subclasses), assessments and summaries.
+Schema and domain assertions remain available. Raw `OntologyTools.asserted`
+is intended for ontology inspection and still contains the supplied examples;
+it is not a complete per-run source-evidence graph.
+
+New runs use `tweetHasText`, topic `SuperBowl` for dataset key `Superbowl`, and
+`claimAboutTopic` links. Readers explicitly accept legacy `tweetText` and
+`Topic_Superbowl` values without depending on OWL equivalence or identity
+inference. Matching alias values do not add duplicate supporters. Conflicting
+text values generate group integrity issues; factual retrieval preserves the
+alternatives as `conflicting_text_values` and sets usable `text` to null, so
+the existing completeness guard prevents a definitive verdict. Rebuild any
+saved graph containing base examples; compatibility reads do not remove them.
 
 ## Factual workflow
 
@@ -28,6 +45,28 @@ The bounded agent retains its model-selected tools, allowlist, observations,
 validated references, completeness guards and call counts. Shared assessment
 preparation/finalization in `fact_check.py` keeps the one-claim and agent paths
 consistent, with no unrecorded retrieval.
+
+`compact_evidence` ranks observed evidence by deterministic word overlap with
+the current claim, then stable original identifier. Qwen sees at most 16 whole
+entries and 8,000 UTF-8 catalogue bytes, with short `E001` identifiers. It does
+not receive duplicate tool results or accumulating evidence messages. Original
+RDF IDs, quotations and file/line provenance remain in the returned assessment;
+`evidence_id_map` connects shown IDs to those originals. IDs remain stable as
+observations accumulate. `expand_verdict` validates shown references and exact
+quotations before restoring full identifiers. Unshown or invented IDs fail.
+
+Factual message input is capped at 16,000 bytes. Selection records shown and
+omitted counts and explicitly does not establish corpus frequency. All cited
+evidence is still retrieved and the existing completeness guard remains binding.
+An oversized entry is omitted whole. An oversized request stops UNKNOWN.
+Each claim allows one extra format-repair call, including for empty explanations;
+it cannot execute another tool. Persistent invalid output remains UNKNOWN. Thus
+the agent allows at most `max_tool_calls + 2` model calls, with the original tool
+limit unchanged. The one-shot `check_claim` uses the same compact view and one
+repair. All verdicts require a nonempty explanation. Only an opposing fact
+justifies CONTRADICTED: missing support, negative sentiment elsewhere and an
+unestablished quantifier require UNKNOWN. This semantic distinction remains an
+unreviewed model judgment, not something quote validation can prove.
 
 The deterministic issue policy is:
 
@@ -52,9 +91,9 @@ Counts and completeness never claim full-topic verification from partial data.
    deterministic batches, at most `batch_size` (default 8) new candidates and at
    most 12,000 input bytes per request. Each exact group sends one original
    representative quotation; all supporter records stay in the Python result.
-   Qwen proposes semantic-equivalence clusters and summary matches per batch.
+   Qwen proposes semantic-equivalence clusters in an equivalence-only task.
    Every candidate must occur exactly once and every merged candidate requires
-   a supplied quotation. Summary IDs and quotes are also validated.
+   a supplied quotation. No summary is included in this phase.
 3. Each batch is then reconciled against the global canonical registry built by
    earlier batches. Qwen must choose EQUIVALENT, DISTINCT or UNKNOWN for every
    incoming cluster in each registry page. EQUIVALENT requires quotations for
@@ -65,7 +104,11 @@ Counts and completeness never claim full-topic verification from partial data.
    claims are never automatically merged because of words, names or targets.
    This compares batches to canonical representatives, not individual original
    claim pairs. The all-distinct worst case still requires more registry pages.
-   Conflicting matching decisions for merged equivalents remain UNKNOWN.
+   Once equivalence/reconciliation is done, a separate summary-coverage task
+   assesses each canonical representative as MATCHED, NOT_MATCHED or UNKNOWN.
+   This task must return singleton candidates; it cannot merge or split clusters.
+   Summary IDs and quotations are validated independently. Unresolved equivalence
+   keeps the affected candidates UNKNOWN and prevents definitive coverage bounds.
 4. Supporting tweet IDs/group labels come from RDF, never from the model. Every
    canonical claim's group weight is its number of distinct supporting tweets.
    Multiple claim records from one tweet do not inflate that weight.
@@ -103,7 +146,9 @@ The public interface and report keys are preserved, with an additional optional
 multi-batch topics work by default. An explicitly supplied budget, including 1
 or 0, remains binding. Each request still has a 12,000-byte input limit including
 instructions, a 16,384-token context, and 3,000 output tokens. The byte limit is
-per request, not per topic. Input, quotations and representative claim text are
+per request, not per topic. A separate 30,000-byte cap includes the complete JSON
+request and its reference-constraining schema. Batches reserve 400 bytes for
+repair instructions. Input, quotations and representative claim text are
 never silently truncated.
 
 ```python
@@ -119,10 +164,19 @@ records request evidence, input size, phase, raw response, validation failures
 and token usage when available. Request-specific JSON schemas constrain generated
 references to the supplied ID/full-quotation pairs; independent Python validation
 still rejects wrong pairs, unshown IDs, missing references and malformed results.
-A later failure preserves earlier results and
-all original members; unprocessed/failed claims remain UNKNOWN. Budget exhaustion
+Every invalid batch gets one bounded repair; both attempts count against 64.
+A failed equivalence, reconciliation or coverage task preserves earlier results
+and continues independent batches. The trace distinguishes `semantic_equivalence`,
+`cross_batch_reconciliation` and `summary_coverage`, with attempts and errors.
+All original members survive; unprocessed/failed claims remain UNKNOWN. Budget exhaustion
 or an oversized individual claim/comparison yields explicit UNKNOWN, not an
 invented omission. There is no whole-topic 12,000-byte rejection.
+
+`probe_checker_reliability.py` performs two focused live probes against the saved
+Obama pilot: original factual claim S01_C01 and the eight propositions from
+original representation batch K009-K016. It preserves original source IDs and
+quotations. It does not run LangGraph or revise a summary. Use a new output path
+for every invocation; existing outputs cannot be overwritten.
 
 `data_complete=false` identifies missing/invalid topic input or unclear extraction.
 Complete input with budget exhaustion, uncertain equivalence or matching failure
@@ -148,6 +202,6 @@ viewpoints can exhaust a chosen call budget even in a 90-tweet topic.
 This is the report's internal weighted claim-coverage calculation. It is not the
 entailment-based Equal Coverage metric used for final experimental evaluation.
 
-The functions can be called from future LangGraph nodes with the graph supplied
-outside the state. Interface readiness does not establish model accuracy or
-full-dataset experimental readiness.
+The functions are called by `summary_agent.py` LangGraph nodes, with a read-only
+RDF wrapper supplied outside state. Integration does not establish model
+accuracy or full-dataset experimental readiness.

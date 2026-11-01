@@ -4,8 +4,53 @@ Section 1 loads the tweets. Section 2 exposes ontology query tools. Section 3
 now defaults to local Ollama with `qwen3.5:4b`, without an API key or paid calls.
 OpenAI remains an explicit optional backend. Factual checking now has a bounded
 agent and summary wrapper; representation checking provides group retrieval,
-auditable matching and weighted coverage. The outer controller and revision
-remain pending. Use Python 3.10 or newer.
+auditable matching and weighted coverage. A LangGraph controller now connects
+summary extraction, both checkers, local embedding retrieval, targeted revision
+and bounded rechecking. It retains the best checked version and attempts at most
+three revisions. Use Python 3.10 or newer.
+
+## Local setup for the group
+
+Get the complete agent from `feature/saif-agent-implementation`. For a fresh
+Windows checkout, run these commands in PowerShell:
+
+```powershell
+git clone --branch feature/saif-agent-implementation https://github.com/Lucayodad/INFOIAG-Group-2.git
+cd INFOIAG-Group-2
+py -3 -m venv .venv
+& .\.venv\Scripts\python.exe -m pip install -r requirements.txt
+ollama pull qwen3.5:4b
+ollama pull all-minilm
+& .\.venv\Scripts\python.exe -m unittest discover -s tests -q
+```
+
+Install and start [Ollama](https://ollama.com/download) before the model commands.
+For an existing clone, switch to the feature branch and pull its latest changes,
+then install `requirements.txt` in the project's environment. On macOS/Linux,
+create the environment with `python3 -m venv .venv` and use `.venv/bin/python`
+instead of `.venv\Scripts\python.exe`. No paid API key is needed for Ollama.
+
+To exercise the whole agent with synthetic evidence and mocked model responses:
+
+```powershell
+& .\.venv\Scripts\python.exe .\demo_revision_loop.py
+```
+
+For a real Obama run, generate source claims, populate RDF, and generate Prompt 1:
+
+```powershell
+& .\.venv\Scripts\python.exe .\run_source_extraction.py --topic Obama --limit 90
+& .\.venv\Scripts\python.exe .\populate_ontology.py --topic Obama
+& .\.venv\Scripts\python.exe .\main.py --section draft --topic Obama --prompt-id 1
+```
+
+Only populate RDF after extraction reports all 90 tweets complete with no
+unresolved failures. Extraction resumes from validated checkpoints when repeated.
+Use the graph and draft paths printed by those commands in the complete-agent
+command below. Generated checkpoints, RDF graphs, drafts and result JSON files
+are local artifacts excluded from Git; pulling the code does not download them.
+Real runs can take substantial time on local hardware. A passing test suite
+checks the implementation; semantic accuracy still requires reviewing real runs.
 
 ## Section 3: local generation
 
@@ -38,6 +83,26 @@ Results are JSON and plain text in `results/drafts/<unique-run-id>/`. Dry runs
 save request previews only. These are initial unchecked drafts, not verified
 bias-free summaries. See [docs/SECTION_3.md](docs/SECTION_3.md) for details,
 optional OpenAI usage, model settings, and troubleshooting.
+
+## Run the complete agent on saved data
+
+`summary_agent.py` is the real Qwen/Ollama CLI. Give it a saved five-sentence
+draft JSON and a populated RDF Turtle graph:
+
+```powershell
+& .\.venv\Scripts\python.exe .\summary_agent.py "path\to\Obama_prompt1.json" --graph "path\to\Obama.ttl" --topic Obama --disparity-threshold 0.25 --max-revisions 3 --output ".\results\evidence\Obama_prompt1_pilot.json"
+```
+
+Install the requirements in that interpreter first, and have Ollama with
+`qwen3.5:4b` and `all-minilm` available. This CLI reuses the complete agent; it
+does not regenerate source claims or the initial summary. Its exploratory
+threshold defaults to 0.25 and remains configurable. Complete JSON is saved to
+`--output`, or a unique file under `results/evidence/agent_runs/` if omitted.
+The console prints concise factual, coverage, revision and final-status results.
+Both demo scripts use controlled mocked data; they are not this real-data run.
+Use a complete 90-tweet graph for full-topic representation results. A five-tweet
+sample retains incomplete-evidence/UNKNOWN behavior. See
+[docs/SUMMARY_AGENT.md](docs/SUMMARY_AGENT.md) for details.
 
 ## Section 2: setup and run
 
@@ -99,13 +164,21 @@ Section 1 complete: 270 tweets across 3 topic(s).
 | `data/divsumm/utf8/` | Convenient UTF-8 text copies |
 | `data/divsumm/manifest.json` | Dataset provenance, encoding notes, and original-file checksums |
 | `data/divsumm/README.md` | Dataset documentation and paper citation |
-| `ontology/group2_Ontology.owl` | Your original ontology, unchanged |
+| `ontology/group2_Ontology.owl` | Luca's updated ontology, preserved by the pipeline; includes illustrative evidence |
 | `ontology/evidence_schema.ttl` | Tweet/topic classes and source-evidence properties, including dialect labels |
 | `populate_ontology.py` | Validate saved extractions and populate a fresh RDF graph per run |
 | `fact_check.py` / `fact_agent.py` | Shared factual verification and the bounded agent, including `fact_check_summary` |
 | `representation_tools.py` | SPARQL source evidence retrieval by literal dialect label |
 | `representation_check.py` | Bounded semantic aggregation/matching and deterministic coverage with uncertainty bounds |
 | `docs/CHECK_COMPONENTS.md` | Checking interfaces, severity rules, thresholds, completeness and research limitations |
+| `summary_agent.py` | Typed LangGraph revision/rechecking, rollback, history and CLI |
+| `revision_retrieval.py` | Group-specific original evidence with local embeddings and cosine ranking |
+| `summary_revision.py` | Targeted Qwen proposals, citation guards and exact preservation of other sentences |
+| `demo_revision_loop.py` | Complete mocked revision loop and optional separate live proposal probe |
+| `tests/test_revision_loop.py` | Revision, stopping, rollback and controlled 90-tweet integration tests |
+| `demo_summary_agent.py` | Complete synthetic offline execution with mocked Qwen replies |
+| `tests/test_summary_agent.py` | Real-graph orchestration and CLI integration tests |
+| `docs/SUMMARY_AGENT.md` | Controller state, node connections, routing, usage and demonstration |
 | `queries/source_evidence.rq` | Query evidence by topic/group, including tweets without claims |
 | `tests/test_populate_ontology.py` | Provenance, validation, run isolation, SPARQL and CLI checks |
 | `ontology_tools.py` | Query tools and limited inference |
@@ -163,6 +236,22 @@ python run_source_extraction.py --topic Obama --limit 90
 python populate_ontology.py --topic Obama
 ```
 
+Source extraction resumes `results/source_claims/Obama.json` and skips every
+successfully saved tweet. Quote validation tolerates valid HTML entities, balanced
+outer quotation marks and whitespace while retaining the exact original source
+substring. It does not use fuzzy/paraphrase matching or accept changed numbers
+and negation.
+
+Invalid model output is retried twice with explicit exact-copy instructions
+(three total attempts per tweet). Persistent failures are recorded separately
+in `results/source_claims/Obama.failures.json`, never as synthetic `no_claim`
+records. Processing continues, then reports unresolved IDs and exits with code 1
+if any remain. Rerun the same extraction command to retry unresolved tweets;
+already validated records are preserved and skipped. Failure history retains
+per-run/cumulative failed-attempt counts, and recovered entries are marked
+`resolved`. Checkpoints and failure logs use temporary files and atomic replace.
+Population still requires all 90 validated extraction records for a complete run.
+
 Population reads `results/source_claims/Obama.json`; it does not call the LLM.
 Use `--claims path/to/extractions.json` to select a different extraction file.
 The default command requires all 90 tweets with exactly one extraction result
@@ -177,25 +266,42 @@ Each invocation writes `results/ontology/<unique-run-id>/Obama.ttl` and a
 whether this is complete topic evidence or a sample. Generated results are
 ignored by Git. Sample graphs are for inspection, not complete coverage analysis.
 
-The graph contains a fresh copy of the original OWL ontology, the local
+The graph contains a filtered copy of the supplied OWL ontology, the local
 `ontology/evidence_schema.ttl` extension, and the selected source evidence:
 
 - Every tweet retains its original ID, exact text, source file/line, extraction
   status, topic link and dataset dialect label as a literal `dialectLabel` property.
+  New graphs use the base ontology's `tweetHasText` property. Readers also accept
+  `tweetText` from older graphs without requiring an OWL reasoner.
 - `containsClaim` connects tweets to per-tweet `Claim` records. Claims retain
   their original IDs, interpretation, actual source quotation, target and stance.
   Claim text uses the ontology's existing `hasText` property.
+  `claimAboutTopic` links each extracted claim to its tweet's topic.
 - `unclear` and `no_claim` tweets remain in the graph without claim links.
 - Unknown/missing/duplicate tweet results, dialect mismatches, duplicate claim
   IDs, inconsistent statuses and quotations absent from the source are rejected.
 - Tweet/claim IRIs are scoped to the run. Each function call loads a fresh graph,
   with no shared mutable evidence graph or edits to the base OWL file.
+- Base example tweets, claims (including subclass instances), assessments and
+  summaries are excluded before run evidence is added. A 90-tweet run therefore
+  contains exactly 90 typed tweets, not 95. Domain assertions and schema remain.
+  `SuperBowl` and `DivSummDataset` remain topic/source reference individuals.
+- The shared topic mapping uses `Topic_Obama`, `Topic_McDonalds`, and the base
+  ontology's `SuperBowl` for dataset key `Superbowl`. Readers also accept the old
+  `Topic_Superbowl` identifier. Topics have `hasTopicName` labels.
+- Conflicting text under the two spellings is reported as an integrity issue
+  by group retrieval; factual retrieval returns no usable single text and keeps
+  both values, so factual checking remains UNKNOWN.
 
 Following the team's architecture decision, dialect is tweet metadata:
 `<tweet-iri> :dialectLabel "AA"`. There is no `DialectGroup` class, group individual
 or `belongsToDialectGroup` object property. Group-specific queries filter this
 literal directly, keeping the labels available for later coverage calculations.
 The report's architecture description should be updated to match this decision.
+See [ontology/README.md](ontology/README.md) for the base filtering policy.
+Manifests record it as `base_evidence_policy`. Existing saved graphs are not
+rewritten; regenerate any graph populated from the updated base before this fix
+to remove its example evidence. Old text/topic spellings remain readable.
 
 The population function can also be called by a future controller:
 
@@ -235,5 +341,26 @@ Factual and representation checking are described in
 deterministic batches and a shared canonical registry to reconcile equivalent
 claims across batches. The input limit applies per request; the default total
 budget is 64 model calls and `batch_size` defaults to 8. Unresolved matching or
-budget exhaustion remains UNKNOWN. Revision and the LangGraph controller remain
-to be implemented.
+budget exhaustion remains UNKNOWN. Equivalence and summary coverage use separate
+tasks; each invalid batch gets one repair and independent batches continue.
+Factual prompts use at most 16 whole evidence entries / 8,000 catalogue bytes,
+validated short IDs mapped back to RDF provenance, and one format repair.
+Function-by-function changes are documented in
+[docs/CHECKER_RELIABILITY.md](docs/CHECKER_RELIABILITY.md).
+`python probe_checker_reliability.py --output results/evidence/new_probes.json`
+runs only the two focused live Obama probes, using the saved pilot and graph
+paths documented by `--help`; it refuses to overwrite existing results.
+The LangGraph controller is available through
+`run_summary_agent` and `python summary_agent.py`; see
+[docs/SUMMARY_AGENT.md](docs/SUMMARY_AGENT.md). It finalizes with uncertainty when
+needed. Confirmed issues trigger bounded evidence-guided revision and both checks
+are repeated before accepting a new version. See the workflow documentation for
+the same-metric improvement rule and all stopping conditions.
+
+Revision retrieval uses local `all-minilm` embeddings through Ollama, with
+in-memory cosine ranking and no vector database or additional Python dependency.
+Install the model once with `ollama pull all-minilm`. Missing/invalid embeddings
+or insufficient original evidence stop revision safely; no lexical fallback is
+substituted. Run `python demo_revision_loop.py` for the controlled example, or
+add `--live` for a separate local Qwen proposal probe. These are development
+checks, not the 36-run experimental evaluation.
