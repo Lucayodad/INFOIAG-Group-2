@@ -45,7 +45,7 @@ def lookup_fact(graph: Graph, summary_claim: dict) -> dict:
                ?source_claim_id ?source_claim_text ?source_quote ?target ?stance
         WHERE {
             ?tweet a :Tweet ; :tweetId ?tweet_id .
-            OPTIONAL { ?tweet :tweetText ?tweet_text . }
+            OPTIONAL { ?tweet (:tweetHasText|:tweetText) ?tweet_text . }
             OPTIONAL { ?tweet :sourceFile ?source_file . }
             OPTIONAL { ?tweet :sourceLine ?source_line . }
             OPTIONAL { ?tweet :aboutTopic ?topic . }
@@ -62,7 +62,7 @@ def lookup_fact(graph: Graph, summary_claim: dict) -> dict:
         }
         ORDER BY ?tweet ?source_claim
     """, initNs={"": NS})
-    tweets = {}
+    tweets, texts = {}, {}
     for tweet_id in cited_ids:
         rows = list(graph.query(query, initBindings={"tweet_id": Literal(tweet_id)}))
         if not rows:
@@ -71,6 +71,9 @@ def lookup_fact(graph: Graph, summary_claim: dict) -> dict:
         for row in rows:
             data = {name: value.toPython() for name, value in row.asdict().items()}
             tweet_uri = data["tweet"]
+            texts.setdefault(tweet_uri, set())
+            if data.get("tweet_text") is not None:
+                texts[tweet_uri].add(data["tweet_text"])
             if tweet_uri not in tweets:
                 tweets[tweet_uri] = {
                     "tweet_id": data["tweet_id"],
@@ -94,6 +97,12 @@ def lookup_fact(graph: Graph, summary_claim: dict) -> dict:
                 }
                 if source_claim not in tweets[tweet_uri]["source_claims"]:
                     tweets[tweet_uri]["source_claims"].append(source_claim)
+    for uri, values in texts.items():
+        if len(values) > 1:
+            # Keep conflicting values visible, but do not choose a source text
+            # for a definitive factual verdict (prepare_assessment guards None).
+            tweets[uri]["text"] = None
+            tweets[uri]["conflicting_text_values"] = sorted(values)
     result["tweets"] = list(tweets.values())
     missing = result["missing_tweet_ids"]
     result["retrieval_status"] = (

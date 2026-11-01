@@ -66,6 +66,25 @@ def matching_response(p_status="MATCHED", q_status="NOT_MATCHED", r_status="NOT_
                                                           "clusters": clusters})}]}]}
 
 
+def split_matching_reply(payload, reply):
+    """Project fixture gold labels into the separate equivalence/coverage tasks."""
+    data = json.loads(reply["output"][0]["content"][0]["text"])
+    body = json.loads(payload["messages"][1]["content"])
+    if "summary_claims" not in body:
+        data["clusters"] = [{k: c[k] for k in ("candidate_ids", "source_evidence", "explanation")} for c in data["clusters"]]
+    else:
+        clusters = []
+        for cluster in data["clusters"]:
+            for key in cluster["candidate_ids"]:
+                if key not in body["candidates"]:
+                    continue
+                shown = body["candidates"][key]["source_evidence"][0]
+                clusters.append({**cluster, "candidate_ids": [key], "source_evidence": [
+                    {"claim_id": shown["claim_id"], "quote": shown["source_quote"]}]})
+        data.update(equivalence_complete=True, clusters=clusters)
+    return {"output": [{"content": [{"text": json.dumps(data)}]}]}
+
+
 def factual_client():
     client = Mock()
     responses = []
@@ -158,7 +177,7 @@ class RepresentationTests(unittest.TestCase):
 
     def matching(self, **kwargs):
         client = Mock()
-        client.chat.return_value = matching_response(**kwargs)
+        client.chat.side_effect = lambda payload: split_matching_reply(payload, matching_response(**kwargs))
         return match_summary_claims(self.groups(), self.summary, client)
 
     def test_sparql_retrieval_preserves_group_and_original_evidence(self):
@@ -273,11 +292,11 @@ class RepresentationTests(unittest.TestCase):
     def test_complete_representation_interface_and_shared_graph_are_json_serializable(self):
         before = set(self.graph)
         client = Mock()
-        client.chat.return_value = matching_response()
+        client.chat.side_effect = lambda payload: split_matching_reply(payload, matching_response())
         report = representation_check(self.graph, self.summary, client, "Obama", 0.25,
                                       expected_group_counts=self.expected)
         self.assertEqual(report["status"], "FAIL")
-        self.assertEqual(report["model_call_count"], 1)
+        self.assertEqual(report["model_call_count"], 2)
         self.assertTrue(report["data_complete"])
         self.assertTrue(report["supporting_source_evidence"])
         self.assertEqual(set(self.graph), before)
@@ -294,33 +313,39 @@ class RepresentationTests(unittest.TestCase):
 
     def test_fabricated_quotes_ids_partitions_and_entity_only_merges_are_rejected(self):
         mutations = [
-            lambda data: data["clusters"][0]["source_evidence"][0].update(quote="Fabricated quote"),
-            lambda data: data["clusters"][0]["summary_evidence"][0].update(claim_id="S99_C01"),
-            lambda data: data["clusters"][0]["candidate_ids"].append("K999"),
-            lambda data: data["clusters"].pop(),
-            lambda data: data["clusters"][1].update(candidate_ids=["K001"]),
-            lambda data: data["clusters"][0].update(dialect_label="Invented"),
+            (False, lambda data: data["clusters"][0]["source_evidence"][0].update(quote="Fabricated quote")),
+            (True, lambda data: data["clusters"][0]["summary_evidence"][0].update(claim_id="S99_C01")),
+            (False, lambda data: data["clusters"][0]["candidate_ids"].append("K999")),
+            (False, lambda data: data["clusters"].pop()),
+            (False, lambda data: data["clusters"][1].update(candidate_ids=["K001"])),
+            (False, lambda data: data["clusters"][0].update(dialect_label="Invented")),
         ]
-        for mutate in mutations:
+        for coverage, mutate in mutations:
             with self.subTest(mutation=mutate):
-                response = matching_response()
-                data = json.loads(response["output"][0]["content"][0]["text"])
-                mutate(data)
-                response["output"][0]["content"][0]["text"] = json.dumps(data)
                 client = Mock()
-                client.chat.return_value = response
-                with self.assertRaises(RepresentationError):
-                    match_summary_claims(self.groups(), self.summary, client)
-        response = matching_response()
-        data = json.loads(response["output"][0]["content"][0]["text"])
-        data["clusters"][0]["candidate_ids"].append("K003")
-        data["clusters"][0]["source_evidence"].extend(data["clusters"][1]["source_evidence"])
-        data["clusters"].pop(1)
-        response["output"][0]["content"][0]["text"] = json.dumps(data)
+                def reply(payload):
+                    result = split_matching_reply(payload, matching_response())
+                    body = json.loads(payload["messages"][1]["content"])
+                    if ("summary_claims" in body) == coverage:
+                        data = json.loads(result["output"][0]["content"][0]["text"])
+                        mutate(data)
+                        result["output"][0]["content"][0]["text"] = json.dumps(data)
+                    return result
+                client.chat.side_effect = reply
+                matching = match_summary_claims(self.groups(), self.summary, client)
+                self.assertEqual(check_summary_fairness(matching, 0.25, data_complete=True)["status"], "UNKNOWN")
+                self.assertTrue(any(e["status"] == "rejected" for e in matching["execution_trace"]))
         client = Mock()
-        client.chat.return_value = response
-        with self.assertRaises(RepresentationError):
-            match_summary_claims(self.groups(), self.summary, client)
+        def opposing_merge(payload):
+            result = split_matching_reply(payload, matching_response())
+            data = json.loads(result["output"][0]["content"][0]["text"])
+            data["clusters"][0]["candidate_ids"].append("K003")
+            data["clusters"][0]["source_evidence"].extend(data["clusters"][1]["source_evidence"])
+            data["clusters"].pop(1)
+            result["output"][0]["content"][0]["text"] = json.dumps(data)
+            return result
+        client.chat.side_effect = opposing_merge
+        self.assertEqual(match_summary_claims(self.groups(), self.summary, client)["aggregation_status"], "UNKNOWN")
         # Exact grouping uses the full statement, never just entity/target or stance.
         groups = self.groups()
         for claim in groups["AA"]["claims"]:
@@ -335,7 +360,7 @@ class RepresentationTests(unittest.TestCase):
         result = representation_check(self.graph, self.summary, client, "Obama", 0.25,
                                       expected_group_counts=self.expected)
         self.assertEqual(result["status"], "UNKNOWN")
-        self.assertEqual(result["model_call_count"], 1)
+        self.assertEqual(result["model_call_count"], 2)
         self.assertTrue(result["supporting_source_evidence"])
         self.assertEqual(result["execution_trace"][0]["status"], "rejected")
 

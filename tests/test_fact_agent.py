@@ -194,8 +194,8 @@ class BoundedFactAgentTests(unittest.TestCase):
         self.assertEqual(result["review_status"], "unreviewed")
         second_payload = client.chat.call_args_list[1].args[0]
         observation = json.loads(second_payload["messages"][-1]["content"])["observation"]
-        self.assertEqual(observation["result"]["tweets"][0]["text"], "I like Obama's speech.")
-        self.assertIn(result["references"][0]["evidence_id"], observation["evidence_catalogue"])
+        self.assertTrue(any(item["quote_text"] == "I like Obama's speech." for item in observation["evidence_catalogue"].values()))
+        self.assertIn(result["references"][0]["evidence_id"], result["evidence_id_map"].values())
         self.assertEqual(len(client.chat.call_args_list[0].args[0]["messages"]), 2)
         self.assertEqual([item["action"] for item in result["model_decisions"]], ["lookup_fact", "finalize"])
         self.assertEqual(result["execution_trace"][-1]["step"], "stop")
@@ -218,7 +218,7 @@ class BoundedFactAgentTests(unittest.TestCase):
         self.assertEqual(result["ontology"]["entity"], str(NS.Obama))
         self.assertTrue(any(item["kind"] == "ontology_assertion" for item in result["evidence"].values()))
         last_messages = client.chat.call_args_list[-1].args[0]["messages"]
-        self.assertEqual(len(last_messages), 6)
+        self.assertEqual(len(last_messages), 4)
         self.assertIn("ontology_assertion", last_messages[-1]["content"])
 
     def test_explicit_unknown_can_stop_without_any_retrieval(self):
@@ -267,7 +267,7 @@ class BoundedFactAgentTests(unittest.TestCase):
 
     def test_unauthorized_entity_stops_unknown_and_preserves_prior_trace(self):
         client = Mock()
-        client.chat.side_effect = [loop_response("lookup_fact"), loop_response("lookup_entity_facts", "McDonalds")]
+        client.chat.side_effect = [loop_response("lookup_fact"), loop_response("lookup_entity_facts", "McDonalds"), loop_response("lookup_entity_facts", "McDonalds")]
         with patch("fact_agent.lookup_entity_facts") as entities:
             result = run_fact_agent(self.graph, self.claim, client, ["Obama"])
             entities.assert_not_called()
@@ -285,7 +285,7 @@ class BoundedFactAgentTests(unittest.TestCase):
         ):
             with self.subTest(evidence_id=evidence_id, quote=quote):
                 client = Mock()
-                client.chat.side_effect = [loop_response("lookup_fact"), fixture_verdict(evidence_id=evidence_id, quote=quote)]
+                client.chat.side_effect = [loop_response("lookup_fact"), fixture_verdict(evidence_id=evidence_id, quote=quote), fixture_verdict(evidence_id=evidence_id, quote=quote)]
                 result = run_fact_agent(self.graph, self.claim, client)
                 self.assertEqual(result["stop_reason"], "invalid_verdict")
                 self.assertEqual(result["verdict"], "UNKNOWN")
@@ -358,7 +358,7 @@ class BoundedFactAgentTests(unittest.TestCase):
         second = json.loads(client.chat.call_args_list[2].args[0]["messages"][-1]["content"])["observation"]
         for key, item in first["evidence_catalogue"].items():
             self.assertEqual(second["evidence_catalogue"][key]["quote_text"], item["quote_text"])
-        self.assertEqual(second["result"]["entity"], str(NS.Person1))
+        self.assertEqual(result["ontology"]["observations"][1]["entity"], str(NS.Person1))
 
     def test_zero_or_invalid_budget_and_malformed_decisions_are_bounded(self):
         client = Mock()

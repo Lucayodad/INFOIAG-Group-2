@@ -80,7 +80,7 @@ def build_request(tweets: list[Tweet], summary_prompt: str,
     }
 
 
-def validate_output(raw_text: str, tweets: list[Tweet]) -> dict:
+def validate_output(raw_text: str, tweets: list[Tweet] | None = None, *, allowed_source_ids=None) -> dict:
     """Validate structure and referenced IDs, not semantic grounding or fairness."""
     try:
         data = json.loads(raw_text)
@@ -91,7 +91,9 @@ def validate_output(raw_text: str, tweets: list[Tweet]) -> dict:
     sentences = data["sentences"]
     if not isinstance(sentences, list) or len(sentences) != 5:
         raise GenerationError("Expected exactly five sentence entries.")
-    allowed_ids = {tweet.id for tweet in tweets}
+    if allowed_source_ids is None and tweets is None:
+        raise GenerationError("Supply original tweets or allowed_source_ids for citation validation.")
+    allowed_ids = set(allowed_source_ids) if allowed_source_ids is not None else {tweet.id for tweet in tweets}
     texts = set()
     for index, entry in enumerate(sentences, 1):
         if not isinstance(entry, dict) or set(entry) != {"text", "source_ids"}:

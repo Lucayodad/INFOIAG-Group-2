@@ -12,6 +12,7 @@ from rdflib import Graph
 from fact_tools import lookup_entity_facts, lookup_fact
 from fact_check import FactCheckError, INSTRUCTIONS as ASSESSMENT_INSTRUCTIONS
 from fact_check import VERDICT_SCHEMA, apply_verdict, prepare_assessment
+from fact_check import compact_evidence, expand_verdict
 from ontology_tools import OntologyTools
 from summarizer import GenerationError
 
@@ -152,20 +153,28 @@ explanation, references. The three assessment fields are inside that envelope.
 """
 
 
-def _loop_schema(allowed_ids):
-    return {
+def _loop_schema(allowed_ids, evidence_ids=None):
+    schema = {
         "type": "object", "properties": {
             "action": {"type": "string", "enum": [*ACTIONS, "finalize"]},
             "entity_id": {"anyOf": [{"type": "null"}, {"type": "string", "enum": allowed_ids}]}
                          if allowed_ids else {"type": "null"},
             "reason": {"type": "string", "minLength": 1},
             "verdict": {"anyOf": [{"type": "null"}, VERDICT_SCHEMA["properties"]["verdict"]]},
-            "explanation": {"type": ["string", "null"]},
-            "references": VERDICT_SCHEMA["properties"]["references"],
+            "explanation": {"anyOf": [{"type": "null"}, {"type": "string", "minLength": 1}]},
+            "references": {"type": "array", "items": {
+                "type": "object", "properties": {
+                    "evidence_id": {"type": "string", "enum": list(evidence_ids or [])},
+                    "quote": {"type": "string", "minLength": 1}},
+                "required": ["evidence_id", "quote"], "additionalProperties": False}},
         },
         "required": ["action", "entity_id", "reason", "verdict", "explanation", "references"],
         "additionalProperties": False,
     }
+    if not evidence_ids:
+        schema["properties"]["references"]["maxItems"] = 0
+        schema["properties"]["references"]["items"]["properties"]["evidence_id"].pop("enum")
+    return schema
 
 
 def _validate_loop_decision(decision, summary_claim, allowed_ids):
@@ -235,8 +244,8 @@ def _finish_agent(assessment, trace, stop_reason, explanation=None):
 def run_fact_agent(graph, summary_claim, client, allowed_entity_ids=None, max_tool_calls=3):
     """Bounded JSON-action investigation using only explicitly recorded tool results.
 
-    At most max_tool_calls executions and max_tool_calls + 1 model decisions are
-    allowed. At the budget boundary the model gets one final decision, but no
+    At most max_tool_calls executions, max_tool_calls + 1 ordinary decisions and
+    one format-repair decision are allowed. At the boundary there is a final decision, but no
     more retrievals. Invalid decisions/verdicts safely stop UNKNOWN with a trace;
     invalid caller inputs/tool errors propagate; model transport errors stop UNKNOWN.
     No hidden retrieval
@@ -246,10 +255,12 @@ def run_fact_agent(graph, summary_claim, client, allowed_entity_ids=None, max_to
     if type(max_tool_calls) is not int or max_tool_calls < 0:
         raise ValueError("max_tool_calls must be a nonnegative integer.")
     retrieval, entity_observations, seen_calls, trace = None, [], set(), []
+    id_map, repair_used = {}, False
     trace.append({"step": "initialization", "claim_id": summary_claim["claim_id"],
                   "allowed_entity_ids": allowed_ids, "max_tool_calls": max_tool_calls,
                   "model": "qwen3.5:4b", "protocol": "structured_json_action"})
     assessment = prepare_assessment(summary_claim)
+    view = compact_evidence(assessment)
     if max_tool_calls == 0:
         return _finish_agent(assessment, trace, "tool_call_limit", "Tool budget is zero; no evidence was retrieved.")
     messages = [
@@ -259,17 +270,33 @@ def run_fact_agent(graph, summary_claim, client, allowed_entity_ids=None, max_to
             "max_tool_calls": max_tool_calls, "remaining_tool_calls": max_tool_calls,
         }, ensure_ascii=False)},
     ]
-    for turn in range(1, max_tool_calls + 2):
+    initial = messages[1]
+    repair_error = None
+    ordinary_turns = 0
+    for turn in range(1, max_tool_calls + 3):
+        if repair_error is None:
+            ordinary_turns += 1
+            if ordinary_turns > max_tool_calls + 1:
+                break
+        request_messages = list(messages)
+        if repair_error is not None:
+            request_messages.append({"role": "user", "content": json.dumps({
+                "format_repair": "Return the required action envelope. A finalize verdict needs a nonempty explanation. Copy only shown evidence IDs and exact quotes. Do not request new evidence to repair formatting.",
+                "validation_error": repair_error[:300]}, ensure_ascii=False)})
+        input_bytes = len(json.dumps(request_messages, ensure_ascii=False).encode("utf-8"))
+        if input_bytes > 16000:
+            return _finish_agent(assessment, trace, "input_limit_exceeded", "Factual request exceeds the 16000-byte input limit.")
         try:
             response = client.chat({
                 "model": "qwen3.5:4b", "stream": False, "think": False,
-                "messages": list(messages), "format": _loop_schema(allowed_ids),
+                "messages": request_messages, "format": _loop_schema(allowed_ids, view["evidence_catalogue"]),
                 "options": {"temperature": 0, "seed": 42, "num_ctx": 16384, "num_predict": 900},
             })
         except GenerationError as exc:
-            trace.append({"step": "model_error", "turn": turn, "error": str(exc)})
+            trace.append({"step": "model_error", "turn": turn, "error": str(exc), "input_bytes": input_bytes})
             return _finish_agent(assessment, trace, "model_error", str(exc))
         event = {"step": "model_decision", "turn": turn,
+                 "input_bytes": input_bytes, "format_repair": repair_error is not None,
                  "observed_evidence_ids": list(assessment["evidence"]),
                  "usage": response.get("usage") if isinstance(response, dict) else None}
         trace.append(event)
@@ -280,17 +307,22 @@ def run_fact_agent(graph, summary_claim, client, allowed_entity_ids=None, max_to
             if isinstance(decision, dict):
                 event["decision"] = decision
             arguments = _validate_loop_decision(decision, summary_claim, allowed_ids)
+            if repair_error is not None and decision["action"] not in ("finalize", "no_tool"):
+                raise FactAgentError("Format repair cannot execute another tool.")
+            if decision["action"] == "finalize":
+                verdict = expand_verdict({key: decision[key] for key in VERDICT_SCHEMA["required"]}, view, assessment)
+                final = apply_verdict(assessment, verdict)
         except (KeyError, IndexError, TypeError, ValueError) as exc:
             event.update(status="rejected", error=str(exc))
-            return _finish_agent(assessment, trace, "invalid_tool_request", str(exc))
+            failure = "invalid_verdict" if isinstance(exc, FactCheckError) else "invalid_tool_request"
+            if repair_used:
+                return _finish_agent(assessment, trace, failure, str(exc))
+            repair_used, repair_error = True, str(exc)
+            continue
+        repair_error = None
         event["status"] = "accepted"
         action = decision["action"]
         if action == "finalize":
-            try:
-                final = apply_verdict(assessment, {key: decision[key] for key in VERDICT_SCHEMA["required"]})
-            except FactCheckError as exc:
-                event.update(status="rejected", error=str(exc))
-                return _finish_agent(assessment, trace, "invalid_verdict", str(exc))
             stop = ("explicit_unknown" if decision["verdict"] == "UNKNOWN" else
                     "verdict" if final["evidence_complete"] else "incomplete_evidence")
             return _finish_agent(final, trace, stop)
@@ -312,17 +344,22 @@ def run_fact_agent(graph, summary_claim, client, allowed_entity_ids=None, max_to
             evidence = lookup_entity_facts(graph, decision["entity_id"])
             entity_observations.append(evidence)
         assessment = prepare_assessment(summary_claim, retrieval, _merge_entity_observations(entity_observations))
+        view = compact_evidence(assessment, id_map)
+        id_map = view["all_evidence_id_map"]
+        assessment.update(evidence_id_map=view["evidence_id_map"], evidence_selection=view["selection"])
         trace.append({"step": "tool_execution", "turn": turn, "tool": action,
                       "tool_arguments": arguments, "result": evidence,
                       "evidence_ids": list(assessment["evidence"]), "status": "completed"})
         observation = {
-            "tool": action, "result": evidence, "evidence_catalogue": assessment["evidence"],
+            "tool": action, "evidence_catalogue": view["evidence_catalogue"],
+            "selection": view["selection"],
             "evidence_complete": assessment["evidence_complete"], "assessment_reason": assessment["reason"],
             "remaining_tool_calls": max_tool_calls - len(seen_calls),
         }
         trace.append({"step": "observation", "turn": turn,
                       "evidence_complete": assessment["evidence_complete"],
                       "remaining_tool_calls": observation["remaining_tool_calls"]})
-        messages.extend([{"role": "assistant", "content": raw},
-                         {"role": "user", "content": json.dumps({"observation": observation}, ensure_ascii=False)}])
+        # Replace previous tool payloads instead of duplicating catalogues/history.
+        messages = [messages[0], initial, {"role": "assistant", "content": raw},
+                    {"role": "user", "content": json.dumps({"observation": observation}, ensure_ascii=False)}]
     return _finish_agent(assessment, trace, "tool_call_limit", "The bounded decision budget was exhausted.")

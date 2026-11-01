@@ -12,10 +12,10 @@ import re
 from urllib.parse import quote
 from uuid import uuid4
 
-from rdflib import Graph, Literal, Namespace, RDF, RDFS
+from rdflib import Graph, Literal, Namespace, RDF, RDFS, XSD
 
 from data_loader import DIALECT_LABELS, TOPICS, DatasetError, Tweet, load_tweets, validate_dataset
-from ontology_tools import DEFAULT_ONTOLOGY, NS, OntologyTools
+from ontology_tools import DEFAULT_ONTOLOGY, NS, TOPIC_IRIS, OntologyTools, pipeline_base_graph
 from source_claims import find_source_quote
 
 
@@ -108,7 +108,7 @@ def _validate_records(tweets: list[Tweet], records: list[dict]) -> dict[str, dic
 def populate_ontology(tweets: list[Tweet], extraction_records: list[dict], *,
                       ontology_file: Path = DEFAULT_ONTOLOGY,
                       run_id: str | None = None) -> Graph:
-    """Return a fresh base + schema + evidence graph for exactly these tweets.
+    """Return a fresh filtered base + schema + evidence graph for these tweets.
 
     The caller chooses the input batch; the CLI separately enforces 90 tweets.
     Run-specific IRIs isolate tweets/claims even if graphs are later combined.
@@ -122,20 +122,23 @@ def populate_ontology(tweets: list[Tweet], extraction_records: list[dict], *,
     graph = Graph(identifier=run[""])
     graph.bind("", NS)
     graph.bind("run", run)
-    # OntologyTools validates the namespace; only asserted base triples are copied.
-    graph += OntologyTools(ontology_file).asserted
+    # Retain domain assertions/schema, not the base file's example run evidence.
+    graph += pipeline_base_graph(OntologyTools(ontology_file))
     graph.parse(EVIDENCE_SCHEMA, format="turtle")
 
     for tweet in tweets:
         record = records[tweet.id]
         tweet_iri = run["tweet/" + quote(tweet.id, safe="")]
-        topic_iri = NS["Topic_" + tweet.topic]
+        topic_iri = TOPIC_IRIS[tweet.topic]
         for triple in (
             (topic_iri, RDF.type, NS.Topic),
             (topic_iri, RDFS.label, Literal(tweet.topic)),
+            (topic_iri, NS.hasTopicName, Literal(
+                "Super Bowl" if tweet.topic == "Superbowl" else tweet.topic,
+                datatype=XSD.string)),
             (tweet_iri, RDF.type, NS.Tweet),
             (tweet_iri, NS.tweetId, Literal(tweet.id)),
-            (tweet_iri, NS.tweetText, Literal(tweet.text)),
+            (tweet_iri, NS.tweetHasText, Literal(tweet.text)),
             (tweet_iri, NS.sourceFile, Literal(tweet.source_file)),
             (tweet_iri, NS.sourceLine, Literal(tweet.source_line)),
             (tweet_iri, NS.extractionStatus, Literal(record["status"])),
@@ -147,6 +150,7 @@ def populate_ontology(tweets: list[Tweet], extraction_records: list[dict], *,
             claim_iri = run["claim/" + quote(claim["claim_id"], safe="")]
             graph.add((tweet_iri, NS.containsClaim, claim_iri))
             graph.add((claim_iri, RDF.type, NS.Claim))
+            graph.add((claim_iri, NS.claimAboutTopic, topic_iri))
             for prop, value in (
                 (NS.claimId, claim["claim_id"]),
                 (NS.hasText, claim["claim"]),
@@ -194,6 +198,7 @@ def main() -> None:
             "claims_file": str(claims_file.resolve()),
             "ontology_file": str(args.ontology_file.resolve()),
             "schema_file": str(EVIDENCE_SCHEMA),
+            "base_evidence_policy": "exclude_tweets_claims_assessments_summaries",
         }
         (destination / "manifest.json").write_text(
             json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

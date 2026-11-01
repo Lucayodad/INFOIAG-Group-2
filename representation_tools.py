@@ -5,7 +5,7 @@ from pathlib import Path
 from rdflib import Graph, Literal, URIRef
 
 from data_loader import DIALECT_LABELS, TOPICS
-from ontology_tools import NS
+from ontology_tools import NS, TOPIC_IRIS
 
 
 QUERY_FILE = Path(__file__).resolve().parent / "queries" / "source_evidence.rq"
@@ -22,9 +22,14 @@ def get_group_claims(graph, topic, dialect_label):
         raise TypeError("graph must be an rdflib.Graph.")
     if topic not in TOPICS or dialect_label not in DIALECT_LABELS:
         raise ValueError("Use an existing dataset topic and dialect label.")
-    rows = graph.query(QUERY_FILE.read_text(encoding="utf-8"), initBindings={
-        "topic": NS["Topic_" + topic], "dialect_label": Literal(dialect_label),
-    })
+    # Older saved Super Bowl graphs used Topic_Superbowl. Accept that spelling
+    # as well as the base ontology's topic without rewriting the caller's graph.
+    topics = {TOPIC_IRIS[topic], NS["Topic_" + topic]}
+    query = QUERY_FILE.read_text(encoding="utf-8")
+    rows = [row for iri in sorted(topics, key=str)
+            for row in graph.query(query, initBindings={
+                "topic": iri, "dialect_label": Literal(dialect_label),
+            })]
     tweets, claims, problems = {}, {}, []
     for row in rows:
         data = {name: value.toPython() for name, value in row.asdict().items()}
@@ -39,6 +44,8 @@ def get_group_claims(graph, topic, dialect_label):
                 "source_line": source_line.toPython() if source_line is not None else None,
                 "source_claim_ids": [],
             }
+        elif tweets[uri]["text"] != data["text"]:
+            problems.append(f"Conflicting tweet text values for {data['tweet_id']}.")
         if data.get("claim") is not None:
             claim = {
                 "claim_id": data["claim_id"], "claim_uri": data["claim"],
@@ -54,7 +61,7 @@ def get_group_claims(graph, topic, dialect_label):
             claims[support_key] = claim
             if data["claim_id"] not in tweets[uri]["source_claim_ids"]:
                 tweets[uri]["source_claim_ids"].append(data["claim_id"])
-    typed = set(graph.subjects(NS.aboutTopic, NS["Topic_" + topic]))
+    typed = {uri for iri in topics for uri in graph.subjects(NS.aboutTopic, iri)}
     expected = {uri for uri in typed if (uri, NS.dialectLabel, Literal(dialect_label)) in graph}
     if expected != {URIRef(uri) for uri in tweets}:
         problems.append("Some topic/group tweets have incomplete RDF fields.")
