@@ -1,0 +1,41 @@
+@prefix : <http://www.semanticweb.org/group2/ontology#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# Loaded alongside group2_Ontology.owl; the supplied export stays unchanged.
+:Tweet a owl:Class ;
+    rdfs:comment "A source tweet, retaining its dataset text and provenance." .
+:Topic a owl:Class .
+
+:aboutTopic a owl:ObjectProperty ;
+    rdfs:domain :Tweet ; rdfs:range :Topic .
+:containsClaim a owl:ObjectProperty ;
+    rdfs:domain :Tweet ; rdfs:range :Claim ;
+    rdfs:comment "The tweet expresses this extracted statement; no truth assessment is implied." .
+
+:tweetId a owl:DatatypeProperty ;
+    rdfs:domain :Tweet ; rdfs:range xsd:string .
+:tweetText a owl:DatatypeProperty ;
+    rdfs:domain :Tweet ; rdfs:range xsd:string .
+:extractionStatus a owl:DatatypeProperty ;
+    rdfs:domain :Tweet ; rdfs:range xsd:string ;
+    rdfs:comment "extracted, unclear, or no_claim. This describes extraction, not truth." .
+:sourceFile a owl:DatatypeProperty ;
+    rdfs:domain :Tweet ; rdfs:range xsd:string .
+:sourceLine a owl:DatatypeProperty ;
+    rdfs:domain :Tweet ; rdfs:range xsd:integer .
+:dialectLabel a owl:DatatypeProperty ;
+    rdfs:domain :Tweet ; rdfs:range xsd:string ;
+    rdfs:comment "The source dataset's dialect label, retained as tweet metadata, not a verified author identity." .
+:claimId a owl:DatatypeProperty ;
+    rdfs:domain :Claim ; rdfs:range xsd:string .
+:sourceQuote a owl:DatatypeProperty ;
+    rdfs:domain :Claim ; rdfs:range xsd:string .
+:targetText a owl:DatatypeProperty ;
+    rdfs:domain :Claim ; rdfs:range xsd:string .
+:stance a owl:DatatypeProperty ;
+    rdfs:domain :Claim ; rdfs:range xsd:string .
+
+# Claim and hasText are already declared in group2_Ontology.owl.
+# Claims stay separate per tweet, retaining the provenance of each quotation.
