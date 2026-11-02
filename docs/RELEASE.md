@@ -65,7 +65,7 @@ and are not the complete-run entry point.
 
 ## Release verification
 
-- The complete suite passes **198 tests** in the project virtual environment,
+- The complete suite passes **210 tests** in the project virtual environment,
   with no added source path or external dependency folder.
 - The complete fresh-input synthetic 90-tweet pipeline exercises source claims,
   RDF, initial generation, factual/representation checking, conditional routing,
@@ -79,7 +79,7 @@ and are not the complete-run entry point.
 - `run_pipeline.py --help`, existing CLI imports, syntax, dependency consistency
   and Git whitespace checks are verified before publication.
 - A clean export of the staged source files, without generated results or a
-  virtual environment, passes CLI/import checks and all 198 tests using the
+  virtual environment, passes CLI/import checks and all 210 tests using the
   declared dependencies. `PYTHONPATH` is removed for that verification.
 - RDFLib/pyparsing emit existing deprecation warnings; tests still pass.
 
@@ -142,7 +142,7 @@ model without mocked responses. Results are saved locally and gitignored at
   This small probe is not a full-topic fairness measurement.
 - A fresh temporary virtual environment installed only `requirements.txt`. An
   export of the staged source, excluding generated results, passed imports,
-  CLI help, dependency checks and all 198 tests with `PYTHONPATH` removed.
+  CLI help, dependency checks and all 210 tests with `PYTHONPATH` removed.
 
 ## Scientific limitations
 
@@ -152,3 +152,16 @@ Source-claim errors can propagate into later checks. Matching/partition choices
 remain unreviewed model judgments. Local runtimes may be slow or time out.
 UNKNOWN cannot be reported as verified support, omission, fairness or improvement.
 Only reviewed/evaluated results should be used as research findings.
+
+## Live handoff monitoring
+
+The complete CLI now records and prints a live observation feed. It includes
+actual LangGraph stage handoffs, bounded model request/reply previews, validated
+factual decisions, tool guard blocks, returned evidence, representation
+validation/repairs, routing, candidate revisions and later acceptance/rollback.
+Model replies remain explicitly pending until checked. A 30-second heartbeat
+shows a call is still active. JSONL is flushed immediately and its path is saved
+in the result manifest. Full evidence remains in the ordinary final result.
+Twelve tests cover streaming, ordered concurrent events, heartbeats, observer
+failures, unmodified transport, real graph handoffs, revision outcomes and
+identical final state/model-call counts with observation enabled.

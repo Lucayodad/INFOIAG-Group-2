@@ -18,6 +18,7 @@ from representation_tools import get_group_claims
 from summary_claims import flatten_summary_claims
 from summarizer import GenerationError
 from semantic_retrieval import shortlist_equivalence
+from live_feed import emit_event
 
 
 MATCH_STATUSES = ("MATCHED", "NOT_MATCHED", "UNKNOWN")
@@ -342,11 +343,15 @@ def _validated_request(client, result, instructions, body, schema, step, budget,
                 return None
             value = validate(data)
             result["execution_trace"][-1].update(status="completed", attempt=attempt + 1)
+            emit_event(client, "assessment_validated", "representation_checker", "shared_state",
+                f"{step}: validated attempt {attempt + 1}", step=step, attempt=attempt + 1, assessment=data)
             return value
         except RepresentationError as exc:
             event = result["execution_trace"][-1]
             event.update(status="rejected", error=event.get("error", str(exc)),
                          failure_kind=event.get("failure_kind", "validation"), attempt=attempt + 1)
+            emit_event(client, "validation_rejected", "representation_checker", "Qwen",
+                f"{step}: {event['error']}", attempt=attempt + 1, repair_remaining=attempt == 0, step=step)
             repair = event["error"][:240]
             # Reserve repair space when batching; no fabricated replacements.
             instructions = instructions.split("\nFORMAT REPAIR:")[0] + "\nFORMAT REPAIR: " + repair + ". Include every supplied ID exactly once; use only supplied quotes."

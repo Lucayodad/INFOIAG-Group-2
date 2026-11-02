@@ -74,6 +74,26 @@ Options (`python run_pipeline.py --help` lists all arguments):
 - `--max-model-calls 64`: representation chat budget per pass; half is reserved
   for coverage. `--max-tool-calls 3`: factual retrieval budget per summary claim.
 
+## Live agent feed
+
+Every complete run prints timestamped `actor -> recipient` events and writes a
+flushed `live_feed.jsonl` inside its artifacts directory. The result manifest
+records that path. It shows actual stage handoffs, model requests and replies,
+validated tool choices, returned evidence, equivalence/coverage validation,
+routing, revision acceptance/rejection/rollback, errors and saved results.
+Model replies are labelled **validation pending** until a checker accepts them.
+Long model calls emit a waiting heartbeat every 30 seconds. These are observable
+structured actions and shared-state transitions; previews are bounded and full
+evidence remains in the normal result. Monitoring does not make additional model
+calls or change judgments.
+
+The feed can be read while the run is active, including by an assistant monitoring
+and relaying entries in chat. To follow the printed feed path in PowerShell:
+
+```powershell
+Get-Content -LiteralPath "path/to/run_artifacts/live_feed.jsonl" -Tail 10 -Wait
+```
+
 ## Outputs and resuming
 
 The runner creates all directories automatically. Generated artifacts are

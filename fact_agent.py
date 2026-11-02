@@ -15,6 +15,7 @@ from fact_check import VERDICT_SCHEMA, apply_verdict, prepare_assessment
 from fact_check import compact_evidence, expand_verdict
 from ontology_tools import OntologyTools
 from summarizer import GenerationError
+from live_feed import emit_event
 
 
 ACTIONS = ("lookup_fact", "lookup_entity_facts", "no_tool")
@@ -259,6 +260,8 @@ def run_fact_agent(graph, summary_claim, client, allowed_entity_ids=None, max_to
     trace.append({"step": "initialization", "claim_id": summary_claim["claim_id"],
                   "allowed_entity_ids": allowed_ids, "max_tool_calls": max_tool_calls,
                   "model": "qwen3.5:4b", "protocol": "structured_json_action"})
+    emit_event(client, "claim_opened", "summary_claim_extractor", "factual_checker",
+               summary_claim["claim"], claim_id=summary_claim["claim_id"], source_ids=summary_claim["cited_source_ids"], max_tool_calls=max_tool_calls)
     assessment = prepare_assessment(summary_claim)
     view = compact_evidence(assessment)
     if max_tool_calls == 0:
@@ -314,6 +317,8 @@ def run_fact_agent(graph, summary_claim, client, allowed_entity_ids=None, max_to
                 final = apply_verdict(assessment, verdict)
         except (KeyError, IndexError, TypeError, ValueError) as exc:
             event.update(status="rejected", error=str(exc))
+            emit_event(client, "validation_rejected", "factual_checker", "Qwen", str(exc),
+                       claim_id=summary_claim["claim_id"], repair_remaining=not repair_used)
             failure = "invalid_verdict" if isinstance(exc, FactCheckError) else "invalid_tool_request"
             if repair_used:
                 return _finish_agent(assessment, trace, failure, str(exc))
@@ -322,6 +327,10 @@ def run_fact_agent(graph, summary_claim, client, allowed_entity_ids=None, max_to
         repair_error = None
         event["status"] = "accepted"
         action = decision["action"]
+        emit_event(client, "decision_validated", "factual_checker", "orchestrator" if action in ("finalize", "no_tool") else "tool_guard",
+                   f"{summary_claim['claim_id']}: {action}; {decision['reason']}",
+                   claim_id=summary_claim["claim_id"], action=action, reason=decision["reason"],
+                   verdict=final["verdict"] if action == "finalize" else None)
         if action == "finalize":
             stop = ("explicit_unknown" if decision["verdict"] == "UNKNOWN" else
                     "verdict" if final["evidence_complete"] else "incomplete_evidence")
@@ -330,13 +339,17 @@ def run_fact_agent(graph, summary_claim, client, allowed_entity_ids=None, max_to
             return _finish_agent(assessment, trace, "no_tool", decision["reason"])
         if len(seen_calls) >= max_tool_calls:
             event.update(status="rejected", error="Tool-call budget exhausted.")
+            emit_event(client, "tool_blocked", "tool_guard", "factual_checker", event["error"], claim_id=summary_claim["claim_id"], tool=action)
             return _finish_agent(assessment, trace, "tool_call_limit", "Tool-call budget exhausted; no further retrieval is permitted.")
         identity = (action, str(OntologyTools.entity_iri(decision["entity_id"]))
                     if action == "lookup_entity_facts" else None)
         if identity in seen_calls:
             event.update(status="rejected", error="Identical call cannot add evidence to an unchanged graph.")
+            emit_event(client, "tool_blocked", "tool_guard", "factual_checker", event["error"], claim_id=summary_claim["claim_id"], tool=action)
             return _finish_agent(assessment, trace, "repeated_tool_call", event["error"])
         seen_calls.add(identity)
+        emit_event(client, "tool_started", "factual_checker", "ontology_tools",
+                   f"{action} for {summary_claim['claim_id']}", tool=action, arguments=arguments)
         if action == "lookup_fact":
             evidence = lookup_fact(graph, summary_claim)
             retrieval = evidence
@@ -359,6 +372,10 @@ def run_fact_agent(graph, summary_claim, client, allowed_entity_ids=None, max_to
         trace.append({"step": "observation", "turn": turn,
                       "evidence_complete": assessment["evidence_complete"],
                       "remaining_tool_calls": observation["remaining_tool_calls"]})
+        emit_event(client, "tool_result", "ontology_tools", "factual_checker",
+                   f"{action}: {len(view['evidence_catalogue'])} selected evidence items; complete={assessment['evidence_complete']}",
+                   claim_id=summary_claim["claim_id"], evidence_complete=assessment["evidence_complete"],
+                   evidence_catalogue=view["evidence_catalogue"], remaining_tool_calls=observation["remaining_tool_calls"])
         # Replace previous tool payloads instead of duplicating catalogues/history.
         messages = [messages[0], initial, {"role": "assistant", "content": raw},
                     {"role": "user", "content": json.dumps({"observation": observation}, ensure_ascii=False)}]

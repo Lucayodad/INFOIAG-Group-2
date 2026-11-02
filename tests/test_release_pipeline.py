@@ -71,6 +71,11 @@ class ReleasePipelineTests(unittest.TestCase):
             self.assertTrue((root / "result_artifacts/Obama_prompt1.json").exists())
             saved = json.loads((root / "result.json").read_text(encoding="utf-8"))
             self.assertEqual(saved["stop_reason"], result["stop_reason"])
+            feed_path = Path(saved["pipeline"]["live_feed"])
+            events = [json.loads(line) for line in feed_path.read_text(encoding="utf-8").splitlines()]
+            self.assertEqual(events[0]["kind"], "run_started")
+            self.assertEqual(events[-1]["kind"], "run_completed")
+            self.assertTrue(any(e["kind"] == "tool_result" for e in events))
             checkpoint = root / "checkpoints/Obama.json"
             before = checkpoint.read_bytes()
             sources.clear()

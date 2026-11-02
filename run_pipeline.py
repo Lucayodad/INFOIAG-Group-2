@@ -7,29 +7,60 @@ from pathlib import Path
 from time import perf_counter
 from uuid import uuid4
 
+from live_feed import LiveFeed, emit_event, request_context
+
 ROOT = Path(__file__).resolve().parent
 
 
 class ProgressClient:
     """Log bounded call progress while preserving the existing client interface."""
-    def __init__(self, client):
-        self.client, self.calls = client, 0
+    def __init__(self, client, live_feed=None):
+        self.client, self.calls, self.live_feed = client, 0, live_feed
 
     def chat(self, payload):
         self.calls += 1
-        fields = set(payload.get("format", {}).get("properties", {}))
-        phase = ("initial summary" if "sentences" in fields else "factual check" if "action" in fields else
-                 "revision" if "replacements" in fields else "equivalence" if "decisions" in fields else
-                 "representation" if "clusters" in fields else "claim extraction")
-        print(f"  Qwen {self.calls}: {phase} ...", flush=True)
-        start = perf_counter()
-        result = self.client.chat(payload)
-        print(f"  Qwen {self.calls}: finished in {perf_counter() - start:.1f}s", flush=True)
-        return result
+        number, start = self.calls, perf_counter()
+        actor, context = request_context(payload)
+        if self.live_feed:
+            self.live_feed.begin_call(actor, "Qwen", f"Qwen #{number}: {actor}", call_id=number, **context)
+        else:
+            print(f"  Qwen {number}: {actor} ...", flush=True)
+        try:
+            result = self.client.chat(payload)
+            if self.live_feed:
+                try:
+                    response = json.loads(result["output"][0]["content"][0]["text"])
+                except (KeyError, IndexError, TypeError, ValueError):
+                    response = {"preview_status": "unparseable"}
+                emit_event(self, "model_returned", "Qwen", actor,
+                    f"Qwen #{number} returned after {perf_counter() - start:.1f}s; validation pending",
+                    call_id=number, validation_status="pending", response=response,
+                    elapsed_seconds=round(perf_counter() - start, 3))
+            else:
+                print(f"  Qwen {number}: finished in {perf_counter() - start:.1f}s", flush=True)
+            return result
+        except Exception as exc:
+            emit_event(self, "call_failed", "Qwen", actor, str(exc), call_id=number, error_type=type(exc).__name__)
+            raise
+        finally:
+            if self.live_feed:
+                self.live_feed.end_call()
 
     def embed(self, texts, model="all-minilm"):
-        print(f"  Embedding {len(texts)} texts with {model} ...", flush=True)
-        return self.client.embed(texts, model=model)
+        if self.live_feed:
+            self.live_feed.begin_call("retrieval", model, f"Embedding {len(texts)} texts", text_count=len(texts))
+        else:
+            print(f"  Embedding {len(texts)} texts with {model} ...", flush=True)
+        try:
+            result = self.client.embed(texts, model=model)
+            emit_event(self, "embeddings_returned", model, "retrieval", f"Received {len(result)} vectors", vector_count=len(result))
+            return result
+        except Exception as exc:
+            emit_event(self, "call_failed", model, "retrieval", str(exc), error_type=type(exc).__name__)
+            raise
+        finally:
+            if self.live_feed:
+                self.live_feed.end_call()
 
 
 def validate_reused_draft(draft, topic, prompt_id, tweets):
@@ -71,9 +102,13 @@ def run_pipeline(args, client=None):
     checkpoint = args.source_claims or ROOT / "results" / "source_claims" / f"{args.topic}.json"
     owns_client = client is None
     backend = OllamaClient() if owns_client else client
-    progress = ProgressClient(backend)
+    feed = LiveFeed(artifacts / "live_feed.jsonl", run_id)
+    progress = ProgressClient(backend, feed)
     stage = "preflight"
     try:
+        feed.emit("run_started", "user", "orchestrator", f"{args.topic}, prompt {args.prompt_id}; up to {args.max_revisions} revisions",
+                  topic=args.topic, prompt_id=args.prompt_id, max_revisions=args.max_revisions, output=str(output))
+        print(f"Live feed: {feed.path}", flush=True)
         print("[1/6] Checking local dependencies, models and tweet data", flush=True)
         models = backend.check_models()
         tweets = load_tweets(args.topic)
@@ -83,11 +118,15 @@ def run_pipeline(args, client=None):
         records, unresolved = resume_source_extraction(tweets, checkpoint, client=progress)
         if unresolved:
             raise ValueError("Unresolved source extractions: " + ", ".join(unresolved) + ". Rerun the same command to resume.")
+        feed.emit("handoff", "source_extractor", "ontology_builder",
+                  f"{len(records)} source checkpoint records ready; RDF validation next",
+                  validation_status="pending", tweet_count=len(tweets), claim_count=sum(len(r["claims"]) for r in records))
         stage = "ontology"
         print("[3/6] Populating isolated read-only checking evidence", flush=True)
         graph = populate_ontology(tweets, records, run_id=run_id)
         graph_file = artifacts / f"{args.topic}.ttl"
         graph.serialize(destination=graph_file, format="turtle")
+        feed.emit("handoff", "ontology_builder", "summary_generator", f"RDF evidence ready: {len(graph)} triples", graph=str(graph_file))
         stage = "draft"
         print("[4/6] Preparing five-sentence initial summary", flush=True)
         if args.reuse_draft:
@@ -99,10 +138,11 @@ def run_pipeline(args, client=None):
             draft["prompt_id"] = args.prompt_id
         draft_file = artifacts / f"{args.topic}_prompt{args.prompt_id}.json"
         save_result(draft, draft_file)
+        feed.emit("handoff", "summary_generator", "summary_claim_extractor", "Five-sentence draft ready for checking", sentences=draft["sentences"])
         manifest = {"topic": args.topic, "prompt_id": args.prompt_id, "run_id": run_id,
                     "source_claims": str(checkpoint.resolve()), "graph": str(graph_file),
                     "draft": str(draft_file), "output": str(output), "models": models,
-                    "draft_reused": args.reuse_draft is not None, "group_counts": counts}
+                    "draft_reused": args.reuse_draft is not None, "group_counts": counts, "live_feed": str(feed.path)}
         save_json(artifacts / "manifest.json", manifest)
         stage = "agent"
         print("[5/6] LangGraph: extract -> facts -> representation -> route -> revision/recheck when justified", flush=True)
@@ -111,13 +151,17 @@ def run_pipeline(args, client=None):
             max_model_calls=args.max_model_calls, max_tool_calls=args.max_tool_calls)
         result["pipeline"] = manifest
         save_json(output, result)
+        feed.emit("run_completed", "result_writer", "user", f"{result['status']}: {result['stop_reason']}",
+                  output=str(output), revision_count=result["revision_count"])
         print("[6/6] Complete result saved", flush=True)
         print_run_summary(result, output)
         return result
     except Exception as exc:
+        feed.emit("run_failed", stage, "user", str(exc), error_type=type(exc).__name__)
         save_json(artifacts / "error.json", {"stage": stage, "error_type": type(exc).__name__, "error": str(exc)})
         raise
     finally:
+        feed.close()
         if owns_client:
             backend.close()
 

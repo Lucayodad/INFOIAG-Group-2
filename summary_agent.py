@@ -9,6 +9,7 @@ from pathlib import Path
 from uuid import uuid4
 
 from langgraph.graph import END, START, StateGraph
+from live_feed import observe_node
 from rdflib import Graph
 from rdflib.graph import ReadOnlyGraphAggregate
 from typing_extensions import TypedDict
@@ -299,7 +300,7 @@ def build_summary_agent(graph, client, *, disparity_threshold=None,
                            ("representation_check", check_representation), ("route_checks", route_checks),
                            ("retrieve_revision_evidence", retrieve_evidence),
                            ("revise_summary", revise), ("finalize", finalize)):
-        builder.add_node(name, function)
+        builder.add_node(name, observe_node(name, function, client))
     builder.add_edge(START, "extract_summary_claims")
     builder.add_edge("extract_summary_claims", "factual_check")
     builder.add_edge("factual_check", "representation_check")
