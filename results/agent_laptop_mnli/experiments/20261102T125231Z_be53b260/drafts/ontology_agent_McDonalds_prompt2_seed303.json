@@ -1,0 +1,98 @@
+{
+  "status": "draft_unchecked",
+  "provider": "ollama",
+  "topic": "McDonalds",
+  "seed": 303,
+  "temperature": 0.7,
+  "summary": "The collected tweets reveal a wide spectrum of reactions to McDonald's, ranging from enthusiastic cravings for items like nuggets and ice cream to complaints about the quality of food such as stale fish or insufficient sauce packets. Several users expressed dissatisfaction with specific operational issues, including long wait times at drive-thrus, limited hours for breakfast service, and the scarcity of popular menu items like chicken selects. While some individuals reported feeling sick after eating at the chain, others shared anecdotes about positive interactions with employees and found the brand convenient for their daily routines. A recurring theme in the social media posts involves personal struggles related to diet and weight, with many admitting a strong craving for McDonald's food despite concerns about health. The sentiment also shifted towards logistical complaints regarding location and payment difficulties, with some users wishing for home delivery services or expressing frustration over not having access to the restaurant.",
+  "sentences": [
+    {
+      "text": "The collected tweets reveal a wide spectrum of reactions to McDonald's, ranging from enthusiastic cravings for items like nuggets and ice cream to complaints about the quality of food such as stale fish or insufficient sauce packets.",
+      "source_ids": [
+        "McDonalds_001",
+        "McDonalds_003",
+        "McDonalds_004",
+        "McDonalds_006",
+        "McDonalds_007",
+        "McDonalds_009",
+        "McDonalds_020",
+        "McDonalds_046",
+        "McDonalds_056",
+        "McDonalds_071"
+      ]
+    },
+    {
+      "text": "Several users expressed dissatisfaction with specific operational issues, including long wait times at drive-thrus, limited hours for breakfast service, and the scarcity of popular menu items like chicken selects.",
+      "source_ids": [
+        "McDonalds_008",
+        "McDonalds_013",
+        "McDonalds_022",
+        "McDonalds_024",
+        "McDonalds_058",
+        "McDonalds_065",
+        "McDonalds_076"
+      ]
+    },
+    {
+      "text": "While some individuals reported feeling sick after eating at the chain, others shared anecdotes about positive interactions with employees and found the brand convenient for their daily routines.",
+      "source_ids": [
+        "McDonalds_018",
+        "McDonalds_025",
+        "McDonalds_034",
+        "McDonalds_063",
+        "McDonalds_066",
+        "McDonalds_079"
+      ]
+    },
+    {
+      "text": "A recurring theme in the social media posts involves personal struggles related to diet and weight, with many admitting a strong craving for McDonald's food despite concerns about health.",
+      "source_ids": [
+        "McDonalds_015",
+        "McDonalds_021",
+        "McDonalds_040",
+        "McDonalds_048",
+        "McDonalds_051",
+        "McDonalds_054"
+      ]
+    },
+    {
+      "text": "The sentiment also shifted towards logistical complaints regarding location and payment difficulties, with some users wishing for home delivery services or expressing frustration over not having access to the restaurant.",
+      "source_ids": [
+        "McDonalds_033",
+        "McDonalds_042",
+        "McDonalds_049",
+        "McDonalds_075",
+        "McDonalds_081",
+        "McDonalds_086"
+      ]
+    }
+  ],
+  "summary_prompt": "I work in communications and need to decide how to respond to public reaction. Summarize the tweets about McDonald's in 5 sentences, highlighting the main sentiment and the most important complaints or praise.",
+  "requested_model": "qwen3.5:4b",
+  "returned_model": "qwen3.5:4b",
+  "generation_settings": {
+    "temperature": 0.7,
+    "seed": 303,
+    "num_ctx": 16384,
+    "num_predict": 2000
+  },
+  "backend_metadata": {
+    "created_at": "2026-11-02T13:13:16.4641012Z",
+    "total_duration": 9687516400,
+    "load_duration": 11883200,
+    "prompt_eval_duration": 1870617000,
+    "eval_duration": 7574661000,
+    "done_reason": "stop"
+  },
+  "usage": {
+    "input_tokens": 4678,
+    "output_tokens": 535,
+    "total_tokens": 5213
+  },
+  "execution_seconds": 9.682471,
+  "created_at_utc": "2026-11-02T13:13:16.464626+00:00",
+  "input_sha256": "d4e38c6fce50e32132233c825dbbc6e77cf79a9ba8308184e5da3c7d436e20e2",
+  "request_sha256": "cd4bab58a857029a7d37afe360f4bee9b16ed04b7d3ad5c2697cdf503e956484",
+  "ontology_used": false,
+  "reference_summaries_used": false
+}
