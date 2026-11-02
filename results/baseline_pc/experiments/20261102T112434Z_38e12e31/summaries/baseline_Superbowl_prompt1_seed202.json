@@ -1,0 +1,104 @@
+{
+  "status": "draft_unchecked",
+  "provider": "ollama",
+  "topic": "Superbowl",
+  "seed": 202,
+  "temperature": 0.7,
+  "summary": "Public discussion of the Super Bowl frequently centers on the potential matchup between rival teams like the Baltimore Ravens and San Francisco 49ers. While many users express excitement for specific games and performances, a significant portion of the conversation indicates indifference or lack of interest in the event. The halftime show features a recurring topic of debate, with some users praising the performers while others express frustration or criticism. A variety of unrelated subjects, including sports rules, historical references, and food, are also integrated into the broader conversation. Many participants speculate on team outcomes and player performances, though they do not always agree on the likely results or key factors.",
+  "sentences": [
+    {
+      "text": "Public discussion of the Super Bowl frequently centers on the potential matchup between rival teams like the Baltimore Ravens and San Francisco 49ers.",
+      "source_ids": [
+        "Superbowl_003",
+        "Superbowl_004",
+        "Superbowl_006",
+        "Superbowl_008",
+        "Superbowl_016",
+        "Superbowl_020",
+        "Superbowl_022",
+        "Superbowl_026",
+        "Superbowl_038",
+        "Superbowl_057"
+      ]
+    },
+    {
+      "text": "While many users express excitement for specific games and performances, a significant portion of the conversation indicates indifference or lack of interest in the event.",
+      "source_ids": [
+        "Superbowl_002",
+        "Superbowl_010",
+        "Superbowl_034",
+        "Superbowl_042",
+        "Superbowl_051",
+        "Superbowl_054",
+        "Superbowl_062",
+        "Superbowl_084"
+      ]
+    },
+    {
+      "text": "The halftime show features a recurring topic of debate, with some users praising the performers while others express frustration or criticism.",
+      "source_ids": [
+        "Superbowl_015",
+        "Superbowl_018",
+        "Superbowl_027",
+        "Superbowl_030",
+        "Superbowl_053",
+        "Superbowl_056",
+        "Superbowl_071"
+      ]
+    },
+    {
+      "text": "A variety of unrelated subjects, including sports rules, historical references, and food, are also integrated into the broader conversation.",
+      "source_ids": [
+        "Superbowl_001",
+        "Superbowl_003",
+        "Superbowl_028",
+        "Superbowl_045",
+        "Superbowl_072",
+        "Superbowl_080"
+      ]
+    },
+    {
+      "text": "Many participants speculate on team outcomes and player performances, though they do not always agree on the likely results or key factors.",
+      "source_ids": [
+        "Superbowl_009",
+        "Superbowl_011",
+        "Superbowl_017",
+        "Superbowl_032",
+        "Superbowl_041",
+        "Superbowl_052",
+        "Superbowl_065",
+        "Superbowl_078"
+      ]
+    }
+  ],
+  "summary_prompt": "Below are 90 tweets about the Super Bowl. Write a 5-sentence summary for someone who has not followed this topic, so they get a quick picture of what people are saying.",
+  "requested_model": "qwen3.5:4b",
+  "returned_model": "qwen3.5:4b",
+  "generation_settings": {
+    "temperature": 0.7,
+    "seed": 202,
+    "num_ctx": 16384,
+    "num_predict": 2000
+  },
+  "backend_metadata": {
+    "created_at": "2026-11-02T11:27:26.1327026Z",
+    "total_duration": 13656493800,
+    "load_duration": 4636800,
+    "prompt_eval_duration": 65143000,
+    "eval_duration": 13567568000,
+    "done_reason": "stop"
+  },
+  "usage": {
+    "input_tokens": 4734,
+    "output_tokens": 527,
+    "total_tokens": 5261
+  },
+  "execution_seconds": 13.657598,
+  "created_at_utc": "2026-11-02T11:27:26.133218+00:00",
+  "input_sha256": "6941abca46e7cf65f39af66f706138e6e0a1b4d13e836920ce2532ecbd1a64b4",
+  "request_sha256": "6b52d843d6e30fd307c9749272d45fb86d398c5b3b87dc22c74ccc134fef9c11",
+  "ontology_used": false,
+  "reference_summaries_used": false,
+  "system": "baseline",
+  "prompt_id": "1"
+}

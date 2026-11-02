@@ -1,0 +1,88 @@
+{
+  "status": "draft_unchecked",
+  "provider": "ollama",
+  "topic": "Superbowl",
+  "seed": 202,
+  "temperature": 0.7,
+  "summary": "The tweets collectively indicate a highly polarized and often dismissive reaction from users who feel uninterested in the Super Bowl. A significant portion of the discussion focuses on the Ravens and their matchup against either the 49ers or the Patriots. Several users expressed strong negative sentiment regarding the commercials, citing them as a major disappointment. There was considerable debate about the halftime show performers, with some users praising Beyonce while others criticized her or suggested alternative acts. Overall, the user base displayed a lack of genuine excitement for the game, with many preferring to watch other content or avoid the event entirely.",
+  "sentences": [
+    {
+      "text": "The tweets collectively indicate a highly polarized and often dismissive reaction from users who feel uninterested in the Super Bowl.",
+      "source_ids": [
+        "Superbowl_002",
+        "Superbowl_010",
+        "Superbowl_034",
+        "Superbowl_051",
+        "Superbowl_062",
+        "Superbowl_084"
+      ]
+    },
+    {
+      "text": "A significant portion of the discussion focuses on the Ravens and their matchup against either the 49ers or the Patriots.",
+      "source_ids": [
+        "Superbowl_004",
+        "Superbowl_006",
+        "Superbowl_008",
+        "Superbowl_013",
+        "Superbowl_020",
+        "Superbowl_057"
+      ]
+    },
+    {
+      "text": "Several users expressed strong negative sentiment regarding the commercials, citing them as a major disappointment.",
+      "source_ids": [
+        "Superbowl_018",
+        "Superbowl_060"
+      ]
+    },
+    {
+      "text": "There was considerable debate about the halftime show performers, with some users praising Beyonce while others criticized her or suggested alternative acts.",
+      "source_ids": [
+        "Superbowl_027",
+        "Superbowl_030",
+        "Superbowl_053",
+        "Superbowl_056",
+        "Superbowl_071"
+      ]
+    },
+    {
+      "text": "Overall, the user base displayed a lack of genuine excitement for the game, with many preferring to watch other content or avoid the event entirely.",
+      "source_ids": [
+        "Superbowl_042",
+        "Superbowl_044",
+        "Superbowl_045",
+        "Superbowl_073"
+      ]
+    }
+  ],
+  "summary_prompt": "I work in communications and need to decide how to respond to public reaction. Summarize the tweets about the Super Bowl in 5 sentences, highlighting the main sentiment and the most important complaints or praise.",
+  "requested_model": "qwen3.5:4b",
+  "returned_model": "qwen3.5:4b",
+  "generation_settings": {
+    "temperature": 0.7,
+    "seed": 202,
+    "num_ctx": 16384,
+    "num_predict": 2000
+  },
+  "backend_metadata": {
+    "created_at": "2026-11-02T11:28:35.1009315Z",
+    "total_duration": 9805086500,
+    "load_duration": 5665200,
+    "prompt_eval_duration": 66932000,
+    "eval_duration": 9713274000,
+    "done_reason": "stop"
+  },
+  "usage": {
+    "input_tokens": 4736,
+    "output_tokens": 375,
+    "total_tokens": 5111
+  },
+  "execution_seconds": 9.805944,
+  "created_at_utc": "2026-11-02T11:28:35.101444+00:00",
+  "input_sha256": "6941abca46e7cf65f39af66f706138e6e0a1b4d13e836920ce2532ecbd1a64b4",
+  "request_sha256": "e90080db411501f54efd90a722627fd499e49f7d33dee5e7dfc1f5e186bea49c",
+  "ontology_used": false,
+  "reference_summaries_used": false,
+  "system": "baseline",
+  "prompt_id": "2"
+}

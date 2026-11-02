@@ -1,0 +1,115 @@
+{
+  "status": "draft_unchecked",
+  "provider": "ollama",
+  "topic": "McDonalds",
+  "seed": 303,
+  "temperature": 0.7,
+  "summary": "The collected tweets reveal a wide spectrum of public sentiment toward McDonald's, ranging from enthusiastic enjoyment and craving to strong disgust and criticism. While many users express a deep love for the brand and its specific menu items like nuggets, fries, and shakes, others explicitly state they find the food disgusting or taste terrible. Complaints frequently focus on operational details, such as the shortage of sauce packets for large orders and early breakfast closing times. Some tweets highlight dissatisfaction with specific locations or staff interactions, while others make broader observations about the chain's presence in their daily lives. Despite the mix of positive and negative experiences, a significant number of users continue to order from McDonald's regardless of their reservations about the food or service.",
+  "sentences": [
+    {
+      "text": "The collected tweets reveal a wide spectrum of public sentiment toward McDonald's, ranging from enthusiastic enjoyment and craving to strong disgust and criticism.",
+      "source_ids": [
+        "McDonalds_001",
+        "McDonalds_002",
+        "McDonalds_003",
+        "McDonalds_004",
+        "McDonalds_005",
+        "McDonalds_006",
+        "McDonalds_007",
+        "McDonalds_008",
+        "McDonalds_009",
+        "McDonalds_010"
+      ]
+    },
+    {
+      "text": "While many users express a deep love for the brand and its specific menu items like nuggets, fries, and shakes, others explicitly state they find the food disgusting or taste terrible.",
+      "source_ids": [
+        "McDonalds_011",
+        "McDonalds_012",
+        "McDonalds_013",
+        "McDonalds_014",
+        "McDonalds_015",
+        "McDonalds_016",
+        "McDonalds_017",
+        "McDonalds_018",
+        "McDonalds_019",
+        "McDonalds_020"
+      ]
+    },
+    {
+      "text": "Complaints frequently focus on operational details, such as the shortage of sauce packets for large orders and early breakfast closing times.",
+      "source_ids": [
+        "McDonalds_021",
+        "McDonalds_022",
+        "McDonalds_023",
+        "McDonalds_024",
+        "McDonalds_025",
+        "McDonalds_026",
+        "McDonalds_027",
+        "McDonalds_028",
+        "McDonalds_029",
+        "McDonalds_030"
+      ]
+    },
+    {
+      "text": "Some tweets highlight dissatisfaction with specific locations or staff interactions, while others make broader observations about the chain's presence in their daily lives.",
+      "source_ids": [
+        "McDonalds_031",
+        "McDonalds_032",
+        "McDonalds_033",
+        "McDonalds_034",
+        "McDonalds_035",
+        "McDonalds_036",
+        "McDonalds_037",
+        "McDonalds_038",
+        "McDonalds_039",
+        "McDonalds_040"
+      ]
+    },
+    {
+      "text": "Despite the mix of positive and negative experiences, a significant number of users continue to order from McDonald's regardless of their reservations about the food or service.",
+      "source_ids": [
+        "McDonalds_041",
+        "McDonalds_042",
+        "McDonalds_043",
+        "McDonalds_044",
+        "McDonalds_045",
+        "McDonalds_046",
+        "McDonalds_047",
+        "McDonalds_048",
+        "McDonalds_049",
+        "McDonalds_050"
+      ]
+    }
+  ],
+  "summary_prompt": "I work in communications and need to decide how to respond to public reaction. Summarize the tweets about McDonald's in 5 sentences, highlighting the main sentiment and the most important complaints or praise.",
+  "requested_model": "qwen3.5:4b",
+  "returned_model": "qwen3.5:4b",
+  "generation_settings": {
+    "temperature": 0.7,
+    "seed": 303,
+    "num_ctx": 16384,
+    "num_predict": 2000
+  },
+  "backend_metadata": {
+    "created_at": "2026-11-02T11:30:39.3271529Z",
+    "total_duration": 17084012100,
+    "load_duration": 5669300,
+    "prompt_eval_duration": 75186000,
+    "eval_duration": 16982514000,
+    "done_reason": "stop"
+  },
+  "usage": {
+    "input_tokens": 4678,
+    "output_tokens": 645,
+    "total_tokens": 5323
+  },
+  "execution_seconds": 17.085754,
+  "created_at_utc": "2026-11-02T11:30:39.328167+00:00",
+  "input_sha256": "d4e38c6fce50e32132233c825dbbc6e77cf79a9ba8308184e5da3c7d436e20e2",
+  "request_sha256": "cd4bab58a857029a7d37afe360f4bee9b16ed04b7d3ad5c2697cdf503e956484",
+  "ontology_used": false,
+  "reference_summaries_used": false,
+  "system": "baseline",
+  "prompt_id": "2"
+}

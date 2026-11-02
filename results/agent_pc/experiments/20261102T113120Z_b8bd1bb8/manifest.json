@@ -1,0 +1,48 @@
+{
+  "status": "started",
+  "run_id": "20261102T113120Z_b8bd1bb8",
+  "created_at_utc": "2026-11-02T11:31:20.643735+00:00",
+  "model": "qwen3.5:4b",
+  "provider": "ollama",
+  "temperature": 0.7,
+  "seeds": [
+    101,
+    202,
+    303
+  ],
+  "systems": [
+    "ontology_agent"
+  ],
+  "topics": [
+    "Obama",
+    "Superbowl",
+    "McDonalds"
+  ],
+  "prompt_ids": [
+    "1",
+    "2"
+  ],
+  "expected_final_summaries": 18,
+  "graph_paths": {
+    "Obama": "C:\\Users\\Casper\\Documents\\GitHub\\INFOIAG-Group-2\\results\\ontology\\20261102T112015Z_7af61a9ca97748a2a20db13d971eb356\\Obama.ttl",
+    "Superbowl": "C:\\Users\\Casper\\Documents\\GitHub\\INFOIAG-Group-2\\results\\ontology\\20261102T111717Z_8abdc515085043afab9f93212b3e38e3\\Superbowl.ttl",
+    "McDonalds": "C:\\Users\\Casper\\Documents\\GitHub\\INFOIAG-Group-2\\results\\ontology\\20261102T105713Z_c65e3f504bba465f8f1b22d3a1a72c47\\McDonalds.ttl"
+  },
+  "agent_options": {
+    "disparity_threshold": 0.25,
+    "max_revisions": 3,
+    "embedding_model": "all-minilm"
+  },
+  "runs": [],
+  "evaluation": {
+    "status": "not_implemented",
+    "pending": [
+      "EC",
+      "group coverage values",
+      "group similarity gap",
+      "DeepEval alignment and coverage",
+      "ROUGE",
+      "aggregation"
+    ]
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "status": "draft_unchecked",
+  "provider": "ollama",
+  "topic": "Obama",
+  "seed": 101,
+  "temperature": 0.7,
+  "summary": "The tweets express a wide spectrum of reactions to Barack Obama, ranging from strong praise for his personal appearance and leadership style to intense criticism regarding his policies and character. A significant portion of the commentary focuses on specific policy decisions, particularly regarding gun control and healthcare, with some users claiming his regulations are necessary while others argue they are excessive or misdirected. Many tweets mock the perceived repetitiveness of Obama's speeches and question his effectiveness as a leader, suggesting he lacks depth or strategic vision. Opposition is frequently personal and derogatory, with some users comparing him to negative figures like the Devil or Satan, while others use racial slurs to describe their disdain. Despite the harsh rhetoric, several users express genuine admiration for Michelle Obama and find humor in the inauguration events or political banter involving him.",
+  "sentences": [
+    {
+      "text": "The tweets express a wide spectrum of reactions to Barack Obama, ranging from strong praise for his personal appearance and leadership style to intense criticism regarding his policies and character.",
+      "source_ids": [
+        "Obama_001",
+        "Obama_005",
+        "Obama_021",
+        "Obama_047",
+        "Obama_080"
+      ]
+    },
+    {
+      "text": "A significant portion of the commentary focuses on specific policy decisions, particularly regarding gun control and healthcare, with some users claiming his regulations are necessary while others argue they are excessive or misdirected.",
+      "source_ids": [
+        "Obama_003",
+        "Obama_020",
+        "Obama_058",
+        "Obama_067",
+        "Obama_074"
+      ]
+    },
+    {
+      "text": "Many tweets mock the perceived repetitiveness of Obama's speeches and question his effectiveness as a leader, suggesting he lacks depth or strategic vision.",
+      "source_ids": [
+        "Obama_012",
+        "Obama_054",
+        "Obama_076",
+        "Obama_083"
+      ]
+    },
+    {
+      "text": "Opposition is frequently personal and derogatory, with some users comparing him to negative figures like the Devil or Satan, while others use racial slurs to describe their disdain.",
+      "source_ids": [
+        "Obama_008",
+        "Obama_012",
+        "Obama_044",
+        "Obama_061",
+        "Obama_030"
+      ]
+    },
+    {
+      "text": "Despite the harsh rhetoric, several users express genuine admiration for Michelle Obama and find humor in the inauguration events or political banter involving him.",
+      "source_ids": [
+        "Obama_021",
+        "Obama_047",
+        "Obama_085",
+        "Obama_090"
+      ]
+    }
+  ],
+  "summary_prompt": "I work in communications and need to decide how to respond to public reaction. Summarize the tweets about Barack Obama in 5 sentences, highlighting the main sentiment and the most important complaints or praise.",
+  "requested_model": "qwen3.5:4b",
+  "returned_model": "qwen3.5:4b",
+  "generation_settings": {
+    "temperature": 0.7,
+    "seed": 101,
+    "num_ctx": 16384,
+    "num_predict": 2000
+  },
+  "backend_metadata": {
+    "created_at": "2026-11-02T11:25:34.072692Z",
+    "total_duration": 17587438800,
+    "load_duration": 3598000,
+    "prompt_eval_duration": 4966088000,
+    "eval_duration": 12494178000,
+    "done_reason": "stop"
+  },
+  "usage": {
+    "input_tokens": 4252,
+    "output_tokens": 490,
+    "total_tokens": 4742
+  },
+  "execution_seconds": 17.588435,
+  "created_at_utc": "2026-11-02T11:25:34.073214+00:00",
+  "input_sha256": "2f8c62fc6b98af2dc3bfe6311455b477450237eea22f3ded4edcf8ea28e25c68",
+  "request_sha256": "accb1b58ee668a69baf98fc6c254a3cdfb148f07146ae82ef86465211301802f",
+  "ontology_used": false,
+  "reference_summaries_used": false,
+  "system": "baseline",
+  "prompt_id": "2"
+}

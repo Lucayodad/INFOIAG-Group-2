@@ -1,0 +1,104 @@
+{
+  "status": "draft_unchecked",
+  "provider": "ollama",
+  "topic": "McDonalds",
+  "seed": 101,
+  "temperature": 0.7,
+  "summary": "A significant number of users express a strong desire to visit McDonald's for its food, citing cravings for items like nuggets, ice cream, and tea. Despite the general appetite for the brand, several tweets highlight specific criticisms regarding the taste of food and the quality of service. Common grievances mentioned include the shortage of sauce packets for large orders and complaints about the time limits on breakfast availability. Users also frequently discuss logistical issues such as long wait times at the drive-thru, difficult parking situations, and confusion over menu items. While some individuals find the food disgusting or feel the brand is stingy, many still view McDonald's as an affordable and convenient option compared to other fast-food chains.",
+  "sentences": [
+    {
+      "text": "A significant number of users express a strong desire to visit McDonald's for its food, citing cravings for items like nuggets, ice cream, and tea.",
+      "source_ids": [
+        "McDonalds_001",
+        "McDonalds_003",
+        "McDonalds_005",
+        "McDonalds_006",
+        "McDonalds_021",
+        "McDonalds_026",
+        "McDonalds_040",
+        "McDonalds_043",
+        "McDonalds_045",
+        "McDonalds_047"
+      ]
+    },
+    {
+      "text": "Despite the general appetite for the brand, several tweets highlight specific criticisms regarding the taste of food and the quality of service.",
+      "source_ids": [
+        "McDonalds_004",
+        "McDonalds_007",
+        "McDonalds_009",
+        "McDonalds_012",
+        "McDonalds_020",
+        "McDonalds_024",
+        "McDonalds_025",
+        "McDonalds_046",
+        "McDonalds_053",
+        "McDonalds_056"
+      ]
+    },
+    {
+      "text": "Common grievances mentioned include the shortage of sauce packets for large orders and complaints about the time limits on breakfast availability.",
+      "source_ids": [
+        "McDonalds_020",
+        "McDonalds_058",
+        "McDonalds_071",
+        "McDonalds_078"
+      ]
+    },
+    {
+      "text": "Users also frequently discuss logistical issues such as long wait times at the drive-thru, difficult parking situations, and confusion over menu items.",
+      "source_ids": [
+        "McDonalds_008",
+        "McDonalds_013",
+        "McDonalds_022",
+        "McDonalds_033",
+        "McDonalds_034",
+        "McDonalds_042",
+        "McDonalds_059",
+        "McDonalds_076"
+      ]
+    },
+    {
+      "text": "While some individuals find the food disgusting or feel the brand is stingy, many still view McDonald's as an affordable and convenient option compared to other fast-food chains.",
+      "source_ids": [
+        "McDonalds_016",
+        "McDonalds_035",
+        "McDonalds_041",
+        "McDonalds_044",
+        "McDonalds_087",
+        "McDonalds_089",
+        "McDonalds_090"
+      ]
+    }
+  ],
+  "summary_prompt": "I work in communications and need to decide how to respond to public reaction. Summarize the tweets about McDonald's in 5 sentences, highlighting the main sentiment and the most important complaints or praise.",
+  "requested_model": "qwen3.5:4b",
+  "returned_model": "qwen3.5:4b",
+  "generation_settings": {
+    "temperature": 0.7,
+    "seed": 101,
+    "num_ctx": 16384,
+    "num_predict": 2000
+  },
+  "backend_metadata": {
+    "created_at": "2026-11-02T11:29:48.5229154Z",
+    "total_duration": 23602357000,
+    "load_duration": 4106500,
+    "prompt_eval_duration": 5699803000,
+    "eval_duration": 17771495000,
+    "done_reason": "stop"
+  },
+  "usage": {
+    "input_tokens": 4678,
+    "output_tokens": 690,
+    "total_tokens": 5368
+  },
+  "execution_seconds": 23.6034,
+  "created_at_utc": "2026-11-02T11:29:48.522944+00:00",
+  "input_sha256": "d4e38c6fce50e32132233c825dbbc6e77cf79a9ba8308184e5da3c7d436e20e2",
+  "request_sha256": "a0f9b057a97ccdf6c2ea638eec45333efbd95eb286c1bef404303833f6f2283e",
+  "ontology_used": false,
+  "reference_summaries_used": false,
+  "system": "baseline",
+  "prompt_id": "2"
+}
