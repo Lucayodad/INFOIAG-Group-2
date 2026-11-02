@@ -1,5 +1,10 @@
 # Checker reliability after the first Obama pilot
 
+These are historical notes for the earlier pilot fix. The final release replaces
+whole-registry reconciliation with embedding-shortlisted verification. See
+[RELEASE.md](RELEASE.md) and [CHECK_COMPONENTS.md](CHECK_COMPONENTS.md) for the
+current architecture and verification.
+
 The original pilot is preserved at `results/evidence/Obama_prompt1_pilot.json`.
 Its initial factual pass had five protocol-invalid UNKNOWN results: one missing
 explanation and four responses referencing local claim names instead of the
@@ -75,7 +80,7 @@ Run the complete suite in the project's configured Python environment:
 Run only the two focused live probes (choose a fresh output path):
 
 ```powershell
-.\.venv\Scripts\python.exe probe_checker_reliability.py --output results/evidence/checker_probes_new.json
+.\.venv\Scripts\python.exe probe_checker_reliability.py --pilot path/to/Obama_pilot.json --graph path/to/Obama.ttl --output results/evidence/checker_probes_new.json
 ```
 
 The default timeout is the existing Ollama client's 300 seconds per request.

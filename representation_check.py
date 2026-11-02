@@ -17,6 +17,8 @@ from ontology_tools import NS, TOPIC_IRIS
 from representation_tools import get_group_claims
 from summary_claims import flatten_summary_claims
 from summarizer import GenerationError
+from semantic_retrieval import shortlist_equivalence
+from live_feed import emit_event
 
 
 MATCH_STATUSES = ("MATCHED", "NOT_MATCHED", "UNKNOWN")
@@ -341,11 +343,15 @@ def _validated_request(client, result, instructions, body, schema, step, budget,
                 return None
             value = validate(data)
             result["execution_trace"][-1].update(status="completed", attempt=attempt + 1)
+            emit_event(client, "assessment_validated", "representation_checker", "shared_state",
+                f"{step}: validated attempt {attempt + 1}", step=step, attempt=attempt + 1, assessment=data)
             return value
         except RepresentationError as exc:
             event = result["execution_trace"][-1]
             event.update(status="rejected", error=event.get("error", str(exc)),
                          failure_kind=event.get("failure_kind", "validation"), attempt=attempt + 1)
+            emit_event(client, "validation_rejected", "representation_checker", "Qwen",
+                f"{step}: {event['error']}", attempt=attempt + 1, repair_remaining=attempt == 0, step=step)
             repair = event["error"][:240]
             # Reserve repair space when batching; no fabricated replacements.
             instructions = instructions.split("\nFORMAT REPAIR:")[0] + "\nFORMAT REPAIR: " + repair + ". Include every supplied ID exactly once; use only supplied quotes."
@@ -388,34 +394,86 @@ def _parse_reconciliation(data, incoming, registry, supplied_sources):
     return data["decisions"]
 
 
-def _merge_clusters(left, right, decision, candidates):
-    """Unite validated equivalence provenance; coverage is assessed afterwards."""
-    values = left["source_evidence"] + right["source_evidence"] + decision["source_evidence"]
-    references = list({(item["claim_id"], item["quote"]): item for item in values}.values())
-    return _cluster(sorted(set(left["candidate_ids"] + right["candidate_ids"])), candidates,
-                    explanation=decision["explanation"], source_evidence=references)
-
-
-def _cross_jobs(new_keys, old_keys, candidates, max_input_bytes):
-    """Deterministic registry pages, splitting only when the joint request is too big."""
-    incoming, _ = _compact(new_keys, candidates)
-    registry, _ = _compact(old_keys, candidates)
-    if _input_size(RECONCILE_INSTRUCTIONS, {"incoming": incoming, "registry": registry}) <= max_input_bytes:
-        yield new_keys, old_keys
-    elif len(old_keys) > 1:
-        middle = len(old_keys) // 2
-        yield from _cross_jobs(new_keys, old_keys[:middle], candidates, max_input_bytes)
-        yield from _cross_jobs(new_keys, old_keys[middle:], candidates, max_input_bytes)
-    elif len(new_keys) > 1:
-        middle = len(new_keys) // 2
-        yield from _cross_jobs(new_keys[:middle], old_keys, candidates, max_input_bytes)
-        yield from _cross_jobs(new_keys[middle:], old_keys, candidates, max_input_bytes)
-    else:
-        yield new_keys, []  # Even this single comparison cannot fit; never truncate it.
+def _shortlisted_partition(candidates, client, result, *, embedder, embedding_model,
+                           embedding_cache, budget, limit, batch_size):
+    """Verify bounded retrieved alternatives, then unite only validated merges."""
+    def counted_embed(texts):
+        result["embedding_call_count"] += 1
+        return embedder(texts)
+    try:
+        proposals, metadata = shortlist_equivalence(candidates, counted_embed,
+            cache=embedding_cache, model=embedding_model)
+        result.update(metadata)
+    except (ValueError, TypeError, GenerationError) as exc:
+        result.update(reason="embedding_retrieval_failed")
+        result["execution_trace"].append({"step": "embedding_retrieval", "status": "rejected", "error": str(exc)})
+        return {}, set(candidates), False
+    parent = {key: key for key in candidates}
+    unresolved, references = set(), []
+    def root(key):
+        while parent[key] != key:
+            key = parent[key]
+        return key
+    instructions = RECONCILE_INSTRUCTIONS + "\nEach incoming candidate has an alternatives list. Compare ONLY those registry IDs, not other candidates' alternatives. DISTINCT means distinct from all its supplied alternatives."
+    def body_for(keys):
+        incoming, shown_new = _compact(keys, candidates)
+        old = sorted({old for key in keys for old in proposals[key]})
+        registry, shown_old = _compact(old, candidates)
+        return {"incoming": incoming, "registry": registry,
+                "alternatives": {key: proposals[key] for key in keys}}, {**shown_new, **shown_old}
+    def verify(keys):
+        body, supplied = body_for(keys)
+        def validate(data):
+            decisions = _parse_reconciliation(data, body["incoming"], body["registry"], supplied)
+            for decision in decisions:
+                if decision["status"] == "EQUIVALENT" and decision["equivalent_to"] not in proposals[decision["candidate_id"]]:
+                    raise RepresentationError("Equivalent target is outside this candidate's embedding shortlist.")
+            return decisions
+        decisions = _validated_request(client, result, instructions, body, RECONCILE_SCHEMA,
+            "shortlisted_equivalence", budget, validate)
+        if decisions is None:
+            unresolved.update(keys)
+            unresolved.update(old for key in keys for old in proposals[key])
+            return
+        for decision in decisions:
+            key = decision["candidate_id"]
+            if decision["status"] == "EQUIVALENT":
+                left, right = root(key), root(decision["equivalent_to"])
+                parent[max(left, right)] = min(left, right)
+                references.extend(decision["source_evidence"])
+            elif decision["status"] == "UNKNOWN":
+                unresolved.update([key, *proposals[key]])
+    current = []
+    for key in candidates:
+        if not proposals[key]:
+            continue
+        body, _ = body_for([*current, key])
+        if current and (len(current) >= batch_size or _input_size(instructions, body) > limit):
+            verify(current)
+            current = []
+        body, _ = body_for([key])
+        if _input_size(instructions, body) > limit:
+            unresolved.add(key)
+            result["reason"] = "input_limit_exceeded"
+        else:
+            current.append(key)
+    if current:
+        verify(current)
+    groups = {}
+    for key in candidates:
+        groups.setdefault(root(key), []).append(key)
+    registry = {}
+    for key, keys in groups.items():
+        member_ids = {m["claim_id"] for k in keys for m in candidates[k]["members"]}
+        evidence = [ref for ref in references if ref["claim_id"] in member_ids]
+        registry[key] = _cluster(keys, candidates, source_evidence=evidence,
+            explanation="Exact grouping plus Qwen-validated embedding-shortlisted equivalence; unreviewed.")
+    return registry, unresolved, not unresolved
 
 
 def match_summary_claims(group_claims, summary_claims, client, *, max_model_calls=64,
-                         max_input_bytes=12000, batch_size=8):
+                         max_input_bytes=12000, batch_size=8, embedder=None,
+                         embedding_model="all-minilm", embedding_cache=None):
     """Exact grouping -> semantic equivalence -> independent coverage matching.
 
     Failed tasks get one repair and never abort independent tasks. Unresolved
@@ -433,6 +491,13 @@ def match_summary_claims(group_claims, summary_claims, client, *, max_model_call
     result = {"clusters": [], "aggregation_status": "UNKNOWN", "model_call_count": 0,
               "execution_trace": [], "review_status": "unreviewed", "reason": "model_assessment"}
     registry, ready, unresolved = {}, True, set()
+    result["embedding_call_count"] = 0
+    if not candidates or max_model_calls == 0:
+        result.update(clusters=[_cluster([key], candidates) for key in candidates],
+                      reason="no_source_claims" if not candidates else "model_budget_exhausted")
+        return result
+    equivalence_budget = max_model_calls // 2
+    result["budget_plan"] = {"equivalence": equivalence_budget, "coverage_reserved": max_model_calls - equivalence_budget}
     # Room for a bounded validation-error instruction on the repair attempt.
     limit = max_input_bytes - 400
 
@@ -458,10 +523,23 @@ def match_summary_claims(group_claims, summary_claims, client, *, max_model_call
     def request(instructions, body, schema, step, validate):
         return _validated_request(client, result, instructions, body, schema, step, max_model_calls, validate)
 
-    for batch in batches(list(candidates), EQUIVALENCE_INSTRUCTIONS):
+    local_keys = list(candidates)
+    # A small collection can still require multiple requests because of bytes.
+    # Use the same bounded global shortlist in that case; independent local
+    # partitions would otherwise silently miss equivalences across byte splits.
+    use_shortlist = len(candidates) > batch_size or _input_size(
+        EQUIVALENCE_INSTRUCTIONS, {"candidates": _compact(local_keys, candidates)[0]}) > limit
+    if use_shortlist:
+        registry, unresolved, ready = _shortlisted_partition(candidates, client, result,
+            embedder=embedder or (lambda texts: client.embed(texts, model=embedding_model)),
+            embedding_model=embedding_model, embedding_cache=embedding_cache,
+            budget=equivalence_budget, limit=limit, batch_size=batch_size)
+        local_keys = []
+    for batch in batches(local_keys, EQUIVALENCE_INSTRUCTIONS):
         compact, supplied = _compact(batch, candidates)
-        parsed = request(EQUIVALENCE_INSTRUCTIONS, {"candidates": compact}, EQUIVALENCE_SCHEMA,
-            "semantic_equivalence", lambda data: _parse_equivalence(data, {k: candidates[k] for k in batch}, supplied))
+        parsed = _validated_request(client, result, EQUIVALENCE_INSTRUCTIONS, {"candidates": compact}, EQUIVALENCE_SCHEMA,
+            "semantic_equivalence", equivalence_budget,
+            lambda data: _parse_equivalence(data, {k: candidates[k] for k in batch}, supplied))
         if parsed is None:
             ready = False
             unresolved.update(batch)
@@ -470,39 +548,7 @@ def match_summary_claims(group_claims, summary_claims, client, *, max_model_call
         ready = ready and complete
         if not complete:
             unresolved.update(batch)
-        old_keys = sorted(registry)
         registry.update({item["canonical_claim_id"]: item for item in local})
-        pending = {item["canonical_claim_id"] for item in local}
-        stances = {_normal(candidates[key]["stance"]) for key in pending}
-        old_keys = [key for key in old_keys if _normal(candidates[key]["stance"]) in stances]
-        if not old_keys:
-            continue
-        for new_page, old_page in _cross_jobs(sorted(pending), old_keys, candidates, limit):
-            new_page = [key for key in new_page if key in pending]
-            if not new_page:
-                continue
-            if not old_page:
-                ready = False
-                unresolved.update(new_page)
-                result["reason"] = "input_limit_exceeded"
-                continue
-            incoming, shown_new = _compact(new_page, candidates)
-            bank, shown_old = _compact(old_page, candidates)
-            decisions = request(RECONCILE_INSTRUCTIONS, {"incoming": incoming, "registry": bank}, RECONCILE_SCHEMA,
-                "cross_batch_reconciliation", lambda data: _parse_reconciliation(data, incoming, bank, {**shown_new, **shown_old}))
-            if decisions is None:
-                ready = False
-                unresolved.update(new_page)
-                continue
-            for decision in decisions:
-                key = decision["candidate_id"]
-                if decision["status"] == "EQUIVALENT":
-                    target = decision["equivalent_to"]
-                    registry[target] = _merge_clusters(registry[target], registry.pop(key), decision, candidates)
-                    pending.remove(key)
-                elif decision["status"] == "UNKNOWN":
-                    ready = False
-                    unresolved.add(key)
 
     # Coverage cannot change the equivalence partition. One supplied candidate is
     # one canonical cluster; expanding it restores ALL distinct-tweet supporters.
@@ -638,7 +684,8 @@ def check_summary_fairness(matching, disparity_threshold=None, *, data_complete=
 
 
 def representation_check(graph, summary_claims, client, topic, disparity_threshold=None, *,
-                         expected_group_counts=None, max_model_calls=64, max_input_bytes=12000, batch_size=8):
+                         expected_group_counts=None, max_model_calls=64, max_input_bytes=12000, batch_size=8,
+                         embedder=None, embedding_model="all-minilm", embedding_cache=None):
     """Retrieve -> auditable aggregation/matching -> deterministic coverage.
 
     Defaults require the dataset's 30 tweets per group. Synthetic complete inputs
@@ -688,7 +735,8 @@ def representation_check(graph, summary_claims, client, topic, disparity_thresho
         fallback["reason"] = "incomplete_input_data"
     try:
         matching = (match_summary_claims(groups, summary_claims, client, max_model_calls=max_model_calls,
-                                         max_input_bytes=max_input_bytes, batch_size=batch_size) if complete and max_model_calls else fallback)
+                                         max_input_bytes=max_input_bytes, batch_size=batch_size, embedder=embedder,
+                                         embedding_model=embedding_model, embedding_cache=embedding_cache) if complete and max_model_calls else fallback)
     except (RepresentationError, GenerationError) as exc:
         matching = getattr(exc, "partial_result", None)
         if matching is None:
@@ -699,5 +747,6 @@ def representation_check(graph, summary_claims, client, topic, disparity_thresho
                                     completeness_issues=problems)
     report.update(topic=topic, source_tweet_counts=counts, expected_group_counts=expected,
                   matching=matching, supporting_source_evidence=groups,
-                  model_call_count=matching["model_call_count"], execution_trace=matching["execution_trace"])
+                  model_call_count=matching["model_call_count"], embedding_call_count=matching.get("embedding_call_count", 0),
+                  execution_trace=matching["execution_trace"])
     return report

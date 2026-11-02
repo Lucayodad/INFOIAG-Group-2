@@ -17,9 +17,8 @@ from summary_claims import flatten_summary_claims
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--pilot", type=Path, default=Path("results/evidence/Obama_prompt1_pilot.json"))
-    parser.add_argument("--graph", type=Path, default=Path(
-        "results/ontology/20261101T183009Z_d38cb5571fa94c4cb684226f813c2646/Obama.ttl"))
+    parser.add_argument("--pilot", type=Path, required=True, help="Existing Obama pilot JSON for this historical diagnostic")
+    parser.add_argument("--graph", type=Path, required=True, help="Corresponding saved Obama Turtle graph")
     parser.add_argument("--output", type=Path, default=Path("results/evidence/checker_reliability_probes.json"))
     parser.add_argument("--timeout", type=int, default=300)
     args = parser.parse_args()

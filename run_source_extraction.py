@@ -24,19 +24,21 @@ def main():
     parser.add_argument("--limit", type=int, default=5)
     args = parser.parse_args()
 
-    # Load and validate the complete source dataset.
     tweets = load_tweets(args.topic)
     validate_dataset(tweets)
-
     if not 1 <= args.limit <= len(tweets):
         parser.error("Limit must be between 1 and 90.")
+    _, unresolved = resume_source_extraction(tweets,
+        ROOT / "results" / "source_claims" / f"{args.topic}.json", limit=args.limit)
+    return 1 if unresolved else 0
 
-    selected = tweets[:args.limit]
 
-    # Each topic gets its own persisted extraction file.
-    output = ROOT / "results" / "source_claims" / f"{args.topic}.json"
+def resume_source_extraction(tweets, output, *, client=None, limit=None):
+    """Shared checkpoint/retry workflow for the standalone and complete CLIs."""
+    validate_dataset(tweets)
+    selected = tweets if limit is None else tweets[:limit]
+    output = Path(output)
     output.parent.mkdir(parents=True, exist_ok=True)
-
     # Recover any previous successful extraction results.
     results = (
         json.loads(output.read_text(encoding="utf-8"))
@@ -55,7 +57,7 @@ def main():
     if not completed.issubset(known_ids):
         raise ValueError("Checkpoint contains unknown tweet IDs.")
 
-    failure_file = output.with_name(f"{args.topic}.failures.json")
+    failure_file = output.with_name(f"{output.stem}.failures.json")
     failure_rows = json.loads(failure_file.read_text(encoding="utf-8")) if failure_file.exists() else []
     if not isinstance(failure_rows, list) or any(
         not isinstance(row, dict) or row.get("tweet_id") not in known_ids for row in failure_rows
@@ -75,7 +77,8 @@ def main():
     if reconciled:
         save_json(failure_file, list(failures.values()))
 
-    client = OllamaClient()
+    owns_client = client is None
+    client = OllamaClient() if owns_client else client
 
     try:
         for tweet in selected:
@@ -110,7 +113,8 @@ def main():
             print(f"Saved {tweet.id}: {len(record['claims'])} claims")
 
     finally:
-        client.close()
+        if owns_client:
+            client.close()
 
     print(f"\nCompleted: {len(completed)} / 90")
     print(f"Output: {output}")
@@ -121,7 +125,7 @@ def main():
         print("Rerun the same command to retry unresolved tweets; validated tweets will be skipped.")
     else:
         print("Unresolved tweets: none.")
-    return 1 if unresolved else 0
+    return results, unresolved
 
 
 if __name__ == "__main__":

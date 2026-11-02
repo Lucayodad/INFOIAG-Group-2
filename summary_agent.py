@@ -9,6 +9,7 @@ from pathlib import Path
 from uuid import uuid4
 
 from langgraph.graph import END, START, StateGraph
+from live_feed import observe_node
 from rdflib import Graph
 from rdflib.graph import ReadOnlyGraphAggregate
 from typing_extensions import TypedDict
@@ -194,10 +195,12 @@ def build_summary_agent(graph, client, *, disparity_threshold=None,
         result = representation_check(
             evidence, state["summary_claims"], client, state["topic"],
             disparity_threshold=disparity_threshold, expected_group_counts=expected_group_counts,
-            max_model_calls=max_model_calls, max_input_bytes=max_input_bytes, batch_size=batch_size)
+            max_model_calls=max_model_calls, max_input_bytes=max_input_bytes, batch_size=batch_size,
+            embedder=embedding_function, embedding_model=embedding_model, embedding_cache=embedding_cache)
         return _update(state, "representation_check", representation_results=result,
                        representation_issues=result["representation_issues"],
-                       call_counts=_counts(state, model_calls=result["model_call_count"]))
+                       call_counts=_counts(state, model_calls=result["model_call_count"],
+                                           embedding_calls=result.get("embedding_call_count", 0)))
 
     def route_checks(state: SummaryAgentState):
         checked = {key: deepcopy(state[key]) for key in CHECKED_FIELDS}
@@ -297,7 +300,7 @@ def build_summary_agent(graph, client, *, disparity_threshold=None,
                            ("representation_check", check_representation), ("route_checks", route_checks),
                            ("retrieve_revision_evidence", retrieve_evidence),
                            ("revise_summary", revise), ("finalize", finalize)):
-        builder.add_node(name, function)
+        builder.add_node(name, observe_node(name, function, client))
     builder.add_edge(START, "extract_summary_claims")
     builder.add_edge("extract_summary_claims", "factual_check")
     builder.add_edge("factual_check", "representation_check")

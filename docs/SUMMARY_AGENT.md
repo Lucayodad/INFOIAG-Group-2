@@ -5,6 +5,10 @@ asserted RDF graph. Source extraction, population and initial generation still
 happen before this graph. Experimental metrics and the 36-run evaluation are
 outside this implementation.
 
+For a fresh-clone complete run, use `python run_pipeline.py --topic Obama --prompt-id 1`.
+It resumes source claims, populates RDF, generates a draft and invokes this
+existing graph. See the README and [release notes](RELEASE.md).
+
 The checker interfaces and graph nodes are unchanged by the pilot reliability
 fixes. Factual calls now use compact evidence with validated short-ID mappings
 and one format repair. Representation performs equivalence and coverage in

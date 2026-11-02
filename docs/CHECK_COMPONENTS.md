@@ -91,19 +91,22 @@ Counts and completeness never claim full-topic verification from partial data.
    deterministic batches, at most `batch_size` (default 8) new candidates and at
    most 12,000 input bytes per request. Each exact group sends one original
    representative quotation; all supporter records stay in the Python result.
-   Qwen proposes semantic-equivalence clusters in an equivalence-only task.
+   A small collection that fits one request uses a single equivalence-only task.
+   Larger or byte-split inputs use
+   local `all-minilm` embeddings, cached in chunks of 32, to shortlist at most
+   two earlier same-stance candidates per proposition (cosine >= 0.8).
    Every candidate must occur exactly once and every merged candidate requires
    a supplied quotation. No summary is included in this phase.
-3. Each batch is then reconciled against the global canonical registry built by
-   earlier batches. Qwen must choose EQUIVALENT, DISTINCT or UNKNOWN for every
-   incoming cluster in each registry page. EQUIVALENT requires quotations for
-   both sides and the exact registry ID. Requests use original representatives,
-   not generated summaries. Registry pages split deterministically by the byte
-   cap; successful matches stop further comparisons for that incoming cluster.
-   Different stances cannot merge and are skipped where possible. Distinct
-   claims are never automatically merged because of words, names or targets.
-   This compares batches to canonical representatives, not individual original
-   claim pairs. The all-distinct worst case still requires more registry pages.
+3. Qwen verifies only each incoming candidate's retrieved alternatives. There
+   are no growing whole-registry comparisons. EQUIVALENT requires quotations
+   from both sides, a consistent stance and a target in this candidate's actual
+   shortlist. Union of approved equivalences retains every original supporter.
+   At most half the representation call budget is available for equivalence,
+   including repairs; the remainder is reserved for coverage. Embeddings never
+   authorize a merge. The shortlist is approximate, not proof that unselected
+   pairs are distinct. `equivalence_scope=embedding_shortlist_only` and
+   `global_equivalence_exhaustive=false` record the scope; numerical coverage
+   is conditional on that unreviewed partition.
    Once equivalence/reconciliation is done, a separate summary-coverage task
    assesses each canonical representative as MATCHED, NOT_MATCHED or UNKNOWN.
    This task must return singleton candidates; it cannot merge or split clusters.
@@ -167,7 +170,7 @@ still rejects wrong pairs, unshown IDs, missing references and malformed results
 Every invalid batch gets one bounded repair; both attempts count against 64.
 A failed equivalence, reconciliation or coverage task preserves earlier results
 and continues independent batches. The trace distinguishes `semantic_equivalence`,
-`cross_batch_reconciliation` and `summary_coverage`, with attempts and errors.
+`shortlisted_equivalence` and `summary_coverage`, with attempts and errors.
 All original members survive; unprocessed/failed claims remain UNKNOWN. Budget exhaustion
 or an oversized individual claim/comparison yields explicit UNKNOWN, not an
 invented omission. There is no whole-topic 12,000-byte rejection.
@@ -176,7 +179,9 @@ invented omission. There is no whole-topic 12,000-byte rejection.
 Obama pilot: original factual claim S01_C01 and the eight propositions from
 original representation batch K009-K016. It preserves original source IDs and
 quotations. It does not run LangGraph or revise a summary. Use a new output path
-for every invocation; existing outputs cannot be overwritten.
+for every invocation; existing outputs cannot be overwritten. This historical
+diagnostic requires explicit `--pilot` and `--graph` inputs. Fresh-clone runs
+use `run_pipeline.py` and do not require those generated artifacts.
 
 `data_complete=false` identifies missing/invalid topic input or unclear extraction.
 Complete input with budget exhaustion, uncertain equivalence or matching failure
