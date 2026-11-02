@@ -6,6 +6,8 @@ Metrics (choose with --metrics, default: all):
   gap       group similarity gap (sentence-transformers, all-MiniLM-L6-v2)
   ec        Equal Coverage (Li et al. 2025) with roberta-large-mnli
   deepeval  DeepEval summarization: alignment + coverage, local Ollama judge
+  bart      BARTScore (Yuan et al. 2021) with facebook/bart-large-cnn:
+            bart_src = faithfulness to the tweets, bart_ref = F-score vs references
 
 Typical use, from the repository root:
   python evaluate.py --system baseline --inputs results/drafts/<run-id>
@@ -29,7 +31,7 @@ DATA = ROOT / "data" / "divsumm" / "ready_to_use"
 OUT_DEFAULT = ROOT / "results" / "eval" / "metrics.csv"
 TOPICS = ("Obama", "Superbowl", "McDonalds")
 GROUPS = ("AA", "Hisp", "White")
-ALL_METRICS = ("cost", "rouge", "gap", "ec", "deepeval")
+ALL_METRICS = ("cost", "rouge", "gap", "ec", "deepeval", "bart")
 
 
 # ---------------------------------------------------------------- data
@@ -232,12 +234,66 @@ def metric_deepeval(rec, tweets, judge_model):
             "deepeval_coverage": round(breakdown.get("Coverage", getattr(metric, "coverage_score", float("nan"))), 4)}
 
 
+_BART = None
+def _bart():
+    global _BART
+    if _BART is None:
+        from transformers import BartForConditionalGeneration, BartTokenizer
+        name = "facebook/bart-large-cnn"
+        _BART = (BartTokenizer.from_pretrained(name),
+                 BartForConditionalGeneration.from_pretrained(name).eval())
+    return _BART
+
+
+def bart_logprob(src, tgt):
+    """Average log-likelihood per token of tgt given src (the BARTScore of src -> tgt)."""
+    import torch
+    tok, model = _bart()
+    enc = tok(src, max_length=1024, truncation=True, return_tensors="pt")
+    dec = tok(tgt, max_length=1024, truncation=True, return_tensors="pt")
+    with torch.no_grad():
+        out = model(input_ids=enc["input_ids"], attention_mask=enc["attention_mask"],
+                    labels=dec["input_ids"])
+    return -out.loss.item()
+
+
+def tweet_chunks(tweets, max_tokens=900):
+    """BART reads at most 1024 tokens, but 90 tweets are ~4,000, so the tweets
+    are split into consecutive chunks that each fit."""
+    tok, _ = _bart()
+    chunks, current, size = [], [], 0
+    for t in tweets:
+        n = len(tok(t["text"], add_special_tokens=False)["input_ids"]) + 1
+        if current and size + n > max_tokens:
+            chunks.append("\n".join(current)); current, size = [], 0
+        current.append(t["text"]); size += n
+    if current:
+        chunks.append("\n".join(current))
+    return chunks
+
+
+_CHUNKS = {}
+def metric_bart(rec, tweets, refs):
+    # Faithfulness: each summary sentence scored against the tweet chunk that
+    # supports it best (max over chunks), averaged over the sentences.
+    chunks = _CHUNKS.setdefault(rec["topic"], tweet_chunks(tweets))
+    src = statistics.mean(max(bart_logprob(c, s) for c in chunks) for s in rec["sentences"])
+    # Reference-based F-score: mean of P(summary|ref) and P(ref|summary), over both references.
+    targets = refs[rec["topic"]]
+    if "_ref_index" in rec:
+        targets = [t for i, t in enumerate(targets) if i != rec["_ref_index"]]
+    ref = statistics.mean((bart_logprob(t, rec["summary"]) + bart_logprob(rec["summary"], t)) / 2
+                          for t in targets)
+    return {"bart_src": round(src, 4), "bart_ref": round(ref, 4)}
+
+
 # ---------------------------------------------------------------- output
 
 FIELDS = ["system", "topic", "prompt_id", "seed", "file",
           "ec", "cov_AA", "cov_Hisp", "cov_White", "cov_all",
           "sim_gap", "sim_AA", "sim_Hisp", "sim_White",
           "deepeval_score", "deepeval_alignment", "deepeval_coverage",
+          "bart_src", "bart_ref",
           "rouge1", "rouge2", "rougeL",
           "execution_seconds", "input_tokens", "output_tokens", "llm_calls",
           "revision_count", "agent_status", "eval_seconds"]
@@ -256,7 +312,7 @@ def append_rows(rows, out):
 def report(out):
     with out.open(encoding="utf-8") as f:
         rows = list(csv.DictReader(f))
-    cols = ["ec", "sim_gap", "deepeval_alignment", "deepeval_coverage",
+    cols = ["ec", "sim_gap", "deepeval_alignment", "deepeval_coverage", "bart_src", "bart_ref",
             "rouge1", "rouge2", "rougeL", "execution_seconds"]
 
     def fmt(vals):
@@ -317,7 +373,7 @@ def main():
     if not records:
         ap.error("nothing to evaluate: give --inputs or --references")
 
-    refs = load_references() if "rouge" in metrics else None
+    refs = load_references() if ("rouge" in metrics or "bart" in metrics) else None
     tweets_cache = {}
     rows = []
     for n, rec in enumerate(records, 1):
@@ -333,6 +389,8 @@ def main():
             row.update(metric_ec(rec, tweets))
         if "deepeval" in metrics:
             row.update(metric_deepeval(rec, tweets, args.judge_model))
+        if "bart" in metrics:
+            row.update(metric_bart(rec, tweets, refs))
         row["eval_seconds"] = round(time.perf_counter() - start, 2)
         print("   ", {k: row[k] for k in FIELDS[5:] if row.get(k) not in (None, "")})
         append_rows([row], args.out)  # saved immediately, so Ctrl+C loses nothing finished
