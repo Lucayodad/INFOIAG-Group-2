@@ -8,8 +8,13 @@ from unittest.mock import Mock
 
 from data_loader import Tweet
 from populate_ontology import populate_ontology
-from representation_check import representation_check
+from representation_check import representation_check as _representation_check
 from representation_tools import get_group_claims
+
+
+def representation_check(*args, **kwargs):
+    kwargs.setdefault("metric", "internal")
+    return _representation_check(*args, **kwargs)
 
 
 def topic_fixture(unique=False, duplicate=False):

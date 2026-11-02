@@ -40,6 +40,7 @@ class TransformersEntailmentScorer:
                 "Install them with: pip install -r requirements.txt"
             ) from exc
         self._torch = torch
+        self.model_name = model_name
         self._tokenizer = AutoTokenizer.from_pretrained(model_name)
         self._model = AutoModelForSequenceClassification.from_pretrained(model_name)
         self._model.eval()
@@ -66,6 +67,7 @@ class TransformersEntailmentScorer:
                     list(hypotheses),
                     padding=True,
                     truncation=True,
+                    max_length=256,
                     return_tensors="pt",
                 )
                 probabilities = self._torch.softmax(
@@ -102,7 +104,8 @@ def calculate_equal_coverage(
 ) -> dict:
     """Calculate group coverage and Equal Coverage from MNLI probabilities.
 
-    Each source tweet is paired with every extracted atomic summary claim.
+    Each source tweet is paired with every supplied summary sentence. Callers
+    pass these as {"claim": sentence_text}; atomic claims remain for fact checking.
     Group coverage is the mean entailment probability over that group's tweets
     and claims. EC is the mean absolute deviation of group coverage from the
     overall tweet-level coverage, so it is zero when groups are equally covered.
@@ -115,7 +118,14 @@ def calculate_equal_coverage(
         and claim["claim"].strip()
     ]
     if not hypotheses:
-        raise ValueError("At least one atomic summary claim is required.")
+        raise ValueError("At least one summary sentence is required.")
+    if len(hypotheses) != len(summary_claims):
+        raise ValueError("Every summary hypothesis must contain nonempty text.")
+    if any(not tweets_by_group[label] for label in DIALECT_LABELS):
+        raise ValueError("Every group requires source tweets; missing data is not zero coverage.")
+    if any(not isinstance(tweet.get("text"), str) or not tweet["text"].strip()
+           for rows in tweets_by_group.values() for tweet in rows):
+        raise ValueError("Every source tweet requires nonempty text.")
 
     scorer = scorer or _default_scorer()
     group_scores = {}
@@ -151,8 +161,11 @@ def calculate_equal_coverage(
         },
         "overall_coverage": overall,
         "equal_coverage": ec,
-        "group_similarity_gap": gap,
+        "entailment_coverage_gap": gap,
+        "hypothesis_unit": "summary_sentence",
+        "metric_version": "mnli_sentence_mean_v1",
         "summary_claim_count": len(hypotheses),
+        "summary_sentence_count": len(hypotheses),
         "pair_count": len(all_scores),
         "status": "measured",
     }

@@ -6,6 +6,7 @@ import unittest
 from unittest.mock import Mock
 
 from demo_revision_loop import fixture, mock_client, mock_embeddings
+from fact_check import quote_in
 from ontology_tools import NS
 from revision_retrieval import cosine, retrieve_revision_evidence
 from summary_agent import compare_revision, run_summary_agent
@@ -14,6 +15,7 @@ from summary_revision import revise_summary
 
 class RevisionLoopTests(unittest.TestCase):
     def run_fixture(self, kind="both", client=None, **options):
+        options.setdefault("representation_metric", "internal")
         graph, draft, counts = fixture(kind, many=options.pop("many", False), per_group=options.pop("per_group", 8))
         client = mock_client() if client is None else client
         before_graph, before_draft = set(graph), deepcopy(draft)
@@ -107,17 +109,77 @@ class RevisionLoopTests(unittest.TestCase):
                 self.assertEqual(result["revision_count"], 1)
                 self.assertEqual(len(result["iterations"]), 1)
 
+    def test_quotation_wrapped_in_quotation_marks_is_accepted(self):
+        def wrapped(data):
+            for reference in data["replacements"][0]["evidence"]:
+                reference["quote"] = f' "{reference["quote"]}" '
+            return data
+        result, _ = self.run_fixture("factual", client=mock_client(transform_revision=wrapped))
+        self.assertEqual(result["revisions"][0]["status"], "accepted")
+        self.assertEqual(result["status"], "completed")
+
+    def test_quote_check_tolerates_only_entities_and_wrapping_marks(self):
+        tweet = "Obama in office niggas &amp; bitches get yo act together"
+        self.assertTrue(quote_in("niggas & bitches get yo act", tweet))
+        self.assertTrue(quote_in('"Obama in office"', tweet))
+        self.assertFalse(quote_in("Obama out of office", tweet))
+        self.assertFalse(quote_in('""', tweet))
+
+    def test_one_format_repair_stays_within_the_same_revision(self):
+        calls = []
+        def fail_first(data):
+            calls.append(1)
+            if len(calls) == 1:
+                data["replacements"][0]["evidence"][0]["quote"] = "Not in any original tweet."
+            return data
+        result, client = self.run_fixture("factual", client=mock_client(transform_revision=fail_first))
+        revision = result["revisions"][0]
+        self.assertEqual(revision["status"], "accepted")
+        self.assertEqual(revision["model_call_count"], 2)
+        self.assertEqual(revision["attempt_errors"], ["Quotation is absent from the cited original tweet."])
+        self.assertEqual(result["revision_count"], 1)
+        repair = [call.args[0] for call in client.chat.call_args_list
+                  if "replacements" in call.args[0]["format"]["properties"]][1]
+        self.assertIn("Quotation is absent", repair["messages"][-1]["content"])
+
     def test_unsupported_addition_is_rechecked_and_rolled_back(self):
         def addition(data):
             data["replacements"][0]["text"] = "An invented quantity proves the speech was popular."
             return data
-        result, _ = self.run_fixture(client=mock_client(transform_revision=addition))
+        result, client = self.run_fixture(client=mock_client(transform_revision=addition))
         self.assertEqual(result["stop_reason"], "unsupported_revision")
-        self.assertEqual(result["revisions"][0]["status"], "rolled_back")
+        # Each rolled-back fix is retried with feedback until the three-revision bound.
+        self.assertEqual([r["status"] for r in result["revisions"]], ["rolled_back"] * 3)
+        self.assertEqual(result["revision_count"], 3)
         self.assertEqual(result["current_summary"], result["initial_summary"])
-        self.assertEqual(len(result["iterations"]), 2)
+        self.assertEqual(len(result["iterations"]), 4)
         self.assertFalse(result["iterations"][-1]["retained"])
         self.assertEqual(result["best_iteration"], 0)
+        requests = [json.loads(call.args[0]["messages"][1]["content"]) for call in client.chat.call_args_list
+                    if "replacements" in call.args[0]["format"]["properties"]]
+        feedback = [i for i in requests[1]["confirmed_issues"] if i["type"] == "rejected_previous_revision"]
+        self.assertIn("An invented quantity", feedback[0]["explanation"])
+
+    def test_rolled_back_fix_is_retried_and_can_then_be_accepted(self):
+        calls = []
+        def addition_first(data):
+            calls.append(1)
+            if len(calls) == 1:
+                data["replacements"][0]["text"] = "An invented quantity proves the speech was popular."
+            return data
+        result, _ = self.run_fixture("factual", client=mock_client(transform_revision=addition_first))
+        self.assertEqual([r["status"] for r in result["revisions"]], ["rolled_back", "accepted"])
+        self.assertEqual(result["status"], "completed")
+        self.assertNotEqual(result["current_summary"], result["initial_summary"])
+
+    def test_replacement_naming_a_dialect_group_is_rejected(self):
+        def group_label(data):
+            data["replacements"][0]["text"] = "Some users in the AA group request more detail."
+            return data
+        result, _ = self.run_fixture("factual", client=mock_client(transform_revision=group_label))
+        self.assertEqual(result["revisions"][0]["status"], "rejected")
+        self.assertIn("names a dialect group", result["revisions"][0]["error"])
+        self.assertEqual(result["current_summary"], result["initial_summary"])
 
     def test_missing_embedding_evidence_stops_without_a_qwen_revision(self):
         client = mock_client()
@@ -178,7 +240,7 @@ class RevisionLoopTests(unittest.TestCase):
         calls = []
         def fail_second(data):
             calls.append(1)
-            if len(calls) == 2:
+            if len(calls) >= 2:  # the proposal and its one format repair
                 data["replacements"][0]["source_ids"] = ["fabricated"]
             return data
         result, _ = self.run_fixture("representation", many=True, disparity_threshold=0.01,

@@ -1,5 +1,9 @@
 # Final engineering release
 
+These are earlier release notes. See [report validation](REPORT_VALIDATION.md)
+for the current MNLI default, factual schema fixes, report tables and validation
+results. Internal semantic batching described below is an optional metric.
+
 This is a runnable research prototype, not a completed scientific evaluation.
 The original OWL ontology, datasets, teammate commits and existing stage CLIs
 are preserved. No main-branch merge or 36-run evaluation is part of this release.

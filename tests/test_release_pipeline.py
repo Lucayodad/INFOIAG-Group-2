@@ -52,7 +52,7 @@ class ReleasePipelineTests(unittest.TestCase):
     def args(self, root, name="result"):
         return Namespace(topic="Obama", prompt_id="1", disparity_threshold=0.25,
             max_revisions=1, output=root / f"{name}.json", source_claims=root / "checkpoints/Obama.json",
-            reuse_draft=None, max_model_calls=64, max_tool_calls=3)
+            reuse_draft=None, max_model_calls=64, max_tool_calls=3, representation_metric="internal")
 
     def test_raw_tweets_to_revision_rechecking_and_saved_results_then_resume(self):
         tweets, client, sources = self.fixture()

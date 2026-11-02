@@ -1,5 +1,8 @@
 # INFOIAG: ontology-assisted summarization
 
+For consistent metrics, report preparation, saved-run limitations and current
+validation commands, see [report validation](docs/REPORT_VALIDATION.md).
+
 A local research prototype that summarizes tweets, checks factual support and
 group representation using RDF evidence, and revises/rechecks a five-sentence
 summary when confirmed issues justify it. Supports **Obama, McDonalds and
@@ -129,6 +132,14 @@ Real-model release verification is recorded in [docs/RELEASE.md](docs/RELEASE.md
 
 ## Representation and known limitations
 
+The default is MNLI Equal Coverage over original summary sentence entries,
+using the same implementation as offline evaluation. Incomplete extraction or
+unavailable scoring stays UNKNOWN. Report absolute group coverage alongside
+EC: equally low coverage can produce a small disparity. The 0.25 threshold is
+exploratory. See [report validation](docs/REPORT_VALIDATION.md) for saved results,
+score provenance and current safeguards.
+
+The optional `--representation-metric internal` path works as follows.
 Exact duplicates are grouped deterministically. Larger inputs use local
 `all-minilm` embeddings and in-memory cosine similarity to shortlist at most two
 earlier same-stance candidates (similarity >= 0.8). Small Qwen requests verify

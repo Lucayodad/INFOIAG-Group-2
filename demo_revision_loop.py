@@ -66,7 +66,7 @@ def mock_client(transform_revision=None, no_improvement=False, unknown_matching=
         fields = set(payload["format"]["properties"])
         raw = payload["messages"][-1]["content"]
         if "replacements" in fields:
-            body = json.loads(raw)
+            body = json.loads(payload["messages"][1]["content"])  # original request, also on repair
             by_id = {row["tweet_id"]: row for row in body["original_tweets"]}
             replacements = []
             for sentence_id in sorted({t["sentence_id"] for t in body["tasks"]}):
@@ -136,7 +136,8 @@ def main():
     args = parser.parse_args()
     graph, draft, counts = fixture()
     result = run_summary_agent(graph, draft, topic="Obama", prompt=draft["summary_prompt"],
-                               client=mock_client(), expected_group_counts=counts, disparity_threshold=0.25)
+                               client=mock_client(), expected_group_counts=counts, disparity_threshold=0.25,
+                               representation_metric="internal")
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     report = {"mode": "MOCKED Qwen and gold-topic embeddings; real graph, retrieval and checkers",

@@ -1,5 +1,10 @@
 # Factual and representation checking
 
+For the current default MNLI sentence metric, constrained factual response
+schema and report outputs, see [report validation](REPORT_VALIDATION.md).
+The semantic clustering/weighted-claim formulas below describe the explicitly
+selected `internal` representation metric.
+
 Both interfaces consume the populated asserted RDF graph and the list of five
 sentence-extraction records produced by `summary_claims.py`. Each record contains
 `sentence_id`, `sentence`, `status` and `claims`. `flatten_summary_claims` checks

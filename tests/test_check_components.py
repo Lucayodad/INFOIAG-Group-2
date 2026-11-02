@@ -11,10 +11,15 @@ from data_loader import Tweet
 from fact_check import fact_check_summary
 from ontology_tools import NS
 from populate_ontology import populate_ontology
-from representation_check import RepresentationError, check_summary_fairness, match_summary_claims, representation_check
+from representation_check import RepresentationError, check_summary_fairness, match_summary_claims, representation_check as _representation_check
 from representation_tools import get_group_claims
 from summary_claims import flatten_summary_claims
 from test_fact_agent import loop_response
+
+
+def representation_check(*args, **kwargs):
+    kwargs.setdefault("metric", "internal")
+    return _representation_check(*args, **kwargs)
 
 
 def complete_check_fixture():

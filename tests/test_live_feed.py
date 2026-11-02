@@ -134,7 +134,8 @@ class LiveFeedTests(unittest.TestCase):
 
     def test_real_graph_revision_and_rechecking_emit_handoffs_without_changing_results(self):
         graph, draft, counts = fixture()
-        options = dict(topic="Obama", prompt=draft["summary_prompt"], expected_group_counts=counts, disparity_threshold=0.25)
+        options = dict(topic="Obama", prompt=draft["summary_prompt"], expected_group_counts=counts, disparity_threshold=0.25,
+                       representation_metric="internal")
         baseline_client = mock_client()
         baseline = run_summary_agent(graph, draft, client=baseline_client, **options)
         with tempfile.TemporaryDirectory() as directory:
@@ -165,7 +166,8 @@ class LiveFeedTests(unittest.TestCase):
             try:
                 backend = mock_client(transform_revision=lambda value: {"invalid": True})
                 result = run_summary_agent(graph, draft, topic="Obama", prompt=draft["summary_prompt"],
-                    expected_group_counts=counts, disparity_threshold=0.25, client=ProgressClient(backend, feed))
+                    expected_group_counts=counts, disparity_threshold=0.25, client=ProgressClient(backend, feed),
+                    representation_metric="internal")
                 self.assertEqual(result["revisions"][-1]["status"], "rejected")
                 row = next(r for r in self.events(path) if r["actor"] == "revise_summary" and r["kind"] == "handoff")
                 self.assertEqual(row["details"]["latest_revision"]["status"], "rejected")

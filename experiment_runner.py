@@ -123,32 +123,13 @@ def _load_graphs(graph_paths: dict[str, Path]):
     return {topic: Graph().parse(path, format="turtle") for topic, path in graph_paths.items()}
 
 
-def _usage_totals(value) -> dict[str, int]:
-    """Sum Ollama usage dictionaries in an agent result without guessing costs."""
-    totals = {"input_tokens": 0, "output_tokens": 0, "total_tokens": 0}
-    if isinstance(value, dict):
-        usage = value.get("usage")
-        if isinstance(usage, dict):
-            for key in totals:
-                number = usage.get(key)
-                if type(number) is int and number >= 0:
-                    totals[key] += number
-        for child in value.values():
-            child_totals = _usage_totals(child)
-            for key in totals:
-                totals[key] += child_totals[key]
-    elif isinstance(value, list):
-        for child in value:
-            child_totals = _usage_totals(child)
-            for key in totals:
-                totals[key] += child_totals[key]
-    return totals
-
-
 def _agent_run(tweets, prompt, model, seed, temperature, client, graph, args) -> dict:
     """Run the existing LangGraph agent after producing its initial draft."""
     from summary_agent import run_summary_agent
+    from model_usage import recording_client
 
+    client = recording_client(client)
+    start_call = len(client.calls)
     draft = _generate_with_settings(tweets, prompt, model, seed, temperature, client)
     started = perf_counter()
     agent = run_summary_agent(
@@ -165,16 +146,6 @@ def _agent_run(tweets, prompt, model, seed, temperature, client, graph, args) ->
     elapsed = perf_counter() - started + draft["execution_seconds"]
     final = agent["current_summary"]
     call_counts = agent.get("call_counts", {})
-    draft_usage = _usage_totals(draft)
-    agent_usage = _usage_totals({
-        "factual_results": agent.get("factual_results"),
-        "representation_results": agent.get("representation_results"),
-        "revisions": agent.get("revisions"),
-    })
-    usage = {
-        key: draft_usage[key] + agent_usage[key]
-        for key in draft_usage
-    }
     result = {
         "status": "completed",
         "system": "ontology_agent",
@@ -193,8 +164,8 @@ def _agent_run(tweets, prompt, model, seed, temperature, client, graph, args) ->
         "llm_calls": 1 + call_counts.get("model_calls", 0),
         "tool_calls": call_counts.get("tool_calls", 0),
         "embedding_calls": call_counts.get("embedding_calls", 0),
-        "usage": usage,
-        "usage_breakdown": {"draft": draft_usage, "agent": agent_usage},
+        **client.accounting(start_call),
+        "usage_scope": "draft_and_all_agent_calls_excludes_source_preprocessing",
         "ontology_used": True,
         "reference_summaries_used": False,
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -551,8 +522,8 @@ def main() -> None:
     parser.add_argument("--graph-dir", type=Path,
                         default=Path(__file__).resolve().parent / "results" / "ontology",
                         help="Directory containing complete populated topic graphs.")
-    parser.add_argument("--disparity-threshold", type=float, default=0.25,
-                        help="Agent revision threshold used by the internal checker.")
+    parser.add_argument("--disparity-threshold", type=float, default=0.2,
+                        help="Max 1 - min/max group coverage; 0.2 is the four-fifths rule.")
     parser.add_argument("--max-revisions", type=int, default=3)
     parser.add_argument("--embedding-model", default="all-minilm")
     parser.add_argument("--output-dir", type=Path,

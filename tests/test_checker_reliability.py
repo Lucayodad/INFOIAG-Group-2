@@ -5,7 +5,7 @@ import json
 import unittest
 from unittest.mock import Mock, patch
 
-from fact_agent import run_fact_agent
+from fact_agent import run_fact_agent, _loop_schema
 from fact_check import FactCheckError, compact_evidence, expand_verdict, prepare_assessment
 from fact_tools import lookup_fact
 from representation_check import match_summary_claims
@@ -20,6 +20,20 @@ def response(data):
 
 
 class FactualReliabilityTests(unittest.TestCase):
+    def test_observed_evidence_schema_requires_verdict_and_exact_reference_pairs(self):
+        catalogue = {"E001": {"quote_text": "I like Obama's speech."},
+                     "E002": {"quote_text": "Needs rest and inspiration IMO"}}
+        properties = _loop_schema([], catalogue)["properties"]
+        self.assertEqual(properties["action"]["enum"], ["finalize"])
+        self.assertNotIn("anyOf", properties["verdict"])
+        choices = properties["references"]["items"]["anyOf"]
+        self.assertEqual([(c["properties"]["evidence_id"]["enum"][0], c["properties"]["quote"]["enum"][0])
+                          for c in choices], [(key, value["quote_text"]) for key, value in catalogue.items()])
+        self.assertEqual(_loop_schema(["Obama"], catalogue)["properties"]["action"]["enum"],
+                         ["finalize", "lookup_entity_facts"])
+        ontology = {"E001": {"kind": "ontology_triple", "quote_text": "{}"}}
+        self.assertIn("lookup_fact", _loop_schema(["Obama"], ontology)["properties"]["action"]["enum"])
+
     def setUp(self):
         self.graph, self.claim = controlled_fixture()
         self.assessment = prepare_assessment(self.claim, lookup_fact(self.graph, self.claim))
@@ -50,6 +64,19 @@ class FactualReliabilityTests(unittest.TestCase):
         self.assertEqual(result["stop_reason"], "explicit_unknown")
         self.assertTrue(result["execution_trace"][-2]["format_repair"])
         self.assertTrue(result["explanation"].strip())
+
+    def test_format_repair_cannot_flip_to_opposing_verdict(self):
+        client = Mock()
+        reference = [{"evidence_id": "E001", "quote": "I like Obama's speech."}]
+        client.chat.side_effect = [loop_response("lookup_fact"),
+            loop_response("finalize", verdict="CONTRADICTED", explanation="An opposing assertion.",
+                          references=[{"evidence_id": "E001", "quote": "invented quote"}]),
+            loop_response("finalize", verdict="SUPPORTED", explanation="Changed conclusion during format repair.",
+                          references=reference)]
+        result = run_fact_agent(self.graph, self.claim, client)
+        self.assertEqual(result["verdict"], "UNKNOWN")
+        self.assertEqual(result["model_call_count"], 3)
+        self.assertIn("opposing verdict", result["explanation"])
 
     def test_persistent_missing_explanation_is_unknown_after_one_repair(self):
         client = Mock()

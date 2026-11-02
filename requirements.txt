@@ -4,5 +4,7 @@ openai==3.28.0
 langgraph==1.2.19
 typing_extensions==4.16.0
 httpx2==2.14.0
-torch
-transformers
+torch>=2.6,<3
+transformers>=4.45,<5
+sentence-transformers>=3.4,<6
+rouge-score==0.1.2

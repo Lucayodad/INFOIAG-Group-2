@@ -175,6 +175,29 @@ def _loop_schema(allowed_ids, evidence_ids=None):
     if not evidence_ids:
         schema["properties"]["references"]["maxItems"] = 0
         schema["properties"]["references"]["items"]["properties"]["evidence_id"].pop("enum")
+    elif isinstance(evidence_ids, dict):
+        # Evidence is already available: no_tool must not replace a verdict.
+        # Keep optional ontology lookup when an explicit entity allowlist exists.
+        actions = ["finalize"] + (["lookup_entity_facts"] if allowed_ids else [])
+        if (allowed_ids and any(item.get("kind") == "ontology_triple" for item in evidence_ids.values())
+                and not any(item.get("kind") in ("tweet", "source_claim") for item in evidence_ids.values())):
+            actions.append("lookup_fact")  # Entity lookup may precede cited-tweet retrieval.
+        schema["properties"]["action"]["enum"] = actions
+        if not allowed_ids:
+            schema["properties"]["verdict"] = VERDICT_SCHEMA["properties"]["verdict"]
+            schema["properties"]["explanation"] = {"type": "string", "minLength": 1}
+        else:
+            # Ontology triples can have long JSON-rendered quotations. Keep
+            # their existing compact schema and strict runtime quote validation.
+            return schema
+        # Constrained decoding selects an observed pair; Python still validates
+        # it against the full RDF mapping. No model-generated quote is trusted.
+        schema["properties"]["references"]["items"] = {"anyOf": [
+            {"type": "object", "properties": {
+                "evidence_id": {"type": "string", "enum": [key]},
+                "quote": {"type": "string", "enum": [item["quote_text"]]}},
+             "required": ["evidence_id", "quote"], "additionalProperties": False}
+            for key, item in evidence_ids.items()]}
     return schema
 
 
@@ -275,6 +298,7 @@ def run_fact_agent(graph, summary_claim, client, allowed_entity_ids=None, max_to
     ]
     initial = messages[1]
     repair_error = None
+    repair_verdict = None
     ordinary_turns = 0
     for turn in range(1, max_tool_calls + 3):
         if repair_error is None:
@@ -284,15 +308,17 @@ def run_fact_agent(graph, summary_claim, client, allowed_entity_ids=None, max_to
         request_messages = list(messages)
         if repair_error is not None:
             request_messages.append({"role": "user", "content": json.dumps({
-                "format_repair": "Return the required action envelope. A finalize verdict needs a nonempty explanation. Copy only shown evidence IDs and exact quotes. Do not request new evidence to repair formatting.",
+                "format_repair": "Return the required action envelope. A finalize verdict needs a brief nonempty explanation agreeing with its verdict field. Copy only shown evidence IDs and substrings of quote_text, never extracted_interpretation. Preserve your evidence-based conclusion while correcting formatting. Do not request new evidence to repair formatting.",
                 "validation_error": repair_error[:300]}, ensure_ascii=False)})
-        input_bytes = len(json.dumps(request_messages, ensure_ascii=False).encode("utf-8"))
+        request_schema = _loop_schema(allowed_ids, view["evidence_catalogue"])
+        input_bytes = len(json.dumps({"messages": request_messages, "format": request_schema},
+                                    ensure_ascii=False).encode("utf-8"))
         if input_bytes > 16000:
             return _finish_agent(assessment, trace, "input_limit_exceeded", "Factual request exceeds the 16000-byte input limit.")
         try:
             response = client.chat({
                 "model": "qwen3.5:4b", "stream": False, "think": False,
-                "messages": request_messages, "format": _loop_schema(allowed_ids, view["evidence_catalogue"]),
+                "messages": request_messages, "format": request_schema,
                 "options": {"temperature": 0, "seed": 42, "num_ctx": 16384, "num_predict": 900},
             })
         except GenerationError as exc:
@@ -303,6 +329,7 @@ def run_fact_agent(graph, summary_claim, client, allowed_entity_ids=None, max_to
                  "observed_evidence_ids": list(assessment["evidence"]),
                  "usage": response.get("usage") if isinstance(response, dict) else None}
         trace.append(event)
+        decision = None
         try:
             raw = response["output"][0]["content"][0]["text"]
             event["raw_response"] = raw
@@ -313,6 +340,8 @@ def run_fact_agent(graph, summary_claim, client, allowed_entity_ids=None, max_to
             if repair_error is not None and decision["action"] not in ("finalize", "no_tool"):
                 raise FactAgentError("Format repair cannot execute another tool.")
             if decision["action"] == "finalize":
+                if repair_error is not None and repair_verdict is not None and decision["verdict"] not in (repair_verdict, "UNKNOWN"):
+                    raise FactCheckError("Format repair changed to the opposing verdict; return UNKNOWN instead.")
                 verdict = expand_verdict({key: decision[key] for key in VERDICT_SCHEMA["required"]}, view, assessment)
                 final = apply_verdict(assessment, verdict)
         except (KeyError, IndexError, TypeError, ValueError) as exc:
@@ -323,6 +352,8 @@ def run_fact_agent(graph, summary_claim, client, allowed_entity_ids=None, max_to
             if repair_used:
                 return _finish_agent(assessment, trace, failure, str(exc))
             repair_used, repair_error = True, str(exc)
+            repair_verdict = (decision.get("verdict") if isinstance(decision, dict)
+                              and decision.get("verdict") in ("SUPPORTED", "CONTRADICTED", "UNKNOWN") else None)
             continue
         repair_error = None
         event["status"] = "accepted"

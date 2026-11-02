@@ -1,10 +1,18 @@
 """Check one summary claim against retrieved evidence; every verdict is unreviewed."""
 
+import html
 import json
 import re
 from rdflib import Graph
 
 from fact_tools import lookup_entity_facts, lookup_fact
+
+
+def quote_in(quote, text):
+    """Exact-substring citation check, tolerant only of HTML entities in the
+    dataset (e.g. '&amp;') and quotation marks wrapped around the quote."""
+    quote = html.unescape(quote).strip().strip("\"'“”‘’").strip()
+    return bool(quote) and quote in html.unescape(text)
 
 
 VERDICT_SCHEMA = {
@@ -30,21 +38,30 @@ SUPPORTED means the evidence explicitly supports the claim, including its
 attribution, negation, uncertainty and scope. CONTRADICTED requires an explicit
 contradiction. Otherwise return UNKNOWN, including when evidence conflicts.
 An opposing fact must negate this particular proposition. Negative sentiment
-elsewhere does not contradict 'some users approve'. Failure to establish 'many',
-'frequently' or 'a significant portion' is UNKNOWN, never a contradiction.
+elsewhere does not contradict 'some users approve'. Vague quantifiers ('some',
+'users', 'several', 'many', 'frequently') describe what the cited tweets say,
+not a corpus count: 'some' or a plural needs one or more cited tweets, and
+'several', 'many' or 'frequently' need at least three distinct cited tweets
+explicitly showing the content. Failing that bar is UNKNOWN, never CONTRADICTED.
 Always give a nonempty explanation, including for UNKNOWN. Explain the specific
 support, opposing fact, or missing/ambiguous information for THIS claim.
 Missing assertions or missing entities never establish falsehood.
 Source claims are unverified model interpretations: check them against the
 original tweets. Ontology assertions are stored assertions, not independently
 verified facts. An author's allegation does not establish a real-world fact.
-Do not generalize from cited tweets to all 90 tweets. Claims about frequencies,
-majorities or the entire corpus need evidence establishing that scope.
+Explicit majority, proportion or whole-corpus claims ('most', 'the majority',
+'all', percentages) need evidence establishing that scope; corpus balance is
+assessed by the separate representation check.
 Return exactly verdict, explanation and references. Each reference must give
 an evidence_id from the evidence dictionary and a nonempty exact substring of
 that entry's quote_text. For ontology entries, quote_text is a JSON rendering
 of the retrieved triple, not a quotation from a tweet. SUPPORTED and
 CONTRADICTED require at least one reference. UNKNOWN may have no references.
+Quote only quote_text, never extracted_interpretation. Keep the explanation
+brief and state the final evidence-based conclusion, without deliberation.
+The verdict field and the conclusion in the explanation must agree.
+When the schema supplies quotation choices, select the exact quotation paired
+with its evidence ID. Use the smallest set of references needed for the verdict.
 """
 
 
@@ -87,6 +104,7 @@ def compact_evidence(assessment, id_map=None, *, max_items=16, max_bytes=8000):
             if parent is None or item["quote_text"] not in parent["quote_text"]:
                 continue
             entry["original_tweet"] = parent["quote_text"]
+            entry["extracted_interpretation"] = entry.pop("text", "")
         # Tweet text already occurs verbatim in quote_text.
         if entry.get("text") == entry["quote_text"]:
             entry.pop("text")
@@ -148,6 +166,14 @@ def _validate_verdict(data, evidence):
         raise FactCheckError("Invalid verdict; expected SUPPORTED, CONTRADICTED or UNKNOWN.")
     if not isinstance(data["explanation"], str) or not data["explanation"].strip():
         raise FactCheckError("A nonempty explanation is required.")
+    # This is a structural consistency check, not a semantic verdict inferred
+    # from prose. Reject an explicitly named final verdict that conflicts with
+    # the JSON field; the existing single repair budget handles it conservatively.
+    named = re.findall(
+        r"\b(?:final\s+)?verdict\s*(?:(?:should|must)\s+be|is|:|=)\s*['\"]?"
+        r"(SUPPORTED|CONTRADICTED|UNKNOWN)\b", data["explanation"], flags=re.I)
+    if any(label.upper() != data["verdict"] for label in named):
+        raise FactCheckError("Verdict field conflicts with the explanation's explicit verdict.")
     references = data["references"]
     if not isinstance(references, list):
         raise FactCheckError("references must be a list.")
@@ -162,7 +188,7 @@ def _validate_verdict(data, evidence):
         item = evidence.get(reference["evidence_id"])
         if item is None:
             raise FactCheckError(f"Unknown evidence ID: {reference['evidence_id']}")
-        if reference["quote"] not in item["quote_text"]:
+        if not quote_in(reference["quote"], item["quote_text"]):
             raise FactCheckError(f"Quotation is absent from evidence {reference['evidence_id']}.")
 
 

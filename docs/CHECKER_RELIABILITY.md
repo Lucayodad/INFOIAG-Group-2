@@ -1,5 +1,9 @@
 # Checker reliability after the first Obama pilot
 
+Current default checking and report preparation are documented in
+[REPORT_VALIDATION.md](REPORT_VALIDATION.md). Semantic batching below concerns
+the optional internal metric; MNLI sentence coverage is now the default.
+
 These are historical notes for the earlier pilot fix. The final release replaces
 whole-registry reconciliation with embedding-shortlisted verification. See
 [RELEASE.md](RELEASE.md) and [CHECK_COMPONENTS.md](CHECK_COMPONENTS.md) for the

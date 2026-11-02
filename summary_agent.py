@@ -17,6 +17,7 @@ from typing_extensions import TypedDict
 from data_loader import DIALECT_LABELS, TOPICS
 from fact_check import fact_check_summary
 from ollama_backend import OllamaClient
+from model_usage import recording_client
 from representation_check import representation_check
 from revision_retrieval import retrieve_revision_evidence
 from summary_revision import revise_summary
@@ -219,9 +220,13 @@ def build_summary_agent(graph, client, *, disparity_threshold=None,
                 iterations[-1]["retained"] = False
                 previous = iterations[state["best_iteration"]]
                 restored = {key: deepcopy(previous[key]) for key in CHECKED_FIELDS}
-                decision = {"node": "route_checks", "iteration": best, "route": "finalize", "reason": reason, "rolled_back": True}
+                # Retry a bad fix (unsupported or regressing) with the recheck's
+                # findings as feedback; a valid fix with no measured gain stops.
+                retry = reason != "no_improvement" and state["revision_count"] < max_revisions
+                route = "retrieve_revision_evidence" if retry else "finalize"
+                decision = {"node": "route_checks", "iteration": best, "route": route, "reason": reason, "rolled_back": True}
                 return _update(state, "route_checks", **restored, revisions=revisions, iterations=iterations,
-                               route="finalize", stop_reason=reason,
+                               route=route, stop_reason=reason,
                                routing_decisions=state["routing_decisions"] + [decision])
         serious = [issue for issue in state["factual_issues"] + state["representation_issues"]
                    if issue["severity"] == "serious"]
@@ -272,6 +277,15 @@ def build_summary_agent(graph, client, *, disparity_threshold=None,
     def revise(state: SummaryAgentState):
         issues = [{key: issue[key] for key in ("type", "severity", "explanation")}
                   for issue in state["factual_issues"] + state["representation_issues"] if issue["severity"] == "serious"]
+        last = state["revisions"][-1] if state["revisions"] else None
+        if last and last["status"] == "rolled_back":
+            checked = state["iterations"][last["checked_iteration"]]["factual_results"]["assessments"]
+            changed = {row["sentence_id"]: row["after"]["text"] for row in last["changes"]}
+            findings = [f'{a["summary_claim_text"]}: {a["verdict"]}; {a["explanation"][:240]}'
+                        for a in checked if a["sentence_id"] in changed and a["verdict"] != "SUPPORTED"]
+            issues.append({"type": "rejected_previous_revision", "severity": "serious", "explanation":
+                           f"Rechecking rolled back your previous replacement ({last['reason']}): "
+                           f"{json.dumps(changed, ensure_ascii=False)}. Findings: {' | '.join(findings)}"})
         proposal = revise_summary(state["current_summary"], issues, state["revision_evidence"],
                                   client, max_input_bytes=revision_max_input_bytes)
         attempt = {**proposal, "attempt": state["revision_count"] + 1,
@@ -284,7 +298,8 @@ def build_summary_agent(graph, client, *, disparity_threshold=None,
                    "summary_versions": state["summary_versions"] + [deepcopy(proposal["candidate"])]} if candidate else {}
         return _update(state, "revise_summary", **changes,
                        revisions=state["revisions"] + [attempt],
-                       revision_count=state["revision_count"] + proposal["model_call_count"],
+                       # A format repair belongs to the same revision attempt.
+                       revision_count=state["revision_count"] + bool(proposal["model_call_count"]),
                        route="extract_summary_claims" if candidate else "finalize",
                        stop_reason="revision_requires_rechecking" if candidate else proposal["reason"],
                        routing_decisions=state["routing_decisions"] + [decision],
@@ -354,8 +369,12 @@ def run_summary_agent(graph, initial_summary, *, topic, prompt, client=None, **c
     owns_client = client is None
     client = OllamaClient() if owns_client else client
     try:
+        client = recording_client(client)
+        start_call = len(client.calls)
         workflow = build_summary_agent(graph, client, **check_options)
-        return workflow.invoke(state, config={"recursion_limit": 40})
+        result = workflow.invoke(state, config={"recursion_limit": 40})
+        result.update(client.accounting(start_call), usage_scope="agent_only_excludes_initial_draft_and_source_extraction")
+        return result
     finally:
         if owns_client:
             client.close()
@@ -393,9 +412,10 @@ def main():
     parser.add_argument("--graph", type=Path, required=True, help="Populated run graph in Turtle")
     parser.add_argument("--topic", choices=TOPICS, required=True)
     parser.add_argument("--prompt", help="Actual summary prompt; defaults to draft.summary_prompt")
-    parser.add_argument("--disparity-threshold", type=float, default=0.25,
-                        help="Exploratory pilot threshold (default: 0.25; not paper-established)")
+    parser.add_argument("--disparity-threshold", type=float, default=0.2,
+                        help="Max 1 - min/max group coverage (default: 0.2, the four-fifths rule)")
     parser.add_argument("--max-revisions", type=int, default=3)
+    parser.add_argument("--representation-metric", choices=("mnli", "internal"), default="mnli")
     parser.add_argument("--embedding-model", default="all-minilm")
     parser.add_argument("--output", type=Path, help="Full JSON result file (default: unique file in results/evidence/agent_runs)")
     args = parser.parse_args()
@@ -403,7 +423,7 @@ def main():
     result = run_summary_agent(Graph().parse(args.graph, format="turtle"), draft,
                                topic=args.topic, prompt=args.prompt or draft.get("summary_prompt"),
                                disparity_threshold=args.disparity_threshold, max_revisions=args.max_revisions,
-                               embedding_model=args.embedding_model)
+                               embedding_model=args.embedding_model, representation_metric=args.representation_metric)
     rendered = json.dumps(result, ensure_ascii=False, indent=2)
     output = args.output or DEFAULT_RUN_DIR / (
         f"{args.topic}_{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}_{uuid4().hex[:8]}.json")

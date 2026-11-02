@@ -24,6 +24,7 @@ from summarizer import GenerationError
 class SummaryAgentTests(unittest.TestCase):
     def run_agent(self, graph, draft, client, **options):
         options.setdefault("max_revisions", 0)  # Preserve check-only coverage of the original graph.
+        options.setdefault("representation_metric", "internal")
         return run_summary_agent(graph, draft, topic="Obama", prompt=draft["summary_prompt"],
                                  client=client, expected_group_counts=EXPECTED_COUNTS, **options)
 
@@ -173,7 +174,8 @@ class SummaryAgentTests(unittest.TestCase):
         client = mock_qwen(draft)
         with patch("summary_agent.OllamaClient", return_value=client):
             run_summary_agent(graph, draft, topic="Obama", prompt="Test",
-                               expected_group_counts=EXPECTED_COUNTS, disparity_threshold=0.25, max_revisions=0)
+                               expected_group_counts=EXPECTED_COUNTS, disparity_threshold=0.25, max_revisions=0,
+                               representation_metric="internal")
         client.close.assert_called_once()
         client.reset_mock()
         with patch("summary_agent.OllamaClient", return_value=client), self.assertRaises(ValueError):
@@ -223,7 +225,7 @@ class SummaryAgentTests(unittest.TestCase):
                 with patch("sys.argv", args), patch("summary_agent.DEFAULT_RUN_DIR", folder / "output"), \
                      patch("summary_agent.OllamaClient", return_value=client), redirect_stdout(io.StringIO()) as printed:
                     main()
-                self.assertIn("threshold=0.25", printed.getvalue())
+                self.assertIn("threshold=0.2", printed.getvalue())
                 self.assertIn("Evidence is incomplete", printed.getvalue())
             files = list((folder / "output").glob("Obama_*.json"))
             self.assertEqual(len(files), 2)
@@ -231,7 +233,7 @@ class SummaryAgentTests(unittest.TestCase):
             self.assertIn("iterations", result)
             self.assertIn("execution_history", result)
             self.assertIn("initial_summary", result)
-            self.assertEqual(result["representation_results"]["disparity_threshold"], 0.25)
+            self.assertEqual(result["representation_results"]["disparity_threshold"], 0.2)
 
 
 if __name__ == "__main__":

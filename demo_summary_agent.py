@@ -92,7 +92,7 @@ def main():
     graph, draft = demo_fixture()
     result = run_summary_agent(graph, draft, topic="Obama", prompt=draft["summary_prompt"],
                                client=mock_qwen(draft), expected_group_counts=EXPECTED_COUNTS,
-                               disparity_threshold=0.25, max_revisions=0)
+                               disparity_threshold=0.25, max_revisions=0, representation_metric="internal")
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

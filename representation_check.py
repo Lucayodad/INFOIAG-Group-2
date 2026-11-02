@@ -1,4 +1,4 @@
-"""Internal claim-based group coverage, not the experimental Equal Coverage metric.
+"""MNLI sentence coverage (default) and optional internal claim-based coverage.
 
 Exact wording/target/stance duplicates are grouped globally and deterministically.
 Bounded batches are matched, then reconciled against earlier canonical claims.
@@ -694,11 +694,43 @@ def _mnli_representation_check(graph, summary_claims, topic, disparity_threshold
     groups = {label: get_group_claims(graph, topic, label) for label in DIALECT_LABELS}
     problems = [problem for group in groups.values() for problem in group["integrity_issues"]]
     counts = {label: groups[label]["tweet_count"] for label in DIALECT_LABELS}
+    identities = {}
+    for group in groups.values():
+        for tweet in group["tweets"]:
+            identities.setdefault(tweet["tweet_id"], set()).add((tweet["tweet_uri"], tweet["dialect_label"]))
+    if any(len(values) != 1 for values in identities.values()):
+        problems.append("Tweet identity is ambiguous across topic groups or runs.")
+    topic_tweets = {tweet for iri in {TOPIC_IRIS[topic], NS["Topic_" + topic]}
+                    for tweet in graph.subjects(NS.aboutTopic, iri)}
+    for tweet in topic_tweets:
+        labels = list(graph.objects(tweet, NS.dialectLabel))
+        if len(labels) != 1 or not isinstance(labels[0], Literal) or str(labels[0]) not in DIALECT_LABELS:
+            problems.append("Topic contains a missing, multiple or unknown dialect label.")
+    if not summary_claims or any(record.get("status") == "unclear" for record in summary_claims):
+        problems.append("Incomplete summary extraction; factual checking may conceal claims.")
+    # Use the same sentence hypotheses as offline evaluation. Atomic claims
+    # are still validated and used by the unchanged factual checker.
+    try:
+        flatten_summary_claims(summary_claims)
+    except (ValueError, KeyError, TypeError) as exc:
+        problems.append(f"Invalid summary extraction: {exc}")
+    sentences = [{"claim": record.get("sentence")} for record in summary_claims]
+    if any(not isinstance(item["claim"], str) or not item["claim"].strip() for item in sentences):
+        problems.append("Missing summary sentence text.")
     for label in DIALECT_LABELS:
         if counts[label] != expected_group_counts[label]:
             problems.append(f"{label}: expected {expected_group_counts[label]} tweets, retrieved {counts[label]}.")
         if any(tweet["extraction_status"] == "unclear" for tweet in groups[label]["tweets"]):
             problems.append(f"{label}: unclear source extraction.")
+    metric = None
+    input_complete = not problems
+    if not problems:
+        try:
+            metric = calculate_equal_coverage(
+                {label: groups[label]["tweets"] for label in DIALECT_LABELS}, sentences,
+                scorer=mnli_scorer)
+        except (RuntimeError, OSError, ImportError, ValueError) as exc:
+            problems.append(f"MNLI scoring unavailable: {type(exc).__name__}: {exc}")
     if problems:
         return {
             "status": "UNKNOWN",
@@ -716,23 +748,23 @@ def _mnli_representation_check(graph, summary_claims, topic, disparity_threshold
                 "dialect_labels": list(DIALECT_LABELS), "evidence": [],
                 "explanation": "; ".join(sorted(set(problems))),
             }],
-            "reasons": sorted(set(problems + ["incomplete_topic_or_extraction_data"])),
-            "data_complete": False, "coverage_scope": "all_source_tweets_and_atomic_summary_claims",
-            "coverage_bounds_condition": "exact_mnli_scores",
+            "reasons": sorted(set(problems + ["mnli_scoring_unavailable" if input_complete else "incomplete_topic_or_extraction_data"])),
+            "data_complete": input_complete, "coverage_scope": "all_source_tweets_and_summary_sentences",
+            "coverage_bounds_condition": "unmeasured",
             "metric": "mnli_equal_coverage", "review_status": "unreviewed",
-            "matching": {"clusters": [], "aggregation_status": "ready"},
+            "matching": {"clusters": [], "aggregation_status": "UNKNOWN"},
             "model_call_count": 0, "embedding_call_count": 0,
             "source_tweet_counts": counts, "expected_group_counts": expected_group_counts,
             "summary_claim_count": 0,
         }
 
-    claims = flatten_summary_claims(summary_claims)
-    metric = calculate_equal_coverage(
-        {label: groups[label]["tweets"] for label in DIALECT_LABELS},
-        claims,
-        scorer=mnli_scorer,
-    )
-    ec = metric["equal_coverage"]
+    # Raw EC is bounded by the (small) absolute MNLI coverage, so a [0, 1]
+    # threshold could never be exceeded. Route on the scale-free four-fifths
+    # rule instead: disparity = 1 - min/max group coverage, and the default
+    # threshold 0.2 fails a group covered below 80% of the best-covered group.
+    # Raw EC is still reported as equal_coverage.
+    coverages = [row["coverage"] for row in metric["coverage_by_group"].values()]
+    ec = 1 - min(coverages) / max(coverages) if max(coverages) > 0 else 0.0
     status = "UNKNOWN" if disparity_threshold is None else (
         "PASS" if ec <= disparity_threshold else "FAIL"
     )
@@ -744,7 +776,7 @@ def _mnli_representation_check(graph, summary_claims, topic, disparity_threshold
         issues.append({
             "type": "representation_disparity", "dialect_label": lowest,
             "severity": "serious", "evidence": [],
-            "explanation": "The MNLI Equal Coverage deviation exceeds the configured threshold.",
+            "explanation": "This group's MNLI coverage falls below the four-fifths ratio to the best-covered group.",
         })
     elif status == "UNKNOWN":
         reasons.append("threshold_not_configured")
@@ -758,9 +790,9 @@ def _mnli_representation_check(graph, summary_claims, topic, disparity_threshold
         "representation_issues": issues,
         "reasons": reasons,
         "data_complete": True,
-        "coverage_scope": "all_source_tweets_and_atomic_summary_claims",
-        "coverage_bounds_condition": "exact_mnli_scores",
-        "threshold_metric": "equal_coverage",
+        "coverage_scope": "all_source_tweets_and_summary_sentences",
+        "coverage_bounds_condition": "model_probability_estimates_not_semantic_certainty",
+        "threshold_metric": "four_fifths_coverage_ratio",
         "review_status": "unreviewed",
         "matching": {"clusters": [], "aggregation_status": "ready"},
         "model_call_count": 0, "embedding_call_count": 0,

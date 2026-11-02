@@ -1,6 +1,6 @@
 """
 
-Metrics (choose with --metrics, default: all):
+Metrics (choose with --metrics, default: cost,rouge,gap,ec,bart):
   cost      execution time, tokens and LLM calls, read from the result JSON
   rouge     ROUGE-1/2/L F1 vs. both human abstractive references (mean)
   gap       group similarity gap (sentence-transformers, all-MiniLM-L6-v2)
@@ -21,6 +21,9 @@ Every evaluated summary becomes one row in results/eval/metrics.csv.
 import argparse
 import csv
 import json
+import hashlib
+import math
+import os
 import re
 import statistics
 import time
@@ -32,6 +35,7 @@ OUT_DEFAULT = ROOT / "results" / "eval" / "metrics.csv"
 TOPICS = ("Obama", "Superbowl", "McDonalds")
 GROUPS = ("AA", "Hisp", "White")
 ALL_METRICS = ("cost", "rouge", "gap", "ec", "deepeval", "bart")
+DEFAULT_METRICS = tuple(m for m in ALL_METRICS if m != "deepeval")
 
 
 # ---------------------------------------------------------------- data
@@ -68,37 +72,44 @@ def guess_topic_prompt(path, data):
 def records_from_file(path, system):
     """Turn one result JSON into one or two summary records.
 
-    Accepts the draft format of summarizer.py ("summary", "sentences") and
-    tries common agent keys ("final_summary", "draft_summary"). If the
-    agent output uses other keys, add them here.
+    Accepts summarizer drafts, experiment wrappers and native agent/pipeline
+    states. Preserve stored sentence boundaries instead of re-splitting them.
     """
     data = json.loads(path.read_text(encoding="utf-8"))
     topic, prompt = guess_topic_prompt(path, data)
     if topic not in TOPICS:
         print(f"  skipped {path.name}: topic unknown")
         return []
-    final = data.get("final_summary") or data.get("summary")
+    agent = data.get("agent_result") or (data if "current_summary" in data else {})
+    current = agent.get("current_summary") or {}
+    final = current.get("summary") or data.get("final_summary") or data.get("summary")
     if not final:
         print(f"  skipped {path.name}: no 'summary' or 'final_summary' key")
         return []
-    if isinstance(data.get("sentences"), list) and data.get("summary") == final:
+    if current.get("summary") == final and isinstance(current.get("sentences"), list):
+        sentences = [s["text"] for s in current["sentences"]]
+    elif isinstance(data.get("sentences"), list) and data.get("summary") == final:
         sentences = [s["text"] if isinstance(s, dict) else str(s) for s in data["sentences"]]
     else:
         sentences = split_sentences(final)
     usage = data.get("usage") or {}
-    agent = data.get("agent_result") or {}
+    complete = data.get("usage_complete", not agent and system == "baseline")
+    initial = data.get("initial_summary") or agent.get("initial_summary") or {}
+    prompt = prompt or str(initial.get("prompt_id") or data.get("pipeline", {}).get("prompt_id", ""))
     base = {
         "topic": topic, "prompt_id": prompt, "seed": data.get("seed", ""), "file": str(path),
         "execution_seconds": data.get("execution_seconds", ""),
-        "input_tokens": usage.get("input_tokens", ""),
-        "output_tokens": usage.get("output_tokens", ""),
+        "input_tokens": usage.get("input_tokens", "") if complete else "",
+        "output_tokens": usage.get("output_tokens", "") if complete else "",
+        "usage_complete": complete, "usage_scope": data.get("usage_scope", "legacy_incomplete" if agent else "draft_only"),
+        "summary_sha256": hashlib.sha256(final.encode("utf-8")).hexdigest(),
         "llm_calls": data.get("llm_calls", 1 if system == "baseline" else ""),
         "revision_count": agent.get("revision_count", ""),
         "agent_status": agent.get("status", ""),
+        "stop_reason": agent.get("stop_reason", ""),
     }
     out = [dict(base, system=system, summary=final, sentences=sentences)]
     # The agent's first draft: "initial_summary" in the experiment runner's output.
-    initial = data.get("initial_summary") if isinstance(data.get("initial_summary"), dict) else {}
     draft = data.get("draft_summary") or initial.get("summary")
     if draft:
         if isinstance(initial.get("sentences"), list):
@@ -110,19 +121,46 @@ def records_from_file(path, system):
                         execution_seconds=initial.get("execution_seconds", ""),
                         input_tokens=d_usage.get("input_tokens", ""),
                         output_tokens=d_usage.get("output_tokens", ""),
-                        llm_calls=1, revision_count="", agent_status=""))
+                        llm_calls=1, revision_count="", agent_status="", stop_reason="",
+                        summary_sha256=hashlib.sha256(draft.encode("utf-8")).hexdigest(),
+                        usage_complete=bool(d_usage), usage_scope="draft_only"))
     return out
 
 
 def collect_records(inputs, system):
     records = []
+    seen_paths, trials = set(), {}
     for item in inputs:
         p = Path(item)
-        files = sorted(p.rglob("*.json")) if p.is_dir() else [p]
+        manifests = sorted(p.rglob("manifest.json")) if p.is_dir() else ([p] if p.name == "manifest.json" else [])
+        files = []
+        for manifest in manifests:
+            data = json.loads(manifest.read_text(encoding="utf-8"))
+            for run in data.get("runs", []):
+                if run.get("status") == "completed":
+                    relative = Path(run["output_path"].replace("\\", "/"))
+                    candidate = manifest.parent / relative
+                    if not candidate.is_file():
+                        candidate = manifest.parent / "summaries" / relative.name
+                    if not candidate.is_file():
+                        raise ValueError(f"Completed manifest output is missing: {candidate}")
+                    files.append(candidate)
+        if not manifests:
+            files = sorted(p.rglob("*.json")) if p.is_dir() else [p]
         for f in files:
             if f.name.endswith(".request.json") or f.name == "manifest.json":
                 continue
-            records.extend(records_from_file(f, system))
+            if p.is_dir() and "drafts" in f.relative_to(p).parts:
+                continue
+            if f.resolve() in seen_paths:
+                continue
+            seen_paths.add(f.resolve())
+            for record in records_from_file(f, system):
+                trial = tuple(record.get(k, "") for k in ("system", "topic", "prompt_id", "seed"))
+                if trial in trials:
+                    raise ValueError(f"Ambiguous repeated trial {trial}: {trials[trial]} and {f}")
+                trials[trial] = f
+                records.append(record)
     return records
 
 
@@ -190,33 +228,16 @@ def metric_gap(rec, tweets):
     return out
 
 
-_NLI = None
 def metric_ec(rec, tweets, batch_size=32):
     """p(d_i, s_j) = probability that tweet d_i (premise) entails summary
     sentence s_j (hypothesis), as in Li et al. (2025), eq. 2-5."""
-    global _NLI
-    import torch
-    from transformers import AutoModelForSequenceClassification, AutoTokenizer
-    if _NLI is None:
-        name = "FacebookAI/roberta-large-mnli"
-        tok = AutoTokenizer.from_pretrained(name)
-        model = AutoModelForSequenceClassification.from_pretrained(name).eval()
-        ent = {v.upper(): k for k, v in model.config.id2label.items()}["ENTAILMENT"]
-        _NLI = (tok, model, ent)
-    tok, model, ent = _NLI
-    pairs = [(tw["text"], s) for tw in tweets for s in rec["sentences"]]
-    probs = []
-    with torch.no_grad():
-        for i in range(0, len(pairs), batch_size):
-            batch = pairs[i:i + batch_size]
-            enc = tok([p for p, _ in batch], [h for _, h in batch], return_tensors="pt",
-                      padding=True, truncation=True, max_length=256)
-            probs.extend(torch.softmax(model(**enc).logits, dim=-1)[:, ent].tolist())
-    n = len(rec["sentences"])
-    matrix = [probs[i * n:(i + 1) * n] for i in range(len(tweets))]
-    ec, per_group, overall = equal_coverage(matrix, [x["group"] for x in tweets])
-    out = {"ec": round(ec, 4), "cov_all": round(overall, 4)}
-    out.update({f"cov_{g}": round(v, 4) for g, v in per_group.items()})
+    from equal_coverage import calculate_equal_coverage
+    result = calculate_equal_coverage(
+        {g: [tw for tw in tweets if tw["group"] == g] for g in GROUPS},
+        [{"claim": sentence} for sentence in rec["sentences"]])
+    out = {"ec": round(result["equal_coverage"], 4), "cov_all": round(result["overall_coverage"], 4),
+           "ec_version": result["metric_version"]}
+    out.update({f"cov_{g}": round(result["coverage_by_group"][g]["coverage"], 4) for g in GROUPS})
     return out
 
 
@@ -290,6 +311,8 @@ def metric_bart(rec, tweets, refs):
 # ---------------------------------------------------------------- output
 
 FIELDS = ["system", "topic", "prompt_id", "seed", "file",
+          "summary_sha256", "ec_version", "usage_complete", "usage_scope", "stop_reason",
+          "metric_provenance",
           "ec", "cov_AA", "cov_Hisp", "cov_White", "cov_all",
           "sim_gap", "sim_AA", "sim_Hisp", "sim_White",
           "deepeval_score", "deepeval_alignment", "deepeval_coverage",
@@ -300,13 +323,36 @@ FIELDS = ["system", "topic", "prompt_id", "seed", "file",
 
 
 def append_rows(rows, out):
+    """Schema-aware atomic upsert; repeated evaluation never adds extra trials."""
     out.parent.mkdir(parents=True, exist_ok=True)
-    new = not out.exists()
-    with out.open("a", newline="", encoding="utf-8") as f:
-        w = csv.DictWriter(f, fieldnames=FIELDS, extrasaction="ignore")
-        if new:
+    old, fields = [], list(FIELDS)
+    if out.exists():
+        with out.open(newline="", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            fields += [key for key in reader.fieldnames or [] if key not in fields]
+            old = list(reader)
+        if any(None in row for row in old):
+            raise ValueError("CSV rows do not match their header; refusing to overwrite malformed data.")
+    def key(row):
+        trial = tuple(str(row.get(k, "")) for k in ("system", "topic", "prompt_id", "seed"))
+        file = str(row.get("file", ""))
+        identity = os.path.normcase(str(Path(file).resolve())) if Path(file).is_file() else file.replace("\\", "/")
+        return (*trial, identity)
+    merged = {}
+    for row in old + rows:
+        previous = merged.get(key(row), {})
+        if previous.get("summary_sha256") and row.get("summary_sha256") and previous["summary_sha256"] != row["summary_sha256"]:
+            previous = {}
+        merged[key(row)] = {**previous, **row}
+    temp = out.with_suffix(out.suffix + ".tmp")
+    try:
+        with temp.open("w", newline="", encoding="utf-8") as f:
+            w = csv.DictWriter(f, fieldnames=fields, extrasaction="ignore")
             w.writeheader()
-        w.writerows(rows)
+            w.writerows(merged.values())
+        os.replace(temp, out)
+    finally:
+        temp.unlink(missing_ok=True)
 
 
 def report(out):
@@ -316,27 +362,30 @@ def report(out):
             "rouge1", "rouge2", "rougeL", "execution_seconds"]
 
     def fmt(vals):
-        nums = [float(v) for v in vals if v not in ("", None)]
+        nums = [float(v) for v in vals if v not in ("", None) and math.isfinite(float(v))]
         if not nums:
             return "-"
         if len(nums) == 1:
-            return f"{nums[0]:.3f}"
-        return f"{statistics.mean(nums):.3f} ± {statistics.stdev(nums):.3f}"
+            return f"{nums[0]:.3f} (n=1)"
+        return f"{statistics.mean(nums):.3f} +/- {statistics.stdev(nums):.3f} (n={len(nums)})"
 
-    def table(key_fn, title):
+    def table(key_fn, title, selected=None):
+        selected = cols if selected is None else selected
         groups = {}
         for r in rows:
             groups.setdefault(key_fn(r), []).append(r)
-        lines = [f"\n## {title}\n", "| group | n | " + " | ".join(cols) + " |",
-                 "|" + "---|" * (len(cols) + 2)]
+        lines = [f"\n## {title}\n", "| group | n | " + " | ".join(selected) + " |",
+                 "|" + "---|" * (len(selected) + 2)]
         for k in sorted(groups):
             g = groups[k]
-            lines.append(f"| {k} | {len(g)} | " + " | ".join(fmt([r[c] for r in g]) for c in cols) + " |")
+            lines.append(f"| {k} | {len(g)} | " + " | ".join(fmt([r.get(c) for r in g]) for c in selected) + " |")
         return "\n".join(lines)
 
     text = (table(lambda r: r["system"], "Per system (mean ± std)")
             + table(lambda r: f"{r['system']} / {r['topic']} / prompt {r['prompt_id'] or '-'}",
-                    "Per system, topic and prompt"))
+                    "Per system, topic and prompt")
+            + table(lambda r: r["system"], "Absolute group coverage and disparity",
+                    ["ec", "cov_AA", "cov_Hisp", "cov_White", "cov_all", "sim_gap"]))
     print(text)
     path = out.with_name("report.md")
     path.write_text(text + "\n", encoding="utf-8")
@@ -350,7 +399,7 @@ def main():
     ap.add_argument("--system", help="Label for these summaries, e.g. baseline or agent.")
     ap.add_argument("--inputs", nargs="*", default=[], help="Result JSON files or folders.")
     ap.add_argument("--references", action="store_true", help="Evaluate the human reference summaries.")
-    ap.add_argument("--metrics", default=",".join(ALL_METRICS),
+    ap.add_argument("--metrics", default=",".join(DEFAULT_METRICS),
                     help="Comma-separated subset of: " + ",".join(ALL_METRICS))
     ap.add_argument("--judge-model", default="llama3.1:8b", help="Ollama model used as DeepEval judge.")
     ap.add_argument("--out", type=Path, default=OUT_DEFAULT)

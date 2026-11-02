@@ -1,5 +1,10 @@
 # LangGraph revision and rechecking
 
+Current default: MNLI coverage over original summary sentence entries, shared
+with offline evaluation. The internal claim metric described below remains
+available explicitly. See [report validation](REPORT_VALIDATION.md) for the
+metric version, usage accounting, safeguards and evaluation commands.
+
 The controller consumes an existing five-sentence draft and a populated,
 asserted RDF graph. Source extraction, population and initial generation still
 happen before this graph. Experimental metrics and the 36-run evaluation are
