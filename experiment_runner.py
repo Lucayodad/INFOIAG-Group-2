@@ -160,6 +160,7 @@ def _agent_run(tweets, prompt, model, seed, temperature, client, graph, args) ->
         disparity_threshold=args.disparity_threshold,
         max_revisions=args.max_revisions,
         embedding_model=args.embedding_model,
+        representation_metric="mnli",
     )
     elapsed = perf_counter() - started + draft["execution_seconds"]
     final = agent["current_summary"]

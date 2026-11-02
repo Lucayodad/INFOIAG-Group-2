@@ -19,6 +19,7 @@ from summary_claims import flatten_summary_claims
 from summarizer import GenerationError
 from semantic_retrieval import shortlist_equivalence
 from live_feed import emit_event
+from equal_coverage import calculate_equal_coverage
 
 
 MATCH_STATUSES = ("MATCHED", "NOT_MATCHED", "UNKNOWN")
@@ -683,22 +684,113 @@ def check_summary_fairness(matching, disparity_threshold=None, *, data_complete=
     }
 
 
+def _mnli_representation_check(graph, summary_claims, topic, disparity_threshold,
+                               expected_group_counts, mnli_scorer=None):
+    """Run the report's entailment-based fairness metric.
+
+    The ontology remains available for provenance and revision evidence, but
+    semantic claim clustering is not used as the fairness denominator.
+    """
+    groups = {label: get_group_claims(graph, topic, label) for label in DIALECT_LABELS}
+    problems = [problem for group in groups.values() for problem in group["integrity_issues"]]
+    counts = {label: groups[label]["tweet_count"] for label in DIALECT_LABELS}
+    for label in DIALECT_LABELS:
+        if counts[label] != expected_group_counts[label]:
+            problems.append(f"{label}: expected {expected_group_counts[label]} tweets, retrieved {counts[label]}.")
+        if any(tweet["extraction_status"] == "unclear" for tweet in groups[label]["tweets"]):
+            problems.append(f"{label}: unclear source extraction.")
+    if problems:
+        return {
+            "status": "UNKNOWN",
+            "coverage_by_group": {
+                label: {"coverage": None, "lower": None, "upper": None,
+                        "tweet_count": counts[label], "pair_count": 0}
+                for label in DIALECT_LABELS
+            },
+            "overall_coverage": None, "equal_coverage": None, "disparity": None,
+            "disparity_bounds": {"lower": None, "upper": None},
+            "disparity_threshold": disparity_threshold,
+            "matched_claims": [], "omitted_claims": [], "uncertain_claims": [],
+            "representation_issues": [{
+                "type": "representation_uncertainty", "severity": "unresolved",
+                "dialect_labels": list(DIALECT_LABELS), "evidence": [],
+                "explanation": "; ".join(sorted(set(problems))),
+            }],
+            "reasons": sorted(set(problems + ["incomplete_topic_or_extraction_data"])),
+            "data_complete": False, "coverage_scope": "all_source_tweets_and_atomic_summary_claims",
+            "coverage_bounds_condition": "exact_mnli_scores",
+            "metric": "mnli_equal_coverage", "review_status": "unreviewed",
+            "matching": {"clusters": [], "aggregation_status": "ready"},
+            "model_call_count": 0, "embedding_call_count": 0,
+            "source_tweet_counts": counts, "expected_group_counts": expected_group_counts,
+            "summary_claim_count": 0,
+        }
+
+    claims = flatten_summary_claims(summary_claims)
+    metric = calculate_equal_coverage(
+        {label: groups[label]["tweets"] for label in DIALECT_LABELS},
+        claims,
+        scorer=mnli_scorer,
+    )
+    ec = metric["equal_coverage"]
+    status = "UNKNOWN" if disparity_threshold is None else (
+        "PASS" if ec <= disparity_threshold else "FAIL"
+    )
+    issues = []
+    reasons = []
+    if status == "FAIL":
+        lowest = min(metric["coverage_by_group"], key=lambda label:
+                     metric["coverage_by_group"][label]["coverage"])
+        issues.append({
+            "type": "representation_disparity", "dialect_label": lowest,
+            "severity": "serious", "evidence": [],
+            "explanation": "The MNLI Equal Coverage deviation exceeds the configured threshold.",
+        })
+    elif status == "UNKNOWN":
+        reasons.append("threshold_not_configured")
+    return {
+        **metric,
+        "status": status,
+        "disparity": ec,
+        "disparity_bounds": {"lower": ec, "upper": ec},
+        "disparity_threshold": disparity_threshold,
+        "matched_claims": [], "omitted_claims": [], "uncertain_claims": [],
+        "representation_issues": issues,
+        "reasons": reasons,
+        "data_complete": True,
+        "coverage_scope": "all_source_tweets_and_atomic_summary_claims",
+        "coverage_bounds_condition": "exact_mnli_scores",
+        "threshold_metric": "equal_coverage",
+        "review_status": "unreviewed",
+        "matching": {"clusters": [], "aggregation_status": "ready"},
+        "model_call_count": 0, "embedding_call_count": 0,
+        "source_tweet_counts": counts, "expected_group_counts": expected_group_counts,
+    }
+
+
 def representation_check(graph, summary_claims, client, topic, disparity_threshold=None, *,
                          expected_group_counts=None, max_model_calls=64, max_input_bytes=12000, batch_size=8,
-                         embedder=None, embedding_model="all-minilm", embedding_cache=None):
+                         embedder=None, embedding_model="all-minilm", embedding_cache=None,
+                         metric="mnli", mnli_scorer=None):
     """Retrieve -> auditable aggregation/matching -> deterministic coverage.
 
     Defaults require the dataset's 30 tweets per group. Synthetic complete inputs
     must explicitly declare their own counts. Incomplete topics skip model calls
     and return UNKNOWN; their coverage bounds describe observed claims only.
     """
-    flatten_summary_claims(summary_claims)
     _validate_threshold(disparity_threshold)
     if type(max_model_calls) is not int or max_model_calls < 0:
         raise ValueError("max_model_calls must be a nonnegative integer.")
     expected = {label: 30 for label in DIALECT_LABELS} if expected_group_counts is None else dict(expected_group_counts)
     if set(expected) != set(DIALECT_LABELS) or any(type(n) is not int or n <= 0 for n in expected.values()):
         raise ValueError("Expected counts must specify positive integers for AA, Hisp and White.")
+    if metric == "mnli":
+        return _mnli_representation_check(
+            graph, summary_claims, topic, disparity_threshold, expected, mnli_scorer
+        )
+    if metric != "internal":
+        raise ValueError("metric must be 'mnli' or 'internal'.")
+    flatten_summary_claims(summary_claims)
     groups = {label: get_group_claims(graph, topic, label) for label in DIALECT_LABELS}
     problems = [problem for group in groups.values() for problem in group["integrity_issues"]]
     counts = {label: groups[label]["tweet_count"] for label in DIALECT_LABELS}

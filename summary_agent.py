@@ -135,7 +135,8 @@ def build_summary_agent(graph, client, *, disparity_threshold=None,
                         max_input_bytes=12000, batch_size=8, max_revisions=3,
                         embedder=None, embedding_model="all-minilm", revision_top_k=3,
                         max_revision_tweets=9, revision_evidence_bytes=7000,
-                        revision_max_input_bytes=14000):
+                        revision_max_input_bytes=14000, mnli_scorer=None,
+                        representation_metric="mnli"):
     """Compile the sequential graph with read-only evidence outside its state.
 
     Serious issues mean conclusive under the existing evidence guards, not
@@ -196,7 +197,8 @@ def build_summary_agent(graph, client, *, disparity_threshold=None,
             evidence, state["summary_claims"], client, state["topic"],
             disparity_threshold=disparity_threshold, expected_group_counts=expected_group_counts,
             max_model_calls=max_model_calls, max_input_bytes=max_input_bytes, batch_size=batch_size,
-            embedder=embedding_function, embedding_model=embedding_model, embedding_cache=embedding_cache)
+            embedder=embedding_function, embedding_model=embedding_model, embedding_cache=embedding_cache,
+            metric=representation_metric, mnli_scorer=mnli_scorer)
         return _update(state, "representation_check", representation_results=result,
                        representation_issues=result["representation_issues"],
                        call_counts=_counts(state, model_calls=result["model_call_count"],

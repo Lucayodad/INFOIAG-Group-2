@@ -52,6 +52,28 @@ def retrieve_revision_evidence(graph, topic, summary_claims, factual_results, re
     factual_targets = sorted({t["sentence_id"] for t in tasks})
     representation = representation_results
     if representation["status"] == "FAIL":
+        if representation.get("metric") == "mnli_equal_coverage":
+            labels = sorted({issue["dialect_label"] for issue in representation["representation_issues"]
+                             if issue["severity"] == "serious" and "dialect_label" in issue})
+            groups = {label: get_group_claims(graph, topic, label) for label in DIALECT_LABELS}
+            for label in labels:
+                preferred_ids = [tweet["tweet_id"] for tweet in groups[label]["tweets"]]
+                tasks.append({
+                    "task_id": f"representation:{label}:mnli",
+                    "kind": "representation",
+                    "sentence_id": next(
+                        (row["sentence_id"] for row in summary_claims if row["status"] == "no_claim"),
+                        summary_claims[-1]["sentence_id"],
+                    ),
+                    "query": f"Represent viewpoints from the {label} group.",
+                    "dialect_label": label,
+                    "preferred_ids": preferred_ids,
+                    "explanation": "Improve the group's MNLI Equal Coverage.",
+                })
+            # The generic ontology-claim branch below cannot select evidence
+            # for a metric that intentionally has no claim clusters.
+            if tasks:
+                representation = {**representation, "status": "FAIL", "omitted_claims": []}
         labels = sorted({issue["dialect_label"] for issue in representation["representation_issues"]
                          if issue["severity"] == "serious" and "dialect_label" in issue})
         if not labels:

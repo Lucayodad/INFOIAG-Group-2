@@ -148,7 +148,8 @@ def run_pipeline(args, client=None):
         print("[5/6] LangGraph: extract -> facts -> representation -> route -> revision/recheck when justified", flush=True)
         result = run_summary_agent(graph, draft, topic=args.topic, prompt=draft.get("summary_prompt") or get_prompt(args.topic, args.prompt_id),
             client=progress, disparity_threshold=args.disparity_threshold, max_revisions=args.max_revisions,
-            max_model_calls=args.max_model_calls, max_tool_calls=args.max_tool_calls)
+            max_model_calls=args.max_model_calls, max_tool_calls=args.max_tool_calls,
+            representation_metric="mnli")
         result["pipeline"] = manifest
         save_json(output, result)
         feed.emit("run_completed", "result_writer", "user", f"{result['status']}: {result['stop_reason']}",
