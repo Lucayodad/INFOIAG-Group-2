@@ -1,0 +1,98 @@
+{
+  "status": "draft_unchecked",
+  "provider": "ollama",
+  "topic": "McDonalds",
+  "seed": 202,
+  "temperature": 0.7,
+  "summary": "Public reaction to McDonald's is mixed, ranging from enthusiastic enjoyment of items like McRibs and nuggets to strong complaints about food quality, pricing, and service. Several users expressed dissatisfaction with the cost of meals, the small amount of sauce provided, and long wait times at drive-thru locations. Negative sentiment was also directed toward specific employees, such as rude cashiers and security guards, as well as the general taste of certain menu items. Despite the criticisms, many tweets highlight a deep craving for McDonald's products, often mentioning fries, chicken nuggets, and breakfast items. Users frequently contrasted McDonald's with other fast-food chains or mentioned specific locations, while some found the brand annoying but still attractive due to its catchy commercials.",
+  "sentences": [
+    {
+      "text": "Public reaction to McDonald's is mixed, ranging from enthusiastic enjoyment of items like McRibs and nuggets to strong complaints about food quality, pricing, and service.",
+      "source_ids": [
+        "McDonalds_001",
+        "McDonalds_003",
+        "McDonalds_004",
+        "McDonalds_009",
+        "McDonalds_020",
+        "McDonalds_046",
+        "McDonalds_056",
+        "McDonalds_071"
+      ]
+    },
+    {
+      "text": "Several users expressed dissatisfaction with the cost of meals, the small amount of sauce provided, and long wait times at drive-thru locations.",
+      "source_ids": [
+        "McDonalds_002",
+        "McDonalds_004",
+        "McDonalds_020",
+        "McDonalds_034",
+        "McDonalds_044",
+        "McDonalds_058",
+        "McDonalds_076"
+      ]
+    },
+    {
+      "text": "Negative sentiment was also directed toward specific employees, such as rude cashiers and security guards, as well as the general taste of certain menu items.",
+      "source_ids": [
+        "McDonalds_004",
+        "McDonalds_024",
+        "McDonalds_025",
+        "McDonalds_065",
+        "McDonalds_071",
+        "McDonalds_072"
+      ]
+    },
+    {
+      "text": "Despite the criticisms, many tweets highlight a deep craving for McDonald's products, often mentioning fries, chicken nuggets, and breakfast items.",
+      "source_ids": [
+        "McDonalds_003",
+        "McDonalds_014",
+        "McDonalds_021",
+        "McDonalds_026",
+        "McDonalds_047",
+        "McDonalds_051",
+        "McDonalds_054"
+      ]
+    },
+    {
+      "text": "Users frequently contrasted McDonald's with other fast-food chains or mentioned specific locations, while some found the brand annoying but still attractive due to its catchy commercials.",
+      "source_ids": [
+        "McDonalds_009",
+        "McDonalds_013",
+        "McDonalds_019",
+        "McDonalds_042",
+        "McDonalds_082",
+        "McDonalds_087",
+        "McDonalds_090"
+      ]
+    }
+  ],
+  "summary_prompt": "I work in communications and need to decide how to respond to public reaction. Summarize the tweets about McDonald's in 5 sentences, highlighting the main sentiment and the most important complaints or praise.",
+  "requested_model": "qwen3.5:4b",
+  "returned_model": "qwen3.5:4b",
+  "generation_settings": {
+    "temperature": 0.7,
+    "seed": 202,
+    "num_ctx": 16384,
+    "num_predict": 2000
+  },
+  "backend_metadata": {
+    "created_at": "2026-11-02T13:09:33.1338285Z",
+    "total_duration": 9832266000,
+    "load_duration": 4820800,
+    "prompt_eval_duration": 1957816000,
+    "eval_duration": 7431805000,
+    "done_reason": "stop"
+  },
+  "usage": {
+    "input_tokens": 4678,
+    "output_tokens": 514,
+    "total_tokens": 5192
+  },
+  "execution_seconds": 9.833668,
+  "created_at_utc": "2026-11-02T13:09:33.134355+00:00",
+  "input_sha256": "d4e38c6fce50e32132233c825dbbc6e77cf79a9ba8308184e5da3c7d436e20e2",
+  "request_sha256": "516978eab0937c542df494503a5a2c459d07293de2853b277fce0b3f1f40773e",
+  "ontology_used": false,
+  "reference_summaries_used": false
+}
