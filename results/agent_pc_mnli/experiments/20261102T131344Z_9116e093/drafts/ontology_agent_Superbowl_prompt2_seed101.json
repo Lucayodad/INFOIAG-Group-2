@@ -1,0 +1,136 @@
+{
+  "status": "draft_unchecked",
+  "provider": "ollama",
+  "topic": "Superbowl",
+  "seed": 101,
+  "temperature": 0.7,
+  "summary": "The provided tweets indicate a generally neutral to positive outlook toward the Super Bowl, with many users expressing excitement about specific matchups involving the Ravens and 49ers. A significant portion of the tweets express strong anticipation for a future Super Bowl appearance by either team, often referencing brotherly rivalries or specific player performances. Several users voiced complaints regarding the halftime show and commercials, with some expressing disappointment or skepticism about the performers selected. In contrast, many tweets highlight a lack of interest in the event itself, citing fatigue from other sports playoffs or personal priorities as reasons for not watching. The collection includes diverse opinions ranging from humorous takes on team dynamics to serious reflections on football history, without a unanimous consensus on the outcome.",
+  "sentences": [
+    {
+      "text": "The provided tweets indicate a generally neutral to positive outlook toward the Super Bowl, with many users expressing excitement about specific matchups involving the Ravens and 49ers.",
+      "source_ids": [
+        "Superbowl_001",
+        "Superbowl_003",
+        "Superbowl_004",
+        "Superbowl_006",
+        "Superbowl_008",
+        "Superbowl_009",
+        "Superbowl_017",
+        "Superbowl_020",
+        "Superbowl_022",
+        "Superbowl_026",
+        "Superbowl_029",
+        "Superbowl_031",
+        "Superbowl_038",
+        "Superbowl_041",
+        "Superbowl_057"
+      ]
+    },
+    {
+      "text": "A significant portion of the tweets express strong anticipation for a future Super Bowl appearance by either team, often referencing brotherly rivalries or specific player performances.",
+      "source_ids": [
+        "Superbowl_011",
+        "Superbowl_016",
+        "Superbowl_023",
+        "Superbowl_033",
+        "Superbowl_046",
+        "Superbowl_050",
+        "Superbowl_054",
+        "Superbowl_065",
+        "Superbowl_079"
+      ]
+    },
+    {
+      "text": "Several users voiced complaints regarding the halftime show and commercials, with some expressing disappointment or skepticism about the performers selected.",
+      "source_ids": [
+        "Superbowl_018",
+        "Superbowl_027",
+        "Superbowl_030",
+        "Superbowl_036",
+        "Superbowl_053",
+        "Superbowl_071"
+      ]
+    },
+    {
+      "text": "In contrast, many tweets highlight a lack of interest in the event itself, citing fatigue from other sports playoffs or personal priorities as reasons for not watching.",
+      "source_ids": [
+        "Superbowl_002",
+        "Superbowl_010",
+        "Superbowl_034",
+        "Superbowl_042",
+        "Superbowl_045",
+        "Superbowl_051",
+        "Superbowl_062"
+      ]
+    },
+    {
+      "text": "The collection includes diverse opinions ranging from humorous takes on team dynamics to serious reflections on football history, without a unanimous consensus on the outcome.",
+      "source_ids": [
+        "Superbowl_005",
+        "Superbowl_007",
+        "Superbowl_014",
+        "Superbowl_019",
+        "Superbowl_021",
+        "Superbowl_024",
+        "Superbowl_028",
+        "Superbowl_032",
+        "Superbowl_035",
+        "Superbowl_037",
+        "Superbowl_039",
+        "Superbowl_043",
+        "Superbowl_044",
+        "Superbowl_047",
+        "Superbowl_048",
+        "Superbowl_060",
+        "Superbowl_061",
+        "Superbowl_066",
+        "Superbowl_069",
+        "Superbowl_072",
+        "Superbowl_073",
+        "Superbowl_074",
+        "Superbowl_075",
+        "Superbowl_076",
+        "Superbowl_077",
+        "Superbowl_080",
+        "Superbowl_081",
+        "Superbowl_082",
+        "Superbowl_083",
+        "Superbowl_084",
+        "Superbowl_085",
+        "Superbowl_086",
+        "Superbowl_087",
+        "Superbowl_088",
+        "Superbowl_089",
+        "Superbowl_090"
+      ]
+    }
+  ],
+  "summary_prompt": "I work in communications and need to decide how to respond to public reaction. Summarize the tweets about the Super Bowl in 5 sentences, highlighting the main sentiment and the most important complaints or praise.",
+  "requested_model": "qwen3.5:4b",
+  "returned_model": "qwen3.5:4b",
+  "generation_settings": {
+    "temperature": 0.7,
+    "seed": 101,
+    "num_ctx": 16384,
+    "num_predict": 2000
+  },
+  "backend_metadata": {
+    "created_at": "2026-11-02T13:28:32.5490967Z",
+    "total_duration": 27634321300,
+    "load_duration": 5548700,
+    "prompt_eval_duration": 5640653000,
+    "eval_duration": 21810444000,
+    "done_reason": "stop"
+  },
+  "usage": {
+    "input_tokens": 4736,
+    "output_tokens": 850,
+    "total_tokens": 5586
+  },
+  "execution_seconds": 27.635232,
+  "created_at_utc": "2026-11-02T13:28:32.549611+00:00",
+  "input_sha256": "6941abca46e7cf65f39af66f706138e6e0a1b4d13e836920ce2532ecbd1a64b4",
+  "request_sha256": "81826982a3b7a6cdaf4c71fc3b20c362b5320099205bfb4edddb52742cc8fa34",
+  "ontology_used": false,
+  "reference_summaries_used": false
+}
