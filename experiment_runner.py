@@ -1,11 +1,4 @@
-"""Execute and record the planned 2 x 3 x 2 x 3 summary experiment.
-
-The baseline system is executable with the current repository.  The
-ontology-agent hook is deliberately isolated below because the current
-repository does not yet expose the draft/check/revise/recheck pipeline.
-Agent runs are recorded as pending placeholders; no synthetic summaries are
-created.
-"""
+"""Execute and record the planned 2 x 3 x 2 x 3 summary experiment."""
 
 import argparse
 import json
@@ -38,6 +31,174 @@ def _utc_run_id() -> str:
 def _write_json(path: Path, value: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def _read_json(path: Path) -> dict:
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise ValueError(f"Cannot read JSON file {path}: {exc}") from exc
+    if not isinstance(value, dict):
+        raise ValueError(f"Expected a JSON object in {path}.")
+    return value
+
+
+def _generate_with_settings(tweets, prompt, model, seed, temperature, client) -> dict:
+    """Generate an initial draft with the experiment-specific settings."""
+    from summarizer import build_request, digest, parse_response
+
+    request = build_request(tweets, prompt, model, "ollama")
+    request["options"]["temperature"] = temperature
+    request["options"]["seed"] = seed
+    started = perf_counter()
+    response = client.chat(request)
+    elapsed = perf_counter() - started
+    output = parse_response(response, tweets)
+    return {
+        "status": "draft_unchecked",
+        "provider": "ollama",
+        "topic": tweets[0].topic,
+        "seed": seed,
+        "temperature": temperature,
+        "summary": " ".join(entry["text"].strip() for entry in output["sentences"]),
+        "sentences": output["sentences"],
+        "summary_prompt": prompt,
+        "requested_model": model,
+        "returned_model": response.get("model"),
+        "generation_settings": request["options"],
+        "backend_metadata": response.get("backend_metadata"),
+        "usage": response.get("usage"),
+        "execution_seconds": round(elapsed, 6),
+        "created_at_utc": datetime.now(timezone.utc).isoformat(),
+        "input_sha256": digest([asdict(tweet) for tweet in tweets]),
+        "request_sha256": digest(request),
+        "ontology_used": False,
+        "reference_summaries_used": False,
+    }
+
+
+def _find_graphs(graph_dir: Path, topics: tuple[str, ...]) -> dict[str, Path]:
+    """Find the newest complete populated graph for each requested topic.
+
+    Graphs may come from populate_ontology.py or run_pipeline.py. The latter
+    stores them beside its pipeline result rather than under results/ontology.
+    """
+    graphs = {}
+    for topic in topics:
+        candidates = []
+        for graph_path in graph_dir.glob(f"*/{topic}.ttl"):
+            manifest_path = graph_path.parent / "manifest.json"
+            if not manifest_path.exists():
+                continue
+            manifest = _read_json(manifest_path)
+            if (manifest.get("topic") == topic and manifest.get("complete_topic") is True
+                    and manifest.get("tweet_count") == 90):
+                candidates.append((manifest_path.stat().st_mtime, graph_path))
+        pipeline_root = Path(__file__).resolve().parent / "results" / "evidence" / "pipeline_runs"
+        for graph_path in pipeline_root.glob(f"*_artifacts/{topic}.ttl"):
+            manifest_path = graph_path.parent / "manifest.json"
+            if not manifest_path.exists():
+                continue
+            manifest = _read_json(manifest_path)
+            counts = manifest.get("group_counts", {})
+            if (manifest.get("topic") == topic
+                    and manifest.get("graph") == str(graph_path)
+                    and sum(counts.values()) == 90
+                    and all(counts.get(label) == 30 for label in ("AA", "Hisp", "White"))):
+                candidates.append((manifest_path.stat().st_mtime, graph_path))
+        if not candidates:
+            raise ValueError(
+                f"No complete 90-tweet ontology graph found for {topic} under {graph_dir}. "
+                f"Run populate_ontology.py --topic {topic} first."
+            )
+        graphs[topic] = max(candidates, key=lambda item: item[0])[1]
+    return graphs
+
+
+def _load_graphs(graph_paths: dict[str, Path]):
+    try:
+        from rdflib import Graph
+    except ImportError as exc:
+        raise ValueError("Install requirements.txt before running ontology-agent experiments.") from exc
+    return {topic: Graph().parse(path, format="turtle") for topic, path in graph_paths.items()}
+
+
+def _usage_totals(value) -> dict[str, int]:
+    """Sum Ollama usage dictionaries in an agent result without guessing costs."""
+    totals = {"input_tokens": 0, "output_tokens": 0, "total_tokens": 0}
+    if isinstance(value, dict):
+        usage = value.get("usage")
+        if isinstance(usage, dict):
+            for key in totals:
+                number = usage.get(key)
+                if type(number) is int and number >= 0:
+                    totals[key] += number
+        for child in value.values():
+            child_totals = _usage_totals(child)
+            for key in totals:
+                totals[key] += child_totals[key]
+    elif isinstance(value, list):
+        for child in value:
+            child_totals = _usage_totals(child)
+            for key in totals:
+                totals[key] += child_totals[key]
+    return totals
+
+
+def _agent_run(tweets, prompt, model, seed, temperature, client, graph, args) -> dict:
+    """Run the existing LangGraph agent after producing its initial draft."""
+    from summary_agent import run_summary_agent
+
+    draft = _generate_with_settings(tweets, prompt, model, seed, temperature, client)
+    started = perf_counter()
+    agent = run_summary_agent(
+        graph,
+        draft,
+        topic=tweets[0].topic,
+        prompt=prompt,
+        client=client,
+        disparity_threshold=args.disparity_threshold,
+        max_revisions=args.max_revisions,
+        embedding_model=args.embedding_model,
+    )
+    elapsed = perf_counter() - started + draft["execution_seconds"]
+    final = agent["current_summary"]
+    call_counts = agent.get("call_counts", {})
+    draft_usage = _usage_totals(draft)
+    agent_usage = _usage_totals({
+        "factual_results": agent.get("factual_results"),
+        "representation_results": agent.get("representation_results"),
+        "revisions": agent.get("revisions"),
+    })
+    usage = {
+        key: draft_usage[key] + agent_usage[key]
+        for key in draft_usage
+    }
+    result = {
+        "status": "completed",
+        "system": "ontology_agent",
+        "provider": "ollama",
+        "topic": tweets[0].topic,
+        "seed": seed,
+        "temperature": temperature,
+        "summary": final["summary"],
+        "sentences": final["sentences"],
+        "summary_prompt": prompt,
+        "requested_model": model,
+        "returned_model": draft.get("returned_model"),
+        "initial_summary": draft,
+        "agent_result": agent,
+        "execution_seconds": round(elapsed, 6),
+        "llm_calls": 1 + call_counts.get("model_calls", 0),
+        "tool_calls": call_counts.get("tool_calls", 0),
+        "embedding_calls": call_counts.get("embedding_calls", 0),
+        "usage": usage,
+        "usage_breakdown": {"draft": draft_usage, "agent": agent_usage},
+        "ontology_used": True,
+        "reference_summaries_used": False,
+        "created_at_utc": datetime.now(timezone.utc).isoformat(),
+    }
+    return result
 
 
 def _tokens(text: str) -> list[str]:
@@ -221,69 +382,6 @@ def evaluate_manifest(manifest_path: Path, references_path: Path) -> Path:
     return output_path
 
 
-def _baseline_run(tweets, prompt, model, seed, temperature, client) -> dict:
-    """Run one baseline request while varying only the experiment settings."""
-    from summarizer import build_request, digest, parse_response
-
-    request = build_request(tweets, prompt, model, "ollama")
-    request["options"]["temperature"] = temperature
-    request["options"]["seed"] = seed
-    started = perf_counter()
-    response = client.chat(request)
-    elapsed = perf_counter() - started
-    output = parse_response(response, tweets)
-    return {
-        "status": "completed",
-        "system": "baseline",
-        "provider": "ollama",
-        "topic": tweets[0].topic,
-        "seed": seed,
-        "temperature": temperature,
-        "summary": " ".join(entry["text"].strip() for entry in output["sentences"]),
-        "sentences": output["sentences"],
-        "summary_prompt": prompt,
-        "requested_model": model,
-        "returned_model": response.get("model"),
-        "generation_settings": request["options"],
-        "backend_metadata": response.get("backend_metadata"),
-        "usage": response.get("usage"),
-        "execution_seconds": round(elapsed, 6),
-        "created_at_utc": datetime.now(timezone.utc).isoformat(),
-        "input_sha256": digest([asdict(tweet) for tweet in tweets]),
-        "request_sha256": digest(request),
-        "ontology_used": False,
-        "reference_summaries_used": False,
-        "checks_completed": ["dataset validation", "JSON structure", "five entries",
-                             "source ID membership"],
-        "checks_pending": ["EC", "group similarity gap", "DeepEval", "ROUGE"],
-    }
-
-
-def _ontology_agent_placeholder(topic, prompt_id, seed, temperature, model) -> dict:
-    """Explicit hand-off point for the Section 5 pipeline.
-
-    Replace this function with draft -> ontology check -> revision -> re-check.
-    Keeping the record makes incomplete execution visible in the manifest.
-    """
-    return {
-        "status": "pending_ontology_pipeline",
-        "system": "ontology_agent",
-        "topic": topic,
-        "prompt_id": prompt_id,
-        "seed": seed,
-        "temperature": temperature,
-        "requested_model": model,
-        "ontology_used": False,
-        "reference_summaries_used": False,
-        "draft": None,
-        "final": None,
-        "checks_pending": ["draft generation", "ontology checks", "revision",
-                           "re-check", "EC", "group similarity gap", "DeepEval", "ROUGE"],
-        "note": "Placeholder only: the ontology-driven pipeline is not exposed by the current repository.",
-        "created_at_utc": datetime.now(timezone.utc).isoformat(),
-    }
-
-
 def run_experiment(args) -> int:
     topics = TOPICS if args.topic == "all" else (args.topic,)
     prompt_ids = ("1", "2") if args.prompt_id == "all" else (args.prompt_id,)
@@ -304,33 +402,65 @@ def run_experiment(args) -> int:
         validate_dataset(tweets)
         batches[topic] = tweets
 
-    run_id = _utc_run_id()
-    destination = args.output_dir / "experiments" / run_id
-    destination.mkdir(parents=True, exist_ok=False)
-    manifest = {
-        "status": "started",
-        "run_id": run_id,
-        "created_at_utc": datetime.now(timezone.utc).isoformat(),
-        "model": model,
-        "provider": args.provider,
-        "temperature": args.temperature,
-        "seeds": list(seeds),
-        "systems": list(systems),
-        "topics": list(topics),
-        "prompt_ids": list(prompt_ids),
-        "expected_final_summaries": len(systems) * len(topics) * len(prompt_ids) * len(seeds),
-        "runs": [],
-        "evaluation": {
-            "status": "not_implemented",
-            "pending": ["EC", "group coverage values", "group similarity gap",
-                        "DeepEval alignment and coverage", "ROUGE", "aggregation"],
-        },
-    }
+    graph_paths = {}
+    graphs = {}
+    if "ontology_agent" in systems and not args.dry_run:
+        graph_paths = _find_graphs(args.graph_dir, topics)
+        graphs = _load_graphs(graph_paths)
+
+    if args.resume_manifest:
+        manifest_path = args.resume_manifest.resolve()
+        manifest = _read_json(manifest_path)
+        destination = manifest_path.parent
+        expected = {
+            "model": model, "provider": args.provider, "temperature": args.temperature,
+            "seeds": list(seeds), "systems": list(systems), "topics": list(topics),
+            "prompt_ids": list(prompt_ids),
+        }
+        mismatches = [key for key, value in expected.items() if manifest.get(key) != value]
+        if mismatches:
+            raise ValueError(f"Resume manifest settings differ for: {', '.join(mismatches)}.")
+        if not isinstance(manifest.get("runs"), list):
+            raise ValueError("Resume manifest has no valid runs list.")
+        run_id = manifest.get("run_id")
+    else:
+        run_id = _utc_run_id()
+        destination = args.output_dir / "experiments" / run_id
+        destination.mkdir(parents=True, exist_ok=False)
+        manifest = {
+            "status": "started",
+            "run_id": run_id,
+            "created_at_utc": datetime.now(timezone.utc).isoformat(),
+            "model": model,
+            "provider": args.provider,
+            "temperature": args.temperature,
+            "seeds": list(seeds),
+            "systems": list(systems),
+            "topics": list(topics),
+            "prompt_ids": list(prompt_ids),
+            "expected_final_summaries": len(systems) * len(topics) * len(prompt_ids) * len(seeds),
+            "graph_paths": {topic: str(path) for topic, path in graph_paths.items()},
+            "agent_options": {
+                "disparity_threshold": args.disparity_threshold,
+                "max_revisions": args.max_revisions,
+                "embedding_model": args.embedding_model,
+            },
+            "runs": [],
+            "evaluation": {
+                "status": "not_implemented",
+                "pending": ["EC", "group coverage values", "group similarity gap",
+                            "DeepEval alignment and coverage", "ROUGE", "aggregation"],
+            },
+        }
     _write_json(destination / "manifest.json", manifest)
 
     client = None
+    existing = {
+        record.get("run_id"): record for record in manifest["runs"]
+        if isinstance(record, dict) and record.get("run_id")
+    }
     try:
-        if "baseline" in systems and not args.dry_run:
+        if not args.dry_run:
             from ollama_backend import OllamaClient
             client = OllamaClient(timeout=args.timeout)
 
@@ -340,6 +470,9 @@ def run_experiment(args) -> int:
                     prompt = get_prompt(topic, prompt_id)
                     for seed in seeds:
                         key = f"{system}_{topic}_prompt{prompt_id}_seed{seed}"
+                        if existing.get(key, {}).get("status") == "completed":
+                            print(f"skipped_completed: {key}")
+                            continue
                         record = {
                             "run_id": key,
                             "system": system,
@@ -358,20 +491,33 @@ def run_experiment(args) -> int:
                                 _write_json(destination / "requests" / f"{key}.json", request)
                                 record["status"] = "request_saved"
                             else:
-                                record.update(_ontology_agent_placeholder(
-                                    topic, prompt_id, seed, args.temperature, model))
+                                record.update({
+                                    "status": "agent_request_pending",
+                                    "note": "Dry run does not execute the LangGraph agent.",
+                                })
                         elif system == "baseline":
-                            result = _baseline_run(
+                            result = _generate_with_settings(
                                 batches[topic], prompt, model, seed, args.temperature, client
                             )
+                            result["system"] = "baseline"
                             result["prompt_id"] = prompt_id
                             _write_json(destination / "summaries" / f"{key}.json", result)
                             record["status"] = "completed"
                             record["output_path"] = str(Path("summaries") / f"{key}.json")
                         else:
-                            record.update(_ontology_agent_placeholder(
-                                topic, prompt_id, seed, args.temperature, model))
-                        manifest["runs"].append(record)
+                            result = _agent_run(
+                                batches[topic], prompt, model, seed, args.temperature,
+                                client, graphs[topic], args
+                            )
+                            result["prompt_id"] = prompt_id
+                            _write_json(destination / "drafts" / f"{key}.json",
+                                        result["initial_summary"])
+                            _write_json(destination / "summaries" / f"{key}.json", result)
+                            record["status"] = "completed"
+                            record["output_path"] = str(Path("summaries") / f"{key}.json")
+                            record["draft_path"] = str(Path("drafts") / f"{key}.json")
+                        existing[key] = record
+                        manifest["runs"] = list(existing.values())
                         _write_json(destination / "manifest.json", manifest)
                         print(f"{record['status']}: {key}")
     finally:
@@ -401,8 +547,17 @@ def main() -> None:
     parser.add_argument("--model")
     parser.add_argument("--timeout", type=float, default=300)
     parser.add_argument("--data-dir", type=Path, default=DEFAULT_DATA_DIR)
+    parser.add_argument("--graph-dir", type=Path,
+                        default=Path(__file__).resolve().parent / "results" / "ontology",
+                        help="Directory containing complete populated topic graphs.")
+    parser.add_argument("--disparity-threshold", type=float, default=0.25,
+                        help="Agent revision threshold used by the internal checker.")
+    parser.add_argument("--max-revisions", type=int, default=3)
+    parser.add_argument("--embedding-model", default="all-minilm")
     parser.add_argument("--output-dir", type=Path,
                         default=Path(__file__).resolve().parent / "results")
+    parser.add_argument("--resume-manifest", type=Path,
+                        help="Continue an existing experiment manifest; completed runs are skipped.")
     parser.add_argument("--dry-run", action="store_true",
                         help="Save all baseline request payloads without calling Ollama.")
     args = parser.parse_args()
