@@ -1,6 +1,7 @@
 """Local Ollama transport, using only the Python standard library."""
 
 import json
+import math
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, build_opener, ProxyHandler, HTTPRedirectHandler
 
@@ -14,6 +15,7 @@ class OllamaClient:
     """Use loopback only, bypass proxies, and never fall back to a paid service."""
 
     endpoint = "http://127.0.0.1:11434/api/chat"
+    embedding_endpoint = "http://127.0.0.1:11434/api/embed"
 
     def __init__(self, timeout=300, opener=None):
         self.timeout = timeout
@@ -59,3 +61,45 @@ class OllamaClient:
 
     def close(self):
         pass  # urllib responses are closed immediately by their context manager.
+
+    def check_models(self, models=("qwen3.5:4b", "all-minilm")):
+        """Preflight local availability without loading/generating with a model."""
+        from summarizer import GenerationError
+        try:
+            with self.opener.open(Request("http://127.0.0.1:11434/api/tags"), timeout=self.timeout) as response:
+                data = json.load(response)
+            installed = {row["name"] for row in data["models"]}
+        except (HTTPError, URLError, TimeoutError, OSError, ValueError, KeyError, TypeError) as exc:
+            raise GenerationError("Cannot list local Ollama models. Start Ollama or run 'ollama serve'.") from exc
+        missing = [model for model in models if model not in installed and model + ":latest" not in installed]
+        if missing:
+            raise GenerationError("Missing Ollama models. Run: " + "; ".join("ollama pull " + model for model in missing))
+        return [{key: row.get(key) for key in ("name", "digest", "modified_at")}
+                for row in data["models"] if row["name"] in {name for model in models for name in (model, model + ":latest")}]
+
+    def embed(self, texts, model="all-minilm"):
+        """Local sentence embeddings; oversized inputs fail instead of truncating."""
+        from summarizer import GenerationError
+        if not isinstance(texts, list) or not texts or any(not isinstance(t, str) or not t.strip() for t in texts):
+            raise ValueError("Embedding input must be a nonempty list of nonempty strings.")
+        request = Request(self.embedding_endpoint,
+                          data=json.dumps({"model": model, "input": texts, "truncate": False}).encode("utf-8"),
+                          headers={"Content-Type": "application/json"}, method="POST")
+        try:
+            with self.opener.open(request, timeout=self.timeout) as response:
+                data = json.load(response)
+        except HTTPError as exc:
+            code = exc.code
+            exc.close()
+            raise GenerationError(f"Embedding HTTP {code}; ensure 'ollama pull {model}' is complete.") from exc
+        except (URLError, TimeoutError, OSError, ValueError) as exc:
+            raise GenerationError("Local embedding request failed; no lexical fallback was used.") from exc
+        vectors = data.get("embeddings") if isinstance(data, dict) else None
+        if not isinstance(vectors, list) or len(vectors) != len(texts):
+            raise GenerationError("Embedding response has the wrong number of vectors.")
+        dimension = len(vectors[0]) if isinstance(vectors[0], list) else 0
+        if not dimension or any(not isinstance(v, list) or len(v) != dimension or
+                                any(type(x) not in (int, float) or not math.isfinite(x) for x in v)
+                                or not any(v) for v in vectors):
+            raise GenerationError("Embedding response contains invalid vectors.")
+        return vectors

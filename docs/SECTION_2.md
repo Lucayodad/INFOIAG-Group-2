@@ -11,7 +11,9 @@
   in declared disjoint named classes, including named subclass paths.
 - Tools return JSON-serializable RDF terms, full IRIs, and status information.
 - Candidate type assertions can be checked in a temporary graph.
-- The supplied ontology is unchanged. There is no LLM or summary generation yet.
+- The supplied ontology file is not modified by loading or population. Initial
+  generation and the checking components are documented separately in
+  `SECTION_3.md` and `CHECK_COMPONENTS.md`.
 
 RDFLib executes the SPARQL, while the small `limited_closure` function implements
 the inference rules listed below. RDFLib alone does not automatically perform
@@ -21,14 +23,21 @@ OWL reasoning just because an OWL file has been loaded.
 
 | Item | Count |
 |---|---:|
-| Asserted triples | 567 |
-| Triples after limited inference | 591 |
-| Added triples | 24 |
-| Named classes | 81 |
-| Object properties | 60 |
-| Datatype properties | 26 |
-| Named individuals | 20 |
-| ClaimAssessment instances | 0 |
+| Asserted triples | 644 |
+| Triples after limited inference | 676 |
+| Added triples | 32 |
+| Named classes | 83 |
+| Object properties | 69 |
+| Datatype properties | 29 |
+| Named individuals | 31 |
+| ClaimAssessment instances | 1 |
+
+These counts describe Luca's complete updated export (`5a6c46a`), including its
+five example tweets, two claims and one assessment. Per-run population uses a
+612-triple asserted base after excluding those eight evidence instances and
+their links; it then adds the local schema and selected run records. Topic and
+Source reference individuals remain. The OWL file and standalone query results
+are unaffected by that filtering; see `../ontology/README.md` for the policy.
 
 ## Query results
 
@@ -38,7 +47,7 @@ OWL reasoning just because an OWL file has been loaded.
 | Q2: partners | OtherCompany |
 | Q3: match result and ritual | team1, team2, HalftimeShow |
 | Q4: occupation and friend | president, Person1 |
-| Q5: claims assessed false | No matches; no assessments are populated |
+| Q5: claims assessed false | No matches; the example assessment has no `isValid` value |
 | Q6: disjoint class conflict | No matches in the supplied graph |
 
 Q1 and Q4 return no matches in asserted-only mode. Q1 needs the inverse
@@ -111,11 +120,13 @@ Q5 returning nothing does not mean every claim is true. An assessment's
 ClaimAssessment instances or set `isValid=false` simply because evidence is
 missing. Future claim extraction and checking must keep source attribution.
 
-The supplied ontology has no tweet/dialect/summary-sentence coverage links.
-Consequently, the report's group coverage check cannot yet run. A later section
-needs a temporary evidence representation linking each tweet's dataset label,
-extracted claim, target, and supporting summary sentence. The three dialect
-categories are already present in the data; do not infer them from writing style.
+The supplied ontology now declares tweets, topics, summaries and coverage
+relationships, but its examples lack the dataset IDs, dialect labels and source
+provenance required for our checks. `populate_ontology.py` adds those fields to
+validated run evidence after excluding the base examples. The checking
+components in `CHECK_COMPONENTS.md` use that populated graph and extracted
+summary sentences. The three dialect categories come from the data; do not
+infer them from writing style.
 
 The report mentions flagging every unrepresented claim. A five-sentence summary
 cannot reproduce all 90 tweets. In the later coverage stage, distinguish normal
@@ -130,7 +141,7 @@ property; the code has not silently changed the ontology's range.
 
 ## Validation
 
-Eight tests passed using Python 3.14, RDFLib 7.3.0, and pyparsing 3.3.3. Tests
+Eight ontology-tool tests pass using Python 3.10, RDFLib 7.3.0, and pyparsing 3.3.3. Tests
 check Q1-Q4 against the report, absent and conflicting assessments, isolated
 Q6 conflicts, inherited class membership, transitivity, evidence provenance,
 and preservation of the source file. The original section-1 command also
@@ -145,8 +156,10 @@ Sources: supplied `report_AI.pdf`, sections 3.3 and 4; supplied
 `group2_Ontology.owl`; RDFLib's SPARQL documentation:
 https://rdflib.readthedocs.io/en/7.3.0/intro_to_sparql.html
 
-## Pause point
+## Integration status
 
-Section 2 stops here. Next, after the user's response, connect the chosen LLM
-and generate the initial five-sentence summary. The later checker and revision
-loop will call the tools implemented here.
+Local generation, source/summary claim extraction, RDF population, factual
+checking and representation checking are implemented. The ontology update is
+reconciled at the population/retrieval boundary. The LangGraph controller now
+connects extraction, checking, embedding retrieval, targeted revision and bounded
+rechecking; see `SUMMARY_AGENT.md`. Final experimental evaluation remains pending.
