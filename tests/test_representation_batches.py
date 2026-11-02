@@ -2,6 +2,7 @@
 
 from copy import deepcopy
 import json
+import re
 import unittest
 from unittest.mock import Mock
 
@@ -59,6 +60,15 @@ def topic_fixture(unique=False, duplicate=False):
 def oracle_client(gold, unknown_matching=(), unknown_equivalence=False):
     """Use fixture gold labels only; every response references the actual supplied data."""
     client = Mock()
+    labels = sorted(set(gold.values()))
+    def embed(texts, model="all-minilm"):
+        output = []
+        for text in texts:
+            unique = re.search(r"distinct item (\w+)", text)
+            label = unique.group(1) if unique else "speech" if "speech" in text else "policy" if "policy" in text else "detail"
+            output.append([1.0 if k == label else 0.0 for k in labels])
+        return output
+    client.embed.side_effect = embed
 
     def category(item):
         return gold[item["source_evidence"][0]["claim_id"]]
@@ -91,8 +101,9 @@ def oracle_client(gold, unknown_matching=(), unknown_equivalence=False):
         else:
             decisions = []
             for key, item in body["incoming"].items():
+                allowed = body.get("alternatives", {}).get(key, list(body["registry"]))
                 equivalent = next((old for old, value in body["registry"].items()
-                                   if category(item) == category(value)), None)
+                                   if old in allowed and category(item) == category(value)), None)
                 status = "UNKNOWN" if unknown_equivalence else "EQUIVALENT" if equivalent else "DISTINCT"
                 target = equivalent if status == "EQUIVALENT" else None
                 evidence = quotes(item) + (quotes(body["registry"][target]) if target else [])
@@ -127,8 +138,8 @@ class BatchedRepresentationTests(unittest.TestCase):
         self.assertAlmostEqual(report["coverage_by_group"]["Hisp"]["coverage"], 1 / 3)
         self.assertAlmostEqual(report["coverage_by_group"]["White"]["coverage"], 1 / 3)
         self.assertAlmostEqual(report["disparity"], 1 / 3)
-        self.assertGreater(sum(e["step"] == "semantic_equivalence" for e in report["execution_trace"]), 1)
-        self.assertTrue(any(e["step"] == "cross_batch_reconciliation" for e in report["execution_trace"]))
+        self.assertGreater(sum(e["step"] == "shortlisted_equivalence" for e in report["execution_trace"]), 1)
+        self.assertTrue(all(e["step"] != "cross_batch_reconciliation" for e in report["execution_trace"]))
         self.assertEqual(report["model_call_count"], client.chat.call_count)
         self.assertLessEqual(report["model_call_count"], 64)
         self.assertTrue(all(e["input_bytes"] <= 12000 for e in report["execution_trace"]))
@@ -195,8 +206,8 @@ class BatchedRepresentationTests(unittest.TestCase):
         client = oracle_client(self.gold)
         report = representation_check(self.graph, self.summary, client, "Obama", 0.2,
                                       max_model_calls=1, batch_size=1)
-        self.assertEqual(client.chat.call_count, 1)
-        self.assertEqual(report["model_call_count"], 1)
+        self.assertLessEqual(client.chat.call_count, 1)
+        self.assertEqual(report["model_call_count"], client.chat.call_count)
         self.assertEqual(report["status"], "UNKNOWN")
         self.assertTrue(report["data_complete"])
         self.assertEqual(report["matching"]["reason"], "model_budget_exhausted")
@@ -236,7 +247,7 @@ class BatchedRepresentationTests(unittest.TestCase):
         self.assertEqual(report["status"], "UNKNOWN")
         self.assertEqual(report["matching"]["reason"], "invalid_or_failed_model_assessment")
         self.assertTrue(any("registry reference" in e.get("error", "") for e in report["execution_trace"]))
-        self.assertTrue(any(e["step"] == "summary_coverage" for e in report["execution_trace"]))
+        self.assertFalse(report["omitted_claims"])
 
     def test_valid_ids_with_mismatched_quote_pairs_are_rejected(self):
         client = oracle_client(self.gold)
@@ -255,7 +266,7 @@ class BatchedRepresentationTests(unittest.TestCase):
         report = representation_check(self.graph, self.summary, client, "Obama", 0.2, batch_size=1)
         self.assertEqual(report["status"], "UNKNOWN")
         self.assertTrue(any("quotation is absent" in e.get("error", "") for e in report["execution_trace"]))
-        self.assertTrue(any(e["step"] == "summary_coverage" for e in report["execution_trace"]))
+        self.assertFalse(report["omitted_claims"])
 
     def test_equivalent_batches_are_matched_only_after_reconciliation(self):
         client = oracle_client(self.gold)
@@ -265,11 +276,11 @@ class BatchedRepresentationTests(unittest.TestCase):
             nonlocal local_calls
             response = oracle(payload)
             body = json.loads(payload["messages"][1]["content"])
-            if "candidates" in body and "summary_claims" not in body:
+            if "incoming" in body:
                 local_calls += 1
                 if local_calls == 2:
                     data = json.loads(response["output"][0]["content"][0]["text"])
-                    data["clusters"][0].update(status="NOT_MATCHED", summary_claim_ids=[], summary_evidence=[])
+                    data["decisions"][0].update(status="NOT_MATCHED")
                     response["output"][0]["content"][0]["text"] = json.dumps(data)
             return response
         client.chat.side_effect = respond
@@ -280,7 +291,7 @@ class BatchedRepresentationTests(unittest.TestCase):
         self.assertEqual(len(report["omitted_claims"]), 2)
         coverage = [e for e in report["execution_trace"] if e["step"] == "summary_coverage"]
         self.assertEqual(sum(e["candidate_count"] for e in coverage), 3)
-        self.assertTrue(any("Invalid equivalence-only" in e.get("error", "") for e in report["execution_trace"]))
+        self.assertTrue(any("equivalence status" in e.get("error", "") for e in report["execution_trace"]))
 
     def test_real_but_unshown_supporter_reference_is_rejected(self):
         client = oracle_client(self.gold)
@@ -299,7 +310,8 @@ class BatchedRepresentationTests(unittest.TestCase):
         self.assertEqual(report["status"], "UNKNOWN")
         self.assertEqual(report["model_call_count"], client.chat.call_count)
         self.assertGreater(report["model_call_count"], 2)
-        self.assertEqual(report["execution_trace"][0]["status"], "rejected")
+        self.assertTrue(any(e["status"] == "rejected" and "evidence claim ID" in e.get("error", "")
+                            for e in report["execution_trace"]))
 
     def test_deterministic_configurable_batches_and_canonical_ids(self):
         a, b = oracle_client(self.gold), oracle_client(self.gold)

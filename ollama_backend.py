@@ -62,6 +62,21 @@ class OllamaClient:
     def close(self):
         pass  # urllib responses are closed immediately by their context manager.
 
+    def check_models(self, models=("qwen3.5:4b", "all-minilm")):
+        """Preflight local availability without loading/generating with a model."""
+        from summarizer import GenerationError
+        try:
+            with self.opener.open(Request("http://127.0.0.1:11434/api/tags"), timeout=self.timeout) as response:
+                data = json.load(response)
+            installed = {row["name"] for row in data["models"]}
+        except (HTTPError, URLError, TimeoutError, OSError, ValueError, KeyError, TypeError) as exc:
+            raise GenerationError("Cannot list local Ollama models. Start Ollama or run 'ollama serve'.") from exc
+        missing = [model for model in models if model not in installed and model + ":latest" not in installed]
+        if missing:
+            raise GenerationError("Missing Ollama models. Run: " + "; ".join("ollama pull " + model for model in missing))
+        return [{key: row.get(key) for key in ("name", "digest", "modified_at")}
+                for row in data["models"] if row["name"] in {name for model in models for name in (model, model + ":latest")}]
+
     def embed(self, texts, model="all-minilm"):
         """Local sentence embeddings; oversized inputs fail instead of truncating."""
         from summarizer import GenerationError
