@@ -1,0 +1,88 @@
+{
+  "status": "draft_unchecked",
+  "provider": "ollama",
+  "topic": "Obama",
+  "seed": 202,
+  "temperature": 0.7,
+  "summary": "The collection contains a wide variety of perspectives on Barack Obama, ranging from positive observations about his speeches and appearance to critical views regarding his policies and character. Several users express strong negative opinions, describing Obama as the devil, a puppet, or someone who is afraid of the military and wants to feed illegals. Other tweets focus on specific issues such as gun control, the Affordable Care Act, and immigration reform, with some arguing these laws are necessary while others dismiss them as lies. There is significant engagement with the First Lady and her family, including comments on her fashion choices, beauty, and interactions with her daughters. A large portion of the content includes informal humor, slang, and jokes about Obama's appearance, voice, and hypothetical personal life situations.",
+  "sentences": [
+    {
+      "text": "The collection contains a wide variety of perspectives on Barack Obama, ranging from positive observations about his speeches and appearance to critical views regarding his policies and character.",
+      "source_ids": [
+        "Obama_001",
+        "Obama_002",
+        "Obama_003",
+        "Obama_004",
+        "Obama_005"
+      ]
+    },
+    {
+      "text": "Several users express strong negative opinions, describing Obama as the devil, a puppet, or someone who is afraid of the military and wants to feed illegals.",
+      "source_ids": [
+        "Obama_006",
+        "Obama_007",
+        "Obama_008",
+        "Obama_012",
+        "Obama_044"
+      ]
+    },
+    {
+      "text": "Other tweets focus on specific issues such as gun control, the Affordable Care Act, and immigration reform, with some arguing these laws are necessary while others dismiss them as lies.",
+      "source_ids": [
+        "Obama_013",
+        "Obama_020",
+        "Obama_058",
+        "Obama_060",
+        "Obama_070"
+      ]
+    },
+    {
+      "text": "There is significant engagement with the First Lady and her family, including comments on her fashion choices, beauty, and interactions with her daughters.",
+      "source_ids": [
+        "Obama_021",
+        "Obama_036",
+        "Obama_047",
+        "Obama_052",
+        "Obama_080"
+      ]
+    },
+    {
+      "text": "A large portion of the content includes informal humor, slang, and jokes about Obama's appearance, voice, and hypothetical personal life situations.",
+      "source_ids": [
+        "Obama_010",
+        "Obama_024",
+        "Obama_037",
+        "Obama_050",
+        "Obama_089"
+      ]
+    }
+  ],
+  "summary_prompt": "Below are 90 tweets about Barack Obama. Write a 5-sentence summary for someone who has not followed this topic, so they get a quick picture of what people are saying.",
+  "requested_model": "qwen3.5:4b",
+  "returned_model": "qwen3.5:4b",
+  "generation_settings": {
+    "temperature": 0.7,
+    "seed": 202,
+    "num_ctx": 16384,
+    "num_predict": 2000
+  },
+  "backend_metadata": {
+    "created_at": "2026-11-03T16:58:45.6934755Z",
+    "total_duration": 16294240800,
+    "load_duration": 5950400,
+    "prompt_eval_duration": 5137852000,
+    "eval_duration": 11045741000,
+    "done_reason": "stop"
+  },
+  "usage": {
+    "input_tokens": 4250,
+    "output_tokens": 428,
+    "total_tokens": 4678
+  },
+  "execution_seconds": 16.294806,
+  "created_at_utc": "2026-11-03T16:58:45.693988+00:00",
+  "input_sha256": "2f8c62fc6b98af2dc3bfe6311455b477450237eea22f3ded4edcf8ea28e25c68",
+  "request_sha256": "abd1b997158b678479f6569549df45fe5457407b66d1629bf37c4a1a79e21a63",
+  "ontology_used": false,
+  "reference_summaries_used": false
+}

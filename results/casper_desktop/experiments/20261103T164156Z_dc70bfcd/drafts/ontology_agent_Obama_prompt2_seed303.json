@@ -1,0 +1,103 @@
+{
+  "status": "draft_unchecked",
+  "provider": "ollama",
+  "topic": "Obama",
+  "seed": 303,
+  "temperature": 0.7,
+  "summary": "The tweets contain a wide range of reactions to Barack Obama, including expressions of admiration for his speech skills and appearance, as well as numerous criticisms regarding his policies on gun control, healthcare, and government spending. A significant portion of the messages express negative sentiment, with some users using strong language to describe Obama as a puppet, associate him with negative figures, or question his motives. Several tweets focus specifically on Michelle Obama, commenting on her fashion choices and style while offering mostly positive remarks about her. Some users make humorous or satirical remarks about political events and figures, often referencing specific media outlets or cultural touchstones. Additionally, there are various jokes and comments regarding the inauguration day, tax increases, and personal interactions that suggest a casual or dismissive attitude toward his presidency.",
+  "sentences": [
+    {
+      "text": "The tweets contain a wide range of reactions to Barack Obama, including expressions of admiration for his speech skills and appearance, as well as numerous criticisms regarding his policies on gun control, healthcare, and government spending.",
+      "source_ids": [
+        "Obama_001",
+        "Obama_003",
+        "Obama_005",
+        "Obama_020",
+        "Obama_021",
+        "Obama_047",
+        "Obama_058",
+        "Obama_069"
+      ]
+    },
+    {
+      "text": "A significant portion of the messages express negative sentiment, with some users using strong language to describe Obama as a puppet, associate him with negative figures, or question his motives.",
+      "source_ids": [
+        "Obama_002",
+        "Obama_007",
+        "Obama_008",
+        "Obama_009",
+        "Obama_015",
+        "Obama_016",
+        "Obama_026",
+        "Obama_044"
+      ]
+    },
+    {
+      "text": "Several tweets focus specifically on Michelle Obama, commenting on her fashion choices and style while offering mostly positive remarks about her.",
+      "source_ids": [
+        "Obama_001",
+        "Obama_021",
+        "Obama_022",
+        "Obama_036",
+        "Obama_047",
+        "Obama_052",
+        "Obama_080",
+        "Obama_085"
+      ]
+    },
+    {
+      "text": "Some users make humorous or satirical remarks about political events and figures, often referencing specific media outlets or cultural touchstones.",
+      "source_ids": [
+        "Obama_013",
+        "Obama_027",
+        "Obama_031",
+        "Obama_033",
+        "Obama_037",
+        "Obama_043",
+        "Obama_068",
+        "Obama_090"
+      ]
+    },
+    {
+      "text": "Additionally, there are various jokes and comments regarding the inauguration day, tax increases, and personal interactions that suggest a casual or dismissive attitude toward his presidency.",
+      "source_ids": [
+        "Obama_004",
+        "Obama_010",
+        "Obama_025",
+        "Obama_030",
+        "Obama_039",
+        "Obama_050",
+        "Obama_051",
+        "Obama_079"
+      ]
+    }
+  ],
+  "summary_prompt": "I work in communications and need to decide how to respond to public reaction. Summarize the tweets about Barack Obama in 5 sentences, highlighting the main sentiment and the most important complaints or praise.",
+  "requested_model": "qwen3.5:4b",
+  "returned_model": "qwen3.5:4b",
+  "generation_settings": {
+    "temperature": 0.7,
+    "seed": 303,
+    "num_ctx": 16384,
+    "num_predict": 2000
+  },
+  "backend_metadata": {
+    "created_at": "2026-11-03T17:37:09.0399658Z",
+    "total_duration": 26409152100,
+    "load_duration": 7783700,
+    "prompt_eval_duration": 5982732000,
+    "eval_duration": 20298260000,
+    "done_reason": "stop"
+  },
+  "usage": {
+    "input_tokens": 4252,
+    "output_tokens": 637,
+    "total_tokens": 4889
+  },
+  "execution_seconds": 26.409475,
+  "created_at_utc": "2026-11-03T17:37:09.053279+00:00",
+  "input_sha256": "2f8c62fc6b98af2dc3bfe6311455b477450237eea22f3ded4edcf8ea28e25c68",
+  "request_sha256": "05d55717769941ae305438e38cbee08f8beecc752095bbf4fd7b5dba238cc223",
+  "ontology_used": false,
+  "reference_summaries_used": false
+}
