@@ -1,0 +1,84 @@
+{
+  "status": "draft_unchecked",
+  "provider": "ollama",
+  "topic": "Superbowl",
+  "seed": 202,
+  "temperature": 0.7,
+  "summary": "Social media discussions during the Super Bowl era reveal a mix of casual fan engagement, specific team rivalries, and varying levels of interest in the event. A significant portion of the conversation centers on predictions for which teams will advance, with particular focus on the Ravens and Patriots. Beyond game outcomes, users frequently discuss halftime performances by artists like Beyonce and Destiny's Child, alongside debates about other broadcast elements. Complaints regarding the quality of commercials and confusion over scheduling rules such as the Pro Bowl timeline are also common themes. While some users express strong enthusiasm for specific matchups, others indicate a lack of motivation to attend or watch the game due to fatigue or alternative priorities.",
+  "sentences": [
+    {
+      "text": "Social media discussions during the Super Bowl era reveal a mix of casual fan engagement, specific team rivalries, and varying levels of interest in the event.",
+      "source_ids": [
+        "Superbowl_002",
+        "Superbowl_010",
+        "Superbowl_034",
+        "Superbowl_051"
+      ]
+    },
+    {
+      "text": "A significant portion of the conversation centers on predictions for which teams will advance, with particular focus on the Ravens and Patriots.",
+      "source_ids": [
+        "Superbowl_004",
+        "Superbowl_006",
+        "Superbowl_008",
+        "Superbowl_020"
+      ]
+    },
+    {
+      "text": "Beyond game outcomes, users frequently discuss halftime performances by artists like Beyonce and Destiny's Child, alongside debates about other broadcast elements.",
+      "source_ids": [
+        "Superbowl_015",
+        "Superbowl_027",
+        "Superbowl_030",
+        "Superbowl_060"
+      ]
+    },
+    {
+      "text": "Complaints regarding the quality of commercials and confusion over scheduling rules such as the Pro Bowl timeline are also common themes.",
+      "source_ids": [
+        "Superbowl_018",
+        "Superbowl_028",
+        "Superbowl_072"
+      ]
+    },
+    {
+      "text": "While some users express strong enthusiasm for specific matchups, others indicate a lack of motivation to attend or watch the game due to fatigue or alternative priorities.",
+      "source_ids": [
+        "Superbowl_045",
+        "Superbowl_054",
+        "Superbowl_062",
+        "Superbowl_089"
+      ]
+    }
+  ],
+  "summary_prompt": "I work in communications and need to decide how to respond to public reaction. Summarize the tweets about the Super Bowl in 5 sentences, highlighting the main sentiment and the most important complaints or praise.",
+  "requested_model": "qwen3.5:4b",
+  "returned_model": "qwen3.5:4b",
+  "generation_settings": {
+    "temperature": 0.7,
+    "seed": 202,
+    "num_ctx": 16384,
+    "num_predict": 2000
+  },
+  "backend_metadata": {
+    "created_at": "2026-11-03T16:45:18.8239662Z",
+    "total_duration": 5144924000,
+    "load_duration": 5222200,
+    "prompt_eval_duration": 56582000,
+    "eval_duration": 5067476000,
+    "done_reason": "stop"
+  },
+  "usage": {
+    "input_tokens": 4736,
+    "output_tokens": 355,
+    "total_tokens": 5091
+  },
+  "execution_seconds": 5.145749,
+  "created_at_utc": "2026-11-03T16:45:18.824486+00:00",
+  "input_sha256": "6941abca46e7cf65f39af66f706138e6e0a1b4d13e836920ce2532ecbd1a64b4",
+  "request_sha256": "e90080db411501f54efd90a722627fd499e49f7d33dee5e7dfc1f5e186bea49c",
+  "ontology_used": false,
+  "reference_summaries_used": false,
+  "system": "baseline",
+  "prompt_id": "2"
+}

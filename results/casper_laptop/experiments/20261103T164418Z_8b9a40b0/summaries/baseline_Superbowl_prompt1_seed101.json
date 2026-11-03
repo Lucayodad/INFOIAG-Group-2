@@ -1,0 +1,111 @@
+{
+  "status": "draft_unchecked",
+  "provider": "ollama",
+  "topic": "Superbowl",
+  "seed": 101,
+  "temperature": 0.7,
+  "summary": "Most of the tweets focus on the Super Bowl being a major event where fans are excited about teams like the Ravens and Patriots making it to the final. However, there is a significant number of users who express that they do not care about the game or are ignoring it to focus on other activities like school or eating. A large portion of the discussion involves speculation about which teams will play in the championship and predictions regarding potential upsets. Many users also talk about the excitement surrounding entertainment elements such as the halftime show featuring artists like Beyoncé, Nicki Minaj, and Destiny's Child. In addition to the game and entertainment, there are several comments regarding the commercials and specific historical or emotional stories surrounding football players.",
+  "sentences": [
+    {
+      "text": "Most of the tweets focus on the Super Bowl being a major event where fans are excited about teams like the Ravens and Patriots making it to the final.",
+      "source_ids": [
+        "Superbowl_004",
+        "Superbowl_006",
+        "Superbowl_008",
+        "Superbowl_016",
+        "Superbowl_020",
+        "Superbowl_022",
+        "Superbowl_026",
+        "Superbowl_029",
+        "Superbowl_038",
+        "Superbowl_046",
+        "Superbowl_057",
+        "Superbowl_077"
+      ]
+    },
+    {
+      "text": "However, there is a significant number of users who express that they do not care about the game or are ignoring it to focus on other activities like school or eating.",
+      "source_ids": [
+        "Superbowl_002",
+        "Superbowl_010",
+        "Superbowl_034",
+        "Superbowl_042",
+        "Superbowl_045",
+        "Superbowl_051",
+        "Superbowl_062",
+        "Superbowl_084",
+        "Superbowl_089",
+        "Superbowl_090"
+      ]
+    },
+    {
+      "text": "A large portion of the discussion involves speculation about which teams will play in the championship and predictions regarding potential upsets.",
+      "source_ids": [
+        "Superbowl_003",
+        "Superbowl_009",
+        "Superbowl_017",
+        "Superbowl_023",
+        "Superbowl_041",
+        "Superbowl_052",
+        "Superbowl_065",
+        "Superbowl_070"
+      ]
+    },
+    {
+      "text": "Many users also talk about the excitement surrounding entertainment elements such as the halftime show featuring artists like Beyoncé, Nicki Minaj, and Destiny's Child.",
+      "source_ids": [
+        "Superbowl_005",
+        "Superbowl_015",
+        "Superbowl_027",
+        "Superbowl_030",
+        "Superbowl_049",
+        "Superbowl_053",
+        "Superbowl_056",
+        "Superbowl_071"
+      ]
+    },
+    {
+      "text": "In addition to the game and entertainment, there are several comments regarding the commercials and specific historical or emotional stories surrounding football players.",
+      "source_ids": [
+        "Superbowl_001",
+        "Superbowl_018",
+        "Superbowl_032",
+        "Superbowl_060",
+        "Superbowl_075",
+        "Superbowl_079",
+        "Superbowl_082",
+        "Superbowl_088"
+      ]
+    }
+  ],
+  "summary_prompt": "Below are 90 tweets about the Super Bowl. Write a 5-sentence summary for someone who has not followed this topic, so they get a quick picture of what people are saying.",
+  "requested_model": "qwen3.5:4b",
+  "returned_model": "qwen3.5:4b",
+  "generation_settings": {
+    "temperature": 0.7,
+    "seed": 101,
+    "num_ctx": 16384,
+    "num_predict": 2000
+  },
+  "backend_metadata": {
+    "created_at": "2026-11-03T16:44:31.9031437Z",
+    "total_duration": 12922370400,
+    "load_duration": 9060100,
+    "prompt_eval_duration": 1949618000,
+    "eval_duration": 10730587000,
+    "done_reason": "stop"
+  },
+  "usage": {
+    "input_tokens": 4734,
+    "output_tokens": 772,
+    "total_tokens": 5506
+  },
+  "execution_seconds": 12.938749,
+  "created_at_utc": "2026-11-03T16:44:31.916023+00:00",
+  "input_sha256": "6941abca46e7cf65f39af66f706138e6e0a1b4d13e836920ce2532ecbd1a64b4",
+  "request_sha256": "0909644909d488c0d34ff0f69cfb9d3a50a9b090b7c5abd5384683832372a2e6",
+  "ontology_used": false,
+  "reference_summaries_used": false,
+  "system": "baseline",
+  "prompt_id": "1"
+}
