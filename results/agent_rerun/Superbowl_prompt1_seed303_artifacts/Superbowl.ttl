@@ -1,0 +1,3153 @@
+@prefix : <http://www.semanticweb.org/group2/ontology#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://www.semanticweb.org/group2/ontology> a owl:Ontology .
+
+:AfricanCountry a owl:Class ;
+    rdfs:subClassOf :Country .
+
+:AsianCountry a owl:Class ;
+    rdfs:subClassOf :Country .
+
+:BallSport a owl:Class ;
+    rdfs:subClassOf :Sport .
+
+:BillboardAdvertisement a owl:Class ;
+    rdfs:subClassOf :Advertisement .
+
+:BusinessClaim a owl:Class ;
+    rdfs:subClassOf :Claim .
+
+:COVID a owl:Class ;
+    rdfs:subClassOf :Disease .
+
+:Child a owl:Class ;
+    rdfs:subClassOf :Person .
+
+:CoffeeShopCompany a owl:Class ;
+    rdfs:subClassOf :Company .
+
+:DivSummDataset a :Source,
+        owl:NamedIndividual .
+
+:Draw a owl:Class ;
+    rdfs:subClassOf :Outcome .
+
+:EuropeanCountry a owl:Class ;
+    rdfs:subClassOf :Country .
+
+:Father a :Role,
+        owl:NamedIndividual .
+
+:Flu a owl:Class ;
+    rdfs:subClassOf :Disease .
+
+:GoodHearted a owl:Class ;
+    rdfs:subClassOf :CharacterTrait .
+
+:Headache a owl:Class ;
+    rdfs:subClassOf :Pain .
+
+:IceSport a owl:Class ;
+    rdfs:subClassOf :Sport .
+
+:League a owl:Class .
+
+:Loss a owl:Class ;
+    rdfs:subClassOf :Outcome .
+
+:Lovable a owl:Class ;
+    rdfs:subClassOf :CharacterTrait .
+
+:McDonalds a :Company,
+        owl:NamedIndividual ;
+    :employs :chef1,
+        :waitress1 ;
+    :hasBranch :branch1 ;
+    :hasName "McDonald's" ;
+    :headquarteredIn :America ;
+    :investsIn :RnD_Project1 ;
+    :operatesIn :FastFoodIndustry ;
+    :partnersWith :OtherCompany ;
+    :produces :FastFoodProduct .
+
+:MobileAdvertisement a owl:Class ;
+    rdfs:subClassOf :Advertisement .
+
+:MuscleAche a owl:Class ;
+    rdfs:subClassOf :Pain .
+
+:Obama a :Person,
+        owl:NamedIndividual ;
+    :friendsWith :Person1 ;
+    :hasAge 55 ;
+    :hasCharacterTrait :Rational ;
+    :hasCountryOfOrigin :America ;
+    :hasName "Obama" ;
+    :hasOccupation :president .
+
+:PoliticalClaim a owl:Class ;
+    rdfs:subClassOf :Claim .
+
+:Position a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Reserved a owl:Class ;
+    rdfs:subClassOf :Introvert .
+
+:Rule a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:SkillLevel a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:SportsClaim a owl:Class ;
+    rdfs:subClassOf :Claim .
+
+:StateOwnedCompany a owl:Class ;
+    rdfs:subClassOf :Company .
+
+:SuperBowlMatch1 a :Match,
+        owl:NamedIndividual ;
+    :hasAwayTeamScore 1 ;
+    :hasHomeTeamScore 2 ;
+    :hasLost :team2 ;
+    :hasParticipantTeam :team1,
+        :team2 ;
+    :hasWon :team1 ;
+    :partOf :SuperBowl1 .
+
+:TVCommercial a owl:Class ;
+    rdfs:subClassOf :Advertisement .
+
+:Tournament a owl:Class .
+
+:TransportationCompany a owl:Class ;
+    rdfs:subClassOf :Company .
+
+:WaterSport a owl:Class ;
+    rdfs:subClassOf :Sport .
+
+:Win a owl:Class ;
+    rdfs:subClassOf :Outcome .
+
+:aboutLocation a owl:ObjectProperty ;
+    rdfs:domain :Claim ;
+    rdfs:range :Location .
+
+:aboutTopic a owl:ObjectProperty ;
+    rdfs:domain :Tweet ;
+    rdfs:range :Topic .
+
+:affects a owl:ObjectProperty ;
+    rdfs:domain :HealthCondition ;
+    rdfs:range :Food .
+
+:basedOn a owl:ObjectProperty ;
+    rdfs:domain :Ranking ;
+    rdfs:range :MatchResult .
+
+:belongsTo a owl:ObjectProperty ;
+    rdfs:domain :Country ;
+    rdfs:range :InternationalOrganization .
+
+:belongsToCategory a owl:ObjectProperty ;
+    rdfs:domain :Food ;
+    rdfs:range :FoodCategory .
+
+:belongsToCountry a owl:FunctionalProperty,
+        owl:ObjectProperty ;
+    rdfs:domain :City ;
+    rdfs:range :Country .
+
+:belongsToTeam a owl:ObjectProperty ;
+    rdfs:domain :Person ;
+    rdfs:range :Team .
+
+:claimAboutTopic a owl:ObjectProperty ;
+    rdfs:domain :Claim ;
+    rdfs:range :Topic .
+
+:claimId a owl:DatatypeProperty ;
+    rdfs:domain :Claim ;
+    rdfs:range xsd:string .
+
+:competesWith a owl:ObjectProperty,
+        owl:SymmetricProperty ;
+    rdfs:domain :Team ;
+    rdfs:range :Team .
+
+:containsClaim a owl:ObjectProperty ;
+    rdfs:comment "The tweet expresses this extracted statement; no truth assessment is implied." ;
+    rdfs:domain :Tweet ;
+    rdfs:range :Claim ;
+    owl:inverseOf :extractedFrom .
+
+:contradictsClaim a owl:ObjectProperty,
+        owl:SymmetricProperty ;
+    rdfs:domain :Claim ;
+    rdfs:range :Claim .
+
+:coversClaim a owl:ObjectProperty ;
+    rdfs:domain :Summary ;
+    rdfs:range :Claim .
+
+:createdBy a owl:ObjectProperty ;
+    rdfs:domain :Advertisement ;
+    rdfs:range :Company .
+
+:dialectLabel a owl:DatatypeProperty ;
+    rdfs:comment "The source dataset's dialect label, retained as tweet metadata, not a verified author identity." ;
+    rdfs:domain :Tweet ;
+    rdfs:range xsd:string .
+
+:employs a owl:ObjectProperty ;
+    rdfs:domain :Company ;
+    rdfs:range :Person ;
+    owl:inverseOf :worksFor .
+
+:extractionStatus a owl:DatatypeProperty ;
+    rdfs:comment "extracted, unclear, or no_claim. This describes extraction, not truth." ;
+    rdfs:domain :Tweet ;
+    rdfs:range xsd:string .
+
+:famousFor a owl:ObjectProperty ;
+    rdfs:domain :City ;
+    rdfs:range :Food .
+
+:friendsWith a owl:ObjectProperty,
+        owl:SymmetricProperty ;
+    rdfs:domain :Person ;
+    rdfs:range :Person .
+
+:hasAwayTeamScore a owl:DatatypeProperty ;
+    rdfs:domain :Match ;
+    rdfs:range xsd:integer .
+
+:hasBranch a owl:ObjectProperty ;
+    rdfs:domain :Company ;
+    rdfs:range :Branch .
+
+:hasBudget a owl:DatatypeProperty ;
+    rdfs:domain :Advertisement ;
+    rdfs:range xsd:decimal .
+
+:hasCalories a owl:DatatypeProperty ;
+    rdfs:domain :Food ;
+    rdfs:range xsd:integer .
+
+:hasCapital a owl:FunctionalProperty,
+        owl:InverseFunctionalProperty,
+        owl:ObjectProperty ;
+    rdfs:domain :Country ;
+    rdfs:range :City .
+
+:hasCharacterTrait a owl:ObjectProperty ;
+    rdfs:domain :Person ;
+    rdfs:range :CharacterTrait .
+
+:hasCitizenship a owl:ObjectProperty ;
+    rdfs:domain :Person ;
+    rdfs:range :Country .
+
+:hasCity a owl:ObjectProperty ;
+    rdfs:domain :Country ;
+    rdfs:range :City .
+
+:hasCountryCode a owl:InverseFunctionalProperty,
+        owl:ObjectProperty ;
+    rdfs:domain :Country ;
+    rdfs:range :CountryCode .
+
+:hasCountryOfOrigin a owl:ObjectProperty ;
+    rdfs:domain :Person ;
+    rdfs:range :Country .
+
+:hasDate a owl:DatatypeProperty ;
+    rdfs:domain :Claim ;
+    rdfs:range xsd:dateTime .
+
+:hasDescendant a owl:ObjectProperty,
+        owl:TransitiveProperty ;
+    rdfs:domain :Person ;
+    rdfs:range :Person .
+
+:hasDuration a owl:DatatypeProperty ;
+    rdfs:domain :Advertisement ;
+    rdfs:range xsd:decimal .
+
+:hasEthnicity a owl:ObjectProperty ;
+    rdfs:domain :Person ;
+    rdfs:range :Ethnicity .
+
+:hasGovernmentForm a owl:ObjectProperty ;
+    rdfs:domain :Country ;
+    rdfs:range :GovernmentForm .
+
+:hasHeadOfState a owl:FunctionalProperty,
+        owl:ObjectProperty ;
+    rdfs:domain :Country ;
+    rdfs:range :Person .
+
+:hasHeight a owl:DatatypeProperty,
+        owl:FunctionalProperty ;
+    rdfs:domain :Landmark ;
+    rdfs:range xsd:decimal .
+
+:hasHomeTeamScore a owl:DatatypeProperty ;
+    rdfs:domain :Match ;
+    rdfs:range xsd:integer .
+
+:hasLandmark a owl:ObjectProperty ;
+    rdfs:domain :City ;
+    rdfs:range :Landmark .
+
+:hasLanguage a owl:ObjectProperty ;
+    rdfs:domain :Advertisement ;
+    rdfs:range :Language .
+
+:hasLost a owl:ObjectProperty ;
+    rdfs:domain :Match ;
+    rdfs:range :Team .
+
+:hasName a owl:DatatypeProperty ;
+    rdfs:range xsd:string .
+
+:hasNeighbor a owl:ObjectProperty,
+        owl:SymmetricProperty ;
+    rdfs:domain :Country ;
+    rdfs:range :Country .
+
+:hasNumberOfEmployees a owl:DatatypeProperty ;
+    rdfs:domain :Company ;
+    rdfs:range xsd:integer .
+
+:hasOccupation a owl:ObjectProperty ;
+    rdfs:domain :Person ;
+    rdfs:range :Occupation .
+
+:hasOfficialLanguage a owl:ObjectProperty ;
+    rdfs:domain :Country ;
+    rdfs:range :Language .
+
+:hasOutcome a owl:FunctionalProperty,
+        owl:ObjectProperty ;
+    rdfs:domain :Match ;
+    rdfs:range :Outcome .
+
+:hasParticipantTeam a owl:ObjectProperty ;
+    rdfs:domain :Match ;
+    rdfs:range :Team .
+
+:hasPopulation a owl:DatatypeProperty ;
+    rdfs:domain :Country ;
+    rdfs:range xsd:integer .
+
+:hasPosition a owl:DatatypeProperty ;
+    rdfs:domain :Player ;
+    rdfs:range xsd:string .
+
+:hasPrimaryOccupation a owl:FunctionalProperty,
+        owl:ObjectProperty ;
+    rdfs:domain :Person ;
+    rdfs:range :Occupation .
+
+:hasPublicationDate a owl:DatatypeProperty ;
+    rdfs:domain :Advertisement ;
+    rdfs:range xsd:dateTime .
+
+:hasRanking a owl:ObjectProperty ;
+    rdfs:domain :Competition ;
+    rdfs:range :Ranking .
+
+:hasRevenue a owl:DatatypeProperty ;
+    rdfs:domain :Company ;
+    rdfs:range xsd:decimal .
+
+:hasRitual a owl:ObjectProperty ;
+    rdfs:domain :Competition ;
+    rdfs:range :Ritual .
+
+:hasRole a owl:ObjectProperty ;
+    rdfs:domain :Person ;
+    rdfs:range :Role .
+
+:hasRules a owl:DatatypeProperty ;
+    rdfs:domain :Sport ;
+    rdfs:range xsd:string .
+
+:hasSeverity a owl:DatatypeProperty ;
+    rdfs:domain :Disease ;
+    rdfs:range xsd:string .
+
+:hasSkillLevel a owl:DatatypeProperty ;
+    rdfs:domain :Player ;
+    rdfs:range xsd:string .
+
+:hasText a owl:DatatypeProperty ;
+    rdfs:domain :Claim ;
+    rdfs:range xsd:string .
+
+:hasTopicName a owl:DatatypeProperty ;
+    rdfs:domain :Topic ;
+    rdfs:range xsd:string .
+
+:hasTypicalDuration a owl:DatatypeProperty ;
+    rdfs:domain :Disease ;
+    rdfs:range xsd:integer .
+
+:hasViewCount a owl:DatatypeProperty ;
+    rdfs:domain :Advertisement ;
+    rdfs:range xsd:integer .
+
+:hasWinnerDetermination a owl:ObjectProperty ;
+    rdfs:domain :Sport ;
+    rdfs:range :WinnerDetermination .
+
+:hasWon a owl:ObjectProperty ;
+    rdfs:domain :Match ;
+    rdfs:range :Team .
+
+:hasYearBuilt a owl:DatatypeProperty ;
+    rdfs:domain :Landmark ;
+    rdfs:range xsd:integer .
+
+:headquarteredIn a owl:FunctionalProperty,
+        owl:ObjectProperty ;
+    rdfs:domain :Company ;
+    rdfs:range :Country .
+
+:hosts a owl:ObjectProperty ;
+    rdfs:domain :Country ;
+    rdfs:range :Event .
+
+:investsIn a owl:ObjectProperty ;
+    rdfs:domain :Company ;
+    rdfs:range :ResearchAndDevelopment .
+
+:isApproved a owl:DatatypeProperty ;
+    rdfs:domain :Advertisement ;
+    rdfs:range xsd:boolean .
+
+:isContagious a owl:DatatypeProperty ;
+    rdfs:domain :Disease ;
+    rdfs:range xsd:boolean .
+
+:isPlayedBy a owl:ObjectProperty ;
+    rdfs:domain :Match ;
+    rdfs:range :Team .
+
+:isPublic a owl:DatatypeProperty ;
+    rdfs:domain :Company ;
+    rdfs:range xsd:boolean .
+
+:isVegetarian a owl:DatatypeProperty ;
+    rdfs:domain :Food ;
+    rdfs:range xsd:boolean .
+
+:locatedIn a owl:ObjectProperty,
+        owl:TransitiveProperty ;
+    rdfs:range [ a owl:Class ;
+            owl:unionOf ( :City :Country :Location ) ] .
+
+:madeBy a owl:ObjectProperty ;
+    rdfs:domain :Claim ;
+    rdfs:range :Person .
+
+:marriedTo a owl:ObjectProperty,
+        owl:SymmetricProperty ;
+    rdfs:domain :Adult ;
+    rdfs:range :Adult .
+
+:operatesIn a owl:ObjectProperty ;
+    rdfs:domain :Company ;
+    rdfs:range :Industry .
+
+:originatesIn a owl:ObjectProperty ;
+    rdfs:domain :Disease ;
+    rdfs:range :City .
+
+:partOf a owl:ObjectProperty,
+        owl:TransitiveProperty .
+
+:participatesIn a owl:ObjectProperty ;
+    rdfs:domain :Player ;
+    rdfs:range :Sport .
+
+:partnersWith a owl:ObjectProperty,
+        owl:SymmetricProperty ;
+    rdfs:domain :Company ;
+    rdfs:range :Company .
+
+:produces a owl:ObjectProperty ;
+    rdfs:domain :Company ;
+    rdfs:range [ a owl:Class ;
+            owl:unionOf ( :Product :Service ) ] .
+
+:prohibits a owl:ObjectProperty ;
+    rdfs:domain :Allergy ;
+    rdfs:range :FoodCategory .
+
+:promotes a owl:ObjectProperty ;
+    rdfs:domain :Advertisement ;
+    rdfs:range :Product .
+
+:recognizes a owl:ObjectProperty ;
+    rdfs:domain :Country ;
+    rdfs:range :Holiday .
+
+:relatedTo a owl:ObjectProperty ;
+    rdfs:domain :Claim ;
+    rdfs:range [ a owl:Class ;
+            owl:unionOf ( :Company :Event :Person :Sport ) ] .
+
+:shownAt a owl:ObjectProperty ;
+    rdfs:domain :Advertisement ;
+    rdfs:range :Location .
+
+:sourceFile a owl:DatatypeProperty ;
+    rdfs:domain :Tweet ;
+    rdfs:range xsd:string .
+
+:sourceLine a owl:DatatypeProperty ;
+    rdfs:domain :Tweet ;
+    rdfs:range xsd:integer .
+
+:sourceQuote a owl:DatatypeProperty ;
+    rdfs:domain :Claim ;
+    rdfs:range xsd:string .
+
+:spreadsTo a owl:ObjectProperty ;
+    rdfs:domain :Disease ;
+    rdfs:range :Region .
+
+:spreadsToRegion a owl:ObjectProperty,
+        owl:TransitiveProperty ;
+    rdfs:domain :Region ;
+    rdfs:range :Region .
+
+:stance a owl:DatatypeProperty ;
+    rdfs:domain :Claim ;
+    rdfs:range xsd:string .
+
+:summarizesTopic a owl:ObjectProperty ;
+    rdfs:domain :Summary ;
+    rdfs:range :Topic .
+
+:summaryHasText a owl:DatatypeProperty ;
+    rdfs:domain :Summary ;
+    rdfs:range xsd:string .
+
+:targetText a owl:DatatypeProperty ;
+    rdfs:domain :Claim ;
+    rdfs:range xsd:string .
+
+:targetsAgeGroup a owl:ObjectProperty ;
+    rdfs:domain :Advertisement ;
+    rdfs:range :AgeGroup .
+
+:tweetId a owl:DatatypeProperty ;
+    rdfs:domain :Tweet ;
+    rdfs:range xsd:string .
+
+:tweetText a owl:DatatypeProperty ;
+    rdfs:comment "Legacy spelling. New population uses tweetHasText from the base ontology; readers explicitly accept both." ;
+    rdfs:domain :Tweet ;
+    rdfs:range xsd:string ;
+    owl:equivalentProperty :tweetHasText .
+
+:uses a owl:ObjectProperty ;
+    rdfs:domain :Country ;
+    rdfs:range :Currency .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_001> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_001_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_001_C02> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 1 ;
+    :tweetHasText "\"Look at you MSY all snazzed up for the superbowl. If a hurricane won't kick you into shape, football will!\"" ;
+    :tweetId "Superbowl_001" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_002> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_002_C01> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 2 ;
+    :tweetHasText "\"Hey its sunday, the day before school &amp; the superbowl but I ain't gunna act like I even care about it cause I dont lol (:\"" ;
+    :tweetId "Superbowl_002" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_003> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_003_C01> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 3 ;
+    :tweetHasText "All I see on twitter is something about hockey. What happened did the red wings win the superbowl?" ;
+    :tweetId "Superbowl_003" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_004> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_004_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_004_C02> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 4 ;
+    :tweetHasText "This game is pretty much the superbowl. The winner is winning it all. #RavenNation" ;
+    :tweetId "Superbowl_004" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_005> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_005_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_005_C02>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_005_C03> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 5 ;
+    :tweetHasText "\"Babysitting 2/2 so no 5k, but I can definitely do the plunge superbowl Sunday !! Who's down?!\"" ;
+    :tweetId "Superbowl_005" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_006> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_006_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_006_C02>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_006_C03> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 6 ;
+    :tweetHasText "PATRIOTS ARE OUT!! Yes!! Dont like the ravens but good game!! Go ravens!! See ya at the superbowl!!" ;
+    :tweetId "Superbowl_006" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_007> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_007_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_007_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 7 ;
+    :tweetHasText "Did this fool taffe compare this trial to joe namath guaranteeing the superbowl? -______-. Did this dude jus did this?" ;
+    :tweetId "Superbowl_007" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_008> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_008_C01> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 8 ;
+    :tweetHasText "\"Congrats ravens, now kick the 49ers ass in the superbowl #SBXLVII\"" ;
+    :tweetId "Superbowl_008" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_009> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_009_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_009_C02> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 9 ;
+    :tweetHasText "\"I picked Denver .. But if Baltimore wins, it would help me more since everyone who picked the Broncos to the superbowl would get less points\"" ;
+    :tweetId "Superbowl_009" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_010> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_010_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_010_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 10 ;
+    :tweetHasText "This superbowl dont even interest me i want sum cookies" ;
+    :tweetId "Superbowl_010" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_011> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_011_C01> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 11 ;
+    :tweetHasText "\"With this game pretty much in san frans hands, I could see tony giving it one more go at a superbowl\"" ;
+    :tweetId "Superbowl_011" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_012> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_012_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_012_C02> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 12 ;
+    :tweetHasText "\"Good morning!! Today's a brand new day.. But, still sad that the 49ers lost in the superbowl, but soon I'll get over it\"" ;
+    :tweetId "Superbowl_012" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_013> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_013_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_013_C02> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 13 ;
+    :tweetHasText "#question wheres ny patriots Randy Moss jersey? i wana wear it for the superbowl..." ;
+    :tweetId "Superbowl_013" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_014> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_014_C01> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 14 ;
+    :tweetHasText "idk what team to pick for thee superbowl doesnt really matter cuz fucken packers are out -.-" ;
+    :tweetId "Superbowl_014" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_015> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_015_C01> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 15 ;
+    :tweetHasText "I wish Nicki Minaj can get on the superbowl again don't nobody got time for Beyonce screaming ass" ;
+    :tweetId "Superbowl_015" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_016> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_016_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_016_C02> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 16 ;
+    :tweetHasText "Wow the two head coaches are brother and they are playing against each other in the superbowl" ;
+    :tweetId "Superbowl_016" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_017> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_017_C01> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 17 ;
+    :tweetHasText "Let me ask you all this who do u think is going to win the #superbowl" ;
+    :tweetId "Superbowl_017" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_018> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_018_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_018_C02> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 18 ;
+    :tweetHasText "oh &amp; the commercials this year SUCKED. like wtf #superbowl?!??!”" ;
+    :tweetId "Superbowl_018" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_019> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_019_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_019_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 19 ;
+    :tweetHasText "was gone gt put out in da 1st round Wat y'all gotta say now\\n#superbowl" ;
+    :tweetId "Superbowl_019" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_020> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_020_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_020_C02>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_020_C03> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 20 ;
+    :tweetHasText "San Fran and Baltimore ?? I like this superbowl! But i want Baltimore ... Do it for Ray__" ;
+    :tweetId "Superbowl_020" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_021> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_021_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_021_C02> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 21 ;
+    :tweetHasText "this bitch. Wtf I'm I the football king??? I've been watching the games. Wait till after the superbowl" ;
+    :tweetId "Superbowl_021" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_022> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_022_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_022_C02> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 22 ;
+    :tweetHasText "looking like a ravens superbowl ! most vicious team still standing" ;
+    :tweetId "Superbowl_022" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_023> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_023_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_023_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 23 ;
+    :tweetHasText "\"let that man live lol, he just won a superbowl\"" ;
+    :tweetId "Superbowl_023" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_024> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_024_C01> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 24 ;
+    :tweetHasText "can we please sign Bernard pollard and just sit him on the bench for the rest of Tom Brady's career. #2superbowls #4patriots" ;
+    :tweetId "Superbowl_024" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_025> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_025_C01> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 25 ;
+    :tweetHasText "if someone said they would buy u and your 3 friends tickets to the superbowl if you married them would you do it??" ;
+    :tweetId "Superbowl_025" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_026> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_026_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_026_C02> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 26 ;
+    :tweetHasText "Its intercepted!! And the ravens are going to the superbowl!! :)" ;
+    :tweetId "Superbowl_026" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_027> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_027_C01> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 27 ;
+    :tweetHasText "Um anyone more than excited that beyonce is the half time show !? #superbowl" ;
+    :tweetId "Superbowl_027" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_028> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_028_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_028_C02> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 28 ;
+    :tweetHasText "Why have pro bowl before superbowl makes no sense .what dose everyone think? Wasn't it after the superbowl at one time?" ;
+    :tweetId "Superbowl_028" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_029> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_029_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_029_C02> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 29 ;
+    :tweetHasText "To all the #haters who didn't believe me when i said the Ravens are going to the #superbowl" ;
+    :tweetId "Superbowl_029" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_030> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_030_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_030_C02>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_030_C03> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 30 ;
+    :tweetHasText "Erabody is so excited bout Beyonce performin at the superbowl...unless she popping out a tittie...IDGAF" ;
+    :tweetId "Superbowl_030" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_031> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_031_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_031_C02>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_031_C03> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 31 ;
+    :tweetHasText "Mecum is better trust me if your into car that's our superbowl beside if my team isn't in the superbowl who cares" ;
+    :tweetId "Superbowl_031" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_032> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_032_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_032_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 32 ;
+    :tweetHasText "why the whole murder thing came back up about ray lewis after he won the superbowl" ;
+    :tweetId "Superbowl_032" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_033> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_033_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_033_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 33 ;
+    :tweetHasText "Its a must the brothers play in the superbowl together” not gonna happen * new new vc*" ;
+    :tweetId "Superbowl_033" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_034> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_034_C01> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 34 ;
+    :tweetHasText "Am I the only one not watching the superbowl ?" ;
+    :tweetId "Superbowl_034" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_035> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_035_C01> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 35 ;
+    :tweetHasText "uh chill. Win a superbowl after my age of 3 please." ;
+    :tweetId "Superbowl_035" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_036> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_036_C01> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 36 ;
+    :tweetHasText "and they are going to sing this at the superbowl? Pathetic!" ;
+    :tweetId "Superbowl_036" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_037> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_037_C01> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 37 ;
+    :tweetHasText "u r rocking da right name but u forgot to add sexy yummy mouthwaterin superbowl fine gumbo thik badbitch seductive AMEN LUV" ;
+    :tweetId "Superbowl_037" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_038> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_038_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_038_C02> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 38 ;
+    :tweetHasText "Fuck Atlanta let's go 49ers and ravens superbowl brother vs. Brother" ;
+    :tweetId "Superbowl_038" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_039> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_039_C01> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 39 ;
+    :tweetHasText "Na! Just look at the team Brady had. Yea sure he's doing good with rookies but that ain't the superbowl team he had before." ;
+    :tweetId "Superbowl_039" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_040> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_040_C01> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 40 ;
+    :tweetHasText "you being a steelers fan would understand why its funny he'll be watching the superbowl with his shampoo lol" ;
+    :tweetId "Superbowl_040" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_041> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_041_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_041_C02>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_041_C03> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 41 ;
+    :tweetHasText "is a total fruad. If u picked ravens to go to superbowl why did u pick pats yesterday. Hindsite is 20-20 but not #freemoney" ;
+    :tweetId "Superbowl_041" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_042> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_042_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_042_C02> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 42 ;
+    :tweetHasText "Idk who gonna win the superbowl and im not goin for no team im just gonna watch" ;
+    :tweetId "Superbowl_042" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_043> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_043_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_043_C02>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_043_C03> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 43 ;
+    :tweetHasText "\"Plans for today work, superbowl, sleep that's it...tho its all subject to change\"" ;
+    :tweetId "Superbowl_043" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_044> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_044_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_044_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 44 ;
+    :tweetHasText "Fuck every other NFL team that's left in the playoffs.. idgaf who wins the superbowl this year" ;
+    :tweetId "Superbowl_044" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_045> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_045_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_045_C02>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_045_C03> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 45 ;
+    :tweetHasText "\"sleepy AF , fcking with that damn superbowl . Ugh\"" ;
+    :tweetId "Superbowl_045" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_046> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_046_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_046_C02>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_046_C03> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 46 ;
+    :tweetHasText "I need to buy 2 *Raven* beanies for the #superbowl !! Anyone know were!!?? :)" ;
+    :tweetId "Superbowl_046" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_047> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_047_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_047_C02> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 47 ;
+    :tweetHasText "I knoww!:O its going to be my first superbowl with the niners playing&amp; im so totally looking foward for the 3rd #Ninerfaithful" ;
+    :tweetId "Superbowl_047" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_048> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_048_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_048_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 48 ;
+    :tweetHasText "\"If the falcons had a consistent defence, they would be superbowl champs.......easily!\"" ;
+    :tweetId "Superbowl_048" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_049> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_049_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_049_C02> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 49 ;
+    :tweetHasText "\"hey, be nice! We are warning up the seats for you to watch the superbowl at home :d\"" ;
+    :tweetId "Superbowl_049" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_050> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_050_C01> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 50 ;
+    :tweetHasText "And it begins all cowboy fans saying superbowl bound chill out its just one game" ;
+    :tweetId "Superbowl_050" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_051> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_051_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_051_C02> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 51 ;
+    :tweetHasText "Yes I'm the only bitch not tweeting about the superbowl! And #IDGAF -.-" ;
+    :tweetId "Superbowl_051" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_052> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_052_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_052_C02> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 52 ;
+    :tweetHasText "\"even if sf49ers reach superbowl ,patriots gonna destroy them bro..\"" ;
+    :tweetId "Superbowl_052" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_053> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_053_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_053_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 53 ;
+    :tweetHasText "\"who cares...she might lip sing her way through the superbowl half time 2..\\/\"\"\"" ;
+    :tweetId "Superbowl_053" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_054> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_054_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_054_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 54 ;
+    :tweetHasText "Damn my team out tha playoffs now idgaf who go to tha superbowl now" ;
+    :tweetId "Superbowl_054" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_055> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_055_C01> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 55 ;
+    :tweetHasText "Ok finta go to breakfast den its cracking again #superbowl today #ravens bitch I'm out here" ;
+    :tweetId "Superbowl_055" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_056> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_056_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_056_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 56 ;
+    :tweetHasText "Yesssss Destiny child is back! Will be performin together at superbowl and fina drop a new cd" ;
+    :tweetId "Superbowl_056" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_057> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_057_C01> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 57 ;
+    :tweetHasText "I hope its 49ers and Ravens superbowl at this point. Anything else would just be unacceptable." ;
+    :tweetId "Superbowl_057" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_058> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_058_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_058_C02>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_058_C03>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_058_C04> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 58 ;
+    :tweetHasText "#TOUCHDOWN! it's not over trill the lights go out. #superbowl" ;
+    :tweetId "Superbowl_058" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_059> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_059_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_059_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 59 ;
+    :tweetHasText "Nobody on da 49ers deserve to be in or win da superbowl other den Patrick n Frank" ;
+    :tweetId "Superbowl_059" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_060> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_060_C01> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 60 ;
+    :tweetHasText "Commercial of the day!!!! I think the Taco Bell one #superbowlcommercials" ;
+    :tweetId "Superbowl_060" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_061> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_061_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_061_C02> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 61 ;
+    :tweetHasText "was sayin Patriots &amp; Falcons for the superbowl now he looks all Bitchmade rooting for Raven #lol" ;
+    :tweetId "Superbowl_061" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_062> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_062_C01> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 62 ;
+    :tweetHasText "Am I the only who doesn't get excited about the superbowl? It's like eh" ;
+    :tweetId "Superbowl_062" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_063> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_063_C01> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 63 ;
+    :tweetHasText "\"Okay, superbowl's over guys, we can go to bed now.\"" ;
+    :tweetId "Superbowl_063" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_064> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_064_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_064_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 64 ;
+    :tweetHasText "Skins gonna be at the superbowl next year...dont believe me just watch nigga nigga nigga" ;
+    :tweetId "Superbowl_064" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_065> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_065_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_065_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 65 ;
+    :tweetHasText "49ers going To be tough af in the superbowl.. But the focus now is on Brady and the Pats" ;
+    :tweetId "Superbowl_065" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_066> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_066_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_066_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 66 ;
+    :tweetHasText "I know #oomf gone do something for the superbowl .. I wanna chill with him .." ;
+    :tweetId "Superbowl_066" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_067> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_067_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_067_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 67 ;
+    :tweetHasText "just told me what time does the superbowl come on today yooooo!!!!" ;
+    :tweetId "Superbowl_067" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_068> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_068_C01> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 68 ;
+    :tweetHasText "wonder if ima chill wit him to watch the superbowl this sunday ." ;
+    :tweetId "Superbowl_068" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_069> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_069_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_069_C02>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_069_C03> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 69 ;
+    :tweetHasText "Looks like the two brothers team will be fighting for the superbowl” he owns them?" ;
+    :tweetId "Superbowl_069" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_070> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_070_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_070_C02> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 70 ;
+    :tweetHasText "\"let's face reality,how many QB's/runners have won a superbowl? 1 or maybe 2, steve young and I don't know who else?\"" ;
+    :tweetId "Superbowl_070" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_071> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_071_C01> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 71 ;
+    :tweetHasText "Beyonce and madonna should be banned from future #superbowl halftime show performances." ;
+    :tweetId "Superbowl_071" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_072> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_072_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_072_C02> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 72 ;
+    :tweetHasText "why do they have pro bowl before superbowl. ? If your in it you cant play in pro bowl. Dose this make sense?" ;
+    :tweetId "Superbowl_072" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_073> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_073_C01> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 73 ;
+    :tweetHasText "Nobody tryna put a hundo on that superbowl game tho" ;
+    :tweetId "Superbowl_073" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_074> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_074_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_074_C02> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 74 ;
+    :tweetHasText "I don't like the 49ers but I hope they go to the superbowl. #niners" ;
+    :tweetId "Superbowl_074" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_075> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_075_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_075_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 75 ;
+    :tweetHasText "Rihanna will never get a superbowl not the new rihanna she would fuck around and come out naked" ;
+    :tweetId "Superbowl_075" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_076> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_076_C01> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 76 ;
+    :tweetHasText "any chance a former marine from RI suffering PTSD can go to the superbowl with you" ;
+    :tweetId "Superbowl_076" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_077> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_077_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_077_C02> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 77 ;
+    :tweetHasText "I'm ok w/ trying to get #HarBowl trending ... excited for the superbowl! Let's go Ravens!!" ;
+    :tweetId "Superbowl_077" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_078> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_078_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_078_C02> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 78 ;
+    :tweetHasText "\"look at all those superbowls the patriots won, all were directly effected by made kicks. Adam is clutch as hell.\"" ;
+    :tweetId "Superbowl_078" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_079> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_079_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_079_C02>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_079_C03> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 79 ;
+    :tweetHasText "fuck you nigha we played a hell of a game” ____ take dat L and come watch da superbowl wit us" ;
+    :tweetId "Superbowl_079" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_080> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_080_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_080_C02> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 80 ;
+    :tweetHasText "#superbowl wings and beer!!!!! Making all types of wings that day. 1.lemon pepper wings 2. My own special BBQ wings 3. Honey &amp; Spicy wings!!" ;
+    :tweetId "Superbowl_080" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_081> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_081_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_081_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 81 ;
+    :tweetHasText "Hoes still talkin bout how the flyers won tha superbowl on campus tho smh im disappointed" ;
+    :tweetId "Superbowl_081" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_082> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_082_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_082_C02>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_082_C03>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_082_C04> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 82 ;
+    :tweetHasText "\"There wouldn't be no Alamo, no cowboys in the superbowl, no loan some dove no yellow rose, if it wasn't for Texas.\"" ;
+    :tweetId "Superbowl_082" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_083> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_083_C01> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 83 ;
+    :tweetHasText "The #HarBowl who ya got in the superbowl?!? I think Jimmy out coaches older brother" ;
+    :tweetId "Superbowl_083" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_084> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_084_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_084_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 84 ;
+    :tweetHasText "Am I the only one who doesnt care about the superbowl ? *shrugs*” No lol" ;
+    :tweetId "Superbowl_084" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_085> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_085_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_085_C02> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 85 ;
+    :tweetHasText "I fucking hate the patriots but I think their gonna win this superbowl .." ;
+    :tweetId "Superbowl_085" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_086> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_086_C01> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 86 ;
+    :tweetHasText "Its okay Tom now you know how Niner fans felt like on the misses holding call on a possible game winner in the superbowl lol" ;
+    :tweetId "Superbowl_086" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_087> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_087_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_087_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 87 ;
+    :tweetHasText "Maybe Olivia will give David a litle summ summ since she just handing it out like papa johns on superbowl sunday" ;
+    :tweetId "Superbowl_087" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_088> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_088_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_088_C02>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_088_C03> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 88 ;
+    :tweetHasText "\"we would all appreciate a moment of silence, Cecil county has been through so much recently. #superbowlsilence #prayforangelo\"" ;
+    :tweetId "Superbowl_088" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_089> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_089_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_089_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 89 ;
+    :tweetHasText "\"Long as they got food for the superbowl ima watch it, but I hate football.\"" ;
+    :tweetId "Superbowl_089" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/tweet/Superbowl_090> a :Tweet ;
+    :aboutTopic :SuperBowl ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_090_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_090_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Superbowl.txt" ;
+    :sourceLine 90 ;
+    :tweetHasText "Is the superbowl being played on sunday or the Ray Lewis show!!!" ;
+    :tweetId "Superbowl_090" .
+
+:AgeGroup a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Allergy a owl:Class ;
+    rdfs:subClassOf :HealthCondition ;
+    owl:disjointWith :Injury .
+
+:Chef a :Occupation,
+        owl:NamedIndividual .
+
+:CountryCode a owl:Class .
+
+:Currency a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Ethnicity a owl:Class .
+
+:FastFoodIndustry a :Industry,
+        owl:NamedIndividual .
+
+:FastFoodProduct a :Product,
+        owl:NamedIndividual .
+
+:GovernmentForm a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:HalftimeShow a :Ritual,
+        owl:NamedIndividual .
+
+:Health a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Holiday a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Injury a owl:Class ;
+    rdfs:subClassOf :HealthCondition .
+
+:InternationalOrganization a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Introvert a owl:Class ;
+    rdfs:subClassOf :CharacterTrait .
+
+:MatchResult a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:OtherCompany a :Company,
+        owl:NamedIndividual .
+
+:Person1 a :Person,
+        owl:NamedIndividual .
+
+:Rational a :CharacterTrait,
+        owl:NamedIndividual .
+
+:RnD_Project1 a :ResearchAndDevelopment,
+        owl:NamedIndividual .
+
+:Service a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:SuperBowl1 a :Competition,
+        owl:NamedIndividual ;
+    :hasRitual :HalftimeShow .
+
+:Symptom a owl:Class ;
+    rdfs:subClassOf :HealthCondition .
+
+:Waitress a :Occupation,
+        owl:NamedIndividual .
+
+:WinnerDetermination a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:assessedBy a owl:FunctionalProperty,
+        owl:ObjectProperty ;
+    rdfs:domain :ClaimAssessment ;
+    rdfs:range :Source .
+
+:assessmentOf a owl:FunctionalProperty,
+        owl:ObjectProperty ;
+    rdfs:domain :ClaimAssessment ;
+    rdfs:range :Claim .
+
+:branch1 a :Branch,
+        owl:NamedIndividual .
+
+:chef1 a :Person,
+        owl:NamedIndividual ;
+    :hasOccupation :Chef .
+
+:extractedFrom a owl:ObjectProperty ;
+    rdfs:domain :Claim ;
+    rdfs:range :Tweet .
+
+:isValid a owl:DatatypeProperty,
+        owl:FunctionalProperty ;
+    rdfs:domain :ClaimAssessment ;
+    rdfs:range xsd:boolean .
+
+:president a :Occupation,
+        owl:NamedIndividual .
+
+:tweetHasText a owl:DatatypeProperty ;
+    rdfs:domain :Tweet ;
+    rdfs:range xsd:string .
+
+:waitress1 a :Person,
+        owl:NamedIndividual ;
+    :hasOccupation :Waitress .
+
+:worksFor a owl:ObjectProperty ;
+    rdfs:domain :Person ;
+    rdfs:range :Company .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_001_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_001_C01" ;
+    :hasText "The author claims that the MSY (Metropolitan Statistical Year? or likely a typo for 'MSU' or referring to a specific group/person) will be forced into a state of readiness or seriousness by the Super Bowl." ;
+    :sourceQuote "If a hurricane won't kick you into shape, football will!" ;
+    :stance "negative" ;
+    :targetText "the Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_001_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_001_C02" ;
+    :hasText "The author claims that the MSY is dressed up or prepared in a flashy manner specifically for the Super Bowl." ;
+    :sourceQuote "Look at you MSY all snazzed up for the superbowl." ;
+    :stance "neutral" ;
+    :targetText "MSY" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_002_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_002_C01" ;
+    :hasText "The author says they do not care about the Super Bowl." ;
+    :sourceQuote "\"Hey its sunday, the day before school &amp; the superbowl but I ain't gunna act like I even care about it cause I dont lol (:\"" ;
+    :stance "negative" ;
+    :targetText "Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_003_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_003_C01" ;
+    :hasText "The author is asking whether the Detroit Red Wings won the Super Bowl." ;
+    :sourceQuote "What happened did the red wings win the superbowl?" ;
+    :stance "unclear" ;
+    :targetText "the Detroit Red Wings winning the Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_004_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_004_C01" ;
+    :hasText "The author claims that the winner of this specific game has secured victory in a broader context." ;
+    :sourceQuote "The winner is winning it all." ;
+    :stance "positive" ;
+    :targetText "the winner of the Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_004_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_004_C02" ;
+    :hasText "The author asserts that the current game being played is essentially equivalent to or representative of the Super Bowl event." ;
+    :sourceQuote "This game is pretty much the superbowl." ;
+    :stance "neutral" ;
+    :targetText "the current game" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_005_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_005_C01" ;
+    :hasText "The author states that they will not be participating in a $5,000 plunge event because they are working as a babysitter." ;
+    :sourceQuote "Babysitting 2/2 so no 5k" ;
+    :stance "negative" ;
+    :targetText "the 5k plunge event" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_005_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_005_C02" ;
+    :hasText "The author expresses confidence in their ability to participate in the Super Bowl plunge event on Sunday." ;
+    :sourceQuote "I can definitely do the plunge superbowl Sunday" ;
+    :stance "positive" ;
+    :targetText "the plunge superbowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_005_C03> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_005_C03" ;
+    :hasText "The author is asking for others to join them or participate in the event." ;
+    :sourceQuote "Who's down?" ;
+    :stance "neutral" ;
+    :targetText "potential participants" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_006_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_006_C01" ;
+    :hasText "The author states that they do not like the Ravens." ;
+    :sourceQuote "Dont like the ravens" ;
+    :stance "negative" ;
+    :targetText "the Ravens" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_006_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_006_C02" ;
+    :hasText "The author describes the game as good." ;
+    :sourceQuote "good game" ;
+    :stance "positive" ;
+    :targetText "the game" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_006_C03> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_006_C03" ;
+    :hasText "The author expresses support for the Ravens." ;
+    :sourceQuote "Go ravens" ;
+    :stance "positive" ;
+    :targetText "the Ravens" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_007_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_007_C01" ;
+    :hasText "The author questions whether 'fool taffe' compared a specific trial to Joe Namath's Super Bowl guarantee." ;
+    :sourceQuote "Did this fool taffe compare this trial to joe namath guaranteeing the superbowl?" ;
+    :stance "negative" ;
+    :targetText "the comparison made by fool taffe" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_007_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_007_C02" ;
+    :hasText "The author expresses disbelief that 'this dude' performed the action in question." ;
+    :sourceQuote "Did this dude jus did this?" ;
+    :stance "unclear" ;
+    :targetText "the person referred to as 'this dude'" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_008_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_008_C01" ;
+    :hasText "The author asserts that the Ravens will defeat the 49ers in the Super Bowl." ;
+    :sourceQuote "kick the 49ers ass" ;
+    :stance "negative" ;
+    :targetText "the 49ers" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_009_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_009_C01" ;
+    :hasText "The author selected the Denver Broncos as their Super Bowl prediction." ;
+    :sourceQuote "I picked Denver" ;
+    :stance "neutral" ;
+    :targetText "Denver Broncos" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_009_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_009_C02" ;
+    :hasText "The author believes that a win by the Baltimore Ravens would result in fewer points for other people who predicted the Denver Broncos would win." ;
+    :sourceQuote "if Baltimore wins, it would help me more since everyone who picked the Broncos to the superbowl would get less points" ;
+    :stance "neutral" ;
+    :targetText "Baltimore Ravens" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_010_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_010_C01" ;
+    :hasText "The author states a desire for cookies." ;
+    :sourceQuote "i want sum cookies" ;
+    :stance "positive" ;
+    :targetText "cookies" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_010_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_010_C02" ;
+    :hasText "The author expresses a lack of interest in the Super Bowl." ;
+    :sourceQuote "This superbowl dont even interest me" ;
+    :stance "negative" ;
+    :targetText "Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_011_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_011_C01" ;
+    :hasText "The author suggests that Tony (likely referring to Tony Dungy or a similar figure associated with the team) might attempt to win another Super Bowl." ;
+    :sourceQuote "I could see tony giving it one more go at a superbowl" ;
+    :stance "unclear" ;
+    :targetText "Tony" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_012_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_012_C01" ;
+    :hasText "The author expresses sadness regarding the loss of the 49ers in the Super Bowl." ;
+    :sourceQuote "still sad that the 49ers lost in the superbowl" ;
+    :stance "negative" ;
+    :targetText "the 49ers losing in the Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_012_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_012_C02" ;
+    :hasText "The author states that they will recover from their sadness soon." ;
+    :sourceQuote "soon I'll get over it" ;
+    :stance "neutral" ;
+    :targetText "the author's emotional state regarding the loss" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_013_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_013_C01" ;
+    :hasText "The author is asking where the New England Patriots' Randy Moss jersey can be found." ;
+    :sourceQuote "#question wheres ny patriots Randy Moss jersey?" ;
+    :stance "neutral" ;
+    :targetText "Randy Moss's jersey" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_013_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_013_C02" ;
+    :hasText "The author expresses a desire to wear the mentioned jersey at the Super Bowl." ;
+    :sourceQuote "i wana wear it for the superbowl..." ;
+    :stance "positive" ;
+    :targetText "the Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_014_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_014_C01" ;
+    :hasText "The author states that the Green Bay Packers have been eliminated from the Super Bowl." ;
+    :sourceQuote "fucken packers are out" ;
+    :stance "negative" ;
+    :targetText "Green Bay Packers" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_015_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_015_C01" ;
+    :hasText "The author alleges that people do not have time to listen to or appreciate Beyoncé." ;
+    :sourceQuote "don't nobody got time for Beyonce screaming ass" ;
+    :stance "negative" ;
+    :targetText "Beyoncé" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_016_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_016_C01" ;
+    :hasText "The author claims that the two head coaches are brothers." ;
+    :sourceQuote "the two head coaches are brother" ;
+    :stance "neutral" ;
+    :targetText "the two head coaches" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_016_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_016_C02" ;
+    :hasText "The author states that these two individuals are competing against one another in the Super Bowl." ;
+    :sourceQuote "they are playing against each other in the superbowl" ;
+    :stance "neutral" ;
+    :targetText "the two head coaches" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_017_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_017_C01" ;
+    :hasText "The author asks their audience for their opinion on which team will win the Super Bowl." ;
+    :sourceQuote "who do u think is going to win the #superbowl" ;
+    :stance "neutral" ;
+    :targetText "the winner of the Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_018_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_018_C01" ;
+    :hasText "The author claims that the commercials were of poor quality." ;
+    :sourceQuote "SUCKED" ;
+    :stance "negative" ;
+    :targetText "the commercials" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_018_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_018_C02" ;
+    :hasText "The author expresses extreme confusion and frustration regarding the Super Bowl event." ;
+    :sourceQuote "like wtf #superbowl?!??!" ;
+    :stance "negative" ;
+    :targetText "#superbowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_019_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_019_C01" ;
+    :hasText "The author claims that the team 'gt' (likely referring to the Green Bay Packers) was eliminated or did not advance past the first round of the Super Bowl." ;
+    :sourceQuote "was gone gt put out in da 1st round" ;
+    :stance "negative" ;
+    :targetText "the Green Bay Packers (or a similar team abbreviated as 'gt')" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_019_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_019_C02" ;
+    :hasText "The author asks what people have to say about the situation, implying that the outcome is surprising or noteworthy." ;
+    :sourceQuote "Wat y'all gotta say now" ;
+    :stance "neutral" ;
+    :targetText "the public opinion regarding the team's performance" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_020_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_020_C01" ;
+    :hasText "The author expresses a general liking for the Super Bowl event." ;
+    :sourceQuote "I like this superbowl!" ;
+    :stance "positive" ;
+    :targetText "the Super Bowl (specifically Super Bowl LVII)" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_020_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_020_C02" ;
+    :hasText "The author states a personal preference for the Baltimore Ravens over the San Francisco 49ers." ;
+    :sourceQuote "But i want Baltimore ..." ;
+    :stance "positive" ;
+    :targetText "the Baltimore Ravens vs. San Francisco 49ers matchup" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_020_C03> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_020_C03" ;
+    :hasText "The author suggests that the outcome of the game should be decided in favor of Ray-Ray McCloud." ;
+    :sourceQuote "Do it for Ray__" ;
+    :stance "unclear" ;
+    :targetText "Ray-Ray McCloud (a player associated with the Baltimore Ravens)" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_021_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_021_C01" ;
+    :hasText "The author questions their own status as 'the football king'." ;
+    :sourceQuote "Wtf I'm I the football king???" ;
+    :stance "negative" ;
+    :targetText "the author's self-perception as a football expert" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_021_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_021_C02" ;
+    :hasText "The author implies that their knowledge or judgment regarding football will be revealed or finalized after the Super Bowl." ;
+    :sourceQuote "Wait till after the superbowl" ;
+    :stance "neutral" ;
+    :targetText "the outcome of the Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_022_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_022_C01" ;
+    :hasText "The author claims that the team in question resembles the Baltimore Ravens." ;
+    :sourceQuote "looking like a ravens superbowl" ;
+    :stance "neutral" ;
+    :targetText "the team in question" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_022_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_022_C02" ;
+    :hasText "The author alleges that the most vicious team is still in the Super Bowl." ;
+    :sourceQuote "most vicious team still standing" ;
+    :stance "positive" ;
+    :targetText "the most vicious team" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_023_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_023_C01" ;
+    :hasText "The author states that the man in question has recently won a Super Bowl." ;
+    :sourceQuote "he just won a superbowl" ;
+    :stance "neutral" ;
+    :targetText "the man who won the Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_023_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_023_C02" ;
+    :hasText "The author expresses a desire for the man to remain alive, using \"lol\" as an expression of amusement or casual tone." ;
+    :sourceQuote "let that man live lol" ;
+    :stance "positive" ;
+    :targetText "the man who won the Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_024_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_024_C01" ;
+    :hasText "The author suggests signing Bernard Pollard to a contract with the condition that he remains inactive on the active roster for the remainder of Tom Brady's tenure." ;
+    :sourceQuote "can we please sign Bernard pollard and just sit him on the bench for the rest of Tom Brady's career." ;
+    :stance "positive" ;
+    :targetText "Bernard Pollard" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_025_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_025_C01" ;
+    :hasText "The author is asking whether they (or a hypothetical person) would accept an offer from someone who promised to purchase Super Bowl tickets for themselves and three friends contingent on marriage." ;
+    :sourceQuote "if someone said they would buy u and your 3 friends tickets to the superbowl if you married them would you do it??" ;
+    :stance "unclear" ;
+    :targetText "the offer of Super Bowl tickets contingent on marriage" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_026_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_026_C01" ;
+    :hasText "The author claims that a pass was intercepted." ;
+    :sourceQuote "Its intercepted!!" ;
+    :stance "positive" ;
+    :targetText "the football game" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_026_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_026_C02" ;
+    :hasText "The author claims that the Ravens will advance to the Super Bowl." ;
+    :sourceQuote "And the ravens are going to the superbowl!!" ;
+    :stance "positive" ;
+    :targetText "the Ravens" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_027_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_027_C01" ;
+    :hasText "The author expresses excitement about Beyoncé performing at the Super Bowl halftime show." ;
+    :sourceQuote "anyone more than excited that beyonce is the half time show !?" ;
+    :stance "positive" ;
+    :targetText "Beyoncé's performance at the Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_028_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_028_C01" ;
+    :hasText "The author argues that having a Pro Bowl game prior to the Super Bowl is illogical." ;
+    :sourceQuote "Why have pro bowl before superbowl makes no sense" ;
+    :stance "negative" ;
+    :targetText "the scheduling of the Pro Bowl relative to the Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_028_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_028_C02" ;
+    :hasText "The author recalls or questions whether the Pro Bowl was historically scheduled after the Super Bowl." ;
+    :sourceQuote "Wasn't it after the superbowl at one time?" ;
+    :stance "unclear" ;
+    :targetText "the historical scheduling of the Pro Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_029_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_029_C01" ;
+    :hasText "The author claims that some people did not believe their prediction." ;
+    :sourceQuote "didn't believe me" ;
+    :stance "negative" ;
+    :targetText "the #haters (people who doubted the author)" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_029_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_029_C02" ;
+    :hasText "The author asserts that the Baltimore Ravens will win the Super Bowl." ;
+    :sourceQuote "Ravens are going to the #superbowl" ;
+    :stance "positive" ;
+    :targetText "the Baltimore Ravens" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_030_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_030_C01" ;
+    :hasText "The author claims that Erabody (likely referring to Jay-Z) is excited about Beyoncé performing at the Super Bowl." ;
+    :sourceQuote "Erabody is so excited bout Beyonce performin at the superbowl" ;
+    :stance "positive" ;
+    :targetText "Erabody's excitement regarding Beyoncé's performance" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_030_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_030_C02" ;
+    :hasText "The author presents a conditional scenario where Erabody's excitement might be negated if Beyoncé were to give birth during the performance." ;
+    :sourceQuote "...unless she popping out a tittie..." ;
+    :stance "negative" ;
+    :targetText "Beyoncé giving birth at the Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_030_C03> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_030_C03" ;
+    :hasText "The author expresses a lack of concern or indifference regarding the situation described." ;
+    :sourceQuote "IDGAF" ;
+    :stance "neutral" ;
+    :targetText "The potential outcome of Beyoncé's performance" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_031_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_031_C01" ;
+    :hasText "The author asserts that Mecum is superior." ;
+    :sourceQuote "Mecum is better trust me" ;
+    :stance "positive" ;
+    :targetText "Mecum" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_031_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_031_C02" ;
+    :hasText "The author claims that their team's participation in the Super Bowl is relevant only to those interested in cars." ;
+    :sourceQuote "if your into car that's our superbowl" ;
+    :stance "neutral" ;
+    :targetText "the author's team" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_031_C03> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_031_C03" ;
+    :hasText "The author states that if their team is not in the Super Bowl, no one should care." ;
+    :sourceQuote "beside if my team isn't in the superbowl who cares" ;
+    :stance "negative" ;
+    :targetText "the author's team's absence from the Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_032_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_032_C01" ;
+    :hasText "The author claims that discussions regarding a \"murder thing\" resurfaced." ;
+    :sourceQuote "why the whole murder thing came back up" ;
+    :stance "neutral" ;
+    :targetText "Ray Lewis" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_032_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_032_C02" ;
+    :hasText "The author claims that these discussions occurred following Ray Lewis's Super Bowl victory." ;
+    :sourceQuote "about ray lewis after he won the superbowl" ;
+    :stance "neutral" ;
+    :targetText "Ray Lewis" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_033_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_033_C01" ;
+    :hasText "The author states that it is a requirement for the brothers to play in the Super Bowl together." ;
+    :sourceQuote "Its a must the brothers play in the superbowl together" ;
+    :stance "negative" ;
+    :targetText "the brothers playing in the Super Bowl together" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_033_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_033_C02" ;
+    :hasText "The author asserts that the event of the brothers playing in the Super Bowl together will not occur." ;
+    :sourceQuote "not gonna happen" ;
+    :stance "negative" ;
+    :targetText "the brothers playing in the Super Bowl together" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_034_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_034_C01" ;
+    :hasText "The author is asking if they are the sole individual who has chosen not to watch the Super Bowl." ;
+    :sourceQuote "Am I the only one not watching the superbowl ?" ;
+    :stance "neutral" ;
+    :targetText "the Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_035_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_035_C01" ;
+    :hasText "The author requests that they win a Super Bowl after reaching the age of three." ;
+    :sourceQuote "Win a superbowl after my age of 3 please." ;
+    :stance "positive" ;
+    :targetText "the author's ability to win a Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_036_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_036_C01" ;
+    :hasText "The author considers the idea of a group singing at the Super Bowl to be pathetic." ;
+    :sourceQuote "Pathetic!" ;
+    :stance "negative" ;
+    :targetText "the act of singing at the Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_037_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_037_C01" ;
+    :hasText "The author claims that the Super Bowl is missing a 'sexy yummy mouthwaterin superbowl fine gumbo' and expresses agreement with this sentiment." ;
+    :sourceQuote "u r rocking da right name but u forgot to add sexy yummy mouthwaterin superbowl fine gumbo thik badbitch seductive AMEN LUV" ;
+    :stance "positive" ;
+    :targetText "Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_038_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_038_C01" ;
+    :hasText "The author expresses a negative sentiment toward the city of Atlanta." ;
+    :sourceQuote "Fuck Atlanta" ;
+    :stance "negative" ;
+    :targetText "Atlanta" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_038_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_038_C02" ;
+    :hasText "The author supports both the San Francisco 49ers and the Baltimore Ravens for a Super Bowl matchup." ;
+    :sourceQuote "let's go 49ers and ravens superbowl brother vs. Brother" ;
+    :stance "positive" ;
+    :targetText "San Francisco 49ers and Baltimore Ravens" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_039_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_039_C01" ;
+    :hasText "The author claims that Tom Brady is performing well with rookie players, but asserts that this current roster is not comparable to the Super Bowl-winning team he previously assembled." ;
+    :sourceQuote "Yea sure he's doing good with rookies but that ain't the superbowl team he had before." ;
+    :stance "negative" ;
+    :targetText "Tom Brady's current Super Bowl team" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_040_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_040_C01" ;
+    :hasText "The author claims that someone who is a Steelers fan would find it amusing that another person will watch the Super Bowl while using their shampoo." ;
+    :sourceQuote "you being a steelers fan would understand why its funny he'll be watching the superbowl with his shampoo lol" ;
+    :stance "positive" ;
+    :targetText "the person watching the Super Bowl with their shampoo" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_041_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_041_C01" ;
+    :hasText "The author claims that the person or entity being addressed is a fraud." ;
+    :sourceQuote "is a total fruad" ;
+    :stance "negative" ;
+    :targetText "the addressee (unspecified)" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_041_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_041_C02" ;
+    :hasText "The author questions the logic of a previous prediction where the Patriots were chosen over the Ravens for the Super Bowl." ;
+    :sourceQuote "If u picked ravens to go to superbowl why did u pick pats yesterday" ;
+    :stance "negative" ;
+    :targetText "the addressee's prediction" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_041_C03> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_041_C03" ;
+    :hasText "The author states that the Hindsite (likely referring to a specific betting site or service) has a record of 20-20, but denies it operates under the '#freemoney' model." ;
+    :sourceQuote "Hindsite is 20-20 but not #freemoney" ;
+    :stance "negative" ;
+    :targetText "Hindsite" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_042_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_042_C01" ;
+    :hasText "The author states they are not supporting or rooting for any specific team." ;
+    :sourceQuote "im not goin for no team" ;
+    :stance "neutral" ;
+    :targetText "the Super Bowl teams" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_042_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_042_C02" ;
+    :hasText "The author expresses uncertainty about which team will win the Super Bowl." ;
+    :sourceQuote "Idk who gonna win the superbowl" ;
+    :stance "unclear" ;
+    :targetText "the winner of the Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_043_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_043_C01" ;
+    :hasText "The author states that their plans for the day are currently functioning as intended." ;
+    :sourceQuote "Plans for today work" ;
+    :stance "positive" ;
+    :targetText "the author's plans for the day" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_043_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_043_C02" ;
+    :hasText "The author identifies the Super Bowl and sleeping as the components of their current plan." ;
+    :sourceQuote "superbowl, sleep that's it" ;
+    :stance "neutral" ;
+    :targetText "the Super Bowl and sleep" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_043_C03> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_043_C03" ;
+    :hasText "The author expresses uncertainty, indicating that their plans are not fixed and may be altered." ;
+    :sourceQuote "tho its all subject to change" ;
+    :stance "unclear" ;
+    :targetText "the author's plans for the day" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_044_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_044_C01" ;
+    :hasText "The author expresses a desire for all other teams remaining in the NFL playoffs to be eliminated." ;
+    :sourceQuote "Fuck every other NFL team that's left in the playoffs" ;
+    :stance "negative" ;
+    :targetText "other NFL teams in the playoffs" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_044_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_044_C02" ;
+    :hasText "The author states that they do not care which team wins the Super Bowl." ;
+    :sourceQuote "idgaf who wins the superbowl this year" ;
+    :stance "neutral" ;
+    :targetText "the winner of the Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_045_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_045_C01" ;
+    :hasText "The author is expressing that they are extremely sleepy." ;
+    :sourceQuote "sleepy AF" ;
+    :stance "neutral" ;
+    :targetText "the author's state of being" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_045_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_045_C02" ;
+    :hasText "The author is engaging in an activity related to the Super Bowl, using 'fcking' as a slang intensifier for 'fighting' or 'messing around'." ;
+    :sourceQuote "fcking with that damn superbowl" ;
+    :stance "neutral" ;
+    :targetText "the Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_045_C03> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_045_C03" ;
+    :hasText "The author is expressing frustration, annoyance, or exasperation." ;
+    :sourceQuote "Ugh" ;
+    :stance "negative" ;
+    :targetText "the situation involving the Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_046_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_046_C01" ;
+    :hasText "The author intends to purchase two beanie hats." ;
+    :sourceQuote "I need to buy 2 *Raven* beanies" ;
+    :stance "neutral" ;
+    :targetText "*Raven* beanies" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_046_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_046_C02" ;
+    :hasText "The author plans to wear or use the beanies during the Super Bowl event." ;
+    :sourceQuote "for the #superbowl" ;
+    :stance "neutral" ;
+    :targetText "#superbowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_046_C03> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_046_C03" ;
+    :hasText "The author is asking others for information on where to purchase these items." ;
+    :sourceQuote "Anyone know were!!??" ;
+    :stance "neutral" ;
+    :targetText "purchase locations" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_047_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_047_C01" ;
+    :hasText "The author states that this Super Bowl will be their first time participating in one while the Niners are playing." ;
+    :sourceQuote "its going to be my first superbowl with the niners playing" ;
+    :stance "positive" ;
+    :targetText "the author's participation in a Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_047_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_047_C02" ;
+    :hasText "The author expresses strong anticipation for their third appearance with the Niners." ;
+    :sourceQuote "im so totally looking foward for the 3rd #Ninerfaithful" ;
+    :stance "positive" ;
+    :targetText "the author's future appearances with the Niners" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_048_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_048_C01" ;
+    :hasText "The author claims that the Falcons' defense lacked consistency." ;
+    :sourceQuote "If the falcons had a consistent defence" ;
+    :stance "negative" ;
+    :targetText "the Falcons' defense" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_048_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_048_C02" ;
+    :hasText "The author asserts that the Falcons would have won the Super Bowl easily if their defense had been consistent." ;
+    :sourceQuote "they would be superbowl champs.......easily!" ;
+    :stance "positive" ;
+    :targetText "the Falcons winning the Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_049_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_049_C01" ;
+    :hasText "The author states that they are reserving or preparing seats for someone." ;
+    :sourceQuote "We are warning up the seats" ;
+    :stance "neutral" ;
+    :targetText "the seats" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_049_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_049_C02" ;
+    :hasText "The author advises the recipient to behave kindly." ;
+    :sourceQuote "hey, be nice!" ;
+    :stance "positive" ;
+    :targetText "the recipient" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_050_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_050_C01" ;
+    :hasText "The author reports that cowboy fans are telling people to relax because the Super Bowl is only one game." ;
+    :sourceQuote "cowboy fans saying superbowl bound chill out its just one game" ;
+    :stance "neutral" ;
+    :targetText "cowboy fans" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_051_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_051_C01" ;
+    :hasText "The author claims to be the sole individual among their social circle who is not posting content related to the Super Bowl." ;
+    :sourceQuote "I'm the only bitch not tweeting about the superbowl" ;
+    :stance "negative" ;
+    :targetText "the author's social circle" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_051_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_051_C02" ;
+    :hasText "The author expresses a lack of interest or concern regarding the Super Bowl." ;
+    :sourceQuote "#IDGAF" ;
+    :stance "neutral" ;
+    :targetText "the Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_052_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_052_C01" ;
+    :hasText "The author claims that the New England Patriots will defeat their opponents." ;
+    :sourceQuote "patriots gonna destroy them" ;
+    :stance "negative" ;
+    :targetText "the Patriots' performance in the Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_052_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_052_C02" ;
+    :hasText "The author acknowledges a hypothetical scenario where the San Francisco 49ers advance to the Super Bowl." ;
+    :sourceQuote "even if sf49ers reach superbowl" ;
+    :stance "neutral" ;
+    :targetText "the San Francisco 49ers' potential advancement" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_053_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_053_C01" ;
+    :hasText "The author states that they do not care about the subject's performance." ;
+    :sourceQuote "who cares..." ;
+    :stance "neutral" ;
+    :targetText "the Super Bowl half time show" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_053_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_053_C02" ;
+    :hasText "The author alleges that the subject may only be performing by lip-syncing during the Super Bowl halftime." ;
+    :sourceQuote "she might lip sing her way through the superbowl half time 2..\\/" ;
+    :stance "negative" ;
+    :targetText "the Super Bowl half time show" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_054_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_054_C01" ;
+    :hasText "The author states that their team has been eliminated from the playoffs." ;
+    :sourceQuote "Damn my team out tha playoffs now" ;
+    :stance "negative" ;
+    :targetText "the author's team" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_054_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_054_C02" ;
+    :hasText "The author expresses indifference regarding which team will attend the Super Bowl." ;
+    :sourceQuote "idgaf who go to tha superbowl now" ;
+    :stance "neutral" ;
+    :targetText "the winner of the Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_055_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_055_C01" ;
+    :hasText "The author expresses a negative sentiment or disdain toward the Ravens." ;
+    :sourceQuote "#ravens bitch" ;
+    :stance "negative" ;
+    :targetText "the Ravens" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_056_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_056_C01" ;
+    :hasText "The author claims that Destiny's Child will be performing together at the Super Bowl." ;
+    :sourceQuote "Will be performin together at superbowl" ;
+    :stance "positive" ;
+    :targetText "Destiny's Child" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_056_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_056_C02" ;
+    :hasText "The author claims that Destiny's Child will release a new CD." ;
+    :sourceQuote "fina drop a new cd" ;
+    :stance "positive" ;
+    :targetText "Destiny's Child" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_057_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_057_C01" ;
+    :hasText "The author believes that any Super Bowl matchup other than the 49ers and Ravens is unacceptable." ;
+    :sourceQuote "Anything else would just be unacceptable." ;
+    :stance "negative" ;
+    :targetText "Super Bowl matchups" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_058_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_058_C01" ;
+    :hasText "The author is celebrating a touchdown." ;
+    :sourceQuote "#TOUCHDOWN!" ;
+    :stance "positive" ;
+    :targetText "the game event (touchdown)" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_058_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_058_C02" ;
+    :hasText "The author believes the game has not yet concluded." ;
+    :sourceQuote "it's not over" ;
+    :stance "neutral" ;
+    :targetText "the Super Bowl game" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_058_C03> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_058_C03" ;
+    :hasText "The author is describing a specific action or phenomenon where lights are turned off, possibly in celebration or as part of an event." ;
+    :sourceQuote "trill the lights go out" ;
+    :stance "neutral" ;
+    :targetText "the lights" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_058_C04> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_058_C04" ;
+    :hasText "The author is referencing the Super Bowl event." ;
+    :sourceQuote "#superbowl" ;
+    :stance "neutral" ;
+    :targetText "the Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_059_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_059_C01" ;
+    :hasText "The author claims that, except for Patrick and Frank, no other player on the 49ers deserves to participate in or win the Super Bowl." ;
+    :sourceQuote "Nobody on da 49ers deserve to be in or win da superbowl other den Patrick n Frank" ;
+    :stance "negative" ;
+    :targetText "the 49ers team (excluding Patrick and Frank)" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_059_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_059_C02" ;
+    :hasText "The author identifies two specific individuals, Patrick and Frank, as exceptions who do deserve to be in or win the Super Bowl." ;
+    :sourceQuote "Patrick n Frank" ;
+    :stance "positive" ;
+    :targetText "Patrick and Frank" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_060_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_060_C01" ;
+    :hasText "The author believes that the Taco Bell commercial is notable or noteworthy." ;
+    :sourceQuote "I think the Taco Bell one" ;
+    :stance "positive" ;
+    :targetText "Taco Bell commercial" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_061_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_061_C01" ;
+    :hasText "The author states that someone previously expressed support for the Patriots and Falcons to compete in the Super Bowl." ;
+    :sourceQuote "Patriots &amp; Falcons for the superbowl" ;
+    :stance "neutral" ;
+    :targetText "the person who made the prediction" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_061_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_061_C02" ;
+    :hasText "The author alleges that this same person now appears to be rooting for the Ravens, using 'Bitchmade' as a derogatory descriptor." ;
+    :sourceQuote "now he looks all Bitchmade rooting for Raven" ;
+    :stance "negative" ;
+    :targetText "the person who made the prediction" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_062_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_062_C01" ;
+    :hasText "The author expresses a lack of excitement or enthusiasm regarding the Super Bowl." ;
+    :sourceQuote "It's like eh" ;
+    :stance "negative" ;
+    :targetText "the superbowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_063_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_063_C01" ;
+    :hasText "The author states that the Super Bowl has ended and it is time for them to sleep." ;
+    :sourceQuote "we can go to bed now" ;
+    :stance "neutral" ;
+    :targetText "the Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_064_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_064_C01" ;
+    :hasText "The author claims that the team 'Skins' will play in the Super Bowl next year." ;
+    :sourceQuote "Skins gonna be at the superbowl next year" ;
+    :stance "positive" ;
+    :targetText "the team 'Skins'" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_064_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_064_C02" ;
+    :hasText "The author asserts that if the reader does not believe the claim about 'Skins', they should watch a specific video or content described by the repeated phrase." ;
+    :sourceQuote "dont believe me just watch nigga nigga nigga" ;
+    :stance "negative" ;
+    :targetText "the viewer's skepticism regarding the claim" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_065_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_065_C01" ;
+    :hasText "The author claims that the San Francisco 49ers will perform well ('tough') in the Super Bowl." ;
+    :sourceQuote "49ers going To be tough af in the superbowl" ;
+    :stance "positive" ;
+    :targetText "the San Francisco 49ers" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_065_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_065_C02" ;
+    :hasText "The author states that the current attention or priority is directed toward Tom Brady and the New England Patriots." ;
+    :sourceQuote "But the focus now is on Brady and the Pats" ;
+    :stance "neutral" ;
+    :targetText "Tom Brady and the New England Patriots" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_066_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_066_C01" ;
+    :hasText "The author believes that Oomph will perform or contribute to an event at the Super Bowl." ;
+    :sourceQuote "I know #oomf gone do something for the superbowl" ;
+    :stance "positive" ;
+    :targetText "Oomph (the artist)" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_066_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_066_C02" ;
+    :hasText "The author expresses a desire to relax or be in the company of Oomph." ;
+    :sourceQuote "I wanna chill with him" ;
+    :stance "positive" ;
+    :targetText "Oomph (the artist)" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_067_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_067_C01" ;
+    :hasText "The author was informed by someone else about the start time of the Super Bowl." ;
+    :sourceQuote "just told me what time does the superbowl come on today" ;
+    :stance "neutral" ;
+    :targetText "the Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_067_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_067_C02" ;
+    :hasText "The author is expressing high enthusiasm or excitement." ;
+    :sourceQuote "yooooo!!!!" ;
+    :stance "positive" ;
+    :targetText "the situation regarding the Super Bowl time" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_068_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_068_C01" ;
+    :hasText "The author is uncertain whether they will be able to relax and watch the Super Bowl with a specific person on Sunday." ;
+    :sourceQuote "wonder if ima chill wit him to watch the superbowl this sunday ." ;
+    :stance "unclear" ;
+    :targetText "the Super Bowl (this Sunday)" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_069_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_069_C01" ;
+    :hasText "The author refers to a specific sports team composed of two brothers." ;
+    :sourceQuote "the two brothers team" ;
+    :stance "neutral" ;
+    :targetText "a sports team consisting of two brothers" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_069_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_069_C02" ;
+    :hasText "The author states that this team is competing for a Super Bowl championship." ;
+    :sourceQuote "will be fighting for the superbowl" ;
+    :stance "neutral" ;
+    :targetText "the Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_069_C03> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_069_C03" ;
+    :hasText "The author questions whether the person mentioned ('he') is the owner of this team." ;
+    :sourceQuote "he owns them?" ;
+    :stance "unclear" ;
+    :targetText "a potential team owner" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_070_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_070_C01" ;
+    :hasText "The author questions the number of quarterbacks or runners who have won a Super Bowl." ;
+    :sourceQuote "how many QB's/runners have won a superbowl" ;
+    :stance "neutral" ;
+    :targetText "quarterbacks and runners" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_070_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_070_C02" ;
+    :hasText "The author asserts that Steve Young is one of the few quarterbacks or runners to have won a Super Bowl and expresses uncertainty about any other individuals." ;
+    :sourceQuote "1 or maybe 2, steve young and I don't know who else?" ;
+    :stance "positive" ;
+    :targetText "Steve Young" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_071_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_071_C01" ;
+    :hasText "The author argues that Beyoncé and Madonna ought to be prohibited from performing in future Super Bowl halftime shows." ;
+    :sourceQuote "Beyonce and madonna should be banned from future #superbowl halftime show performances." ;
+    :stance "negative" ;
+    :targetText "Beyoncé, Madonna" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_072_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_072_C01" ;
+    :hasText "The author claims that if a player is selected for the Pro Bowl, they cannot participate in the Super Bowl." ;
+    :sourceQuote "If your in it you cant play in pro bowl." ;
+    :stance "unclear" ;
+    :targetText "the relationship between Pro Bowl selection and Super Bowl participation" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_072_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_072_C02" ;
+    :hasText "The author questions the existence or ordering of the Pro Bowl relative to the Super Bowl." ;
+    :sourceQuote "why do they have pro bowl before superbowl. ?" ;
+    :stance "unclear" ;
+    :targetText "the scheduling of the Pro Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_073_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_073_C01" ;
+    :hasText "The author claims that no one is attempting to place a hundred-dollar bet on the Super Bowl game." ;
+    :sourceQuote "Nobody tryna put a hundo on that superbowl game tho" ;
+    :stance "negative" ;
+    :targetText "the Super Bowl game" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_074_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_074_C01" ;
+    :hasText "The author expresses a dislike for the San Francisco 49ers." ;
+    :sourceQuote "I don't like the 49ers" ;
+    :stance "negative" ;
+    :targetText "the 49ers (San Francisco 49ers)" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_074_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_074_C02" ;
+    :hasText "The author expresses a desire for the San Francisco 49ers to reach the Super Bowl." ;
+    :sourceQuote "I hope they go to the superbowl" ;
+    :stance "positive" ;
+    :targetText "the 49ers reaching the Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_075_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_075_C01" ;
+    :hasText "The author claims that Rihanna will not win the Super Bowl." ;
+    :sourceQuote "Rihanna will never get a superbowl" ;
+    :stance "negative" ;
+    :targetText "Rihanna winning the Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_075_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_075_C02" ;
+    :hasText "The author alleges that a hypothetical 'new Rihanna' would engage in reckless behavior, specifically appearing naked." ;
+    :sourceQuote "not the new rihanna she would fuck around and come out naked" ;
+    :stance "negative" ;
+    :targetText "a hypothetical 'new Rihanna'" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_076_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_076_C01" ;
+    :hasText "The author suggests that a former Marine from Rhode Island who suffers from PTSD might be able to attend the Super Bowl together." ;
+    :sourceQuote "any chance a former marine from RI suffering PTSD can go to the superbowl with you" ;
+    :stance "neutral" ;
+    :targetText "a former Marine from Rhode Island suffering from PTSD" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_077_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_077_C01" ;
+    :hasText "The author expresses support for the Baltimore Ravens." ;
+    :sourceQuote "Let's go Ravens!!" ;
+    :stance "positive" ;
+    :targetText "Baltimore Ravens" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_077_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_077_C02" ;
+    :hasText "The author is looking forward to the Super Bowl." ;
+    :sourceQuote "excited for the superbowl!" ;
+    :stance "positive" ;
+    :targetText "Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_078_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_078_C01" ;
+    :hasText "The author claims that Adam (referring to Adam Vinatieri) performs exceptionally well in critical situations." ;
+    :sourceQuote "Adam is clutch as hell" ;
+    :stance "positive" ;
+    :targetText "Adam Vinatieri" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_078_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_078_C02" ;
+    :hasText "The author claims that all Super Bowl victories won by the Patriots were directly caused by field goals kicked by Adam." ;
+    :sourceQuote "all were directly effected by made kicks" ;
+    :stance "positive" ;
+    :targetText "Patriots' Super Bowl wins" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_079_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_079_C01" ;
+    :hasText "The author is expressing anger or defiance towards someone." ;
+    :sourceQuote "fuck you nigha" ;
+    :stance "negative" ;
+    :targetText "an unspecified person (implied opponent)" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_079_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_079_C02" ;
+    :hasText "The author asserts that they performed exceptionally well in a game." ;
+    :sourceQuote "we played a hell of a game" ;
+    :stance "positive" ;
+    :targetText "the performance of the author's team" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_079_C03> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_079_C03" ;
+    :hasText "The author is challenging someone to accept their loss and attend a Super Bowl game with them." ;
+    :sourceQuote "take dat L and come watch da superbowl wit us" ;
+    :stance "neutral" ;
+    :targetText "the opponent who lost" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_080_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_080_C01" ;
+    :hasText "The author made multiple types of wings on the day of the Super Bowl." ;
+    :sourceQuote "Making all types of wings that day." ;
+    :stance "positive" ;
+    :targetText "the author's cooking activity" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_080_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_080_C02" ;
+    :hasText "The author prepared lemon pepper wings, a special homemade BBQ wing variety, and honey and spicy wings." ;
+    :sourceQuote "1.lemon pepper wings 2. My own special BBQ wings 3. Honey &amp; Spicy wings!!" ;
+    :stance "positive" ;
+    :targetText "specific types of chicken wings" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_081_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_081_C01" ;
+    :hasText "The author expresses disappointment or frustration." ;
+    :sourceQuote "smh" ;
+    :stance "negative" ;
+    :targetText "the situation regarding the Flyers winning the Super Bowl on campus" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_081_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_081_C02" ;
+    :hasText "The author states they are personally disappointed." ;
+    :sourceQuote "im disappointed" ;
+    :stance "negative" ;
+    :targetText "the outcome of the game where the Flyers won on campus" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_082_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_082_C01" ;
+    :hasText "The author claims that the Battle of the Alamo would not have occurred." ;
+    :sourceQuote "There wouldn't be no Alamo" ;
+    :stance "negative" ;
+    :targetText "the Battle of the Alamo" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_082_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_082_C02" ;
+    :hasText "The author claims that cowboys would not appear in the Super Bowl." ;
+    :sourceQuote "no cowboys in the superbowl" ;
+    :stance "negative" ;
+    :targetText "cowboys in the Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_082_C03> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_082_C03" ;
+    :hasText "The author claims that a dove, a yellow rose, and a loan would not exist." ;
+    :sourceQuote "no loan some dove no yellow rose" ;
+    :stance "negative" ;
+    :targetText "a dove, a yellow rose, and a loan" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_082_C04> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_082_C04" ;
+    :hasText "The author attributes the existence of the aforementioned events to Texas." ;
+    :sourceQuote "if it wasn't for Texas" ;
+    :stance "positive" ;
+    :targetText "Texas" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_083_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_083_C01" ;
+    :hasText "The author believes that Jimmy Gatschenberger is a better coach than his older brother." ;
+    :sourceQuote "I think Jimmy out coaches older brother" ;
+    :stance "positive" ;
+    :targetText "Jimmy Gatschenberger (and his older brother)" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_084_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_084_C01" ;
+    :hasText "The author indicates a lack of interest in the Super Bowl." ;
+    :sourceQuote "*shrugs*" ;
+    :stance "negative" ;
+    :targetText "the superbowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_084_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_084_C02" ;
+    :hasText "The author asserts that they are not alone in their lack of interest." ;
+    :sourceQuote "No lol" ;
+    :stance "positive" ;
+    :targetText "other people who dont care about the superbowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_085_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_085_C01" ;
+    :hasText "The author expresses a strong dislike for the New England Patriots." ;
+    :sourceQuote "I fucking hate the patriots" ;
+    :stance "negative" ;
+    :targetText "the patriots" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_085_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_085_C02" ;
+    :hasText "The author believes the New England Patriots will win the Super Bowl." ;
+    :sourceQuote "their gonna win this superbowl" ;
+    :stance "positive" ;
+    :targetText "this superbowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_086_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_086_C01" ;
+    :hasText "The author claims that they can explain to Tom how Niner fans felt when there was a missed holding call on a potential Super Bowl-winning play." ;
+    :sourceQuote "Its okay Tom now you know how Niner fans felt like on the misses holding call on a possible game winner in the superbowl lol" ;
+    :stance "neutral" ;
+    :targetText "Niner fans" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_087_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_087_C01" ;
+    :hasText "The author suggests that Olivia might provide David with some 'summ' (likely referring to the Super Bowl LII halftime show performance of Summ 4 U by Halsey and Childish Gambino)." ;
+    :sourceQuote "Maybe Olivia will give David a litle summ summ" ;
+    :stance "unclear" ;
+    :targetText "Olivia, David" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_087_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_087_C02" ;
+    :hasText "The author alleges that Olivia distributes 'summ' in a manner similar to how Papa John's pizza is handed out during Super Bowl Sunday." ;
+    :sourceQuote "since she just handing it out like papa johns on superbowl sunday" ;
+    :stance "negative" ;
+    :targetText "Papa John's, Super Bowl Sunday" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_088_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_088_C01" ;
+    :hasText "The author suggests that the public would benefit from a moment of silence." ;
+    :sourceQuote "we would all appreciate a moment of silence" ;
+    :stance "positive" ;
+    :targetText "the public" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_088_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_088_C02" ;
+    :hasText "The author asserts that Cecil County has experienced significant difficulties or hardships in recent times." ;
+    :sourceQuote "Cecil county has been through so much recently." ;
+    :stance "negative" ;
+    :targetText "Cecil County" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_088_C03> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_088_C03" ;
+    :hasText "The author expresses a desire for prayers to be offered for someone named Angelo." ;
+    :sourceQuote "#prayforangelo" ;
+    :stance "positive" ;
+    :targetText "Angelo" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_089_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_089_C01" ;
+    :hasText "The author states that their condition for watching the Super Bowl is having food available." ;
+    :sourceQuote "Long as they got food for the superbowl ima watch it" ;
+    :stance "neutral" ;
+    :targetText "the Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_089_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_089_C02" ;
+    :hasText "The author expresses a dislike for the sport of football." ;
+    :sourceQuote "but I hate football" ;
+    :stance "negative" ;
+    :targetText "football" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_090_C01> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_090_C01" ;
+    :hasText "The author is questioning whether the Super Bowl will be played on Sunday." ;
+    :sourceQuote "Is the superbowl being played on sunday" ;
+    :stance "unclear" ;
+    :targetText "the Super Bowl" .
+
+<http://www.semanticweb.org/group2/runs/20261103T085902Z_0ce98314/claim/Superbowl_090_C02> a :Claim ;
+    :claimAboutTopic :SuperBowl ;
+    :claimId "Superbowl_090_C02" ;
+    :hasText "The author suggests that the event being discussed might actually be a show featuring Ray Lewis rather than the actual Super Bowl." ;
+    :sourceQuote "or the Ray Lewis show!!!" ;
+    :stance "unclear" ;
+    :targetText "the Ray Lewis show" .
+
+:Adult a owl:Class ;
+    rdfs:subClassOf :Person ;
+    owl:equivalentClass [ a owl:Class ;
+            owl:intersectionOf ( :Person [ a owl:Restriction ;
+                        owl:onProperty :hasAge ;
+                        owl:someValuesFrom [ a rdfs:Datatype ;
+                                owl:onDatatype xsd:integer ;
+                                owl:withRestrictions ( [ xsd:minInclusive 18 ] ) ] ] ) ] .
+
+:America a :Country,
+        owl:NamedIndividual .
+
+:Branch a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Event a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:FoodCategory a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Industry a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Language a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Pain a owl:Class ;
+    rdfs:subClassOf :Symptom .
+
+:Ranking a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:ResearchAndDevelopment a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Ritual a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Role a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:hasAge a owl:DatatypeProperty ;
+    rdfs:domain :Person ;
+    rdfs:range xsd:integer .
+
+:team1 a :Team,
+        owl:NamedIndividual .
+
+:team2 a :Team,
+        owl:NamedIndividual .
+
+:ClaimAssessment a owl:Class ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:onClass :Claim ;
+            owl:onProperty :assessmentOf ;
+            owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ],
+        [ a owl:Restriction ;
+            owl:onClass :Source ;
+            owl:onProperty :assessedBy ;
+            owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ],
+        [ a owl:Restriction ;
+            owl:onDataRange xsd:boolean ;
+            owl:onProperty :isValid ;
+            owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ],
+        owl:Thing .
+
+:Competition a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Landmark a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Location a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Player a owl:Class ;
+    rdfs:subClassOf :Person .
+
+:Product a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Region a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Source a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Summary a owl:Class .
+
+:Outcome a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:CharacterTrait a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Food a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:HealthCondition a owl:Class ;
+    rdfs:subClassOf :Health .
+
+:Occupation a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Topic a owl:Class .
+
+:City a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Disease a owl:Class ;
+    rdfs:subClassOf :HealthCondition .
+
+:Sport a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Match a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Team a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Advertisement a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Company a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Country a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Person a owl:Class ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:allValuesFrom [ a rdfs:Datatype ;
+                    owl:onDatatype xsd:integer ;
+                    owl:withRestrictions ( [ xsd:maxInclusive 110 ] ) ] ;
+            owl:onProperty :hasAge ],
+        owl:Thing .
+
+:Tweet a owl:Class ;
+    rdfs:comment "A source tweet, retaining its dataset text and provenance." .
+
+:Claim a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:SuperBowl a :Topic,
+        owl:NamedIndividual ;
+    rdfs:label "Superbowl" ;
+    :hasTopicName "Super Bowl"^^xsd:string .
+

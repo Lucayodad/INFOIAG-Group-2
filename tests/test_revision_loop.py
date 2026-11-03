@@ -102,12 +102,17 @@ class RevisionLoopTests(unittest.TestCase):
             return data
         for transform in (invented, unaffected, fake_quote, wrong_group, lambda data: {"bad": "schema"}):
             with self.subTest(transform=transform):
-                result, _ = self.run_fixture(client=mock_client(transform_revision=transform))
+                client = mock_client(transform_revision=transform)
+                result, _ = self.run_fixture(client=client)
                 self.assertEqual(result["stop_reason"], "invalid_revision")
-                self.assertEqual(result["revisions"][0]["status"], "rejected")
+                # An invalid proposal is retried with its error until the three-revision bound.
+                self.assertEqual([r["status"] for r in result["revisions"]], ["rejected"] * 3)
                 self.assertEqual(result["current_summary"], result["initial_summary"])
-                self.assertEqual(result["revision_count"], 1)
+                self.assertEqual(result["revision_count"], 3)
                 self.assertEqual(len(result["iterations"]), 1)
+                requests = [json.loads(call.args[0]["messages"][1]["content"]) for call in client.chat.call_args_list
+                            if "replacements" in call.args[0]["format"]["properties"]]
+                self.assertTrue(any(i["type"] == "rejected_previous_revision" for i in requests[-1]["confirmed_issues"]))
 
     def test_quotation_wrapped_in_quotation_marks_is_accepted(self):
         def wrapped(data):
@@ -245,8 +250,8 @@ class RevisionLoopTests(unittest.TestCase):
             return data
         result, _ = self.run_fixture("representation", many=True, disparity_threshold=0.01,
                                      client=mock_client(transform_revision=fail_second))
-        self.assertEqual(result["revision_count"], 2)
-        self.assertEqual([r["status"] for r in result["revisions"]], ["accepted", "rejected"])
+        self.assertEqual(result["revision_count"], 3)
+        self.assertEqual([r["status"] for r in result["revisions"]], ["accepted", "rejected", "rejected"])
         self.assertEqual(result["current_summary"], result["summary_versions"][1])
         self.assertNotEqual(result["current_summary"], result["initial_summary"])
         self.assertEqual(result["best_iteration"], 1)

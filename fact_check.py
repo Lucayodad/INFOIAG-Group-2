@@ -1,5 +1,6 @@
 """Check one summary claim against retrieved evidence; every verdict is unreviewed."""
 
+from copy import deepcopy
 import html
 import json
 import re
@@ -290,12 +291,21 @@ def check_claim(graph, summary_claim, client, entity_id=None):
                 "Repair the verdict format once. Include a nonempty explanation and only supplied evidence IDs and exact quotes. Validation error: " + str(exc)[:300]})
 
 
-def fact_check_summary(graph, summary_claims, client, allowed_entity_ids=None, max_tool_calls=3):
+def claim_cache_key(claim):
+    """Everything a claim's check depends on besides the unchanged read-only graph."""
+    return json.dumps(claim, ensure_ascii=False, sort_keys=True)
+
+
+def fact_check_summary(graph, summary_claims, client, allowed_entity_ids=None, max_tool_calls=3, cache=None):
     """Run the existing bounded agent for every extracted claim in five sentences.
 
     Severity policy: CONTRADICTED -> serious; UNKNOWN/unclear extraction ->
     unresolved; SUPPORTED -> no issue. Unresolved validation is not a confirmed
     factual error. All assessments/issues remain unreviewed model judgments.
+    An optional cache (claim_cache_key -> assessment) reuses the check of an
+    identical claim from an earlier pass over the same graph: every step runs
+    at temperature 0, and rechecks of unchanged sentences were identical in
+    all 133 recorded cases. Reused checks are marked and not counted as calls.
     """
     # Local import avoids the fact_agent -> shared fact_check helpers cycle.
     from fact_agent import run_fact_agent
@@ -308,7 +318,13 @@ def fact_check_summary(graph, summary_claims, client, allowed_entity_ids=None, m
     claims = flatten_summary_claims(summary_claims)
     assessments, issues = [], []
     for claim in claims:
-        assessment = run_fact_agent(graph, claim, client, allowed_entity_ids, max_tool_calls)
+        key = claim_cache_key(claim)
+        if cache is not None and key in cache:
+            assessment = {**deepcopy(cache[key]), "reused_check": True}
+        else:
+            assessment = run_fact_agent(graph, claim, client, allowed_entity_ids, max_tool_calls)
+            if cache is not None:
+                cache[key] = deepcopy(assessment)
         assessment["sentence_id"] = claim["sentence_id"]
         assessments.append(assessment)
         if assessment["verdict"] != "SUPPORTED":
@@ -336,8 +352,9 @@ def fact_check_summary(graph, summary_claims, client, allowed_entity_ids=None, m
     return {
         "status": status, "claims_examined": len(assessments), "verdict_counts": counts,
         "assessments": assessments, "issues": issues, "review_status": "unreviewed",
-        "model_call_count": sum(item["model_call_count"] for item in assessments),
-        "tool_call_count": sum(item["tool_call_count"] for item in assessments),
+        "model_call_count": sum(item["model_call_count"] for item in assessments if not item.get("reused_check")),
+        "tool_call_count": sum(item["tool_call_count"] for item in assessments if not item.get("reused_check")),
+        "reused_check_count": sum(bool(item.get("reused_check")) for item in assessments),
         "assessment_scope": "retrieved_cited_evidence_only",
         "evidence_complete": bool(assessments) and all(item["evidence_complete"] for item in assessments)
                              and all(record["status"] != "unclear" for record in summary_claims),

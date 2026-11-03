@@ -50,13 +50,14 @@ class SentenceCoverageTests(unittest.TestCase):
         self.assertEqual(self.check_coverages([0.125, 0.1, 0.11])["status"], "PASS")  # exactly 4/5
         self.assertEqual(self.check_coverages([0.125, 0.099, 0.11])["status"], "FAIL")
 
-    def test_failed_extraction_cannot_pass(self):
+    def test_failed_extraction_is_still_measured_on_sentence_text(self):
+        # Coverage uses sentence text; the unclear claims stay a factual issue.
         self.claims[0].update(status="unclear", claims=[])
         result = self.check()
-        self.assertEqual(result["status"], "UNKNOWN")
-        self.assertFalse(result["data_complete"])
-        self.assertIsNone(result["disparity"])
-        self.scorer.score_pairs.assert_not_called()
+        self.assertIn(result["status"], ("PASS", "FAIL"))
+        self.assertTrue(result["data_complete"])
+        self.assertIsNotNone(result["disparity"])
+        self.scorer.score_pairs.assert_called()
 
     def test_empty_input_and_scoring_failure_are_unknown(self):
         self.assertEqual(self.check([])["status"], "UNKNOWN")

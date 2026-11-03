@@ -1,0 +1,3138 @@
+@prefix : <http://www.semanticweb.org/group2/ontology#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://www.semanticweb.org/group2/ontology> a owl:Ontology .
+
+:AfricanCountry a owl:Class ;
+    rdfs:subClassOf :Country .
+
+:AsianCountry a owl:Class ;
+    rdfs:subClassOf :Country .
+
+:BallSport a owl:Class ;
+    rdfs:subClassOf :Sport .
+
+:BillboardAdvertisement a owl:Class ;
+    rdfs:subClassOf :Advertisement .
+
+:BusinessClaim a owl:Class ;
+    rdfs:subClassOf :Claim .
+
+:COVID a owl:Class ;
+    rdfs:subClassOf :Disease .
+
+:Child a owl:Class ;
+    rdfs:subClassOf :Person .
+
+:CoffeeShopCompany a owl:Class ;
+    rdfs:subClassOf :Company .
+
+:DivSummDataset a :Source,
+        owl:NamedIndividual .
+
+:Draw a owl:Class ;
+    rdfs:subClassOf :Outcome .
+
+:EuropeanCountry a owl:Class ;
+    rdfs:subClassOf :Country .
+
+:Father a :Role,
+        owl:NamedIndividual .
+
+:Flu a owl:Class ;
+    rdfs:subClassOf :Disease .
+
+:GoodHearted a owl:Class ;
+    rdfs:subClassOf :CharacterTrait .
+
+:Headache a owl:Class ;
+    rdfs:subClassOf :Pain .
+
+:IceSport a owl:Class ;
+    rdfs:subClassOf :Sport .
+
+:League a owl:Class .
+
+:Loss a owl:Class ;
+    rdfs:subClassOf :Outcome .
+
+:Lovable a owl:Class ;
+    rdfs:subClassOf :CharacterTrait .
+
+:McDonalds a :Company,
+        owl:NamedIndividual ;
+    :employs :chef1,
+        :waitress1 ;
+    :hasBranch :branch1 ;
+    :hasName "McDonald's" ;
+    :headquarteredIn :America ;
+    :investsIn :RnD_Project1 ;
+    :operatesIn :FastFoodIndustry ;
+    :partnersWith :OtherCompany ;
+    :produces :FastFoodProduct .
+
+:MobileAdvertisement a owl:Class ;
+    rdfs:subClassOf :Advertisement .
+
+:MuscleAche a owl:Class ;
+    rdfs:subClassOf :Pain .
+
+:Obama a :Person,
+        owl:NamedIndividual ;
+    :friendsWith :Person1 ;
+    :hasAge 55 ;
+    :hasCharacterTrait :Rational ;
+    :hasCountryOfOrigin :America ;
+    :hasName "Obama" ;
+    :hasOccupation :president .
+
+:PoliticalClaim a owl:Class ;
+    rdfs:subClassOf :Claim .
+
+:Position a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Reserved a owl:Class ;
+    rdfs:subClassOf :Introvert .
+
+:Rule a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:SkillLevel a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:SportsClaim a owl:Class ;
+    rdfs:subClassOf :Claim .
+
+:StateOwnedCompany a owl:Class ;
+    rdfs:subClassOf :Company .
+
+:SuperBowl a :Topic,
+        owl:NamedIndividual ;
+    :hasTopicName "Super Bowl"^^xsd:string .
+
+:SuperBowlMatch1 a :Match,
+        owl:NamedIndividual ;
+    :hasAwayTeamScore 1 ;
+    :hasHomeTeamScore 2 ;
+    :hasLost :team2 ;
+    :hasParticipantTeam :team1,
+        :team2 ;
+    :hasWon :team1 ;
+    :partOf :SuperBowl1 .
+
+:TVCommercial a owl:Class ;
+    rdfs:subClassOf :Advertisement .
+
+:Tournament a owl:Class .
+
+:TransportationCompany a owl:Class ;
+    rdfs:subClassOf :Company .
+
+:WaterSport a owl:Class ;
+    rdfs:subClassOf :Sport .
+
+:Win a owl:Class ;
+    rdfs:subClassOf :Outcome .
+
+:aboutLocation a owl:ObjectProperty ;
+    rdfs:domain :Claim ;
+    rdfs:range :Location .
+
+:aboutTopic a owl:ObjectProperty ;
+    rdfs:domain :Tweet ;
+    rdfs:range :Topic .
+
+:affects a owl:ObjectProperty ;
+    rdfs:domain :HealthCondition ;
+    rdfs:range :Food .
+
+:basedOn a owl:ObjectProperty ;
+    rdfs:domain :Ranking ;
+    rdfs:range :MatchResult .
+
+:belongsTo a owl:ObjectProperty ;
+    rdfs:domain :Country ;
+    rdfs:range :InternationalOrganization .
+
+:belongsToCategory a owl:ObjectProperty ;
+    rdfs:domain :Food ;
+    rdfs:range :FoodCategory .
+
+:belongsToCountry a owl:FunctionalProperty,
+        owl:ObjectProperty ;
+    rdfs:domain :City ;
+    rdfs:range :Country .
+
+:belongsToTeam a owl:ObjectProperty ;
+    rdfs:domain :Person ;
+    rdfs:range :Team .
+
+:claimAboutTopic a owl:ObjectProperty ;
+    rdfs:domain :Claim ;
+    rdfs:range :Topic .
+
+:claimId a owl:DatatypeProperty ;
+    rdfs:domain :Claim ;
+    rdfs:range xsd:string .
+
+:competesWith a owl:ObjectProperty,
+        owl:SymmetricProperty ;
+    rdfs:domain :Team ;
+    rdfs:range :Team .
+
+:containsClaim a owl:ObjectProperty ;
+    rdfs:comment "The tweet expresses this extracted statement; no truth assessment is implied." ;
+    rdfs:domain :Tweet ;
+    rdfs:range :Claim ;
+    owl:inverseOf :extractedFrom .
+
+:contradictsClaim a owl:ObjectProperty,
+        owl:SymmetricProperty ;
+    rdfs:domain :Claim ;
+    rdfs:range :Claim .
+
+:coversClaim a owl:ObjectProperty ;
+    rdfs:domain :Summary ;
+    rdfs:range :Claim .
+
+:createdBy a owl:ObjectProperty ;
+    rdfs:domain :Advertisement ;
+    rdfs:range :Company .
+
+:dialectLabel a owl:DatatypeProperty ;
+    rdfs:comment "The source dataset's dialect label, retained as tweet metadata, not a verified author identity." ;
+    rdfs:domain :Tweet ;
+    rdfs:range xsd:string .
+
+:employs a owl:ObjectProperty ;
+    rdfs:domain :Company ;
+    rdfs:range :Person ;
+    owl:inverseOf :worksFor .
+
+:extractionStatus a owl:DatatypeProperty ;
+    rdfs:comment "extracted, unclear, or no_claim. This describes extraction, not truth." ;
+    rdfs:domain :Tweet ;
+    rdfs:range xsd:string .
+
+:famousFor a owl:ObjectProperty ;
+    rdfs:domain :City ;
+    rdfs:range :Food .
+
+:friendsWith a owl:ObjectProperty,
+        owl:SymmetricProperty ;
+    rdfs:domain :Person ;
+    rdfs:range :Person .
+
+:hasAwayTeamScore a owl:DatatypeProperty ;
+    rdfs:domain :Match ;
+    rdfs:range xsd:integer .
+
+:hasBranch a owl:ObjectProperty ;
+    rdfs:domain :Company ;
+    rdfs:range :Branch .
+
+:hasBudget a owl:DatatypeProperty ;
+    rdfs:domain :Advertisement ;
+    rdfs:range xsd:decimal .
+
+:hasCalories a owl:DatatypeProperty ;
+    rdfs:domain :Food ;
+    rdfs:range xsd:integer .
+
+:hasCapital a owl:FunctionalProperty,
+        owl:InverseFunctionalProperty,
+        owl:ObjectProperty ;
+    rdfs:domain :Country ;
+    rdfs:range :City .
+
+:hasCharacterTrait a owl:ObjectProperty ;
+    rdfs:domain :Person ;
+    rdfs:range :CharacterTrait .
+
+:hasCitizenship a owl:ObjectProperty ;
+    rdfs:domain :Person ;
+    rdfs:range :Country .
+
+:hasCity a owl:ObjectProperty ;
+    rdfs:domain :Country ;
+    rdfs:range :City .
+
+:hasCountryCode a owl:InverseFunctionalProperty,
+        owl:ObjectProperty ;
+    rdfs:domain :Country ;
+    rdfs:range :CountryCode .
+
+:hasCountryOfOrigin a owl:ObjectProperty ;
+    rdfs:domain :Person ;
+    rdfs:range :Country .
+
+:hasDate a owl:DatatypeProperty ;
+    rdfs:domain :Claim ;
+    rdfs:range xsd:dateTime .
+
+:hasDescendant a owl:ObjectProperty,
+        owl:TransitiveProperty ;
+    rdfs:domain :Person ;
+    rdfs:range :Person .
+
+:hasDuration a owl:DatatypeProperty ;
+    rdfs:domain :Advertisement ;
+    rdfs:range xsd:decimal .
+
+:hasEthnicity a owl:ObjectProperty ;
+    rdfs:domain :Person ;
+    rdfs:range :Ethnicity .
+
+:hasGovernmentForm a owl:ObjectProperty ;
+    rdfs:domain :Country ;
+    rdfs:range :GovernmentForm .
+
+:hasHeadOfState a owl:FunctionalProperty,
+        owl:ObjectProperty ;
+    rdfs:domain :Country ;
+    rdfs:range :Person .
+
+:hasHeight a owl:DatatypeProperty,
+        owl:FunctionalProperty ;
+    rdfs:domain :Landmark ;
+    rdfs:range xsd:decimal .
+
+:hasHomeTeamScore a owl:DatatypeProperty ;
+    rdfs:domain :Match ;
+    rdfs:range xsd:integer .
+
+:hasLandmark a owl:ObjectProperty ;
+    rdfs:domain :City ;
+    rdfs:range :Landmark .
+
+:hasLanguage a owl:ObjectProperty ;
+    rdfs:domain :Advertisement ;
+    rdfs:range :Language .
+
+:hasLost a owl:ObjectProperty ;
+    rdfs:domain :Match ;
+    rdfs:range :Team .
+
+:hasName a owl:DatatypeProperty ;
+    rdfs:range xsd:string .
+
+:hasNeighbor a owl:ObjectProperty,
+        owl:SymmetricProperty ;
+    rdfs:domain :Country ;
+    rdfs:range :Country .
+
+:hasNumberOfEmployees a owl:DatatypeProperty ;
+    rdfs:domain :Company ;
+    rdfs:range xsd:integer .
+
+:hasOccupation a owl:ObjectProperty ;
+    rdfs:domain :Person ;
+    rdfs:range :Occupation .
+
+:hasOfficialLanguage a owl:ObjectProperty ;
+    rdfs:domain :Country ;
+    rdfs:range :Language .
+
+:hasOutcome a owl:FunctionalProperty,
+        owl:ObjectProperty ;
+    rdfs:domain :Match ;
+    rdfs:range :Outcome .
+
+:hasParticipantTeam a owl:ObjectProperty ;
+    rdfs:domain :Match ;
+    rdfs:range :Team .
+
+:hasPopulation a owl:DatatypeProperty ;
+    rdfs:domain :Country ;
+    rdfs:range xsd:integer .
+
+:hasPosition a owl:DatatypeProperty ;
+    rdfs:domain :Player ;
+    rdfs:range xsd:string .
+
+:hasPrimaryOccupation a owl:FunctionalProperty,
+        owl:ObjectProperty ;
+    rdfs:domain :Person ;
+    rdfs:range :Occupation .
+
+:hasPublicationDate a owl:DatatypeProperty ;
+    rdfs:domain :Advertisement ;
+    rdfs:range xsd:dateTime .
+
+:hasRanking a owl:ObjectProperty ;
+    rdfs:domain :Competition ;
+    rdfs:range :Ranking .
+
+:hasRevenue a owl:DatatypeProperty ;
+    rdfs:domain :Company ;
+    rdfs:range xsd:decimal .
+
+:hasRitual a owl:ObjectProperty ;
+    rdfs:domain :Competition ;
+    rdfs:range :Ritual .
+
+:hasRole a owl:ObjectProperty ;
+    rdfs:domain :Person ;
+    rdfs:range :Role .
+
+:hasRules a owl:DatatypeProperty ;
+    rdfs:domain :Sport ;
+    rdfs:range xsd:string .
+
+:hasSeverity a owl:DatatypeProperty ;
+    rdfs:domain :Disease ;
+    rdfs:range xsd:string .
+
+:hasSkillLevel a owl:DatatypeProperty ;
+    rdfs:domain :Player ;
+    rdfs:range xsd:string .
+
+:hasText a owl:DatatypeProperty ;
+    rdfs:domain :Claim ;
+    rdfs:range xsd:string .
+
+:hasTopicName a owl:DatatypeProperty ;
+    rdfs:domain :Topic ;
+    rdfs:range xsd:string .
+
+:hasTypicalDuration a owl:DatatypeProperty ;
+    rdfs:domain :Disease ;
+    rdfs:range xsd:integer .
+
+:hasViewCount a owl:DatatypeProperty ;
+    rdfs:domain :Advertisement ;
+    rdfs:range xsd:integer .
+
+:hasWinnerDetermination a owl:ObjectProperty ;
+    rdfs:domain :Sport ;
+    rdfs:range :WinnerDetermination .
+
+:hasWon a owl:ObjectProperty ;
+    rdfs:domain :Match ;
+    rdfs:range :Team .
+
+:hasYearBuilt a owl:DatatypeProperty ;
+    rdfs:domain :Landmark ;
+    rdfs:range xsd:integer .
+
+:headquarteredIn a owl:FunctionalProperty,
+        owl:ObjectProperty ;
+    rdfs:domain :Company ;
+    rdfs:range :Country .
+
+:hosts a owl:ObjectProperty ;
+    rdfs:domain :Country ;
+    rdfs:range :Event .
+
+:investsIn a owl:ObjectProperty ;
+    rdfs:domain :Company ;
+    rdfs:range :ResearchAndDevelopment .
+
+:isApproved a owl:DatatypeProperty ;
+    rdfs:domain :Advertisement ;
+    rdfs:range xsd:boolean .
+
+:isContagious a owl:DatatypeProperty ;
+    rdfs:domain :Disease ;
+    rdfs:range xsd:boolean .
+
+:isPlayedBy a owl:ObjectProperty ;
+    rdfs:domain :Match ;
+    rdfs:range :Team .
+
+:isPublic a owl:DatatypeProperty ;
+    rdfs:domain :Company ;
+    rdfs:range xsd:boolean .
+
+:isVegetarian a owl:DatatypeProperty ;
+    rdfs:domain :Food ;
+    rdfs:range xsd:boolean .
+
+:locatedIn a owl:ObjectProperty,
+        owl:TransitiveProperty ;
+    rdfs:range [ a owl:Class ;
+            owl:unionOf ( :City :Country :Location ) ] .
+
+:madeBy a owl:ObjectProperty ;
+    rdfs:domain :Claim ;
+    rdfs:range :Person .
+
+:marriedTo a owl:ObjectProperty,
+        owl:SymmetricProperty ;
+    rdfs:domain :Adult ;
+    rdfs:range :Adult .
+
+:operatesIn a owl:ObjectProperty ;
+    rdfs:domain :Company ;
+    rdfs:range :Industry .
+
+:originatesIn a owl:ObjectProperty ;
+    rdfs:domain :Disease ;
+    rdfs:range :City .
+
+:partOf a owl:ObjectProperty,
+        owl:TransitiveProperty .
+
+:participatesIn a owl:ObjectProperty ;
+    rdfs:domain :Player ;
+    rdfs:range :Sport .
+
+:partnersWith a owl:ObjectProperty,
+        owl:SymmetricProperty ;
+    rdfs:domain :Company ;
+    rdfs:range :Company .
+
+:produces a owl:ObjectProperty ;
+    rdfs:domain :Company ;
+    rdfs:range [ a owl:Class ;
+            owl:unionOf ( :Product :Service ) ] .
+
+:prohibits a owl:ObjectProperty ;
+    rdfs:domain :Allergy ;
+    rdfs:range :FoodCategory .
+
+:promotes a owl:ObjectProperty ;
+    rdfs:domain :Advertisement ;
+    rdfs:range :Product .
+
+:recognizes a owl:ObjectProperty ;
+    rdfs:domain :Country ;
+    rdfs:range :Holiday .
+
+:relatedTo a owl:ObjectProperty ;
+    rdfs:domain :Claim ;
+    rdfs:range [ a owl:Class ;
+            owl:unionOf ( :Company :Event :Person :Sport ) ] .
+
+:shownAt a owl:ObjectProperty ;
+    rdfs:domain :Advertisement ;
+    rdfs:range :Location .
+
+:sourceFile a owl:DatatypeProperty ;
+    rdfs:domain :Tweet ;
+    rdfs:range xsd:string .
+
+:sourceLine a owl:DatatypeProperty ;
+    rdfs:domain :Tweet ;
+    rdfs:range xsd:integer .
+
+:sourceQuote a owl:DatatypeProperty ;
+    rdfs:domain :Claim ;
+    rdfs:range xsd:string .
+
+:spreadsTo a owl:ObjectProperty ;
+    rdfs:domain :Disease ;
+    rdfs:range :Region .
+
+:spreadsToRegion a owl:ObjectProperty,
+        owl:TransitiveProperty ;
+    rdfs:domain :Region ;
+    rdfs:range :Region .
+
+:stance a owl:DatatypeProperty ;
+    rdfs:domain :Claim ;
+    rdfs:range xsd:string .
+
+:summarizesTopic a owl:ObjectProperty ;
+    rdfs:domain :Summary ;
+    rdfs:range :Topic .
+
+:summaryHasText a owl:DatatypeProperty ;
+    rdfs:domain :Summary ;
+    rdfs:range xsd:string .
+
+:targetText a owl:DatatypeProperty ;
+    rdfs:domain :Claim ;
+    rdfs:range xsd:string .
+
+:targetsAgeGroup a owl:ObjectProperty ;
+    rdfs:domain :Advertisement ;
+    rdfs:range :AgeGroup .
+
+:tweetId a owl:DatatypeProperty ;
+    rdfs:domain :Tweet ;
+    rdfs:range xsd:string .
+
+:tweetText a owl:DatatypeProperty ;
+    rdfs:comment "Legacy spelling. New population uses tweetHasText from the base ontology; readers explicitly accept both." ;
+    rdfs:domain :Tweet ;
+    rdfs:range xsd:string ;
+    owl:equivalentProperty :tweetHasText .
+
+:uses a owl:ObjectProperty ;
+    rdfs:domain :Country ;
+    rdfs:range :Currency .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_001> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_001_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_001_C02>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_001_C03> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 1 ;
+    :tweetHasText "Obama speeches make my head spin ! Mandela  is beautiful!. Obama when he talks.It's ROUND n Round we go." ;
+    :tweetId "Obama_001" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_002> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_002_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_002_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 2 ;
+    :tweetHasText "Talm Bout Everybody Finna Get Bangs Cuz Of Michelle Obama ..Umm No! Mfs Been Wearing Them" ;
+    :tweetId "Obama_002" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_003> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_003_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_003_C02>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_003_C03> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 3 ;
+    :tweetHasText "Obama isn't going to take away guns he is going to take away assault rifles what the fuck do you need an assault rifle anyways" ;
+    :tweetId "Obama_003" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_004> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_004_C01> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 4 ;
+    :tweetHasText "A any of yall MF knw Obama @ name on here?" ;
+    :tweetId "Obama_004" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_005> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_005_C01> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 5 ;
+    :tweetHasText "I wanna go eat but my mom said now until she's done watching Obama. __\\n#Inaug2013" ;
+    :tweetId "Obama_005" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_006> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_006_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_006_C02> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 6 ;
+    :tweetHasText "But.... It's Obama free .-. Haha You're right though.. I just wanna leave the Country :p" ;
+    :tweetId "Obama_006" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_007> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_007_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_007_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 7 ;
+    :tweetHasText "Bitch gon ask whats Obama's last name...I told her Williams" ;
+    :tweetId "Obama_007" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_008> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_008_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_008_C02> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 8 ;
+    :tweetHasText "Obama looks just like the devil check out his eyes same video on U Tube speaking in Hollywood. Anti Christ ???__" ;
+    :tweetId "Obama_008" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_009> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_009_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_009_C02> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 9 ;
+    :tweetHasText "Good! They all voted for Obama so let them kill each other! I'm tired of paying for them!" ;
+    :tweetId "Obama_009" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_010> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_010_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_010_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 10 ;
+    :tweetHasText "Obama gotta hurry wit his speech Maury finna cum on" ;
+    :tweetId "Obama_010" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_011> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_011_C01> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 11 ;
+    :tweetHasText "Obama and Tiger are the biggest uncle toms in the world" ;
+    :tweetId "Obama_011" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_012> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_012_C01> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 12 ;
+    :tweetHasText "We knew that was coming.  Scary Obama emperor for life." ;
+    :tweetId "Obama_012" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_013> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_013_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_013_C02> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 13 ;
+    :tweetHasText "Teabaggers/RWNJs just can't stand that President Obama won a second term. Bless their tiny little hating heats." ;
+    :tweetId "Obama_013" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_014> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_014_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_014_C02> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 14 ;
+    :tweetHasText "\"The SS tax increase was necessary for the life of the program, but isn't it wonderful that it came in Obama's tax bill.\"" ;
+    :tweetId "Obama_014" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_015> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_015_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_015_C02>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_015_C03>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_015_C04> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 15 ;
+    :tweetHasText "You're a good little liberal lap dog! You make me sick! Go ahead a kiss Obamas ring! You already kissed his ass!" ;
+    :tweetId "Obama_015" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_016> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_016_C01> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 16 ;
+    :tweetHasText "This Barack Obama page on my tl. THEY KNOW GOOD N WELL HE AIN'T GOT NO DOG'ON TWITTER!!!!!" ;
+    :tweetId "Obama_016" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_017> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_017_C01> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 17 ;
+    :tweetHasText "A Obama para que les arda mas a los gringos lol" ;
+    :tweetId "Obama_017" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_018> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_018_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_018_C02> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 18 ;
+    :tweetHasText "Just saw a sticker on a car that said #ObamaSucks... Made my day." ;
+    :tweetId "Obama_018" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_019> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_019_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_019_C02> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 19 ;
+    :tweetHasText "You never see a Obama sticker on an American made car? Why is that?" ;
+    :tweetId "Obama_019" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_020> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_020_C01> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 20 ;
+    :tweetHasText "Obamacare = The Affordable Care Act...\\n\\nThe clowns who wrote that must have a fairly tenuous connection with reality." ;
+    :tweetId "Obama_020" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_021> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_021_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_021_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 21 ;
+    :tweetHasText "I love the gown the Michelle Obama wore she looking stunning !!" ;
+    :tweetId "Obama_021" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_022> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_022_C01> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 22 ;
+    :tweetHasText "B also took out her Obama ornament and put it on display for the inauguration today. ________" ;
+    :tweetId "Obama_022" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_023> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_023_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_023_C02> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 23 ;
+    :tweetHasText "The House has the power to stop Obama's runaway spending. They just need the will. Shut down government. Save the economy. Save America." ;
+    :tweetId "Obama_023" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_024> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_024_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_024_C02> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 24 ;
+    :tweetHasText "Uncle Obama I like the shape of your banana. Can I give it to my monkey?" ;
+    :tweetId "Obama_024" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_025> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_025_C01> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 25 ;
+    :tweetHasText "I believe Obama will be the reason I ultimately stop buying shoes. #TakinMoUhMuhMoney" ;
+    :tweetId "Obama_025" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_026> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_026_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_026_C02> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 26 ;
+    :tweetHasText "4 years from now you'll all regret voting for Obama. #StupidCommie" ;
+    :tweetId "Obama_026" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_027> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_027_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_027_C02>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_027_C03> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 27 ;
+    :tweetHasText "\"It's a hip hop event? The Obama girls are dancing up a storm, just NO RESPECT for the moment! This first family is lowering the bar too far!\"" ;
+    :tweetId "Obama_027" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_028> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_028_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_028_C02> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 28 ;
+    :tweetHasText "Persons saying they don't like Obama have issues.how can you like or dislike someone you've never met." ;
+    :tweetId "Obama_028" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_029> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_029_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_029_C02>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_029_C03>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_029_C04> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 29 ;
+    :tweetHasText "FOR MLK DAY I GOT SOME MLK SPECIAL EDITION KUSH\\n\\nITS CALLED Michelle Obama ::\\n\\nGUARANTEED TO HOLD A GOOD NIGGA DOWN LOL::\\n\\n FWM ::" ;
+    :tweetId "Obama_029" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_030> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_030_C01> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 30 ;
+    :tweetHasText "Obama in office niggas &amp; bitches get yo act together" ;
+    :tweetId "Obama_030" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_031> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_031_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_031_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 31 ;
+    :tweetHasText "\"Me. J Cole. Bob Marley. President Obama. Check the stats, my team winning.\"" ;
+    :tweetId "Obama_031" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_032> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_032_C01> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 32 ;
+    :tweetHasText "These people talkin bout Michelle Obama and wat she wore omg" ;
+    :tweetId "Obama_032" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_033> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_033_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_033_C02> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 33 ;
+    :tweetHasText "Listen to the tone Obama is the chief divider in this country he will never be the work together president" ;
+    :tweetId "Obama_033" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_034> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_034_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_034_C02> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 34 ;
+    :tweetHasText "And if you really think Obama puppet ass gonna file civil charges then you probably also believe this is a free country smh wake up" ;
+    :tweetId "Obama_034" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_035> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_035_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_035_C02> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 35 ;
+    :tweetHasText "\"ehh, but Obama called you gay. Can't top that bruh\"" ;
+    :tweetId "Obama_035" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_036> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_036_C01> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 36 ;
+    :tweetHasText "I'm On A Mission To Get Obama Oldest Daughter . .  She Is Gorgeous ! __" ;
+    :tweetId "Obama_036" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_037> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_037_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_037_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 37 ;
+    :tweetHasText "Dese MFS on Boondocks talmbout ridin Obama dick .. LMAO" ;
+    :tweetId "Obama_037" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_038> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_038_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_038_C02> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 38 ;
+    :tweetHasText "\"Sr. President Obama, Como ciudadano USA me siento en la obligation ética y moral de exigirle que NO MAS PETROLEO DE VENEZUELA\"" ;
+    :tweetId "Obama_038" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_039> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_039_C01> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 39 ;
+    :tweetHasText "I was lmao In my car when I heard your Obama impression!!" ;
+    :tweetId "Obama_039" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_040> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_040_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_040_C02>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_040_C03> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 40 ;
+    :tweetHasText "\"Nobody's getting America's guns, focus on cutting spending &amp; act like a real POTUS, Pinocchio! #ObamaSucks\"" ;
+    :tweetId "Obama_040" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_041> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_041_C01> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 41 ;
+    :tweetHasText "If President Obama ever decide to move on from Michele I will be first in line." ;
+    :tweetId "Obama_041" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_042> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_042_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_042_C02> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 42 ;
+    :tweetHasText "\\rYou should do Obama lifting the ban off women serving in the front line. There are a lot of mixed feelings on this. Thoughts? :)" ;
+    :tweetId "Obama_042" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_043> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_043_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_043_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 43 ;
+    :tweetHasText "Boondocks always making fun somebody.... *sings dick riding Obama lmao" ;
+    :tweetId "Obama_043" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_044> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_044_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_044_C02> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 44 ;
+    :tweetHasText "I'm telling y'all Obama is the Devil dude and all y'all bitches voted for him" ;
+    :tweetId "Obama_044" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_045> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_045_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_045_C02> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 45 ;
+    :tweetHasText "What the fuck is Bill doing there? Obama should be there" ;
+    :tweetId "Obama_045" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_046> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_046_C01> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 46 ;
+    :tweetHasText "Hoping everyone that voted Obama is enjoying their tax increase!" ;
+    :tweetId "Obama_046" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_047> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_047_C01> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 47 ;
+    :tweetHasText "Watching the Inauguration before I head out! Michelle Obama looks GREAT!" ;
+    :tweetId "Obama_047" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_048> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_048_C01> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 48 ;
+    :tweetHasText "\"Except God spoke to Mose and Obama spoke to Holder, huge difference!\"" ;
+    :tweetId "Obama_048" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_049> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_049_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_049_C02>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_049_C03> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 49 ;
+    :tweetHasText "Now I Know my neighbors aint on no #Domesticviolence sh*t on MLK &amp;&amp;&amp; Obama Day?...Damn....*thrws up hands* ..Ni99as. *sigh*" ;
+    :tweetId "Obama_049" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_050> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_050_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_050_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 50 ;
+    :tweetHasText "Obama was Gona shout my twitter name out but I told him Dnt even wry about it" ;
+    :tweetId "Obama_050" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_051> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_051_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_051_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 51 ;
+    :tweetHasText "The DMV mad hype son lmao…… Ravens won its MLK day and Obamas inaguration is tody" ;
+    :tweetId "Obama_051" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_052> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_052_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_052_C02>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_052_C03> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 52 ;
+    :tweetHasText "\"I love Michelle Obama. I love everything about her. The way she carry herself, her style and her love for the president.\"" ;
+    :tweetId "Obama_052" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_053> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_053_C01> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 53 ;
+    :tweetHasText "But where was all this anti governmental everything rhetoric before Pres. Obama. He was always aware but not as hateful" ;
+    :tweetId "Obama_053" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_054> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_054_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_054_C02> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 54 ;
+    :tweetHasText "Obama a bit repetitive and boring. Needs rest and inspiration IMO" ;
+    :tweetId "Obama_054" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_055> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_055_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_055_C02> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 55 ;
+    :tweetHasText "Maybe family night before my stepdad goes to Afghanistan ! Obama send our heros home ! :(" ;
+    :tweetId "Obama_055" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_056> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_056_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_056_C02> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 56 ;
+    :tweetHasText "Te-o deserved the Heisman like Obama deserved the Nobel Peace Prize.." ;
+    :tweetId "Obama_056" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_057> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_057_C01> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 57 ;
+    :tweetHasText "I wonder if Obama and his wife are fuckin right now ?" ;
+    :tweetId "Obama_057" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_058> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_058_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_058_C02>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_058_C03> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 58 ;
+    :tweetHasText "The US is falling behind in the most prosperous countries because of our wild west guns and awful healthcare. Show us some change Obama" ;
+    :tweetId "Obama_058" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_059> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_059_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_059_C02> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 59 ;
+    :tweetHasText "Mom: what's the worst moment in 2012? \\n\\nDad: Obama getting reelected \\n\\n#RepublicanProbz" ;
+    :tweetId "Obama_059" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_060> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_060_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_060_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 60 ;
+    :tweetHasText "I really don't like this law Obama just passed.... Smh" ;
+    :tweetId "Obama_060" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_061> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_061_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_061_C02> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 61 ;
+    :tweetHasText "#ObamaIsNotSatan Yes he is. Just a little bit dark. And convincing." ;
+    :tweetId "Obama_061" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_062> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_062_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_062_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 62 ;
+    :tweetHasText "In other news President Barack Obama got to meet Mario Chalmers today... #CongratsObama" ;
+    :tweetId "Obama_062" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_063> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_063_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_063_C02> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 63 ;
+    :tweetHasText "If you want to protect schools then arm them - Obama protects his kids they have 15 SS officers!" ;
+    :tweetId "Obama_063" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_064> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_064_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_064_C02> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 64 ;
+    :tweetHasText "Hey Piers now that President Obama threw the ball back to the people &amp; the 113th guess what? now nothing will be done as usual!" ;
+    :tweetId "Obama_064" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_065> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_065_C01> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 65 ;
+    :tweetHasText "I am pretty sure that OBAMA'S FAA/FCC is responsible for this!!! #ObamasAmerica #wifiwalter" ;
+    :tweetId "Obama_065" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_066> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_066_C01> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 66 ;
+    :tweetHasText "Not much talk about the inauguration today. Oh wait that's right nobody cares about Obama" ;
+    :tweetId "Obama_066" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_067> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_067_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_067_C02> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 67 ;
+    :tweetHasText "WTF is Barack Obama doing trying pass this bill!__\\n#immigrationreform #CNNNEWS" ;
+    :tweetId "Obama_067" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_068> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_068_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_068_C02>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_068_C03> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 68 ;
+    :tweetHasText "\"The Niners, Tomorrow Obama.....always pick winners...this sprig we have another one #HK\"" ;
+    :tweetId "Obama_068" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_069> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_069_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_069_C02> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 69 ;
+    :tweetHasText "President Obama must layout his full agenda 4 the next 2yrs N remain steadfast in his resolve 2 bring it 2 a reality.#FNA" ;
+    :tweetId "Obama_069" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_070> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_070_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_070_C02>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_070_C03> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 70 ;
+    :tweetHasText "\"Obama is regulating gun control to protect the innocent people, yet he believes that woman can kill their own innocent children? #DamnLibs\"" ;
+    :tweetId "Obama_070" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_071> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_071_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_071_C02> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 71 ;
+    :tweetHasText "Don't your lips ever get tired of kissing Obamas ass! You're not free to speak! You're a left wing puppet!" ;
+    :tweetId "Obama_071" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_072> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_072_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_072_C02>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_072_C03> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 72 ;
+    :tweetHasText "\"Obama is steal President, regardless we have to accept it, but God is still in charge...\"" ;
+    :tweetId "Obama_072" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_073> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_073_C01> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 73 ;
+    :tweetHasText "Like frfr we gotta make progress to. Obama cant do it by himself #SIMPLE" ;
+    :tweetId "Obama_073" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_074> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_074_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_074_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 74 ;
+    :tweetHasText "They're trying to impeach President Obama over gun control...for real?! C'mon son..." ;
+    :tweetId "Obama_074" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_075> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_075_C01> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 75 ;
+    :tweetHasText "I bet half of y'all don't even understand what Obama is saying !!" ;
+    :tweetId "Obama_075" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_076> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_076_C01> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 76 ;
+    :tweetHasText "What happened to Obama? No one talks about him anymore" ;
+    :tweetId "Obama_076" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_077> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_077_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_077_C02> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 77 ;
+    :tweetHasText "Interested to see how President Obama runs this second term. He now has NOTHING to prove &amp; doesn't have re-election in the forefront." ;
+    :tweetId "Obama_077" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_078> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_078_C01> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 78 ;
+    :tweetHasText "I thought Obama shut u up a long time ago?" ;
+    :tweetId "Obama_078" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_079> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_079_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_079_C02> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 79 ;
+    :tweetHasText "Obama tells text me.couz ima take a shit.lol:lol.ur dumm cx" ;
+    :tweetId "Obama_079" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_080> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_080_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_080_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 80 ;
+    :tweetHasText "Obama dancing mad gangsta at the inaugural ball ! First Lady look beautiful in her red dress __" ;
+    :tweetId "Obama_080" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_081> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_081_C01> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 81 ;
+    :tweetHasText "Obama Got Waves . . . .  ! ! ! ! !" ;
+    :tweetId "Obama_081" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_082> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_082_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_082_C02> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 82 ;
+    :tweetHasText "\"I feel like Obama, sooo much pressure on a nigga now.\"" ;
+    :tweetId "Obama_082" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_083> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_083_C01> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 83 ;
+    :tweetHasText "Comeon Obama get off the tv! I'm missing the price is right" ;
+    :tweetId "Obama_083" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_084> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_084_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_084_C02>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_084_C03> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 84 ;
+    :tweetHasText "We don't vote Liberal! That's why! Obama is afraid of the Military! He hates them! Rather feed illegals" ;
+    :tweetId "Obama_084" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_085> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_085_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_085_C02> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 85 ;
+    :tweetHasText "Hopefully Obama will put some braces on Michelle this Term . No shade just wanna see her smile bright like a Diamond." ;
+    :tweetId "Obama_085" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_086> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_086_C01> ;
+    :dialectLabel "Hisp" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 86 ;
+    :tweetHasText "Yea your probably right! I swear I probably had a longer more frustrating day than Obama! -.- Haha" ;
+    :tweetId "Obama_086" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_087> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_087_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_087_C02> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 87 ;
+    :tweetHasText "I am so sick and tired of Obama lying about the Republicans he is like a 5 year old" ;
+    :tweetId "Obama_087" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_088> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_088_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_088_C02> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 88 ;
+    :tweetHasText "\"Sorry ladies, gun show got canceled.  Obama's banning assault weapons\"" ;
+    :tweetId "Obama_088" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_089> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_089_C01>,
+        <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_089_C02> ;
+    :dialectLabel "White" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 89 ;
+    :tweetHasText "\"Obama's expression when Steve Kraft asks real dumb, factually inaccurate ?s is perfect. The WTF moment. C'mon Steve. U r missing the mark.\"" ;
+    :tweetId "Obama_089" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/tweet/Obama_090> a :Tweet ;
+    :aboutTopic :Topic_Obama ;
+    :containsClaim <http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_090_C01> ;
+    :dialectLabel "AA" ;
+    :extractionStatus "extracted" ;
+    :sourceFile "input_docs/Obama.txt" ;
+    :sourceLine 90 ;
+    :tweetHasText "Michelle Obama Getting Her Nicki Minaj On By Tha Head" ;
+    :tweetId "Obama_090" .
+
+:AgeGroup a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Allergy a owl:Class ;
+    rdfs:subClassOf :HealthCondition ;
+    owl:disjointWith :Injury .
+
+:Chef a :Occupation,
+        owl:NamedIndividual .
+
+:CountryCode a owl:Class .
+
+:Currency a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Ethnicity a owl:Class .
+
+:FastFoodIndustry a :Industry,
+        owl:NamedIndividual .
+
+:FastFoodProduct a :Product,
+        owl:NamedIndividual .
+
+:GovernmentForm a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:HalftimeShow a :Ritual,
+        owl:NamedIndividual .
+
+:Health a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Holiday a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Injury a owl:Class ;
+    rdfs:subClassOf :HealthCondition .
+
+:InternationalOrganization a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Introvert a owl:Class ;
+    rdfs:subClassOf :CharacterTrait .
+
+:MatchResult a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:OtherCompany a :Company,
+        owl:NamedIndividual .
+
+:Person1 a :Person,
+        owl:NamedIndividual .
+
+:Rational a :CharacterTrait,
+        owl:NamedIndividual .
+
+:RnD_Project1 a :ResearchAndDevelopment,
+        owl:NamedIndividual .
+
+:Service a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:SuperBowl1 a :Competition,
+        owl:NamedIndividual ;
+    :hasRitual :HalftimeShow .
+
+:Symptom a owl:Class ;
+    rdfs:subClassOf :HealthCondition .
+
+:Waitress a :Occupation,
+        owl:NamedIndividual .
+
+:WinnerDetermination a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:assessedBy a owl:FunctionalProperty,
+        owl:ObjectProperty ;
+    rdfs:domain :ClaimAssessment ;
+    rdfs:range :Source .
+
+:assessmentOf a owl:FunctionalProperty,
+        owl:ObjectProperty ;
+    rdfs:domain :ClaimAssessment ;
+    rdfs:range :Claim .
+
+:branch1 a :Branch,
+        owl:NamedIndividual .
+
+:chef1 a :Person,
+        owl:NamedIndividual ;
+    :hasOccupation :Chef .
+
+:extractedFrom a owl:ObjectProperty ;
+    rdfs:domain :Claim ;
+    rdfs:range :Tweet .
+
+:isValid a owl:DatatypeProperty,
+        owl:FunctionalProperty ;
+    rdfs:domain :ClaimAssessment ;
+    rdfs:range xsd:boolean .
+
+:president a :Occupation,
+        owl:NamedIndividual .
+
+:tweetHasText a owl:DatatypeProperty ;
+    rdfs:domain :Tweet ;
+    rdfs:range xsd:string .
+
+:waitress1 a :Person,
+        owl:NamedIndividual ;
+    :hasOccupation :Waitress .
+
+:worksFor a owl:ObjectProperty ;
+    rdfs:domain :Person ;
+    rdfs:range :Company .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_001_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_001_C01" ;
+    :hasText "The author states that Obama's speeches cause them to feel dizzy or overwhelmed." ;
+    :sourceQuote "Obama speeches make my head spin !" ;
+    :stance "negative" ;
+    :targetText "Obama speeches" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_001_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_001_C02" ;
+    :hasText "The author expresses admiration for Mandela, describing him as beautiful." ;
+    :sourceQuote "Mandela  is beautiful!" ;
+    :stance "positive" ;
+    :targetText "Mandela" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_001_C03> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_001_C03" ;
+    :hasText "The author claims that whenever Obama speaks, a cycle or pattern repeats itself continuously." ;
+    :sourceQuote "Obama when he talks.It's ROUND n Round we go." ;
+    :stance "neutral" ;
+    :targetText "Obama's speaking style" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_002_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_002_C01" ;
+    :hasText "The author claims that many people (Mfs) have been wearing the outfit in question." ;
+    :sourceQuote "Mfs Been Wearing Them" ;
+    :stance "neutral" ;
+    :targetText "the outfit worn by Michelle Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_002_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_002_C02" ;
+    :hasText "The author claims that it is not true that everyone wants to get bangs because of Michelle Obama." ;
+    :sourceQuote "Talm Bout Everybody Finna Get Bangs Cuz Of Michelle Obama ..Umm No!" ;
+    :stance "negative" ;
+    :targetText "the trend of getting bangs due to Michelle Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_003_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_003_C01" ;
+    :hasText "The author claims that President Obama will not ban all firearms." ;
+    :sourceQuote "Obama isn't going to take away guns" ;
+    :stance "neutral" ;
+    :targetText "President Obama's gun policy" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_003_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_003_C02" ;
+    :hasText "The author claims that President Obama will ban assault rifles." ;
+    :sourceQuote "he is going to take away assault rifles" ;
+    :stance "neutral" ;
+    :targetText "assault rifles" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_003_C03> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_003_C03" ;
+    :hasText "The author expresses skepticism or sarcasm regarding the necessity of owning an assault rifle." ;
+    :sourceQuote "what the fuck do you need an assault rifle anyways" ;
+    :stance "negative" ;
+    :targetText "the utility of assault rifles" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_004_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_004_C01" ;
+    :hasText "The author asks if anyone knows the name 'Obama'." ;
+    :sourceQuote "A any of yall MF knw Obama @ name on here?" ;
+    :stance "neutral" ;
+    :targetText "the name 'Obama'" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_005_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_005_C01" ;
+    :hasText "The author claims their mother told them to stay home or wait because she is currently watching the inauguration of Barack Obama." ;
+    :sourceQuote "my mom said now until she's done watching Obama" ;
+    :stance "neutral" ;
+    :targetText "Barack Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_006_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_006_C01" ;
+    :hasText "The author states that a specific condition or situation is 'Obama free'." ;
+    :sourceQuote "It's Obama free" ;
+    :stance "neutral" ;
+    :targetText "the state of being 'Obama free'" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_006_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_006_C02" ;
+    :hasText "The author expresses a desire to leave their country." ;
+    :sourceQuote "I just wanna leave the Country" ;
+    :stance "positive" ;
+    :targetText "the author's country" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_007_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_007_C01" ;
+    :hasText "The author states that someone is asking for the last name of Barack Obama." ;
+    :sourceQuote "Bitch gon ask whats Obama's last name..." ;
+    :stance "neutral" ;
+    :targetText "Barack Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_007_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_007_C02" ;
+    :hasText "The author claims they provided the surname 'Williams' to the person who asked." ;
+    :sourceQuote "...I told her Williams" ;
+    :stance "positive" ;
+    :targetText "the person asking about Obama's last name" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_008_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_008_C01" ;
+    :hasText "The author claims that Barack Obama resembles the devil." ;
+    :sourceQuote "Obama looks just like the devil" ;
+    :stance "negative" ;
+    :targetText "Barack Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_008_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_008_C02" ;
+    :hasText "The author speculates or alleges that Barack Obama is the Antichrist." ;
+    :sourceQuote "Anti Christ ???__" ;
+    :stance "negative" ;
+    :targetText "Barack Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_009_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_009_C01" ;
+    :hasText "The author argues that because the individuals in question voted for Obama, they deserve to be killed by one another." ;
+    :sourceQuote "They all voted for Obama so let them kill each other!" ;
+    :stance "negative" ;
+    :targetText "Obama's supporters" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_009_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_009_C02" ;
+    :hasText "The author expresses frustration about the financial cost associated with Obama's supporters." ;
+    :sourceQuote "I'm tired of paying for them!" ;
+    :stance "negative" ;
+    :targetText "Obama's supporters" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_010_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_010_C01" ;
+    :hasText "The author claims that Obama needs to rush his speech." ;
+    :sourceQuote "Obama gotta hurry wit his speech" ;
+    :stance "negative" ;
+    :targetText "Obama's speech" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_010_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_010_C02" ;
+    :hasText "The author claims that Maury is about to arrive or begin." ;
+    :sourceQuote "Maury finna cum on" ;
+    :stance "neutral" ;
+    :targetText "Maury" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_011_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_011_C01" ;
+    :hasText "The author claims that Barack Obama and Tiger Woods are the most prominent examples of 'uncle toms' globally." ;
+    :sourceQuote "Obama and Tiger are the biggest uncle toms in the world" ;
+    :stance "negative" ;
+    :targetText "Barack Obama and Tiger Woods" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_012_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_012_C01" ;
+    :hasText "The author characterizes Barack Obama as a 'scary emperor' who holds power indefinitely." ;
+    :sourceQuote "Scary Obama emperor for life." ;
+    :stance "negative" ;
+    :targetText "Barack Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_013_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_013_C01" ;
+    :hasText "The author claims that individuals identified as 'Teabaggers' or 'RWNJs' are unable to accept the fact that President Obama was re-elected for a second term." ;
+    :sourceQuote "Teabaggers/RWNJs just can't stand that President Obama won a second term." ;
+    :stance "negative" ;
+    :targetText "Teabaggers/RWNJs" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_013_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_013_C02" ;
+    :hasText "The author expresses contempt and pity toward the group identified as 'Teabaggers' or 'RWNJs', referring to them as having small, hateful feelings." ;
+    :sourceQuote "Bless their tiny little hating heats." ;
+    :stance "negative" ;
+    :targetText "Teabaggers/RWNJs" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_014_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_014_C01" ;
+    :hasText "The author states that the SS tax increase was necessary for the continuation of the program." ;
+    :sourceQuote "The SS tax increase was necessary for the life of the program" ;
+    :stance "neutral" ;
+    :targetText "the SS tax increase" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_014_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_014_C02" ;
+    :hasText "The author expresses a positive sentiment regarding the fact that the SS tax increase was included in Obama's tax bill." ;
+    :sourceQuote "isn't it wonderful that it came in Obama's tax bill" ;
+    :stance "positive" ;
+    :targetText "Obama's tax bill" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_015_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_015_C01" ;
+    :hasText "The author asserts that the addressee is a 'liberal' and compares them to a 'lap dog'." ;
+    :sourceQuote "You're a good little liberal lap dog!" ;
+    :stance "negative" ;
+    :targetText "the addressee (a person)" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_015_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_015_C02" ;
+    :hasText "The author expresses disgust toward the addressee." ;
+    :sourceQuote "You make me sick!" ;
+    :stance "negative" ;
+    :targetText "the addressee" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_015_C03> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_015_C03" ;
+    :hasText "The author suggests that the addressee should kiss Barack Obama's ring." ;
+    :sourceQuote "Go ahead a kiss Obamas ring!" ;
+    :stance "neutral" ;
+    :targetText "Barack Obama's ring" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_015_C04> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_015_C04" ;
+    :hasText "The author alleges that the addressee has previously insulted or disrespected Barack Obama (using 'kissed his ass' as an idiom)." ;
+    :sourceQuote "You already kissed his ass!" ;
+    :stance "negative" ;
+    :targetText "Barack Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_016_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_016_C01" ;
+    :hasText "The author claims that Barack Obama lacks a significant presence or activity on Twitter." ;
+    :sourceQuote "THEY KNOW GOOD N WELL HE AIN'T GOT NO DOG'ON TWITTER!!!!" ;
+    :stance "negative" ;
+    :targetText "Barack Obama's Twitter presence" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_017_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_017_C01" ;
+    :hasText "The author claims that the subject (Obama) is acting in a way intended to make 'los gringos' feel more anger or frustration." ;
+    :sourceQuote "para que les arda mas a los gringos" ;
+    :stance "negative" ;
+    :targetText "los gringos" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_018_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_018_C01" ;
+    :hasText "The author saw a sticker with the text '#ObamaSucks' on a car." ;
+    :sourceQuote "#ObamaSucks" ;
+    :stance "neutral" ;
+    :targetText "a sticker on a car" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_018_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_018_C02" ;
+    :hasText "The author found the sight of the sticker amusing or entertaining." ;
+    :sourceQuote "Made my day." ;
+    :stance "positive" ;
+    :targetText "the author's mood/experience" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_019_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_019_C01" ;
+    :hasText "The author claims that it is uncommon to find Obama stickers on cars manufactured in the United States." ;
+    :sourceQuote "You never see a Obama sticker on an American made car?" ;
+    :stance "unclear" ;
+    :targetText "Obama stickers on American-made cars" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_019_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_019_C02" ;
+    :hasText "The author questions the reason behind the lack of Obama stickers on American-made cars." ;
+    :sourceQuote "Why is that?" ;
+    :stance "unclear" ;
+    :targetText "the absence of Obama stickers on American-made cars" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_020_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_020_C01" ;
+    :hasText "The author asserts that the individuals responsible for writing The Affordable Care Act (Obamacare) lack a realistic understanding of reality." ;
+    :sourceQuote "The clowns who wrote that must have a fairly tenuous connection with reality." ;
+    :stance "negative" ;
+    :targetText "The authors of The Affordable Care Act" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_021_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_021_C01" ;
+    :hasText "The author expresses affection for the dress worn by Michelle Obama." ;
+    :sourceQuote "I love the gown the Michelle Obama wore" ;
+    :stance "positive" ;
+    :targetText "Michelle Obama's gown" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_021_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_021_C02" ;
+    :hasText "The author believes Michelle Obama looked very attractive or impressive in the gown." ;
+    :sourceQuote "she looking stunning !!" ;
+    :stance "positive" ;
+    :targetText "Michelle Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_022_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_022_C01" ;
+    :hasText "The author claims that a person referred to as 'B' removed an Obama-themed ornament from storage and displayed it in front of the White House during the inauguration ceremony." ;
+    :sourceQuote "B also took out her Obama ornament and put it on display for the inauguration today." ;
+    :stance "neutral" ;
+    :targetText "an Obama ornament" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_023_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_023_C01" ;
+    :hasText "The author suggests that shutting down the government is a viable action to stop Obama's spending." ;
+    :sourceQuote "Shut down government." ;
+    :stance "positive" ;
+    :targetText "the government" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_023_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_023_C02" ;
+    :hasText "The author believes that shutting down the government will result in saving the economy and America." ;
+    :sourceQuote "Save the economy. Save America." ;
+    :stance "positive" ;
+    :targetText "the economy and America" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_024_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_024_C01" ;
+    :hasText "The author expresses a preference for the physical appearance of the target's banana." ;
+    :sourceQuote "I like the shape of your banana." ;
+    :stance "positive" ;
+    :targetText "the banana belonging to Uncle Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_024_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_024_C02" ;
+    :hasText "The author asks for permission to transfer possession of the banana to their monkey." ;
+    :sourceQuote "Can I give it to my monkey?" ;
+    :stance "neutral" ;
+    :targetText "the author's monkey" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_025_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_025_C01" ;
+    :hasText "The author believes that President Obama is the cause of their decision to stop purchasing shoes." ;
+    :sourceQuote "I believe Obama will be the reason I ultimately stop buying shoes." ;
+    :stance "negative" ;
+    :targetText "Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_026_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_026_C01" ;
+    :hasText "The author claims that voters who supported Barack Obama will experience regret four years in the future." ;
+    :sourceQuote "4 years from now you'll all regret voting for Obama." ;
+    :stance "negative" ;
+    :targetText "Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_026_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_026_C02" ;
+    :hasText "The author refers to Barack Obama as a 'stupid communist'." ;
+    :sourceQuote "#StupidCommie" ;
+    :stance "negative" ;
+    :targetText "Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_027_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_027_C01" ;
+    :hasText "The author questions the nature of the event, implying it is not appropriate." ;
+    :sourceQuote "It's a hip hop event?" ;
+    :stance "negative" ;
+    :targetText "the event being described as a hip hop event" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_027_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_027_C02" ;
+    :hasText "The author alleges that the daughters of Barack and Michelle Obama are disrespecting the occasion by dancing energetically." ;
+    :sourceQuote "The Obama girls are dancing up a storm, just NO RESPECT for the moment!" ;
+    :stance "negative" ;
+    :targetText "the Obama girls" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_027_C03> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_027_C03" ;
+    :hasText "The author asserts that Barack and Michelle Obama are setting an inappropriate standard or precedent." ;
+    :sourceQuote "This first family is lowering the bar too far!" ;
+    :stance "negative" ;
+    :targetText "the Obama family (the 'first family')" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_028_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_028_C01" ;
+    :hasText "The author claims that individuals who express dislike for Barack Obama are acting irrationally or have unresolved personal problems." ;
+    :sourceQuote "Persons saying they don't like Obama have issues." ;
+    :stance "negative" ;
+    :targetText "Barack Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_028_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_028_C02" ;
+    :hasText "The author argues that it is impossible to form a liking or disliking of Barack Obama without having had any personal interaction with him." ;
+    :sourceQuote "how can you like or dislike someone you've never met." ;
+    :stance "neutral" ;
+    :targetText "Barack Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_029_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_029_C01" ;
+    :hasText "The author states they acquired a specific type of marijuana product for Martin Luther King Jr. Day." ;
+    :sourceQuote "FOR MLK DAY I GOT SOME MLK SPECIAL EDITION KUSH" ;
+    :stance "neutral" ;
+    :targetText "MLK Special Edition Kush (marijuana)" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_029_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_029_C02" ;
+    :hasText "The author asserts that the previously mentioned marijuana product is named 'Michelle Obama'." ;
+    :sourceQuote "ITS CALLED Michelle Obama ::" ;
+    :stance "positive" ;
+    :targetText "Michelle Obama (brand name of marijuana)" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_029_C03> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_029_C03" ;
+    :hasText "The author claims the product will keep a specific person from acting out, using sarcasm or humor to express this expectation." ;
+    :sourceQuote "GUARANTEED TO HOLD A GOOD NIGGA DOWN LOL::" ;
+    :stance "positive" ;
+    :targetText "a 'good nigga' (person)" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_029_C04> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_029_C04" ;
+    :hasText "The author attributes the content to themselves using the initials FWM." ;
+    :sourceQuote "FWM ::" ;
+    :stance "neutral" ;
+    :targetText "the author (FWM)" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_030_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_030_C01" ;
+    :hasText "The author claims that while Obama is in office, Black men ('niggas') and women ('bitches') should coordinate their actions." ;
+    :sourceQuote "Obama in office niggas &amp; bitches get yo act together" ;
+    :stance "neutral" ;
+    :targetText "Black men and women" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_031_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_031_C01" ;
+    :hasText "The author suggests that statistical evidence supports their assertion." ;
+    :sourceQuote "Check the stats" ;
+    :stance "positive" ;
+    :targetText "the author's team" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_031_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_031_C02" ;
+    :hasText "The author asserts that their team is winning." ;
+    :sourceQuote "my team winning" ;
+    :stance "positive" ;
+    :targetText "the author's team" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_032_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_032_C01" ;
+    :hasText "The author claims that certain individuals are discussing Michelle Obama's attire." ;
+    :sourceQuote "These people talkin bout Michelle Obama and wat she wore omg" ;
+    :stance "neutral" ;
+    :targetText "Michelle Obama's clothing" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_033_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_033_C01" ;
+    :hasText "The author claims that Barack Obama serves as the primary source of division within the nation." ;
+    :sourceQuote "Obama is the chief divider in this country" ;
+    :stance "negative" ;
+    :targetText "Barack Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_033_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_033_C02" ;
+    :hasText "The author asserts that Barack Obama will not serve as a president who fosters unity or cooperation." ;
+    :sourceQuote "he will never be the work together president" ;
+    :stance "negative" ;
+    :targetText "Barack Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_034_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_034_C01" ;
+    :hasText "The author claims that the belief in filing civil charges against Obama implies a belief that the United States is not a free country." ;
+    :sourceQuote "you probably also believe this is a free country" ;
+    :stance "negative" ;
+    :targetText "the United States as a free country" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_034_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_034_C02" ;
+    :hasText "The author expresses frustration and suggests that the person holding these beliefs is out of touch with reality." ;
+    :sourceQuote "smh wake up" ;
+    :stance "negative" ;
+    :targetText "the person believing Obama will file civil charges" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_035_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_035_C01" ;
+    :hasText "The author claims that Barack Obama said the addressee was gay." ;
+    :sourceQuote "Obama called you gay" ;
+    :stance "negative" ;
+    :targetText "Barack Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_035_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_035_C02" ;
+    :hasText "The author asserts that the allegation that Obama called the addressee gay is an extreme or shocking statement." ;
+    :sourceQuote "Can't top that bruh" ;
+    :stance "neutral" ;
+    :targetText "the allegation that Obama called the addressee gay" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_036_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_036_C01" ;
+    :hasText "The author states that the oldest daughter of Barack Obama is gorgeous." ;
+    :sourceQuote "She Is Gorgeous !" ;
+    :stance "positive" ;
+    :targetText "Barack Obama's oldest daughter" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_037_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_037_C01" ;
+    :hasText "The author claims that the characters in the cartoon 'Boondocks' are talking about riding Barack Obama's dick." ;
+    :sourceQuote "Dese MFS on Boondocks talmbout ridin Obama dick" ;
+    :stance "neutral" ;
+    :targetText "the characters in the cartoon 'Boondocks'" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_037_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_037_C02" ;
+    :hasText "The author expresses amusement or laughter regarding the situation described." ;
+    :sourceQuote "LMAO" ;
+    :stance "positive" ;
+    :targetText "the situation described (characters talking about riding Obama's dick)" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_038_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_038_C01" ;
+    :hasText "The author feels an ethical and moral obligation to demand something." ;
+    :sourceQuote "me siento en la obligation ética y moral de exigirle" ;
+    :stance "positive" ;
+    :targetText "the President Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_038_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_038_C02" ;
+    :hasText "The author is demanding that no more oil be imported from Venezuela." ;
+    :sourceQuote "NO MAS PETROLEO DE VENEZUELA" ;
+    :stance "negative" ;
+    :targetText "petroleum from Venezuela" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_039_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_039_C01" ;
+    :hasText "The author found the target's impersonation of Barack Obama amusing." ;
+    :sourceQuote "I was lmao In my car when I heard your Obama impression!!" ;
+    :stance "positive" ;
+    :targetText "the user who made the Obama impression" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_040_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_040_C01" ;
+    :hasText "The author alleges that the subject is not behaving in the manner expected of a President." ;
+    :sourceQuote "act like a real POTUS" ;
+    :stance "negative" ;
+    :targetText "Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_040_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_040_C02" ;
+    :hasText "The author implies that the subject is dishonest or untrustworthy." ;
+    :sourceQuote "Pinocchio!" ;
+    :stance "negative" ;
+    :targetText "Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_040_C03> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_040_C03" ;
+    :hasText "The author expresses a negative opinion about the subject." ;
+    :sourceQuote "#ObamaSucks" ;
+    :stance "negative" ;
+    :targetText "Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_041_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_041_C01" ;
+    :hasText "The author claims they would be the first person to move on from Michele Obama if President Obama decided to do so." ;
+    :sourceQuote "I will be first in line." ;
+    :stance "positive" ;
+    :targetText "Michele Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_042_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_042_C01" ;
+    :hasText "The author suggests that Obama should lift the ban on women serving in the front line." ;
+    :sourceQuote "Obama lifting the ban off women serving in the front line" ;
+    :stance "positive" ;
+    :targetText "Obama's policy regarding women in the military" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_042_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_042_C02" ;
+    :hasText "The author acknowledges that there are conflicting opinions or emotions regarding the topic." ;
+    :sourceQuote "There are a lot of mixed feelings on this" ;
+    :stance "neutral" ;
+    :targetText "the public opinion on women serving in the front line" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_043_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_043_C01" ;
+    :hasText "The author is mocking or making fun of Barack Obama." ;
+    :sourceQuote "*sings dick riding Obama lmao" ;
+    :stance "negative" ;
+    :targetText "Barack Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_043_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_043_C02" ;
+    :hasText "The author believes the animated series 'The Boondocks' frequently mocks individuals." ;
+    :sourceQuote "Boondocks always making fun somebody" ;
+    :stance "neutral" ;
+    :targetText "The Boondocks (TV series)" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_044_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_044_C01" ;
+    :hasText "The author claims that Barack Obama is the Devil." ;
+    :sourceQuote "Obama is the Devil dude" ;
+    :stance "negative" ;
+    :targetText "Barack Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_044_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_044_C02" ;
+    :hasText "The author alleges that all of their female followers voted for Barack Obama." ;
+    :sourceQuote "all y'all bitches voted for him" ;
+    :stance "negative" ;
+    :targetText "voters of Barack Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_045_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_045_C01" ;
+    :hasText "The author believes that Bill Clinton's presence at a specific location is inappropriate or unexpected." ;
+    :sourceQuote "What the fuck is Bill doing there?" ;
+    :stance "negative" ;
+    :targetText "Bill Clinton" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_045_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_045_C02" ;
+    :hasText "The author asserts that Barack Obama ought to have been present at the same location instead of Bill Clinton." ;
+    :sourceQuote "Obama should be there" ;
+    :stance "positive" ;
+    :targetText "Barack Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_046_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_046_C01" ;
+    :hasText "The author expresses a negative sentiment toward the tax increases associated with Barack Obama." ;
+    :sourceQuote "Hoping everyone that voted Obama is enjoying their tax increase!" ;
+    :stance "negative" ;
+    :targetText "tax increase" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_047_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_047_C01" ;
+    :hasText "The author believes that Michelle Obama appears attractive." ;
+    :sourceQuote "Michelle Obama looks GREAT!" ;
+    :stance "positive" ;
+    :targetText "Michelle Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_048_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_048_C01" ;
+    :hasText "The author asserts that there is a significant distinction between God speaking to Moses and Obama speaking to Holder." ;
+    :sourceQuote "huge difference" ;
+    :stance "neutral" ;
+    :targetText "the comparison between divine communication with Moses and political communication involving Obama and Holder" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_049_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_049_C01" ;
+    :hasText "The author claims that their neighbors are not involved in domestic violence." ;
+    :sourceQuote "my neighbors aint on no #Domesticviolence sh*t" ;
+    :stance "positive" ;
+    :targetText "neighbors" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_049_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_049_C02" ;
+    :hasText "The author expresses frustration or disappointment regarding the situation on MLK & Obama Day." ;
+    :sourceQuote "Damn....*thrws up hands*" ;
+    :stance "negative" ;
+    :targetText "situation" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_049_C03> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_049_C03" ;
+    :hasText "The author identifies themselves as a 'Nigga' (a term used here in a self-deprecating or community-specific context)." ;
+    :sourceQuote "Ni99as." ;
+    :stance "neutral" ;
+    :targetText "self-identity" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_050_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_050_C01" ;
+    :hasText "The author claims that Barack Obama intended to publicly announce the author's Twitter handle." ;
+    :sourceQuote "Obama was Gona shout my twitter name out" ;
+    :stance "negative" ;
+    :targetText "Barack Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_050_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_050_C02" ;
+    :hasText "The author states that they instructed Barack Obama not to make a fuss or create a scene regarding the matter." ;
+    :sourceQuote "I told him Dnt even wry about it" ;
+    :stance "neutral" ;
+    :targetText "Barack Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_051_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_051_C01" ;
+    :hasText "The author claims that the Baltimore Ravens won their game on Martin Luther King Jr. Day." ;
+    :sourceQuote "Ravens won its MLK day" ;
+    :stance "neutral" ;
+    :targetText "Baltimore Ravens" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_051_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_051_C02" ;
+    :hasText "The author claims that Barack Obama's inauguration took place today." ;
+    :sourceQuote "Obamas inaguration is tody" ;
+    :stance "neutral" ;
+    :targetText "Barack Obama's inauguration" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_052_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_052_C01" ;
+    :hasText "The author expresses affection for Michelle Obama." ;
+    :sourceQuote "I love Michelle Obama" ;
+    :stance "positive" ;
+    :targetText "Michelle Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_052_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_052_C02" ;
+    :hasText "The author states that they have a positive opinion of all aspects of Michelle Obama." ;
+    :sourceQuote "I love everything about her" ;
+    :stance "positive" ;
+    :targetText "Michelle Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_052_C03> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_052_C03" ;
+    :hasText "The author identifies specific qualities they admire in Michelle Obama: her demeanor, her fashion sense, and her relationship with the president." ;
+    :sourceQuote "The way she carry herself, her style and her love for the president" ;
+    :stance "positive" ;
+    :targetText "Michelle Obama's demeanor, style, and relationship with the president" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_053_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_053_C01" ;
+    :hasText "The author claims that the subject (Pres. Obama) was 'always aware' of anti-governmental rhetoric, but asserts he was 'not as hateful' compared to a previous period." ;
+    :sourceQuote "He was always aware but not as hateful" ;
+    :stance "positive" ;
+    :targetText "Pres. Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_054_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_054_C01" ;
+    :hasText "The author claims that Obama is repetitive and boring." ;
+    :sourceQuote "Obama a bit repetitive and boring." ;
+    :stance "negative" ;
+    :targetText "Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_054_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_054_C02" ;
+    :hasText "The author states that Obama needs rest and inspiration, based on the author's opinion (IMO)." ;
+    :sourceQuote "Needs rest and inspiration IMO" ;
+    :stance "negative" ;
+    :targetText "Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_055_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_055_C01" ;
+    :hasText "The author claims that President Obama sent their heroes home." ;
+    :sourceQuote "Obama send our heros home !" ;
+    :stance "negative" ;
+    :targetText "President Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_055_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_055_C02" ;
+    :hasText "The author expresses a desire for a family night before their stepfather departs for Afghanistan." ;
+    :sourceQuote "Maybe family night before my stepdad goes to Afghanistan !" ;
+    :stance "neutral" ;
+    :targetText "family night / stepfather's deployment" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_056_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_056_C01" ;
+    :hasText "The author asserts that Te'o was deserving of the Heisman Trophy, drawing a parallel to the author's belief that Obama was deserving of the Nobel Peace Prize." ;
+    :sourceQuote "Te-o deserved the Heisman like Obama deserved the Nobel Peace Prize." ;
+    :stance "positive" ;
+    :targetText "Te'o" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_056_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_056_C02" ;
+    :hasText "The author asserts that Barack Obama was deserving of the Nobel Peace Prize." ;
+    :sourceQuote "Obama deserved the Nobel Peace Prize." ;
+    :stance "positive" ;
+    :targetText "Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_057_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_057_C01" ;
+    :hasText "The author speculates that Barack Obama and Michelle Obama are currently engaged in sexual activity." ;
+    :sourceQuote "I wonder if Obama and his wife are fuckin right now ?" ;
+    :stance "negative" ;
+    :targetText "Barack Obama and Michelle Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_058_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_058_C01" ;
+    :hasText "The author claims that the United States is lagging behind other wealthy nations." ;
+    :sourceQuote "The US is falling behind in the most prosperous countries" ;
+    :stance "negative" ;
+    :targetText "the United States compared to other prosperous countries" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_058_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_058_C02" ;
+    :hasText "The author attributes the US's decline to its gun culture and poor healthcare system." ;
+    :sourceQuote "because of our wild west guns and awful healthcare" ;
+    :stance "negative" ;
+    :targetText "wild west guns and awful healthcare" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_058_C03> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_058_C03" ;
+    :hasText "The author is urging President Obama to implement reforms or demonstrate a shift in policy." ;
+    :sourceQuote "Show us some change Obama" ;
+    :stance "unclear" ;
+    :targetText "Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_059_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_059_C01" ;
+    :hasText "The author implies that the Republican Party is likely to be in a difficult or unfavorable position." ;
+    :sourceQuote "#RepublicanProbz" ;
+    :stance "negative" ;
+    :targetText "the Republican Party" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_059_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_059_C02" ;
+    :hasText "The author presents a scenario where the father character identifies Barack Obama's reelection as the worst moment in 2012." ;
+    :sourceQuote "Dad: Obama getting reelected" ;
+    :stance "negative" ;
+    :targetText "Barack Obama's reelection" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_060_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_060_C01" ;
+    :hasText "The author expresses a personal dislike for a law that they attribute to President Obama." ;
+    :sourceQuote "I really don't like this law Obama just passed" ;
+    :stance "negative" ;
+    :targetText "the law passed by Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_060_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_060_C02" ;
+    :hasText "The author uses the slang abbreviation 'Smh' (Shaking My Head) to convey frustration or disappointment regarding the situation." ;
+    :sourceQuote "Smh" ;
+    :stance "negative" ;
+    :targetText "the situation involving the law" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_061_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_061_C01" ;
+    :hasText "The author states that the claim 'Obama is Satan' is false." ;
+    :sourceQuote "#ObamaIsNotSatan" ;
+    :stance "positive" ;
+    :targetText "Barack Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_061_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_061_C02" ;
+    :hasText "The author admits to being convinced by the claim that Barack Obama is Satan, describing him as 'a little bit dark'." ;
+    :sourceQuote "Yes he is. Just a little bit dark. And convincing." ;
+    :stance "negative" ;
+    :targetText "Barack Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_062_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_062_C01" ;
+    :hasText "The author congratulates President Barack Obama." ;
+    :sourceQuote "#CongratsObama" ;
+    :stance "positive" ;
+    :targetText "President Barack Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_062_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_062_C02" ;
+    :hasText "The author states that President Barack Obama met with Mario Chalmers on the day of the tweet." ;
+    :sourceQuote "In other news President Barack Obama got to meet Mario Chalmers today..." ;
+    :stance "neutral" ;
+    :targetText "Mario Chalmers" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_063_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_063_C01" ;
+    :hasText "The author suggests that arming schools is a method for protecting them." ;
+    :sourceQuote "If you want to protect schools then arm them" ;
+    :stance "positive" ;
+    :targetText "schools" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_063_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_063_C02" ;
+    :hasText "The author alleges that President Obama protects his children by employing 15 members of the Schutzstaffel (SS) for their security." ;
+    :sourceQuote "Obama protects his kids they have 15 SS officers!" ;
+    :stance "negative" ;
+    :targetText "Obama's children" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_064_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_064_C01" ;
+    :hasText "The author claims that President Obama returned power or initiative to the public." ;
+    :sourceQuote "President Obama threw the ball back to the people" ;
+    :stance "neutral" ;
+    :targetText "President Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_064_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_064_C02" ;
+    :hasText "The author asserts that no significant action will occur and that the situation will remain unchanged from previous patterns." ;
+    :sourceQuote "now nothing will be done as usual!" ;
+    :stance "negative" ;
+    :targetText "the 113th Congress" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_065_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_065_C01" ;
+    :hasText "The author claims that the Federal Aviation Administration (FAA) and the Federal Communications Commission (FCC), under Obama's administration, are responsible for an unspecified event." ;
+    :sourceQuote "OBAMA'S FAA/FCC is responsible for this!!!" ;
+    :stance "negative" ;
+    :targetText "Obama's FAA/FCC" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_066_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_066_C01" ;
+    :hasText "The author claims that no one is caring about Obama." ;
+    :sourceQuote "nobody cares about Obama" ;
+    :stance "negative" ;
+    :targetText "Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_067_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_067_C01" ;
+    :hasText "The author alleges that Barack Obama is attempting to pass a specific bill." ;
+    :sourceQuote "trying pass this bill" ;
+    :stance "negative" ;
+    :targetText "Barack Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_067_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_067_C02" ;
+    :hasText "The author associates the bill in question with immigration reform." ;
+    :sourceQuote "#immigrationreform" ;
+    :stance "neutral" ;
+    :targetText "immigration reform" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_068_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_068_C01" ;
+    :hasText "The author states that the team 'The Niners' will play tomorrow against President Obama." ;
+    :sourceQuote "The Niners, Tomorrow Obama" ;
+    :stance "neutral" ;
+    :targetText "the game between The Niners and Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_068_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_068_C02" ;
+    :hasText "The author asserts that Obama has a habit of selecting winning teams or opponents." ;
+    :sourceQuote "always pick winners" ;
+    :stance "positive" ;
+    :targetText "Obama's selection process" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_068_C03> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_068_C03" ;
+    :hasText "The author claims that this specific instance is another example of the previously mentioned pattern, using the hashtag #HK." ;
+    :sourceQuote "this sprig we have another one #HK" ;
+    :stance "neutral" ;
+    :targetText "the event described as 'another one'" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_069_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_069_C01" ;
+    :hasText "The author asserts that President Obama is required to present his complete plan for the following two years." ;
+    :sourceQuote "President Obama must layout his full agenda 4 the next 2yrs" ;
+    :stance "positive" ;
+    :targetText "President Obama's future policy agenda" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_069_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_069_C02" ;
+    :hasText "The author argues that President Obama must maintain firm determination to execute his stated plan." ;
+    :sourceQuote "N remain steadfast in his resolve 2 bring it 2 a reality" ;
+    :stance "positive" ;
+    :targetText "President Obama's resolve" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_070_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_070_C01" ;
+    :hasText "The author claims that Obama is implementing regulations regarding gun control." ;
+    :sourceQuote "Obama is regulating gun control" ;
+    :stance "neutral" ;
+    :targetText "Obama's gun control policies" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_070_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_070_C02" ;
+    :hasText "The author alleges that Obama holds the belief that women are capable of killing their own innocent children." ;
+    :sourceQuote "he believes that woman can kill their own innocent children" ;
+    :stance "negative" ;
+    :targetText "Obama's views on women and child safety" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_070_C03> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_070_C03" ;
+    :hasText "The author expresses a negative sentiment toward liberals." ;
+    :sourceQuote "#DamnLibs" ;
+    :stance "negative" ;
+    :targetText "Liberals" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_071_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_071_C01" ;
+    :hasText "The author alleges that the person being addressed is a 'left wing puppet'." ;
+    :sourceQuote "You're a left wing puppet!" ;
+    :stance "negative" ;
+    :targetText "the person being addressed (implied to be someone speaking out)" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_071_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_071_C02" ;
+    :hasText "The author asserts that the person being addressed is not free to speak." ;
+    :sourceQuote "You're not free to speak!" ;
+    :stance "negative" ;
+    :targetText "the person being addressed" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_072_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_072_C01" ;
+    :hasText "The author claims that Obama is a stolen president." ;
+    :sourceQuote "Obama is steal President" ;
+    :stance "negative" ;
+    :targetText "Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_072_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_072_C02" ;
+    :hasText "The author states that the situation must be accepted regardless of its nature." ;
+    :sourceQuote "regardless we have to accept it" ;
+    :stance "neutral" ;
+    :targetText "the situation of Obama being a stolen president" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_072_C03> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_072_C03" ;
+    :hasText "The author asserts that God remains in control despite the political situation." ;
+    :sourceQuote "but God is still in charge..." ;
+    :stance "positive" ;
+    :targetText "God" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_073_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_073_C01" ;
+    :hasText "The author claims that the person referred to as 'Obama' is unable to achieve progress alone." ;
+    :sourceQuote "Obama cant do it by himself" ;
+    :stance "negative" ;
+    :targetText "Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_074_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_074_C01" ;
+    :hasText "The author claims that there is an attempt to impeach President Obama specifically regarding his stance or actions on gun control." ;
+    :sourceQuote "They're trying to impeach President Obama over gun control..." ;
+    :stance "negative" ;
+    :targetText "President Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_074_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_074_C02" ;
+    :hasText "The author expresses skepticism and disbelief that the impeachment attempt is genuine, using sarcasm or rhetorical questioning directed at someone referred to as 'son'." ;
+    :sourceQuote "...for real?! C'mon son..." ;
+    :stance "negative" ;
+    :targetText "The impeachment effort" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_075_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_075_C01" ;
+    :hasText "The author claims that approximately half of their audience does not comprehend the statements made by Barack Obama." ;
+    :sourceQuote "I bet half of y'all don't even understand what Obama is saying !!" ;
+    :stance "negative" ;
+    :targetText "Barack Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_076_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_076_C01" ;
+    :hasText "The author claims that there is a lack of discussion regarding Obama." ;
+    :sourceQuote "No one talks about him anymore" ;
+    :stance "negative" ;
+    :targetText "Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_077_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_077_C01" ;
+    :hasText "The author claims that President Obama has nothing left to prove." ;
+    :sourceQuote "He now has NOTHING to prove" ;
+    :stance "negative" ;
+    :targetText "President Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_077_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_077_C02" ;
+    :hasText "The author claims that re-election is not currently a primary concern for President Obama." ;
+    :sourceQuote "doesn't have re-election in the forefront" ;
+    :stance "neutral" ;
+    :targetText "re-election" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_078_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_078_C01" ;
+    :hasText "The author believes that the person being addressed has been silenced by Barack Obama for an extended period." ;
+    :sourceQuote "I thought Obama shut u up a long time ago?" ;
+    :stance "negative" ;
+    :targetText "Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_079_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_079_C01" ;
+    :hasText "The author claims that Barack Obama sent them a text message." ;
+    :sourceQuote "Obama tells text me." ;
+    :stance "neutral" ;
+    :targetText "Barack Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_079_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_079_C02" ;
+    :hasText "The author refers to the recipient of the text as 'dumb' and uses 'cx' (likely short for 'crazy') as a descriptor." ;
+    :sourceQuote "ur dumm cx" ;
+    :stance "negative" ;
+    :targetText "recipient of the text" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_080_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_080_C01" ;
+    :hasText "The author claims that Barack Obama was dancing in a 'mad gangsta' manner." ;
+    :sourceQuote "Obama dancing mad gangsta at the inaugural ball" ;
+    :stance "negative" ;
+    :targetText "Barack Obama's behavior at the inauguration" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_080_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_080_C02" ;
+    :hasText "The author claims that Michelle Obama looked beautiful while wearing a red dress." ;
+    :sourceQuote "First Lady look beautiful in her red dress" ;
+    :stance "positive" ;
+    :targetText "Michelle Obama's appearance" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_081_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_081_C01" ;
+    :hasText "The author claims that Obama received waves." ;
+    :sourceQuote "Obama Got Waves . . . .  ! ! ! ! !" ;
+    :stance "positive" ;
+    :targetText "Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_082_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_082_C01" ;
+    :hasText "The author claims they are experiencing significant pressure." ;
+    :sourceQuote "sooo much pressure" ;
+    :stance "neutral" ;
+    :targetText "the author's current situation" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_082_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_082_C02" ;
+    :hasText "The author claims their feelings or state of mind resemble those of Barack Obama." ;
+    :sourceQuote "I feel like Obama" ;
+    :stance "unclear" ;
+    :targetText "Barack Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_083_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_083_C01" ;
+    :hasText "The author claims they are missing the show 'Price Is Right'." ;
+    :sourceQuote "I'm missing the price is right" ;
+    :stance "neutral" ;
+    :targetText "the show 'Price Is Right'" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_084_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_084_C01" ;
+    :hasText "The author claims that Obama is afraid of the military." ;
+    :sourceQuote "Obama is afraid of the Military!" ;
+    :stance "negative" ;
+    :targetText "Obama's relationship with the military" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_084_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_084_C02" ;
+    :hasText "The author claims that Obama hates the military." ;
+    :sourceQuote "He hates them!" ;
+    :stance "negative" ;
+    :targetText "Obama's feelings toward the military" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_084_C03> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_084_C03" ;
+    :hasText "The author claims that Obama prefers to feed illegal immigrants over supporting the military." ;
+    :sourceQuote "Rather feed illegals" ;
+    :stance "negative" ;
+    :targetText "Obama's policy priorities regarding immigration and the military" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_085_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_085_C01" ;
+    :hasText "The author suggests that President Obama should have his wife, Michelle, wear dental braces." ;
+    :sourceQuote "Hopefully Obama will put some braces on Michelle this Term" ;
+    :stance "negative" ;
+    :targetText "Michelle Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_085_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_085_C02" ;
+    :hasText "The author expresses a desire for Michelle Obama's smile to appear very bright, comparing it to a diamond." ;
+    :sourceQuote "No shade just wanna see her smile bright like a Diamond" ;
+    :stance "positive" ;
+    :targetText "Michelle Obama's smile" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_086_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_086_C01" ;
+    :hasText "The author claims they experienced a longer and more frustrating day than Barack Obama." ;
+    :sourceQuote "I swear I probably had a longer more frustrating day than Obama!" ;
+    :stance "positive" ;
+    :targetText "Barack Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_087_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_087_C01" ;
+    :hasText "The author alleges that Barack Obama is lying regarding the Republican party." ;
+    :sourceQuote "Obama lying about the Republicans" ;
+    :stance "negative" ;
+    :targetText "Barack Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_087_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_087_C02" ;
+    :hasText "The author characterizes Barack Obama as childish, comparing him to a five-year-old child." ;
+    :sourceQuote "he is like a 5 year old" ;
+    :stance "negative" ;
+    :targetText "Barack Obama" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_088_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_088_C01" ;
+    :hasText "The author claims that a gun show was canceled." ;
+    :sourceQuote "gun show got canceled" ;
+    :stance "neutral" ;
+    :targetText "a gun show" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_088_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_088_C02" ;
+    :hasText "The author attributes the cancellation of the gun show to Obama's alleged ban on assault weapons." ;
+    :sourceQuote "Obama's banning assault weapons" ;
+    :stance "negative" ;
+    :targetText "assault weapons" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_089_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_089_C01" ;
+    :hasText "The author claims that Obama's facial expression was appropriate in response to questions asked by Steve Kraft." ;
+    :sourceQuote "Obama's expression when Steve Kraft asks real dumb, factually inaccurate ?s is perfect" ;
+    :stance "negative" ;
+    :targetText "Steve Kraft" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_089_C02> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_089_C02" ;
+    :hasText "The author asserts that Steve Kraft is failing to understand or address the issue correctly." ;
+    :sourceQuote "U r missing the mark" ;
+    :stance "negative" ;
+    :targetText "Steve Kraft" .
+
+<http://www.semanticweb.org/group2/runs/20261103T001234Z_ae802dbc/claim/Obama_090_C01> a :Claim ;
+    :claimAboutTopic :Topic_Obama ;
+    :claimId "Obama_090_C01" ;
+    :hasText "The author claims that Michelle Obama is outsmarting or defeating Nicki Minaj." ;
+    :sourceQuote "Michelle Obama Getting Her Nicki Minaj On By Tha Head" ;
+    :stance "positive" ;
+    :targetText "the interaction between Michelle Obama and Nicki Minaj" .
+
+:Adult a owl:Class ;
+    rdfs:subClassOf :Person ;
+    owl:equivalentClass [ a owl:Class ;
+            owl:intersectionOf ( :Person [ a owl:Restriction ;
+                        owl:onProperty :hasAge ;
+                        owl:someValuesFrom [ a rdfs:Datatype ;
+                                owl:onDatatype xsd:integer ;
+                                owl:withRestrictions ( [ xsd:minInclusive 18 ] ) ] ] ) ] .
+
+:America a :Country,
+        owl:NamedIndividual .
+
+:Branch a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Event a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:FoodCategory a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Industry a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Language a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Pain a owl:Class ;
+    rdfs:subClassOf :Symptom .
+
+:Ranking a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:ResearchAndDevelopment a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Ritual a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Role a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:hasAge a owl:DatatypeProperty ;
+    rdfs:domain :Person ;
+    rdfs:range xsd:integer .
+
+:team1 a :Team,
+        owl:NamedIndividual .
+
+:team2 a :Team,
+        owl:NamedIndividual .
+
+:ClaimAssessment a owl:Class ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:onClass :Claim ;
+            owl:onProperty :assessmentOf ;
+            owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ],
+        [ a owl:Restriction ;
+            owl:onClass :Source ;
+            owl:onProperty :assessedBy ;
+            owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ],
+        [ a owl:Restriction ;
+            owl:onDataRange xsd:boolean ;
+            owl:onProperty :isValid ;
+            owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ],
+        owl:Thing .
+
+:Competition a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Landmark a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Location a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Player a owl:Class ;
+    rdfs:subClassOf :Person .
+
+:Product a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Region a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Source a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Summary a owl:Class .
+
+:Outcome a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:CharacterTrait a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Food a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:HealthCondition a owl:Class ;
+    rdfs:subClassOf :Health .
+
+:Occupation a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Topic a owl:Class .
+
+:City a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Disease a owl:Class ;
+    rdfs:subClassOf :HealthCondition .
+
+:Sport a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Match a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Team a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Advertisement a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Company a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Country a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Person a owl:Class ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:allValuesFrom [ a rdfs:Datatype ;
+                    owl:onDatatype xsd:integer ;
+                    owl:withRestrictions ( [ xsd:maxInclusive 110 ] ) ] ;
+            owl:onProperty :hasAge ],
+        owl:Thing .
+
+:Tweet a owl:Class ;
+    rdfs:comment "A source tweet, retaining its dataset text and provenance." .
+
+:Claim a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+:Topic_Obama a :Topic ;
+    rdfs:label "Obama" ;
+    :hasTopicName "Obama"^^xsd:string .
+

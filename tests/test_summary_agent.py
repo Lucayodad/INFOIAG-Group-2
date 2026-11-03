@@ -149,13 +149,13 @@ class SummaryAgentTests(unittest.TestCase):
         for malformed in (GenerationError("Local model unavailable"), response({"bad": "output"})):
             with self.subTest(response=type(malformed).__name__):
                 client = Mock()
-                client.chat.side_effect = [malformed] * 5
+                client.chat.side_effect = [malformed] * 10  # each sentence: attempt + one retry
                 result = self.run_agent(graph, draft, client, disparity_threshold=0.25)
                 self.assertEqual(len(result["extraction_errors"]), 5)
                 self.assertTrue(all(record["status"] == "unclear" for record in result["summary_claims"]))
                 self.assertEqual(result["status"], "completed_with_uncertainty")
                 self.assertIn("summary_extraction_failed", result["uncertainty_flags"])
-                self.assertEqual(client.chat.call_count, 5)
+                self.assertEqual(client.chat.call_count, 10)
 
     def test_bad_inputs_fail_before_model_calls(self):
         graph, draft = demo_fixture()

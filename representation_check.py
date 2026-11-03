@@ -706,10 +706,11 @@ def _mnli_representation_check(graph, summary_claims, topic, disparity_threshold
         labels = list(graph.objects(tweet, NS.dialectLabel))
         if len(labels) != 1 or not isinstance(labels[0], Literal) or str(labels[0]) not in DIALECT_LABELS:
             problems.append("Topic contains a missing, multiple or unknown dialect label.")
-    if not summary_claims or any(record.get("status") == "unclear" for record in summary_claims):
-        problems.append("Incomplete summary extraction; factual checking may conceal claims.")
-    # Use the same sentence hypotheses as offline evaluation. Atomic claims
-    # are still validated and used by the unchanged factual checker.
+    if not summary_claims:
+        problems.append("Missing summary extraction records.")
+    # Use the same sentence hypotheses as offline evaluation. Coverage needs
+    # only the sentence text, so an unclear claim extraction (already flagged
+    # as factual uncertainty) does not make representation unmeasurable.
     try:
         flatten_summary_claims(summary_claims)
     except (ValueError, KeyError, TypeError) as exc:

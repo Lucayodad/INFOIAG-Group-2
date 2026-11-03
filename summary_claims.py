@@ -30,20 +30,32 @@ Return status "unclear" or "no_claim" with an empty list otherwise.
 """
 
 
-def extract_sentence(sentence, number, client):
-    """Extract claims from one summary sentence."""
+def extract_sentence(sentence, number, client, retry_error=None):
+    """Extract claims from one summary sentence.
+
+    retry_error is the previous attempt's validation error; it is returned to
+    the model once so that it can copy its quotations exactly.
+    """
 
     text = sentence["text"]
     source_ids = sentence["source_ids"]
+
+    messages = [
+        {"role": "system", "content": INSTRUCTIONS},
+        {"role": "user", "content": text}
+    ]
+    if retry_error is not None:
+        messages.append({"role": "user", "content": json.dumps({
+            "previous_validation_error": str(retry_error)[:300],
+            "instruction": "Extract the claims again. Every quote must be an exact contiguous "
+                           "substring copied from the sentence, without added quotation marks."
+        }, ensure_ascii=False)})
 
     request = {
         "model": "qwen3.5:4b",
         "stream": False,
         "think": False,
-        "messages": [
-            {"role": "system", "content": INSTRUCTIONS},
-            {"role": "user", "content": text}
-        ],
+        "messages": messages,
         "format": CLAIM_SCHEMA,
         "options": {
             "temperature": 0,
@@ -114,6 +126,23 @@ def extract_sentence(sentence, number, client):
         "status": status,
         "claims": claims
     }
+
+
+def extract_sentence_with_retry(sentence, number, client, extract=None):
+    """Return (record, model_calls); a failed attempt is retried once with its error.
+
+    Source extraction already retries this way. Without it, one paraphrased
+    quotation left a sentence's claims unchecked. The final error is raised.
+    """
+    extract = extract or extract_sentence
+    error = None
+    for attempt in (1, 2):
+        try:
+            return extract(sentence, number, client, retry_error=error), attempt
+        except (ValueError, KeyError, IndexError, TypeError) as exc:
+            if attempt == 2:
+                raise
+            error = exc
 
 
 def flatten_summary_claims(records):

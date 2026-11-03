@@ -87,6 +87,26 @@ def _default_scorer() -> EntailmentScorer:
     return _DEFAULT_SCORER
 
 
+class CachedScorer:
+    """Score each (tweet, sentence) pair once per agent run.
+
+    A revision changes one sentence, so a recheck needs 90 new pairs, not 450.
+    Reusing the first scores also keeps unchanged pairs bit-identical across
+    the checks whose coverages the acceptance gate compares.
+    """
+
+    def __init__(self, scorer: EntailmentScorer | None = None):
+        self._scorer = scorer
+        self.cache: dict[tuple[str, str], float] = {}
+
+    def score_pairs(self, pairs: Sequence[tuple[str, str]]) -> list[float]:
+        missing = [pair for pair in dict.fromkeys(pairs) if pair not in self.cache]
+        if missing:
+            scorer = self._scorer or _default_scorer()
+            self.cache.update(zip(missing, _validate_scores(scorer.score_pairs(missing), len(missing))))
+        return [self.cache[pair] for pair in pairs]
+
+
 def _validate_scores(scores: Sequence[float], expected: int) -> list[float]:
     if len(scores) != expected:
         raise ValueError(f"MNLI scorer returned {len(scores)} scores; expected {expected}.")

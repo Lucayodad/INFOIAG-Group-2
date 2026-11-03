@@ -58,14 +58,15 @@ def retrieve_revision_evidence(graph, topic, summary_claims, factual_results, re
             groups = {label: get_group_claims(graph, topic, label) for label in DIALECT_LABELS}
             for label in labels:
                 preferred_ids = [tweet["tweet_id"] for tweet in groups[label]["tweets"]]
+                target = next((row for row in summary_claims if row["status"] == "no_claim"), summary_claims[-1])
                 tasks.append({
                     "task_id": f"representation:{label}:mnli",
                     "kind": "representation",
-                    "sentence_id": next(
-                        (row["sentence_id"] for row in summary_claims if row["status"] == "no_claim"),
-                        summary_claims[-1]["sentence_id"],
-                    ),
-                    "query": f"Represent viewpoints from the {label} group.",
+                    "sentence_id": target["sentence_id"],
+                    # Rank the group's tweets by the sentence being rewritten:
+                    # a group-generic query returned tweets on unrelated topics,
+                    # which the reviser then cited for the old sentence's content.
+                    "query": target["sentence"],
                     "dialect_label": label,
                     "preferred_ids": preferred_ids,
                     "explanation": "Improve the group's MNLI Equal Coverage.",

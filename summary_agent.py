@@ -15,13 +15,14 @@ from rdflib.graph import ReadOnlyGraphAggregate
 from typing_extensions import TypedDict
 
 from data_loader import DIALECT_LABELS, TOPICS
-from fact_check import fact_check_summary
+from equal_coverage import CachedScorer
+from fact_check import claim_cache_key, fact_check_summary
 from ollama_backend import OllamaClient
 from model_usage import recording_client
 from representation_check import representation_check
 from revision_retrieval import retrieve_revision_evidence
 from summary_revision import revise_summary
-from summary_claims import extract_sentence, flatten_summary_claims
+from summary_claims import extract_sentence, extract_sentence_with_retry, flatten_summary_claims
 from summarizer import GenerationError, digest
 
 
@@ -94,40 +95,83 @@ def _metrics(state):
             "coverage": {g: row["coverage"] for g, row in rep["coverage_by_group"].items()}}
 
 
-def compare_revision(previous, current, changes):
-    """Conservative Pareto acceptance on the same measured quantities.
+def _sentence_findings(state, sentence_ids):
+    """SUPPORTED claims per sentence, and the factual issues raised in those sentences."""
+    supported = dict.fromkeys(sentence_ids, 0)
+    for assessment in state["factual_results"]["assessments"]:
+        if assessment["sentence_id"] in supported and assessment["verdict"] == "SUPPORTED" \
+                and assessment["evidence_complete"]:
+            supported[assessment["sentence_id"]] += 1
+    issues = [issue for issue in state["factual_results"]["issues"] if issue["sentence_id"] in sentence_ids]
+    return supported, issues
 
-    Changed sentences must contain supported claims, not disappear into UNKNOWN
-    or no_claim. A changed source partition cannot establish disparity progress.
+
+def _worst_coverage(metrics):
+    return None if metrics["disparity"] is None else min(metrics["coverage"].values())
+
+
+def compare_revision(previous, current, changes):
+    """Accept a revision only if it is measurably better and nowhere worse.
+
+    Changed sentences must be extracted, contain no CONTRADICTED claim, keep at
+    least one SUPPORTED claim and raise no more issues than the sentences they
+    replace: a leftover UNKNOWN phrase no longer voids a repair. The whole
+    summary may gain no contradiction or unverified claim. The worst-covered
+    group's coverage may not fall: the four-fifths disparity routes revisions,
+    but it improves when every group loses coverage and worsens when the
+    repaired group overtakes the others, so it does not decide acceptance.
+    Progress means fewer contradictions or a better-covered worst group.
     """
     targets = {row["sentence_id"] for row in changes}
-    for record in current["summary_claims"]:
-        if record["sentence_id"] not in targets:
-            continue
-        assessments = [a for a in current["factual_results"]["assessments"] if a["sentence_id"] == record["sentence_id"]]
-        if record["status"] != "extracted" or not assessments or any(
-            a["verdict"] != "SUPPORTED" or not a["evidence_complete"] for a in assessments
-        ):
-            return False, "unsupported_revision"
+    if any(record["sentence_id"] in targets and record["status"] != "extracted"
+           for record in current["summary_claims"]):
+        return False, "unsupported_revision"
+    supported, issues_after = _sentence_findings(current, targets)
+    _, issues_before = _sentence_findings(previous, targets)
+    if any(issue["severity"] == "serious" for issue in issues_after) or not all(supported.values()) \
+            or len(issues_after) > len(issues_before):
+        return False, "unsupported_revision"
     before, after = _metrics(previous), _metrics(current)
     if after["serious_factual_count"] > before["serious_factual_count"] or \
             after["unknown_factual_count"] > before["unknown_factual_count"]:
         return False, "factual_regression"
-    same_partition = before["partition"] == after["partition"]
-    if before["disparity"] is not None and (
-        after["disparity"] is None or not same_partition or after["disparity"] > before["disparity"] + 1e-12
-    ):
+    worst_before, worst_after = _worst_coverage(before), _worst_coverage(after)
+    if worst_before is not None and (worst_after is None or before["partition"] != after["partition"]
+                                     or worst_after < worst_before - 1e-12):
         return False, "representation_regression_or_incomparable"
     if before["representation_status"] != "FAIL" and after["representation_status"] == "FAIL":
         return False, "representation_regression_or_incomparable"
     improved = (after["serious_factual_count"] < before["serious_factual_count"] or
-                same_partition and before["disparity"] is not None and after["disparity"] is not None
-                and after["disparity"] < before["disparity"] - 1e-12)
+                worst_before is not None and worst_after > worst_before + 1e-12)
     return (True, "measured_improvement") if improved else (False, "no_improvement")
 
 
 def _counts(state, **increments):
     return {key: value + increments.get(key, 0) for key, value in state["call_counts"].items()}
+
+
+def _extraction_key(number, sentence):
+    return json.dumps([number, sentence["text"], sentence["source_ids"]], ensure_ascii=False)
+
+
+def seed_check_cache(summary, checked):
+    """Caches holding a recorded first check of this same draft, to reuse.
+
+    Extraction and fact checks run at temperature 0 and repeated identically in
+    every recorded recheck. Sentences whose extraction failed are not seeded,
+    so they get the current extraction retry; their claims are checked anew.
+    """
+    if [record["sentence"] for record in checked["summary_claims"]] != [s["text"] for s in summary["sentences"]]:
+        raise ValueError("The recorded check belongs to a different draft.")
+    cache = {"extraction": {}, "facts": {}}
+    for number, (sentence, record) in enumerate(zip(summary["sentences"], checked["summary_claims"]), 1):
+        if record["status"] != "unclear":
+            cache["extraction"][_extraction_key(number, sentence)] = ("ok", deepcopy(record))
+    by_id = {a["summary_claim_id"]: a for a in checked["factual_results"]["assessments"]}
+    for claim in flatten_summary_claims(checked["summary_claims"]):
+        if claim["claim_id"] in by_id:
+            cache["facts"][claim_cache_key(claim)] = deepcopy(by_id[claim["claim_id"]])
+    return cache
 
 
 def build_summary_agent(graph, client, *, disparity_threshold=None,
@@ -137,11 +181,13 @@ def build_summary_agent(graph, client, *, disparity_threshold=None,
                         embedder=None, embedding_model="all-minilm", revision_top_k=3,
                         max_revision_tweets=9, revision_evidence_bytes=7000,
                         revision_max_input_bytes=14000, mnli_scorer=None,
-                        representation_metric="mnli"):
+                        representation_metric="mnli", check_cache=None):
     """Compile the sequential graph with read-only evidence outside its state.
 
     Serious issues mean conclusive under the existing evidence guards, not
-    human-verified truth. UNKNOWN alone never triggers revision.
+    human-verified truth. UNKNOWN alone never triggers revision. Unchanged
+    sentences are not re-extracted or re-checked: their earlier results in this
+    run (or a recorded first check from seed_check_cache) are reused.
     """
     if not isinstance(graph, Graph):
         raise TypeError("graph must be an rdflib.Graph.")
@@ -167,28 +213,41 @@ def build_summary_agent(graph, client, *, disparity_threshold=None,
     ):
         raise ValueError("Expected counts must specify positive integers for AA, Hisp and White.")
     evidence = ReadOnlyGraphAggregate([graph])
+    cache = {"extraction": {}, "facts": {}} if check_cache is None else check_cache
+    cache.setdefault("extraction", {})
+    cache.setdefault("facts", {})
+    scorer = CachedScorer(mnli_scorer)
     embedding_cache = {}
     embedding_function = embedder if embedder is not None else lambda texts: client.embed(texts, model=embedding_model)
 
     def extract_claims(state: SummaryAgentState):
-        records, errors = [], []
+        records, errors, calls = [], [], 0
         for number, sentence in enumerate(state["current_summary"]["sentences"], 1):
-            try:
-                records.append(extract_sentence(sentence, number, client))
-            except (GenerationError, ValueError, KeyError, IndexError, TypeError) as exc:
+            key = _extraction_key(number, sentence)
+            if key not in cache["extraction"]:
+                try:
+                    record, used = extract_sentence_with_retry(sentence, number, client, extract=extract_sentence)
+                    cache["extraction"][key] = ("ok", record)
+                    calls += used
+                except (GenerationError, ValueError, KeyError, IndexError, TypeError) as exc:
+                    cache["extraction"][key] = ("error", type(exc).__name__, str(exc))
+                    calls += 2
+            outcome = cache["extraction"][key]
+            if outcome[0] == "ok":
+                records.append(deepcopy(outcome[1]))
+            else:
                 # A failed extraction is missing knowledge, never a no-claim result.
                 records.append({"sentence_id": f"S{number:02d}", "sentence": sentence["text"],
                                 "status": "unclear", "claims": []})
-                errors.append({"sentence_id": f"S{number:02d}",
-                               "error_type": type(exc).__name__, "message": str(exc)})
+                errors.append({"sentence_id": f"S{number:02d}", "error_type": outcome[1], "message": outcome[2]})
         flatten_summary_claims(records)
         return _update(state, "extract_summary_claims", summary_claims=records,
-                       extraction_errors=errors, call_counts=_counts(state, model_calls=5))
+                       extraction_errors=errors, call_counts=_counts(state, model_calls=calls))
 
     def check_facts(state: SummaryAgentState):
         result = fact_check_summary(evidence, state["summary_claims"], client,
                                     allowed_entity_ids=allowed_entity_ids,
-                                    max_tool_calls=max_tool_calls)
+                                    max_tool_calls=max_tool_calls, cache=cache["facts"])
         return _update(state, "factual_check", factual_results=result,
                        factual_issues=result["issues"], call_counts=_counts(
                            state, model_calls=result["model_call_count"], tool_calls=result["tool_call_count"]))
@@ -199,7 +258,7 @@ def build_summary_agent(graph, client, *, disparity_threshold=None,
             disparity_threshold=disparity_threshold, expected_group_counts=expected_group_counts,
             max_model_calls=max_model_calls, max_input_bytes=max_input_bytes, batch_size=batch_size,
             embedder=embedding_function, embedding_model=embedding_model, embedding_cache=embedding_cache,
-            metric=representation_metric, mnli_scorer=mnli_scorer)
+            metric=representation_metric, mnli_scorer=scorer)
         return _update(state, "representation_check", representation_results=result,
                        representation_issues=result["representation_issues"],
                        call_counts=_counts(state, model_calls=result["model_call_count"],
@@ -283,24 +342,43 @@ def build_summary_agent(graph, client, *, disparity_threshold=None,
             changed = {row["sentence_id"]: row["after"]["text"] for row in last["changes"]}
             findings = [f'{a["summary_claim_text"]}: {a["verdict"]}; {a["explanation"][:240]}'
                         for a in checked if a["sentence_id"] in changed and a["verdict"] != "SUPPORTED"]
+            if last["reason"].startswith("representation"):
+                # Without numbers the reviser cannot tell what went wrong.
+                before, after = last["metrics_before"]["coverage"], last["metrics_after"]["coverage"]
+                findings.append("Group coverage before " + json.dumps({g: round(v, 4) for g, v in before.items()
+                                                                        if v is not None}) +
+                                ", after " + json.dumps({g: round(v, 4) for g, v in after.items() if v is not None}) +
+                                ": the worst-covered group must gain coverage and no group may fall below it.")
             issues.append({"type": "rejected_previous_revision", "severity": "serious", "explanation":
                            f"Rechecking rolled back your previous replacement ({last['reason']}): "
                            f"{json.dumps(changed, ensure_ascii=False)}. Findings: {' | '.join(findings)}"})
+        elif last and last["status"] == "rejected" and last.get("error"):
+            issues.append({"type": "rejected_previous_revision", "severity": "serious", "explanation":
+                           f"Your previous proposal was invalid and was not checked: {last['error']}"})
+        # At temperature 0 the seed is ignored, so a retry would repeat the
+        # failed sentence; only retries sample, reproducibly per attempt.
+        retry = bool(last and last["status"] in ("rolled_back", "rejected"))
         proposal = revise_summary(state["current_summary"], issues, state["revision_evidence"],
-                                  client, max_input_bytes=revision_max_input_bytes)
+                                  client, max_input_bytes=revision_max_input_bytes,
+                                  temperature=0.7 if retry else 0, seed=42 + state["revision_count"])
         attempt = {**proposal, "attempt": state["revision_count"] + 1,
                    "summary_before": deepcopy(state["current_summary"]), "evidence": state["revision_evidence"],
                    "metrics_before": _metrics(state)}
         candidate = proposal["status"] == "candidate"
-        decision = {"node": "revise_summary", "route": "extract_summary_claims" if candidate else "finalize",
-                    "reason": proposal["reason"]}
+        count = state["revision_count"] + bool(proposal["model_call_count"])
+        # An invalid proposal (e.g. a pasted tweet after its one format repair)
+        # is retried with its error, like a rolled-back one, while attempts remain.
+        route = ("extract_summary_claims" if candidate else
+                 "revise_summary" if proposal["reason"] == "invalid_revision" and proposal["model_call_count"]
+                 and count < max_revisions else "finalize")
+        decision = {"node": "revise_summary", "route": route, "reason": proposal["reason"]}
         changes = {"current_summary": proposal["candidate"],
                    "summary_versions": state["summary_versions"] + [deepcopy(proposal["candidate"])]} if candidate else {}
         return _update(state, "revise_summary", **changes,
                        revisions=state["revisions"] + [attempt],
                        # A format repair belongs to the same revision attempt.
-                       revision_count=state["revision_count"] + bool(proposal["model_call_count"]),
-                       route="extract_summary_claims" if candidate else "finalize",
+                       revision_count=count,
+                       route=route,
                        stop_reason="revision_requires_rechecking" if candidate else proposal["reason"],
                        routing_decisions=state["routing_decisions"] + [decision],
                        call_counts=_counts(state, model_calls=proposal["model_call_count"]))
@@ -327,7 +405,8 @@ def build_summary_agent(graph, client, *, disparity_threshold=None,
     builder.add_conditional_edges("retrieve_revision_evidence", lambda state: state["route"],
                                   {"finalize": "finalize", "revise_summary": "revise_summary"})
     builder.add_conditional_edges("revise_summary", lambda state: state["route"],
-                                  {"finalize": "finalize", "extract_summary_claims": "extract_summary_claims"})
+                                  {"finalize": "finalize", "extract_summary_claims": "extract_summary_claims",
+                                   "revise_summary": "revise_summary"})
     builder.add_edge("finalize", END)
     return builder.compile()
 

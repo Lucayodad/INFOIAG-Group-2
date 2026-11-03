@@ -5,7 +5,7 @@ import json
 import re
 
 from fact_check import quote_in
-from summarizer import GenerationError, validate_output
+from summarizer import GenerationError, validate_abstraction, validate_output
 
 
 REVISION_INSTRUCTIONS = """Repair ONLY the listed sentences of a five-sentence tweet summary.
@@ -31,12 +31,15 @@ GROUP_LABEL = re.compile(
     r"(?:group|users?|authors?|people|tweeters?|communit(?:y|ies)|voices?|posters?)\b", re.I)
 
 
-def revise_summary(summary, confirmed_issues, retrieved, client, *, max_input_bytes=14000):
+def revise_summary(summary, confirmed_issues, retrieved, client, *, max_input_bytes=14000,
+                   temperature=0, seed=42):
     """Return an unaccepted candidate; malformed/ungrounded proposals are rejected.
 
     Citation validation proves provenance, not entailment. The controller must
     extract and fact-check every changed sentence, and rerun representation
-    checking, before accepting a candidate. No source or prior version is edited.
+    checking, before accepting a candidate. A replacement that copies a cited
+    tweet is rejected: the gate verifies citations, not summarization. No
+    source or prior version is edited.
     """
     result = {"status": "rejected", "reason": "insufficient_evidence", "candidate": None,
               "changes": [], "model_call_count": 0, "raw_response": None}
@@ -60,7 +63,8 @@ def revise_summary(summary, confirmed_issues, retrieved, client, *, max_input_by
     payload = {"model": "qwen3.5:4b", "stream": False, "think": False,
                "messages": [{"role": "system", "content": REVISION_INSTRUCTIONS},
                             {"role": "user", "content": json.dumps(body, ensure_ascii=False)}],
-               "format": schema, "options": {"temperature": 0, "seed": 42, "num_ctx": 16384, "num_predict": 1800}}
+               "format": schema, "options": {"temperature": temperature, "seed": seed,
+                                             "num_ctx": 16384, "num_predict": 1800}}
     result["input_bytes"] = len(json.dumps(payload, ensure_ascii=False).encode("utf-8"))
     if result["input_bytes"] > max_input_bytes:
         result["reason"] = "revision_input_budget"
@@ -103,6 +107,10 @@ def revise_summary(summary, confirmed_issues, retrieved, client, *, max_input_by
                     quoted.add(tweet_id)
                 if quoted != set(ids):
                     raise ValueError("Every citation needs its original quotation.")
+                try:
+                    validate_abstraction(replacement["text"], [evidence[tweet_id]["quote"] for tweet_id in ids])
+                except GenerationError as exc:
+                    raise ValueError(f"{exc} Summarize the viewpoint in your own words.") from exc
                 for task in tasks:
                     if task["kind"] == "representation" and task["sentence_id"] == key and not set(ids).intersection(task["evidence_ids"]):
                         raise ValueError("A revision task has no supporting citation.")

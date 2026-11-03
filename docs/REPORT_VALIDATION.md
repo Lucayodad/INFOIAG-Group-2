@@ -46,6 +46,50 @@ Two behaviour changes followed the first live reruns:
   are dataset annotations, and a replacement naming a group (e.g. "users in
   the AA group") is rejected and repaired.
 
+## Fixes after the 18-trial rerun (`results/agent_rerun`)
+
+Every failed revision attempt of the rerun (36 attempts) was traced to the
+piece that broke it: reviser 18, acceptance gate 11, retrieval 4, the
+four-fifths ratio 3; three more trials never revised because a failed claim
+extraction blanked the group check. `tests/test_real_pieces.py` replays these
+recorded states, candidates and graphs against the current code.
+
+- **Acceptance gate** (`compare_revision`). A changed sentence must contain no
+  CONTRADICTED claim, keep at least one SUPPORTED claim and raise no more
+  issues than the sentence it replaces; one leftover UNKNOWN phrase no longer
+  voids a repair (10 attempts, incl. both poster scenarios). The worst-covered
+  group's coverage must not fall, and progress means fewer contradictions or a
+  higher worst-group coverage. The four-fifths ratio still routes revisions,
+  but as an acceptance test it accepted levelling down (every group lost
+  coverage, Superbowl P2 s101) and rejected fixes that lifted every group
+  (McDonalds P1 s303).
+- **Copy guard.** A replacement that copies a cited tweet (verbatim, or 85% of
+  its word trigrams) is rejected with a request to summarize in its own words
+  (7 attempts pasted a tweet; one was accepted). An invalid proposal is now
+  retried with its error while attempts remain, instead of ending the trial.
+- **Group retrieval.** Group-coverage evidence is ranked by similarity to the
+  sentence being rewritten, not to "Represent viewpoints from the X group",
+  which returned tweets on unrelated topics (cosine to the sentence 0.12-0.37
+  vs 0.26-0.59).
+- **Claim extraction.** A summary sentence's failed extraction is retried once
+  with its validation error, and an unclear extraction no longer makes the MNLI
+  group check UNKNOWN (it scores sentence text only; 4/6 Superbowl trials).
+- **Retries.** At temperature 0 a retry repeated the rolled-back sentence, so
+  retries sample at temperature 0.7 with seed 42 + attempt; first attempts are
+  unchanged. Rollback feedback for a group regression now includes the group
+  coverages.
+- **Caching.** Unchanged sentences are not re-extracted or re-checked, and each
+  (tweet, sentence) MNLI pair is scored once per run: all 133 recorded rechecks
+  of unchanged sentences were identical, and the fact checker took 79% of a
+  trial's model time. `run_final_agent.py` also reuses each recorded first
+  check of the same draft and graph.
+
+Open: every atomic claim is checked against all tweets its sentence cites, so
+the checker judges e.g. "others express disgust" next to the tweet cited for
+"some find it delicious" (marked as an expected failure in the tests).
+Restricting a claim to its closest cited tweets is not a safe fix: it made a
+vague "significant number" claim SUPPORTED from three tweets.
+
 ## Changes for consistent execution
 
 - `equal_coverage.calculate_equal_coverage()` is the shared MNLI implementation.
