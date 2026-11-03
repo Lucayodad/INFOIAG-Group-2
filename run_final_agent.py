@@ -50,7 +50,7 @@ def main():
             continue
         recorded = json.loads((RECORDED / f"{name}.json").read_text(encoding="utf-8"))
         recorded = recorded.get("agent_result", recorded)
-        graph_path = Path(recorded["pipeline"]["graph"])
+        graph_path = Path(recorded["pipeline"]["graph"].replace("\\", "/"))  # recorded on Windows
         graph_path = graph_path if graph_path.is_absolute() else ROOT / graph_path
         print(f"Running {name} at {time.strftime('%H:%M')}", flush=True)
         started = time.time()

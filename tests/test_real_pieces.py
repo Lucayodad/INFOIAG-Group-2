@@ -55,10 +55,14 @@ def candidate(name, attempt=1):
     return run["iterations"][0], run["iterations"][revision["checked_iteration"]], revision
 
 
+def graph_path(name):
+    path = Path(recorded(name)["pipeline"]["graph"].replace("\\", "/"))  # recorded on Windows
+    return path if path.is_absolute() else ROOT / path
+
+
 @lru_cache(maxsize=None)
 def graph(name):
-    path = Path(recorded(name)["pipeline"]["graph"])
-    path = path if path.is_absolute() else ROOT / path
+    path = graph_path(name)
     if not path.exists():
         raise unittest.SkipTest(f"graph {path} is not available")
     return ReadOnlyGraphAggregate([Graph().parse(path, format="turtle")])
@@ -330,7 +334,7 @@ class CachingReproducesRecordedChecks(unittest.TestCase):
         client.chat.side_effect = AssertionError("an unchanged sentence was sent to Qwen again")
         scorer = Mock()
         scorer.score_pairs.side_effect = lambda pairs: [0.05] * len(pairs)
-        result = run_summary_agent(Graph().parse(ROOT / run["pipeline"]["graph"], format="turtle"),
+        result = run_summary_agent(Graph().parse(graph_path(name), format="turtle"),
                                    run["initial_summary"], topic="Obama", prompt=run["prompt"], client=client,
                                    disparity_threshold=0.2, max_revisions=0, mnli_scorer=scorer,
                                    check_cache=seed_check_cache(run["initial_summary"], first))
