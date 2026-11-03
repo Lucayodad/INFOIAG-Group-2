@@ -28,7 +28,20 @@
     "max_revisions": 3,
     "embedding_model": "all-minilm"
   },
-  "runs": [],
+  "runs": [
+    {
+      "run_id": "ontology_agent_Superbowl_prompt1_seed101",
+      "system": "ontology_agent",
+      "topic": "Superbowl",
+      "prompt_id": "1",
+      "seed": 101,
+      "temperature": 0.7,
+      "model": "qwen3.5:4b",
+      "status": "completed",
+      "output_path": "summaries\\ontology_agent_Superbowl_prompt1_seed101.json",
+      "draft_path": "drafts\\ontology_agent_Superbowl_prompt1_seed101.json"
+    }
+  ],
   "evaluation": {
     "status": "not_implemented",
     "pending": [
