@@ -64,6 +64,8 @@ def _evidence_by_task(tasks, evidence):
         "task_id": task["task_id"],
         "kind": task["kind"],
         "dialect_label": task.get("dialect_label"),
+        "failed_claim": task.get("failed_claim"),
+        "failure_explanation": task.get("failure_explanation", task.get("explanation")),
         "required_source_count": task.get("min_source_ids", 1),
         "evidence": [evidence[tweet_id] for tweet_id in task["evidence_ids"]],
     } for task in tasks]

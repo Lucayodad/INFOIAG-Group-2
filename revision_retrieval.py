@@ -47,6 +47,8 @@ def retrieve_revision_evidence(graph, topic, summary_claims, factual_results, re
         direct[issue["claim_id"]] = {row["tweet_id"] for row in cited["tweets"] if row["text"]}
         tasks.append({"task_id": "fact:" + issue["claim_id"], "kind": "factual",
                       "sentence_id": issue["sentence_id"], "query": claim["claim"],
+                      "failed_claim": claim["claim"],
+                      "failure_explanation": issue["explanation"],
                       "explanation": issue["explanation"], "dialect_label": None,
                       "preferred_ids": sorted(direct[issue["claim_id"]])})
     factual_targets = sorted({t["sentence_id"] for t in tasks})
@@ -67,6 +69,8 @@ def retrieve_revision_evidence(graph, topic, summary_claims, factual_results, re
                         summary_claims[-1]["sentence_id"],
                     ),
                     "query": f"Represent viewpoints from the {label} group.",
+                    "failed_claim": None,
+                    "failure_explanation": "The group's coverage is below the configured representation threshold.",
                     "dialect_label": label,
                     "preferred_ids": preferred_ids,
                     "explanation": "Improve the group's MNLI Equal Coverage.",
@@ -104,6 +108,8 @@ def retrieve_revision_evidence(graph, topic, summary_claims, factual_results, re
             tasks.append({"task_id": f"representation:{label}:{cluster['canonical_claim_id']}",
                           "kind": "representation",
                           "min_source_ids": 2, "sentence_id": target, "query": member["claim"],
+                          "failed_claim": member["claim"],
+                          "failure_explanation": "This viewpoint is missing from the current summary.",
                           "dialect_label": label, "explanation": "Represent this omitted source viewpoint.",
                           "preferred_ids": sorted(cluster["supporting_tweet_ids"][label])})
     result = {"status": "insufficient", "reason": "no_actionable_source_evidence", "tasks": tasks,
