@@ -64,6 +64,33 @@ class RevisionLoopTests(unittest.TestCase):
         self.assertEqual(source_tweets["AA_01"]["quote"], "I like Obama's speech.")
         self.assertEqual(source_tweets["AA_01"]["dialect_label"], "AA")
 
+    def test_factual_retrieval_continues_when_representation_also_fails(self):
+        graph, draft, counts = fixture("factual")
+        claim_text = draft["sentences"][0]["text"]
+        summary_claims = [{
+            "sentence_id": "S01", "sentence": draft["sentences"][0]["text"],
+            "status": "extracted", "claims": [{
+                "claim_id": "S01_C01", "claim": claim_text, "summary_quote": claim_text,
+                "cited_source_ids": ["AA_01"],
+            }],
+        }] + [{
+            "sentence_id": f"S{i:02d}", "sentence": draft["sentences"][i - 1]["text"],
+            "status": "no_claim", "claims": [],
+        } for i in range(2, 6)]
+        factual_results = {"issues": [{
+            "claim_id": "S01_C01", "sentence_id": "S01", "severity": "unresolved",
+            "explanation": "Needs narrower wording.",
+        }]}
+        representation_results = {"status": "FAIL", "representation_issues": [],
+                                 "coverage_by_group": {}, "omitted_claims": []}
+        result = retrieve_revision_evidence(
+            graph, "Obama", summary_claims, factual_results, representation_results,
+            mock_embeddings,
+        )
+        self.assertEqual(result["status"], "ready")
+        self.assertTrue(result["tasks"])
+        self.assertTrue(result["tweets"])
+
     def test_factual_contradiction_repaired(self):
         result, _ = self.run_fixture("factual")
         self.assertEqual(result["revision_count"], 1)

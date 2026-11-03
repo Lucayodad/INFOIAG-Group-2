@@ -202,7 +202,13 @@ def retrieve_revision_evidence(graph, topic, summary_claims, factual_results, re
     result = {"status": "insufficient", "reason": "no_actionable_source_evidence", "tasks": tasks,
               "tweets": [], "embedding_model": embedding_model, "embedding_call_count": 0,
               "tool_call_count": tools, "evidence_bytes": 0}
-    if not tasks or representation["status"] == "FAIL" and not any(t["kind"] == "representation" for t in tasks):
+    if not tasks:
+        return result
+    if (
+        representation["status"] == "FAIL"
+        and not any(task["kind"] == "representation" for task in tasks)
+        and not any(task["kind"] == "factual" for task in tasks)
+    ):
         return result
     groups = {label: get_group_claims(graph, topic, label) for label in DIALECT_LABELS}
     result["tool_call_count"] += len(groups)
