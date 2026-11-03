@@ -65,6 +65,8 @@ def main():
             failures.append(name)
             print(f"FAILED {name}; rerun the same command to retry it.", flush=True)
             continue
+        # evaluate.py identifies a trial by topic, prompt and seed.
+        result["prompt_id"], result["seed"] = name.split("_prompt")[1].split("_seed")[0], int(name.rsplit("_seed", 1)[1])
         result["provenance"] = {
             "recorded_run": str((RECORDED / f"{name}.json").relative_to(ROOT)),
             "graph": str(graph_path.relative_to(ROOT)),
