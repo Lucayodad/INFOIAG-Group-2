@@ -68,6 +68,7 @@ def _evidence_by_task(tasks):
     return [{
         "task_id": task["task_id"],
         "kind": task["kind"],
+        "sentence_id": task["sentence_id"],
         "dialect_label": task.get("dialect_label"),
         "failed_claim": task.get("failed_claim"),
         "failure_explanation": task.get("failure_explanation", task.get("explanation")),
@@ -104,6 +105,37 @@ def _repair_guidance(summary, confirmed_issues, tasks):
     }
 
 
+def _revision_body(summary, confirmed_issues, tasks, evidence):
+    """Build a bounded request containing only the sentences and evidence being repaired."""
+    target_ids = {task["sentence_id"] for task in tasks}
+    target_sentences = [
+        {"sentence_id": f"S{index:02d}", "text": sentence["text"]}
+        for index, sentence in enumerate(summary["sentences"], 1)
+        if f"S{index:02d}" in target_ids
+    ]
+    issues = [
+        {"type": issue.get("type"), "severity": issue.get("severity"),
+         "explanation": issue.get("explanation")}
+        for issue in confirmed_issues
+        if issue.get("sentence_id") in target_ids or issue.get("type") == "rejected_previous_revision"
+    ]
+    task_bundle = _evidence_by_task(tasks)
+    evidence_ids = {evidence_id for task in tasks for evidence_id in task["evidence_ids"]}
+    original_tweets = [row for row in evidence.values() if row["tweet_id"] in evidence_ids]
+    return {
+        "target_sentences": target_sentences,
+        "confirmed_issues": issues,
+        "tasks": task_bundle,
+        "repair_rules": [
+            "Change only the unsupported phrase or clause.",
+            "Preserve accurate wording and sentence structure.",
+            "Narrow unsupported quantifiers instead of adding claims.",
+            "Use the checker explanation as the direct repair target.",
+        ],
+        "original_tweets": original_tweets,
+    }
+
+
 def revise_summary(summary, confirmed_issues, retrieved, client, *, max_input_bytes=14000):
     """Return an unaccepted candidate; malformed/ungrounded proposals are rejected.
 
@@ -128,10 +160,7 @@ def revise_summary(summary, confirmed_issues, retrieved, client, *, max_input_by
                     "additionalProperties": False, "required": ["tweet_id", "quote"], "properties": {
                         "tweet_id": {"type": "string", "enum": list(evidence)}, "quote": {"type": "string"}}}},
             }}}}}
-    body = {"summary": summary["sentences"], "confirmed_issues": confirmed_issues,
-            "tasks": tasks, "evidence_by_task": _evidence_by_task(tasks),
-            "repair_guidance": _repair_guidance(summary, confirmed_issues, tasks),
-            "original_tweets": retrieved["tweets"]}
+    body = _revision_body(summary, confirmed_issues, tasks, evidence)
     payload = {"model": "qwen3.5:4b", "stream": False, "think": False,
                "messages": [{"role": "system", "content": REVISION_INSTRUCTIONS},
                             {"role": "user", "content": json.dumps(body, ensure_ascii=False)}],
