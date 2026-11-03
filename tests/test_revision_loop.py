@@ -133,6 +133,27 @@ class RevisionLoopTests(unittest.TestCase):
         self.assertIn("at least 2 distinct source tweets", result["revisions"][0]["error"])
         self.assertEqual(result["current_summary"], result["initial_summary"])
 
+    def test_revision_rejects_unsupported_scope_quantifiers(self):
+        def broad_scope(data):
+            data["replacements"][0]["text"] = "Most users support this policy."
+            return data
+
+        result, _ = self.run_fixture("factual", client=mock_client(transform_revision=broad_scope))
+        self.assertEqual(result["revisions"][0]["status"], "rejected")
+        self.assertIn("corpus-wide quantifiers", result["revisions"][0]["error"])
+
+    def test_revision_requires_three_sources_for_many(self):
+        def many_with_two(data):
+            replacement = data["replacements"][0]
+            replacement["text"] = "Many users support this policy."
+            replacement["source_ids"] = replacement["source_ids"][:2]
+            replacement["evidence"] = replacement["evidence"][:2]
+            return data
+
+        result, _ = self.run_fixture("factual", client=mock_client(transform_revision=many_with_two))
+        self.assertEqual(result["revisions"][0]["status"], "rejected")
+        self.assertIn("at least 3 cited source tweets", result["revisions"][0]["error"])
+
     def test_quotation_wrapped_in_quotation_marks_is_accepted(self):
         def wrapped(data):
             for reference in data["replacements"][0]["evidence"]:

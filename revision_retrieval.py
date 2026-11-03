@@ -152,7 +152,8 @@ def retrieve_revision_evidence(graph, topic, summary_claims, factual_results, re
             task["evidence_ids"] = []
             task["similarities"] = {}
             for _, negative_score, key, tweet in sorted(ranking, key=lambda item: item[:3]):
-                if len(task["evidence_ids"]) >= top_k:
+                required = max(top_k, task.get("min_source_ids", 1))
+                if len(task["evidence_ids"]) >= required:
                     break
                 row = {"tweet_id": key, "dialect_label": tweet["dialect_label"], "quote": tweet["text"],
                        "source_file": tweet["source_file"], "source_line": tweet["source_line"]}

@@ -23,6 +23,11 @@ For group-coverage tasks include an assigned tweet from that specific group.
 For representation tasks, synthesize the shared viewpoint across at least two
 different assigned tweets and cite both; do not treat one unusual tweet as a
 group summary.
+Use "some" for one or more cited posts. Use "several", "many" or "frequently"
+only when at least three distinct cited posts explicitly support that wording.
+Do not use "most", "the majority", "all", percentages, or whole-corpus claims:
+the bounded evidence set cannot establish corpus-wide scope. Do not generalize
+from one author's post to a group or to the full collection.
 Never name a dialect or demographic group in the text: the group labels are
 dataset annotations, not identities of the authors. Describe the viewpoint only.
 Do not rewrite unaffected sentences. Return only replacements as specified.
@@ -32,6 +37,27 @@ Do not rewrite unaffected sentences. Return only replacements as specified.
 GROUP_LABEL = re.compile(
     r"\b(?:AA|Hisp)\b|\bdialect|\b(?:African[- ]American|Hispanic|Latin[oax]|White|Black)\s+"
     r"(?:group|users?|authors?|people|tweeters?|communit(?:y|ies)|voices?|posters?)\b", re.I)
+CORPUS_QUANTIFIER = re.compile(
+    r"\b(?:most|majority|all|everyone|no one|nobody|every(?:one|body|where)|"
+    r"\d+(?:\.\d+)?\s*%|percent(?:age)?)\b", re.I)
+THREE_SOURCE_QUANTIFIER = re.compile(r"\b(?:several|many|frequently)\b", re.I)
+
+
+def _validate_revision_scope(text: str, source_count: int) -> None:
+    if CORPUS_QUANTIFIER.search(text):
+        raise ValueError("Bounded revision evidence cannot support corpus-wide quantifiers.")
+    if THREE_SOURCE_QUANTIFIER.search(text) and source_count < 3:
+        raise ValueError("Several, many or frequently requires at least 3 cited source tweets.")
+
+
+def _evidence_by_task(tasks, evidence):
+    return [{
+        "task_id": task["task_id"],
+        "kind": task["kind"],
+        "dialect_label": task.get("dialect_label"),
+        "required_source_count": task.get("min_source_ids", 1),
+        "evidence": [evidence[tweet_id] for tweet_id in task["evidence_ids"]],
+    } for task in tasks]
 
 
 def revise_summary(summary, confirmed_issues, retrieved, client, *, max_input_bytes=14000):
@@ -59,7 +85,8 @@ def revise_summary(summary, confirmed_issues, retrieved, client, *, max_input_by
                         "tweet_id": {"type": "string", "enum": list(evidence)}, "quote": {"type": "string"}}}},
             }}}}}
     body = {"summary": summary["sentences"], "confirmed_issues": confirmed_issues,
-            "tasks": tasks, "original_tweets": retrieved["tweets"]}
+            "tasks": tasks, "evidence_by_task": _evidence_by_task(tasks, evidence),
+            "original_tweets": retrieved["tweets"]}
     payload = {"model": "qwen3.5:4b", "stream": False, "think": False,
                "messages": [{"role": "system", "content": REVISION_INSTRUCTIONS},
                             {"role": "user", "content": json.dumps(body, ensure_ascii=False)}],
@@ -113,6 +140,7 @@ def revise_summary(summary, confirmed_issues, retrieved, client, *, max_input_by
                     quoted.add(tweet_id)
                 if quoted != set(ids):
                     raise ValueError("Every citation needs its original quotation.")
+                _validate_revision_scope(replacement["text"], len(ids))
                 try:
                     validate_abstraction(replacement["text"], [evidence[tweet_id]["quote"] for tweet_id in ids])
                 except GenerationError as exc:
