@@ -175,5 +175,90 @@
     "representation": "PASS",
     "disparity": 0.06588937595758049,
     "changed": false
+  },
+  "Superbowl_prompt1_seed101": {
+    "status": "completed_with_uncertainty",
+    "stop_reason": "uncertainty_only",
+    "revisions": {},
+    "verdicts": {
+      "SUPPORTED": 1,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 9
+    },
+    "representation": "UNKNOWN",
+    "disparity": null,
+    "changed": false
+  },
+  "Superbowl_prompt1_seed202": {
+    "status": "stopped_with_issues",
+    "stop_reason": "unsupported_revision",
+    "revisions": {
+      "rolled_back": 3
+    },
+    "verdicts": {
+      "SUPPORTED": 3,
+      "CONTRADICTED": 1,
+      "UNKNOWN": 2
+    },
+    "representation": "UNKNOWN",
+    "disparity": null,
+    "changed": false
+  },
+  "Superbowl_prompt1_seed303": {
+    "status": "completed_with_uncertainty",
+    "stop_reason": "uncertainty_only",
+    "revisions": {},
+    "verdicts": {
+      "SUPPORTED": 2,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 6
+    },
+    "representation": "UNKNOWN",
+    "disparity": null,
+    "changed": false
+  },
+  "Superbowl_prompt2_seed101": {
+    "status": "stopped_with_issues",
+    "stop_reason": "invalid_revision",
+    "revisions": {
+      "accepted": 1,
+      "rejected": 1
+    },
+    "verdicts": {
+      "SUPPORTED": 4,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 6
+    },
+    "representation": "FAIL",
+    "disparity": 0.2437591577298749,
+    "changed": true
+  },
+  "Superbowl_prompt2_seed202": {
+    "status": "completed_with_uncertainty",
+    "stop_reason": "uncertainty_only",
+    "revisions": {},
+    "verdicts": {
+      "SUPPORTED": 2,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 4
+    },
+    "representation": "UNKNOWN",
+    "disparity": null,
+    "changed": false
+  },
+  "Superbowl_prompt2_seed303": {
+    "status": "stopped_with_issues",
+    "stop_reason": "unsupported_revision",
+    "revisions": {
+      "rolled_back": 3
+    },
+    "verdicts": {
+      "SUPPORTED": 0,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 12
+    },
+    "representation": "FAIL",
+    "disparity": 0.20354840576906197,
+    "changed": false
   }
 }
