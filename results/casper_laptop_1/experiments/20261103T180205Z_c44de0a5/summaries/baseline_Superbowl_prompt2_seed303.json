@@ -1,0 +1,115 @@
+{
+  "status": "draft_unchecked",
+  "provider": "ollama",
+  "topic": "Superbowl",
+  "seed": 303,
+  "temperature": 0.7,
+  "summary": "The tweets collectively reflect a mix of strong team-specific excitement, general disinterest, and critical commentary regarding the Super Bowl event. A significant portion of the discussion centers on specific predictions and rivalries involving the Ravens, Patriots, 49ers, and other teams. Several users expressed enthusiasm for the halftime show, specifically mentioning Beyonce and Destiny's Child, while others voiced dissatisfaction with the commercials. There is recurring speculation about the two head coaches being brothers and debates regarding the validity of the Pro Bowl schedule. Many participants noted their lack of interest or fatigue with the event, contrasting these feelings with those who remain highly engaged in the competition.",
+  "sentences": [
+    {
+      "text": "The tweets collectively reflect a mix of strong team-specific excitement, general disinterest, and critical commentary regarding the Super Bowl event.",
+      "source_ids": [
+        "Superbowl_001",
+        "Superbowl_002",
+        "Superbowl_003",
+        "Superbowl_004",
+        "Superbowl_005",
+        "Superbowl_006",
+        "Superbowl_007",
+        "Superbowl_008",
+        "Superbowl_009",
+        "Superbowl_010"
+      ]
+    },
+    {
+      "text": "A significant portion of the discussion centers on specific predictions and rivalries involving the Ravens, Patriots, 49ers, and other teams.",
+      "source_ids": [
+        "Superbowl_011",
+        "Superbowl_012",
+        "Superbowl_013",
+        "Superbowl_014",
+        "Superbowl_015",
+        "Superbowl_016",
+        "Superbowl_017",
+        "Superbowl_018",
+        "Superbowl_019",
+        "Superbowl_020"
+      ]
+    },
+    {
+      "text": "Several users expressed enthusiasm for the halftime show, specifically mentioning Beyonce and Destiny's Child, while others voiced dissatisfaction with the commercials.",
+      "source_ids": [
+        "Superbowl_021",
+        "Superbowl_022",
+        "Superbowl_023",
+        "Superbowl_024",
+        "Superbowl_025",
+        "Superbowl_026",
+        "Superbowl_027",
+        "Superbowl_028",
+        "Superbowl_029",
+        "Superbowl_030"
+      ]
+    },
+    {
+      "text": "There is recurring speculation about the two head coaches being brothers and debates regarding the validity of the Pro Bowl schedule.",
+      "source_ids": [
+        "Superbowl_031",
+        "Superbowl_032",
+        "Superbowl_033",
+        "Superbowl_034",
+        "Superbowl_035",
+        "Superbowl_036",
+        "Superbowl_037",
+        "Superbowl_038",
+        "Superbowl_039",
+        "Superbowl_040"
+      ]
+    },
+    {
+      "text": "Many participants noted their lack of interest or fatigue with the event, contrasting these feelings with those who remain highly engaged in the competition.",
+      "source_ids": [
+        "Superbowl_041",
+        "Superbowl_042",
+        "Superbowl_043",
+        "Superbowl_044",
+        "Superbowl_045",
+        "Superbowl_046",
+        "Superbowl_047",
+        "Superbowl_048",
+        "Superbowl_049",
+        "Superbowl_050"
+      ]
+    }
+  ],
+  "summary_prompt": "I work in communications and need to decide how to respond to public reaction. Summarize the tweets about the Super Bowl in 5 sentences, highlighting the main sentiment and the most important complaints or praise.",
+  "requested_model": "qwen3.5:4b",
+  "returned_model": "qwen3.5:4b",
+  "generation_settings": {
+    "temperature": 0.7,
+    "seed": 303,
+    "num_ctx": 16384,
+    "num_predict": 2000
+  },
+  "backend_metadata": {
+    "created_at": "2026-11-03T18:03:20.6916908Z",
+    "total_duration": 8796216400,
+    "load_duration": 4752100,
+    "prompt_eval_duration": 57085000,
+    "eval_duration": 8718191000,
+    "done_reason": "stop"
+  },
+  "usage": {
+    "input_tokens": 4736,
+    "output_tokens": 627,
+    "total_tokens": 5363
+  },
+  "execution_seconds": 8.807688,
+  "created_at_utc": "2026-11-03T18:03:20.692287+00:00",
+  "input_sha256": "6941abca46e7cf65f39af66f706138e6e0a1b4d13e836920ce2532ecbd1a64b4",
+  "request_sha256": "e48dcfa55a16676b401110bb534e509c4b32e2c0ac4eb881333cdc24b48af345",
+  "ontology_used": false,
+  "reference_summaries_used": false,
+  "system": "baseline",
+  "prompt_id": "2"
+}

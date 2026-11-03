@@ -1,0 +1,84 @@
+{
+  "status": "draft_unchecked",
+  "provider": "ollama",
+  "topic": "Superbowl",
+  "seed": 101,
+  "temperature": 0.7,
+  "summary": "The provided tweets collectively express a wide range of attitudes toward the Super Bowl, from enthusiastic anticipation to complete disinterest. A significant portion of the user base shows strong support for the Ravens, with many expressing excitement about their advancement and praising their performance. Conversely, there is notable skepticism and criticism regarding the Patriots' current roster compared to their past success. Several users voiced dissatisfaction with various aspects of the event, including the halftime show and the commercials. Despite these varied opinions, a common theme emerges where many users stated they would watch regardless of the outcome or their team's participation.",
+  "sentences": [
+    {
+      "text": "The provided tweets collectively express a wide range of attitudes toward the Super Bowl, from enthusiastic anticipation to complete disinterest.",
+      "source_ids": [
+        "Superbowl_001",
+        "Superbowl_002",
+        "Superbowl_003",
+        "Superbowl_004",
+        "Superbowl_005"
+      ]
+    },
+    {
+      "text": "A significant portion of the user base shows strong support for the Ravens, with many expressing excitement about their advancement and praising their performance.",
+      "source_ids": [
+        "Superbowl_006",
+        "Superbowl_008",
+        "Superbowl_012",
+        "Superbowl_019",
+        "Superbowl_022"
+      ]
+    },
+    {
+      "text": "Conversely, there is notable skepticism and criticism regarding the Patriots' current roster compared to their past success.",
+      "source_ids": [
+        "Superbowl_007",
+        "Superbowl_024",
+        "Superbowl_039",
+        "Superbowl_085"
+      ]
+    },
+    {
+      "text": "Several users voiced dissatisfaction with various aspects of the event, including the halftime show and the commercials.",
+      "source_ids": [
+        "Superbowl_015",
+        "Superbowl_018",
+        "Superbowl_036",
+        "Superbowl_071"
+      ]
+    },
+    {
+      "text": "Despite these varied opinions, a common theme emerges where many users stated they would watch regardless of the outcome or their team's participation.",
+      "source_ids": [
+        "Superbowl_042",
+        "Superbowl_062",
+        "Superbowl_089"
+      ]
+    }
+  ],
+  "summary_prompt": "I work in communications and need to decide how to respond to public reaction. Summarize the tweets about the Super Bowl in 5 sentences, highlighting the main sentiment and the most important complaints or praise.",
+  "requested_model": "qwen3.5:4b",
+  "returned_model": "qwen3.5:4b",
+  "generation_settings": {
+    "temperature": 0.7,
+    "seed": 101,
+    "num_ctx": 16384,
+    "num_predict": 2000
+  },
+  "backend_metadata": {
+    "created_at": "2026-11-03T18:18:54.5627496Z",
+    "total_duration": 8265801000,
+    "load_duration": 5288200,
+    "prompt_eval_duration": 1959688000,
+    "eval_duration": 5049941000,
+    "done_reason": "stop"
+  },
+  "usage": {
+    "input_tokens": 4736,
+    "output_tokens": 357,
+    "total_tokens": 5093
+  },
+  "execution_seconds": 8.267125,
+  "created_at_utc": "2026-11-03T18:18:54.563791+00:00",
+  "input_sha256": "6941abca46e7cf65f39af66f706138e6e0a1b4d13e836920ce2532ecbd1a64b4",
+  "request_sha256": "81826982a3b7a6cdaf4c71fc3b20c362b5320099205bfb4edddb52742cc8fa34",
+  "ontology_used": false,
+  "reference_summaries_used": false
+}
