@@ -109,6 +109,18 @@ class RevisionLoopTests(unittest.TestCase):
                 self.assertEqual(result["revision_count"], 1)
                 self.assertEqual(len(result["iterations"]), 1)
 
+    def test_verbatim_qwen_revision_is_rejected(self):
+        def copied(data):
+            replacement = data["replacements"][0]
+            replacement["text"] = replacement["evidence"][0]["quote"]
+            return data
+
+        result, _ = self.run_fixture(client=mock_client(transform_revision=copied))
+        self.assertEqual(result["revisions"][0]["status"], "rejected")
+        self.assertEqual(result["revisions"][0]["reason"], "invalid_revision")
+        self.assertIn("verbatim", result["revisions"][0]["error"])
+        self.assertEqual(result["current_summary"], result["initial_summary"])
+
     def test_quotation_wrapped_in_quotation_marks_is_accepted(self):
         def wrapped(data):
             for reference in data["replacements"][0]["evidence"]:

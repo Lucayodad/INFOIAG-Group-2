@@ -94,6 +94,12 @@ class SummarizerTests(unittest.TestCase):
             with self.assertRaises(GenerationError):
                 validate_output(json.dumps(data), self.tweets)
 
+    def test_rejects_verbatim_source_sentence(self):
+        output = fixture_output()
+        output["sentences"][0]["text"] = self.tweets[0].text
+        with self.assertRaisesRegex(GenerationError, "verbatim"):
+            validate_output(json.dumps(output), self.tweets)
+
     def test_missing_key_has_clear_error(self):
         with patch.dict(os.environ, {"OPENAI_API_KEY": ""}):
             with self.assertRaisesRegex(GenerationError, "OPENAI_API_KEY"):

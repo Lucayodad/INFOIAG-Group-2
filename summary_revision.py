@@ -5,7 +5,7 @@ import json
 import re
 
 from fact_check import quote_in
-from summarizer import GenerationError, validate_output
+from summarizer import GenerationError, validate_abstraction, validate_output
 
 
 REVISION_INSTRUCTIONS = """Repair ONLY the listed sentences of a five-sentence tweet summary.
@@ -103,6 +103,10 @@ def revise_summary(summary, confirmed_issues, retrieved, client, *, max_input_by
                     quoted.add(tweet_id)
                 if quoted != set(ids):
                     raise ValueError("Every citation needs its original quotation.")
+                try:
+                    validate_abstraction(replacement["text"], [evidence[tweet_id]["quote"] for tweet_id in ids])
+                except GenerationError as exc:
+                    raise ValueError(str(exc)) from exc
                 for task in tasks:
                     if task["kind"] == "representation" and task["sentence_id"] == key and not set(ids).intersection(task["evidence_ids"]):
                         raise ValueError("A revision task has no supporting citation.")

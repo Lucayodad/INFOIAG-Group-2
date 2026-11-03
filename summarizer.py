@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 import hashlib
 import json
 import os
+import re
 from pathlib import Path
 from time import perf_counter
 
@@ -18,6 +19,29 @@ OPENAI_MODEL = "gpt-4.1-mini-2025-04-14"
 
 class GenerationError(ValueError):
     """A generation request or its output could not be accepted."""
+
+
+def _abstraction_tokens(text: str) -> list[str]:
+    return re.findall(r"\w+(?:['’-]\w+)?", text.casefold(), flags=re.UNICODE)
+
+
+def _ngram_set(tokens: list[str], size: int) -> set[tuple[str, ...]]:
+    return {tuple(tokens[index:index + size]) for index in range(len(tokens) - size + 1)}
+
+
+def validate_abstraction(text: str, source_texts: list[str]) -> None:
+    """Reject source copies while allowing ordinary short phrase overlap."""
+    normalized = " ".join(text.casefold().split())
+    candidate_tokens = _abstraction_tokens(text)
+    candidate_ngrams = _ngram_set(candidate_tokens, 3)
+    for source in source_texts:
+        if normalized == " ".join(source.casefold().split()):
+            raise GenerationError("Summary sentence copies a source tweet verbatim.")
+        if len(candidate_tokens) < 8 or len(candidate_ngrams) < 2:
+            continue
+        source_ngrams = _ngram_set(_abstraction_tokens(source), 3)
+        if candidate_ngrams and len(candidate_ngrams & source_ngrams) / len(candidate_ngrams) >= 0.85:
+            raise GenerationError("Summary sentence copies too much contiguous source wording.")
 
 
 def digest(value) -> str:
@@ -109,6 +133,9 @@ def validate_output(raw_text: str, tweets: list[Tweet] | None = None, *, allowed
             raise GenerationError(f"Sentence {index}: source_ids must be a nonempty string list.")
         if len(set(ids)) != len(ids) or not set(ids).issubset(allowed_ids):
             raise GenerationError(f"Sentence {index}: duplicate or unknown source IDs.")
+        if tweets is not None:
+            source_by_id = {tweet.id: tweet.text for tweet in tweets}
+            validate_abstraction(text, [source_by_id[source_id] for source_id in ids])
     return data
 
 
