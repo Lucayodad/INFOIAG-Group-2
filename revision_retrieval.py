@@ -47,6 +47,25 @@ def _shared_group_viewpoint(group):
     ))
 
 
+def _source_tweets_by_id(graph, topic):
+    """Index original topic tweets for claims whose RDF lookup is incomplete."""
+    tweets = {}
+    for label in DIALECT_LABELS:
+        group = get_group_claims(graph, topic, label)
+        for tweet in group["tweets"]:
+            existing = tweets.get(tweet["tweet_id"])
+            if existing is not None and existing["text"] != tweet["text"]:
+                raise ValueError(f"Conflicting source text for tweet {tweet['tweet_id']}.")
+            tweets[tweet["tweet_id"]] = {
+                "tweet_id": tweet["tweet_id"],
+                "dialect_label": tweet["dialect_label"],
+                "quote": tweet["text"],
+                "source_file": tweet["source_file"],
+                "source_line": tweet["source_line"],
+            }
+    return tweets
+
+
 def cosine(left, right):
     if not left or len(left) != len(right) or any(
         type(x) not in (int, float) or not math.isfinite(x) for x in [*left, *right]
@@ -73,6 +92,7 @@ def retrieve_revision_evidence(graph, topic, summary_claims, factual_results, re
             raise ValueError(f"{name} must be a positive integer.")
     claims = {c["claim_id"]: c for c in flatten_summary_claims(summary_claims)}
     tasks, direct, tools = [], {}, 0
+    source_tweets = None
     for issue in factual_results["issues"]:
         if issue["severity"] not in {"serious", "unresolved"}:
             continue
@@ -83,6 +103,13 @@ def retrieve_revision_evidence(graph, topic, summary_claims, factual_results, re
         cited = lookup_fact(graph, claim)
         # Prefer the original sources already inspected by the factual checker.
         direct[issue["claim_id"]] = {row["tweet_id"] for row in cited["tweets"] if row["text"]}
+        if not direct[issue["claim_id"]]:
+            if source_tweets is None:
+                source_tweets = _source_tweets_by_id(graph, topic)
+            direct[issue["claim_id"]] = {
+                tweet_id for tweet_id in claim["cited_source_ids"]
+                if tweet_id in source_tweets and source_tweets[tweet_id]["quote"]
+            }
         tasks.append({"task_id": "fact:" + issue["claim_id"], "kind": "factual",
                       "severity": issue["severity"],
                       "sentence_id": issue["sentence_id"], "query": claim["claim"],

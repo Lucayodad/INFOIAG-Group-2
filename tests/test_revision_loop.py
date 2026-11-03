@@ -9,6 +9,7 @@ from demo_revision_loop import fixture, mock_client, mock_embeddings
 from fact_check import quote_in
 from ontology_tools import NS
 from revision_retrieval import (
+    _source_tweets_by_id,
     _representation_target,
     _shared_group_viewpoint,
     cosine,
@@ -55,6 +56,13 @@ class RevisionLoopTests(unittest.TestCase):
         self.assertEqual(bundled[0]["evidence_ids"], ["T01"])
         self.assertNotIn("evidence", bundled[0])
         self.assertNotIn("quote", bundled[0])
+
+    def test_source_tweet_fallback_indexes_cited_originals(self):
+        graph, _, _ = fixture("factual")
+        source_tweets = _source_tweets_by_id(graph, "Obama")
+        self.assertIn("AA_01", source_tweets)
+        self.assertEqual(source_tweets["AA_01"]["quote"], "I like Obama's speech.")
+        self.assertEqual(source_tweets["AA_01"]["dialect_label"], "AA")
 
     def test_factual_contradiction_repaired(self):
         result, _ = self.run_fixture("factual")
