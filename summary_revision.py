@@ -37,6 +37,12 @@ tweets and follow its viewpoint_constraint. Do not introduce a new topic,
 team, person, activity or event merely because it appears in one citation.
 If the assigned tweets do not share a clear viewpoint, use a narrower shared
 description rather than combining unrelated details.
+For every factual task, either replace the failed claim with wording directly
+supported by that task's evidence, or remove that claim entirely. Do not retain
+the failed claim or a close paraphrase merely because its citation changed.
+When several failed claims target one sentence, rebuild the sentence from only
+the claims supported by the supplied evidence; do not preserve unsupported
+clauses for completeness.
 Use "some" for one or more cited posts. Use "several", "many" or "frequently"
 only when at least three distinct cited posts explicitly support that wording.
 Do not use "most", "the majority", "all", percentages, or whole-corpus claims:
@@ -132,6 +138,11 @@ def _revision_body(summary, confirmed_issues, tasks, evidence):
         if issue.get("sentence_id") in target_ids or issue.get("type") == "rejected_previous_revision"
     ]
     task_bundle = _evidence_by_task(tasks)
+    failed_claims = [
+        {"sentence_id": task["sentence_id"], "claim": task.get("failed_claim"),
+         "instruction": "Replace with supported wording or remove entirely."}
+        for task in tasks if task.get("kind") == "factual"
+    ]
     evidence_ids = {evidence_id for task in tasks for evidence_id in task["evidence_ids"]}
     original_tweets = [row for row in evidence.values() if row["tweet_id"] in evidence_ids]
     return {
@@ -139,6 +150,7 @@ def _revision_body(summary, confirmed_issues, tasks, evidence):
         "sentences": target_sentences,
         "confirmed_issues": issues,
         "tasks": task_bundle,
+        "failed_claims": failed_claims,
         "repair_rules": [
             "Change only the unsupported phrase or clause unless every claim in a "
             "target sentence is unsupported; then replace that sentence with one "

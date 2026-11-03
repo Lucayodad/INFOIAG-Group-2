@@ -212,6 +212,19 @@ class RevisionLoopTests(unittest.TestCase):
         self.assertEqual(result["revisions"][0]["status"], "rejected")
         self.assertIn("does not change sentence text", result["revisions"][0]["error"])
 
+    def test_revision_payload_requires_failed_claims_to_be_replaced_or_removed(self):
+        result, client = self.run_fixture("factual")
+        request = next(
+            call.args[0] for call in client.chat.call_args_list
+            if "replacements" in call.args[0]["format"]["properties"]
+        )
+        body = json.loads(request["messages"][1]["content"])
+        self.assertTrue(body["failed_claims"])
+        self.assertTrue(all(
+            item["instruction"] == "Replace with supported wording or remove entirely."
+            for item in body["failed_claims"]
+        ))
+
     def test_representation_revision_requires_two_group_sources(self):
         def one_source(data):
             replacement = data["replacements"][0]
