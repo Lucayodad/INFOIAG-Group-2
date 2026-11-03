@@ -59,20 +59,22 @@ def retrieve_revision_evidence(graph, topic, summary_claims, factual_results, re
                              if issue["severity"] == "serious" and "dialect_label" in issue})
             groups = {label: get_group_claims(graph, topic, label) for label in DIALECT_LABELS}
             for label in labels:
-                preferred_ids = [tweet["tweet_id"] for tweet in groups[label]["tweets"]]
+                target = next(
+                    (row for row in summary_claims if row["status"] == "no_claim"),
+                    summary_claims[-1],
+                )
+                target_text = target["sentence"]
                 tasks.append({
                     "task_id": f"representation:{label}:mnli",
                     "kind": "representation",
                     "min_source_ids": 2,
-                    "sentence_id": next(
-                        (row["sentence_id"] for row in summary_claims if row["status"] == "no_claim"),
-                        summary_claims[-1]["sentence_id"],
-                    ),
-                    "query": f"Represent viewpoints from the {label} group.",
-                    "failed_claim": None,
+                    "sentence_id": target["sentence_id"],
+                    "query": target_text,
+                    "failed_claim": "The target sentence needs a viewpoint supported by the assigned tweets.",
                     "failure_explanation": "The group's coverage is below the configured representation threshold.",
                     "dialect_label": label,
-                    "preferred_ids": preferred_ids,
+                    "preferred_ids": [],
+                    "viewpoint_constraint": "Describe only a viewpoint common to the cited tweets.",
                     "explanation": "Improve the group's MNLI Equal Coverage.",
                 })
             # The generic ontology-claim branch below cannot select evidence
@@ -111,6 +113,7 @@ def retrieve_revision_evidence(graph, topic, summary_claims, factual_results, re
                           "failed_claim": member["claim"],
                           "failure_explanation": "This viewpoint is missing from the current summary.",
                           "dialect_label": label, "explanation": "Represent this omitted source viewpoint.",
+                          "viewpoint_constraint": f"Express only this viewpoint: {member['claim']}",
                           "preferred_ids": sorted(cluster["supporting_tweet_ids"][label])})
     result = {"status": "insufficient", "reason": "no_actionable_source_evidence", "tasks": tasks,
               "tweets": [], "embedding_model": embedding_model, "embedding_call_count": 0,

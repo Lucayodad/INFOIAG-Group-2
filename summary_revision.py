@@ -32,6 +32,11 @@ For group-coverage tasks include an assigned tweet from that specific group.
 For representation tasks, synthesize the shared viewpoint across at least two
 different assigned tweets and cite both; do not treat one unusual tweet as a
 group summary.
+For each representation task, express only the viewpoint common to the cited
+tweets and follow its viewpoint_constraint. Do not introduce a new topic,
+team, person, activity or event merely because it appears in one citation.
+If the assigned tweets do not share a clear viewpoint, use a narrower shared
+description rather than combining unrelated details.
 Use "some" for one or more cited posts. Use "several", "many" or "frequently"
 only when at least three distinct cited posts explicitly support that wording.
 Do not use "most", "the majority", "all", percentages, or whole-corpus claims:
@@ -66,6 +71,7 @@ def _evidence_by_task(tasks):
         "dialect_label": task.get("dialect_label"),
         "failed_claim": task.get("failed_claim"),
         "failure_explanation": task.get("failure_explanation", task.get("explanation")),
+        "viewpoint_constraint": task.get("viewpoint_constraint"),
         "required_source_count": task.get("min_source_ids", 1),
         "evidence_ids": task["evidence_ids"],
     } for task in tasks]
