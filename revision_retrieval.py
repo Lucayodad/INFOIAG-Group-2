@@ -61,6 +61,7 @@ def retrieve_revision_evidence(graph, topic, summary_claims, factual_results, re
                 tasks.append({
                     "task_id": f"representation:{label}:mnli",
                     "kind": "representation",
+                    "min_source_ids": 2,
                     "sentence_id": next(
                         (row["sentence_id"] for row in summary_claims if row["status"] == "no_claim"),
                         summary_claims[-1]["sentence_id"],
@@ -101,7 +102,8 @@ def retrieve_revision_evidence(graph, topic, summary_claims, factual_results, re
             vacant = [r["sentence_id"] for r in summary_claims if r["status"] == "no_claim"]
             target = factual_targets[0] if factual_targets else (vacant or [r["sentence_id"] for r in summary_claims])[-1]
             tasks.append({"task_id": f"representation:{label}:{cluster['canonical_claim_id']}",
-                          "kind": "representation", "sentence_id": target, "query": member["claim"],
+                          "kind": "representation",
+                          "min_source_ids": 2, "sentence_id": target, "query": member["claim"],
                           "dialect_label": label, "explanation": "Represent this omitted source viewpoint.",
                           "preferred_ids": sorted(cluster["supporting_tweet_ids"][label])})
     result = {"status": "insufficient", "reason": "no_actionable_source_evidence", "tasks": tasks,
@@ -140,7 +142,7 @@ def retrieve_revision_evidence(graph, topic, summary_claims, factual_results, re
         chosen = {}
         for task in tasks:
             allowed = [tweet for tweet in corpus if task["dialect_label"] is None or
-                       tweet["dialect_label"] == task["dialect_label"] and tweet["tweet_id"] in task["preferred_ids"]]
+                       tweet["dialect_label"] == task["dialect_label"]]
             ranking = []
             for tweet in allowed:
                 score = cosine(cache[(embedding_model, task["query"])], cache[(embedding_model, tweet["text"])])

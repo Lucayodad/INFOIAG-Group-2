@@ -20,6 +20,9 @@ and replace it with a grounded viewpoint. Do not cite a refuting tweet as suppor
 for an unrelated replacement. Cite only the sentence's allowed evidence_ids;
 for each citation supply an exact nonempty quotation from that original tweet.
 For group-coverage tasks include an assigned tweet from that specific group.
+For representation tasks, synthesize the shared viewpoint across at least two
+different assigned tweets and cite both; do not treat one unusual tweet as a
+group summary.
 Never name a dialect or demographic group in the text: the group labels are
 dataset annotations, not identities of the authors. Describe the viewpoint only.
 Do not rewrite unaffected sentences. Return only replacements as specified.
@@ -93,6 +96,13 @@ def revise_summary(summary, confirmed_issues, retrieved, client, *, max_input_by
                 if not isinstance(ids, list) or not ids or any(not isinstance(i, str) or i not in allowed for i in ids) \
                         or len(ids) != len(set(ids)) or not isinstance(references, list):
                     raise ValueError("Invented, duplicate, missing or unassigned source citation.")
+                representation_tasks = [task for task in tasks
+                                        if task["sentence_id"] == key and task["kind"] == "representation"]
+                required_ids = max((task.get("min_source_ids", 1) for task in representation_tasks), default=1)
+                if len(ids) < required_ids:
+                    raise ValueError(
+                        f"Representation revisions require at least {required_ids} distinct source tweets."
+                    )
                 quoted = set()
                 for reference in references:
                     if not isinstance(reference, dict) or set(reference) != {"tweet_id", "quote"}:
@@ -110,6 +120,9 @@ def revise_summary(summary, confirmed_issues, retrieved, client, *, max_input_by
                 for task in tasks:
                     if task["kind"] == "representation" and task["sentence_id"] == key and not set(ids).intersection(task["evidence_ids"]):
                         raise ValueError("A revision task has no supporting citation.")
+                    if task["kind"] == "representation" and task["sentence_id"] == key and \
+                            len(set(ids).intersection(task["evidence_ids"])) < task.get("min_source_ids", 1):
+                        raise ValueError("Representation citations must come from distinct assigned group tweets.")
                 index = int(key[1:]) - 1
                 candidate["sentences"][index] = {"text": replacement["text"], "source_ids": ids}
             if seen != set(targets):

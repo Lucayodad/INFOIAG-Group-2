@@ -78,6 +78,8 @@ def mock_client(transform_revision=None, no_improvement=False, unknown_matching=
                         if "item " in quote else "One author requests more detail." if "detail" in quote else
                         "One author dislikes the policy." if "policy" in quote else "One author likes Obama's speech.")
                 ids = [key]
+                if task["kind"] == "representation":
+                    ids = task["evidence_ids"][:2]
                 replacements.append({"sentence_id": sentence_id, "text": text, "source_ids": ids,
                                      "evidence": [{"tweet_id": i, "quote": by_id[i]["quote"]} for i in ids]})
             data = {"replacements": replacements}

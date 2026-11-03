@@ -115,10 +115,22 @@ class RevisionLoopTests(unittest.TestCase):
             replacement["text"] = replacement["evidence"][0]["quote"]
             return data
 
-        result, _ = self.run_fixture(client=mock_client(transform_revision=copied))
+        result, _ = self.run_fixture("factual", client=mock_client(transform_revision=copied))
         self.assertEqual(result["revisions"][0]["status"], "rejected")
         self.assertEqual(result["revisions"][0]["reason"], "invalid_revision")
         self.assertIn("verbatim", result["revisions"][0]["error"])
+        self.assertEqual(result["current_summary"], result["initial_summary"])
+
+    def test_representation_revision_requires_two_group_sources(self):
+        def one_source(data):
+            replacement = data["replacements"][0]
+            replacement["source_ids"] = replacement["source_ids"][:1]
+            replacement["evidence"] = [replacement["evidence"][0]]
+            return data
+
+        result, _ = self.run_fixture("representation", client=mock_client(transform_revision=one_source))
+        self.assertEqual(result["revisions"][0]["status"], "rejected")
+        self.assertIn("at least 2 distinct source tweets", result["revisions"][0]["error"])
         self.assertEqual(result["current_summary"], result["initial_summary"])
 
     def test_quotation_wrapped_in_quotation_marks_is_accepted(self):
