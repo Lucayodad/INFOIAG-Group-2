@@ -1,0 +1,56 @@
+{
+  "status": "started",
+  "run_id": "20261103T230125Z_b7a9c176",
+  "created_at_utc": "2026-11-03T23:01:25.959287+00:00",
+  "model": "qwen3.5:4b",
+  "provider": "ollama",
+  "temperature": 0.7,
+  "seeds": [
+    101,
+    202,
+    303
+  ],
+  "systems": [
+    "ontology_agent"
+  ],
+  "topics": [
+    "Superbowl"
+  ],
+  "prompt_ids": [
+    "1"
+  ],
+  "expected_final_summaries": 3,
+  "graph_paths": {
+    "Superbowl": "C:\\Users\\caspe\\Documents\\GitHub\\INFOIAG-Group-2\\results\\ontology\\20261102T111717Z_8abdc515085043afab9f93212b3e38e3\\Superbowl.ttl"
+  },
+  "agent_options": {
+    "disparity_threshold": 0.2,
+    "max_revisions": 3,
+    "embedding_model": "all-minilm"
+  },
+  "runs": [
+    {
+      "run_id": "ontology_agent_Superbowl_prompt1_seed101",
+      "system": "ontology_agent",
+      "topic": "Superbowl",
+      "prompt_id": "1",
+      "seed": 101,
+      "temperature": 0.7,
+      "model": "qwen3.5:4b",
+      "status": "completed",
+      "output_path": "summaries\\ontology_agent_Superbowl_prompt1_seed101.json",
+      "draft_path": "drafts\\ontology_agent_Superbowl_prompt1_seed101.json"
+    }
+  ],
+  "evaluation": {
+    "status": "not_implemented",
+    "pending": [
+      "EC",
+      "group coverage values",
+      "group similarity gap",
+      "DeepEval alignment and coverage",
+      "ROUGE",
+      "aggregation"
+    ]
+  }
+}
