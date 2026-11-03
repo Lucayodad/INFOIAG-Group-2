@@ -200,6 +200,18 @@ class RevisionLoopTests(unittest.TestCase):
         self.assertIn("verbatim", result["revisions"][0]["error"])
         self.assertEqual(result["current_summary"], result["initial_summary"])
 
+    def test_textually_unchanged_revision_is_rejected_even_with_new_citations(self):
+        def change_only_citations(data):
+            replacement = data["replacements"][0]
+            replacement["text"] = data["_target_sentences"][0]["text"]
+            replacement["source_ids"] = replacement["source_ids"][-1:]
+            replacement["evidence"] = replacement["evidence"][-1:]
+            return data
+
+        result, _ = self.run_fixture("factual", client=mock_client(transform_revision=change_only_citations))
+        self.assertEqual(result["revisions"][0]["status"], "rejected")
+        self.assertIn("does not change sentence text", result["revisions"][0]["error"])
+
     def test_representation_revision_requires_two_group_sources(self):
         def one_source(data):
             replacement = data["replacements"][0]

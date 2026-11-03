@@ -113,6 +113,18 @@ def _revision_body(summary, confirmed_issues, tasks, evidence):
         for index, sentence in enumerate(summary["sentences"], 1)
         if f"S{index:02d}" in target_ids
     ]
+    fully_unresolved = {
+        sentence_id for sentence_id in target_ids
+        if sentence_id in {
+            issue.get("sentence_id") for issue in confirmed_issues
+            if issue.get("severity") == "unresolved"
+        }
+        and not any(
+            issue.get("sentence_id") == sentence_id
+            and issue.get("severity") not in {"unresolved", "serious"}
+            for issue in confirmed_issues
+        )
+    }
     issues = [
         {"type": issue.get("type"), "severity": issue.get("severity"),
          "explanation": issue.get("explanation")}
@@ -124,14 +136,19 @@ def _revision_body(summary, confirmed_issues, tasks, evidence):
     original_tweets = [row for row in evidence.values() if row["tweet_id"] in evidence_ids]
     return {
         "target_sentences": target_sentences,
+        "sentences": target_sentences,
         "confirmed_issues": issues,
         "tasks": task_bundle,
         "repair_rules": [
-            "Change only the unsupported phrase or clause.",
-            "Preserve accurate wording and sentence structure.",
+            "Change only the unsupported phrase or clause unless every claim in a "
+            "target sentence is unsupported; then replace that sentence with one "
+            "narrow, evidence-grounded sentence.",
+            "Preserve accurate wording and sentence structure when any supported "
+            "claim remains; otherwise rewrite the target sentence as needed.",
             "Narrow unsupported quantifiers instead of adding claims.",
             "Use the checker explanation as the direct repair target.",
         ],
+        "fully_unresolved_sentence_ids": sorted(fully_unresolved),
         "original_tweets": original_tweets,
     }
 
@@ -236,8 +253,15 @@ def revise_summary(summary, confirmed_issues, retrieved, client, *, max_input_by
             candidate["summary"] = " ".join(s["text"] for s in candidate["sentences"])
             changes = [{"sentence_id": key, "before": deepcopy(summary["sentences"][int(key[1:]) - 1]),
                         "after": deepcopy(candidate["sentences"][int(key[1:]) - 1])} for key in targets]
-            if all(row["before"] == row["after"] for row in changes):
-                raise ValueError("The proposed revision changes nothing.")
+            unchanged_text = [
+                row["sentence_id"] for row in changes
+                if row["before"]["text"] == row["after"]["text"]
+            ]
+            if unchanged_text:
+                raise ValueError(
+                    "The proposed revision does not change sentence text for: "
+                    + ", ".join(unchanged_text)
+                )
             result.update(status="candidate", reason="requires_rechecking", candidate=candidate, changes=changes)
             return result
         except GenerationError as exc:

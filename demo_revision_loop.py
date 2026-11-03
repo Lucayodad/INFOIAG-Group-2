@@ -91,7 +91,10 @@ def mock_client(transform_revision=None, no_improvement=False, unknown_matching=
                 replacements.append({"sentence_id": sentence_id, "text": text, "source_ids": ids,
                                      "evidence": [{"tweet_id": i, "quote": by_id[i]["quote"]} for i in ids]})
             data = {"replacements": replacements}
-            return response(transform_revision(data) if transform_revision else data)
+            data["_target_sentences"] = body.get("target_sentences", body.get("sentences", []))
+            transformed = transform_revision(data) if transform_revision else data
+            transformed.pop("_target_sentences", None)
+            return response(transformed)
         if fields == {"status", "claims"}:
             text = raw
             entries = [] if text.startswith(("End of briefing", "Further context")) else [{
