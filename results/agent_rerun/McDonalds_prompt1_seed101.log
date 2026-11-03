@@ -1,0 +1,948 @@
+[LIVE 02:30:06Z #0001] user -> orchestrator | run_started | McDonalds, prompt 1; up to 3 revisions
+Live feed: results\agent_rerun\McDonalds_prompt1_seed101_artifacts\live_feed.jsonl
+[1/6] Checking local dependencies, models and tweet data
+[2/6] Source claims: 90 tweets; resume results\source_claims\McDonalds.json
+Extracting McDonalds_001...
+[LIVE 02:30:06Z #0002] source_extractor -> Qwen | call_started | Qwen #1: source_extractor
+[LIVE 02:30:36Z #0003] source_extractor -> Qwen | waiting | Still waiting: Qwen #1: source_extractor; 30s elapsed
+[LIVE 02:30:36Z #0004] Qwen -> source_extractor | model_returned | Qwen #1 returned after 30.5s; validation pending
+Saved McDonalds_001: 4 claims
+Extracting McDonalds_002...
+[LIVE 02:30:36Z #0005] source_extractor -> Qwen | call_started | Qwen #2: source_extractor
+[LIVE 02:30:51Z #0006] Qwen -> source_extractor | model_returned | Qwen #2 returned after 14.6s; validation pending
+Saved McDonalds_002: 2 claims
+Extracting McDonalds_003...
+[LIVE 02:30:51Z #0007] source_extractor -> Qwen | call_started | Qwen #3: source_extractor
+[LIVE 02:31:01Z #0008] Qwen -> source_extractor | model_returned | Qwen #3 returned after 10.2s; validation pending
+Saved McDonalds_003: 1 claims
+Extracting McDonalds_004...
+[LIVE 02:31:01Z #0009] source_extractor -> Qwen | call_started | Qwen #4: source_extractor
+[LIVE 02:31:06Z #0010] source_extractor -> Qwen | waiting | Still waiting: Qwen #4: source_extractor; 5s elapsed
+[LIVE 02:31:14Z #0011] Qwen -> source_extractor | model_returned | Qwen #4 returned after 13.4s; validation pending
+Saved McDonalds_004: 2 claims
+Extracting McDonalds_005...
+[LIVE 02:31:14Z #0012] source_extractor -> Qwen | call_started | Qwen #5: source_extractor
+[LIVE 02:31:29Z #0013] Qwen -> source_extractor | model_returned | Qwen #5 returned after 15.1s; validation pending
+Saved McDonalds_005: 2 claims
+Extracting McDonalds_006...
+[LIVE 02:31:29Z #0014] source_extractor -> Qwen | call_started | Qwen #6: source_extractor
+[LIVE 02:31:36Z #0015] source_extractor -> Qwen | waiting | Still waiting: Qwen #6: source_extractor; 6s elapsed
+[LIVE 02:31:46Z #0016] Qwen -> source_extractor | model_returned | Qwen #6 returned after 16.9s; validation pending
+Saved McDonalds_006: 2 claims
+Extracting McDonalds_007...
+[LIVE 02:31:46Z #0017] source_extractor -> Qwen | call_started | Qwen #7: source_extractor
+[LIVE 02:32:05Z #0018] Qwen -> source_extractor | model_returned | Qwen #7 returned after 19.0s; validation pending
+Saved McDonalds_007: 3 claims
+Extracting McDonalds_008...
+[LIVE 02:32:05Z #0019] source_extractor -> Qwen | call_started | Qwen #8: source_extractor
+[LIVE 02:32:06Z #0020] source_extractor -> Qwen | waiting | Still waiting: Qwen #8: source_extractor; 0s elapsed
+[LIVE 02:32:22Z #0021] Qwen -> source_extractor | model_returned | Qwen #8 returned after 16.7s; validation pending
+Saved McDonalds_008: 2 claims
+Extracting McDonalds_009...
+[LIVE 02:32:22Z #0022] source_extractor -> Qwen | call_started | Qwen #9: source_extractor
+[LIVE 02:32:36Z #0023] source_extractor -> Qwen | waiting | Still waiting: Qwen #9: source_extractor; 14s elapsed
+[LIVE 02:32:37Z #0024] Qwen -> source_extractor | model_returned | Qwen #9 returned after 15.0s; validation pending
+Saved McDonalds_009: 2 claims
+Extracting McDonalds_010...
+[LIVE 02:32:37Z #0025] source_extractor -> Qwen | call_started | Qwen #10: source_extractor
+[LIVE 02:32:52Z #0026] Qwen -> source_extractor | model_returned | Qwen #10 returned after 15.1s; validation pending
+Saved McDonalds_010: 2 claims
+Extracting McDonalds_011...
+[LIVE 02:32:52Z #0027] source_extractor -> Qwen | call_started | Qwen #11: source_extractor
+[LIVE 02:33:06Z #0028] source_extractor -> Qwen | waiting | Still waiting: Qwen #11: source_extractor; 14s elapsed
+[LIVE 02:33:12Z #0029] Qwen -> source_extractor | model_returned | Qwen #11 returned after 19.8s; validation pending
+Saved McDonalds_011: 3 claims
+Extracting McDonalds_012...
+[LIVE 02:33:12Z #0030] source_extractor -> Qwen | call_started | Qwen #12: source_extractor
+[LIVE 02:33:27Z #0031] Qwen -> source_extractor | model_returned | Qwen #12 returned after 14.9s; validation pending
+Saved McDonalds_012: 2 claims
+Extracting McDonalds_013...
+[LIVE 02:33:27Z #0032] source_extractor -> Qwen | call_started | Qwen #13: source_extractor
+[LIVE 02:33:36Z #0033] source_extractor -> Qwen | waiting | Still waiting: Qwen #13: source_extractor; 9s elapsed
+[LIVE 02:33:37Z #0034] Qwen -> source_extractor | model_returned | Qwen #13 returned after 10.2s; validation pending
+Saved McDonalds_013: 1 claims
+Extracting McDonalds_014...
+[LIVE 02:33:37Z #0035] source_extractor -> Qwen | call_started | Qwen #14: source_extractor
+[LIVE 02:33:47Z #0036] Qwen -> source_extractor | model_returned | Qwen #14 returned after 9.9s; validation pending
+Saved McDonalds_014: 1 claims
+Extracting McDonalds_015...
+[LIVE 02:33:47Z #0037] source_extractor -> Qwen | call_started | Qwen #15: source_extractor
+[LIVE 02:34:01Z #0038] Qwen -> source_extractor | model_returned | Qwen #15 returned after 14.0s; validation pending
+Saved McDonalds_015: 2 claims
+Extracting McDonalds_016...
+[LIVE 02:34:01Z #0039] source_extractor -> Qwen | call_started | Qwen #16: source_extractor
+[LIVE 02:34:06Z #0040] source_extractor -> Qwen | waiting | Still waiting: Qwen #16: source_extractor; 5s elapsed
+[LIVE 02:34:11Z #0041] Qwen -> source_extractor | model_returned | Qwen #16 returned after 10.5s; validation pending
+Saved McDonalds_016: 1 claims
+Extracting McDonalds_017...
+[LIVE 02:34:11Z #0042] source_extractor -> Qwen | call_started | Qwen #17: source_extractor
+[LIVE 02:34:23Z #0043] Qwen -> source_extractor | model_returned | Qwen #17 returned after 11.8s; validation pending
+Saved McDonalds_017: 1 claims
+Extracting McDonalds_018...
+[LIVE 02:34:23Z #0044] source_extractor -> Qwen | call_started | Qwen #18: source_extractor
+[LIVE 02:34:36Z #0045] source_extractor -> Qwen | waiting | Still waiting: Qwen #18: source_extractor; 13s elapsed
+[LIVE 02:34:37Z #0046] Qwen -> source_extractor | model_returned | Qwen #18 returned after 14.0s; validation pending
+Saved McDonalds_018: 2 claims
+Extracting McDonalds_019...
+[LIVE 02:34:37Z #0047] source_extractor -> Qwen | call_started | Qwen #19: source_extractor
+[LIVE 02:34:51Z #0048] Qwen -> source_extractor | model_returned | Qwen #19 returned after 14.0s; validation pending
+Saved McDonalds_019: 2 claims
+Extracting McDonalds_020...
+[LIVE 02:34:51Z #0049] source_extractor -> Qwen | call_started | Qwen #20: source_extractor
+[LIVE 02:35:06Z #0050] source_extractor -> Qwen | waiting | Still waiting: Qwen #20: source_extractor; 14s elapsed
+[LIVE 02:35:12Z #0051] Qwen -> source_extractor | model_returned | Qwen #20 returned after 21.1s; validation pending
+Saved McDonalds_020: 3 claims
+Extracting McDonalds_021...
+[LIVE 02:35:12Z #0052] source_extractor -> Qwen | call_started | Qwen #21: source_extractor
+[LIVE 02:35:25Z #0053] Qwen -> source_extractor | model_returned | Qwen #21 returned after 12.6s; validation pending
+Saved McDonalds_021: 2 claims
+Extracting McDonalds_022...
+[LIVE 02:35:25Z #0054] source_extractor -> Qwen | call_started | Qwen #22: source_extractor
+[LIVE 02:35:36Z #0055] source_extractor -> Qwen | waiting | Still waiting: Qwen #22: source_extractor; 11s elapsed
+[LIVE 02:35:36Z #0056] Qwen -> source_extractor | model_returned | Qwen #22 returned after 11.2s; validation pending
+Saved McDonalds_022: 1 claims
+Extracting McDonalds_023...
+[LIVE 02:35:36Z #0057] source_extractor -> Qwen | call_started | Qwen #23: source_extractor
+[LIVE 02:35:50Z #0058] Qwen -> source_extractor | model_returned | Qwen #23 returned after 13.8s; validation pending
+Saved McDonalds_023: 2 claims
+Extracting McDonalds_024...
+[LIVE 02:35:50Z #0059] source_extractor -> Qwen | call_started | Qwen #24: source_extractor
+[LIVE 02:36:00Z #0060] Qwen -> source_extractor | model_returned | Qwen #24 returned after 10.3s; validation pending
+Saved McDonalds_024: 1 claims
+Extracting McDonalds_025...
+[LIVE 02:36:00Z #0061] source_extractor -> Qwen | call_started | Qwen #25: source_extractor
+[LIVE 02:36:06Z #0062] source_extractor -> Qwen | waiting | Still waiting: Qwen #25: source_extractor; 6s elapsed
+[LIVE 02:36:11Z #0063] Qwen -> source_extractor | model_returned | Qwen #25 returned after 10.6s; validation pending
+Saved McDonalds_025: 1 claims
+Extracting McDonalds_026...
+[LIVE 02:36:11Z #0064] source_extractor -> Qwen | call_started | Qwen #26: source_extractor
+[LIVE 02:36:20Z #0065] Qwen -> source_extractor | model_returned | Qwen #26 returned after 9.5s; validation pending
+Saved McDonalds_026: 1 claims
+Extracting McDonalds_027...
+[LIVE 02:36:20Z #0066] source_extractor -> Qwen | call_started | Qwen #27: source_extractor
+[LIVE 02:36:32Z #0067] Qwen -> source_extractor | model_returned | Qwen #27 returned after 11.3s; validation pending
+Saved McDonalds_027: 1 claims
+Extracting McDonalds_028...
+[LIVE 02:36:32Z #0068] source_extractor -> Qwen | call_started | Qwen #28: source_extractor
+[LIVE 02:36:36Z #0069] source_extractor -> Qwen | waiting | Still waiting: Qwen #28: source_extractor; 4s elapsed
+[LIVE 02:36:47Z #0070] Qwen -> source_extractor | model_returned | Qwen #28 returned after 15.4s; validation pending
+Saved McDonalds_028: 2 claims
+Extracting McDonalds_029...
+[LIVE 02:36:47Z #0071] source_extractor -> Qwen | call_started | Qwen #29: source_extractor
+[LIVE 02:36:56Z #0072] Qwen -> source_extractor | model_returned | Qwen #29 returned after 8.7s; validation pending
+Saved McDonalds_029: 1 claims
+Extracting McDonalds_030...
+[LIVE 02:36:56Z #0073] source_extractor -> Qwen | call_started | Qwen #30: source_extractor
+[LIVE 02:37:06Z #0074] source_extractor -> Qwen | waiting | Still waiting: Qwen #30: source_extractor; 10s elapsed
+[LIVE 02:37:09Z #0075] Qwen -> source_extractor | model_returned | Qwen #30 returned after 13.4s; validation pending
+Saved McDonalds_030: 2 claims
+Extracting McDonalds_031...
+[LIVE 02:37:09Z #0076] source_extractor -> Qwen | call_started | Qwen #31: source_extractor
+[LIVE 02:37:24Z #0077] Qwen -> source_extractor | model_returned | Qwen #31 returned after 15.4s; validation pending
+Saved McDonalds_031: 2 claims
+Extracting McDonalds_032...
+[LIVE 02:37:24Z #0078] source_extractor -> Qwen | call_started | Qwen #32: source_extractor
+[LIVE 02:37:36Z #0079] source_extractor -> Qwen | waiting | Still waiting: Qwen #32: source_extractor; 11s elapsed
+[LIVE 02:37:41Z #0080] Qwen -> source_extractor | model_returned | Qwen #32 returned after 16.0s; validation pending
+Saved McDonalds_032: 3 claims
+Extracting McDonalds_033...
+[LIVE 02:37:41Z #0081] source_extractor -> Qwen | call_started | Qwen #33: source_extractor
+[LIVE 02:37:51Z #0082] Qwen -> source_extractor | model_returned | Qwen #33 returned after 10.3s; validation pending
+Saved McDonalds_033: 1 claims
+Extracting McDonalds_034...
+[LIVE 02:37:51Z #0083] source_extractor -> Qwen | call_started | Qwen #34: source_extractor
+[LIVE 02:38:03Z #0084] Qwen -> source_extractor | model_returned | Qwen #34 returned after 12.5s; validation pending
+Saved McDonalds_034: 1 claims
+Extracting McDonalds_035...
+[LIVE 02:38:03Z #0085] source_extractor -> Qwen | call_started | Qwen #35: source_extractor
+[LIVE 02:38:06Z #0086] source_extractor -> Qwen | waiting | Still waiting: Qwen #35: source_extractor; 2s elapsed
+[LIVE 02:38:18Z #0087] Qwen -> source_extractor | model_returned | Qwen #35 returned after 14.8s; validation pending
+Saved McDonalds_035: 2 claims
+Extracting McDonalds_036...
+[LIVE 02:38:18Z #0088] source_extractor -> Qwen | call_started | Qwen #36: source_extractor
+[LIVE 02:38:33Z #0089] Qwen -> source_extractor | model_returned | Qwen #36 returned after 15.1s; validation pending
+Saved McDonalds_036: 2 claims
+Extracting McDonalds_037...
+[LIVE 02:38:33Z #0090] source_extractor -> Qwen | call_started | Qwen #37: source_extractor
+[LIVE 02:38:36Z #0091] source_extractor -> Qwen | waiting | Still waiting: Qwen #37: source_extractor; 3s elapsed
+[LIVE 02:38:54Z #0092] Qwen -> source_extractor | model_returned | Qwen #37 returned after 21.1s; validation pending
+Saved McDonalds_037: 3 claims
+Extracting McDonalds_038...
+[LIVE 02:38:54Z #0093] source_extractor -> Qwen | call_started | Qwen #38: source_extractor
+[LIVE 02:39:06Z #0094] source_extractor -> Qwen | waiting | Still waiting: Qwen #38: source_extractor; 12s elapsed
+[LIVE 02:39:10Z #0095] Qwen -> source_extractor | model_returned | Qwen #38 returned after 15.7s; validation pending
+Saved McDonalds_038: 2 claims
+Extracting McDonalds_039...
+[LIVE 02:39:10Z #0096] source_extractor -> Qwen | call_started | Qwen #39: source_extractor
+[LIVE 02:39:19Z #0097] Qwen -> source_extractor | model_returned | Qwen #39 returned after 9.3s; validation pending
+Saved McDonalds_039: 1 claims
+Extracting McDonalds_040...
+[LIVE 02:39:19Z #0098] source_extractor -> Qwen | call_started | Qwen #40: source_extractor
+[LIVE 02:39:35Z #0099] Qwen -> source_extractor | model_returned | Qwen #40 returned after 15.4s; validation pending
+Saved McDonalds_040: 2 claims
+Extracting McDonalds_041...
+[LIVE 02:39:35Z #0100] source_extractor -> Qwen | call_started | Qwen #41: source_extractor
+[LIVE 02:39:36Z #0101] source_extractor -> Qwen | waiting | Still waiting: Qwen #41: source_extractor; 1s elapsed
+[LIVE 02:39:44Z #0102] Qwen -> source_extractor | model_returned | Qwen #41 returned after 9.8s; validation pending
+Saved McDonalds_041: 1 claims
+Extracting McDonalds_042...
+[LIVE 02:39:44Z #0103] source_extractor -> Qwen | call_started | Qwen #42: source_extractor
+[LIVE 02:40:01Z #0104] Qwen -> source_extractor | model_returned | Qwen #42 returned after 16.5s; validation pending
+Saved McDonalds_042: 2 claims
+Extracting McDonalds_043...
+[LIVE 02:40:01Z #0105] source_extractor -> Qwen | call_started | Qwen #43: source_extractor
+[LIVE 02:40:06Z #0106] source_extractor -> Qwen | waiting | Still waiting: Qwen #43: source_extractor; 5s elapsed
+[LIVE 02:40:11Z #0107] Qwen -> source_extractor | model_returned | Qwen #43 returned after 10.6s; validation pending
+Saved McDonalds_043: 1 claims
+Extracting McDonalds_044...
+[LIVE 02:40:11Z #0108] source_extractor -> Qwen | call_started | Qwen #44: source_extractor
+[LIVE 02:40:32Z #0109] Qwen -> source_extractor | model_returned | Qwen #44 returned after 20.4s; validation pending
+Saved McDonalds_044: 3 claims
+Extracting McDonalds_045...
+[LIVE 02:40:32Z #0110] source_extractor -> Qwen | call_started | Qwen #45: source_extractor
+[LIVE 02:40:36Z #0111] source_extractor -> Qwen | waiting | Still waiting: Qwen #45: source_extractor; 4s elapsed
+[LIVE 02:40:48Z #0112] Qwen -> source_extractor | model_returned | Qwen #45 returned after 15.7s; validation pending
+Retrying McDonalds_045: attempt 2/3; copying exact source quotations.
+[LIVE 02:40:48Z #0113] source_extractor -> Qwen | call_started | Qwen #46: source_extractor
+[LIVE 02:41:06Z #0114] source_extractor -> Qwen | waiting | Still waiting: Qwen #46: source_extractor; 18s elapsed
+[LIVE 02:41:07Z #0115] Qwen -> source_extractor | model_returned | Qwen #46 returned after 19.3s; validation pending
+Saved McDonalds_045: 2 claims
+Extracting McDonalds_046...
+[LIVE 02:41:07Z #0116] source_extractor -> Qwen | call_started | Qwen #47: source_extractor
+[LIVE 02:41:21Z #0117] Qwen -> source_extractor | model_returned | Qwen #47 returned after 14.0s; validation pending
+Saved McDonalds_046: 2 claims
+Extracting McDonalds_047...
+[LIVE 02:41:21Z #0118] source_extractor -> Qwen | call_started | Qwen #48: source_extractor
+[LIVE 02:41:30Z #0119] Qwen -> source_extractor | model_returned | Qwen #48 returned after 9.5s; validation pending
+Saved McDonalds_047: 1 claims
+Extracting McDonalds_048...
+[LIVE 02:41:30Z #0120] source_extractor -> Qwen | call_started | Qwen #49: source_extractor
+[LIVE 02:41:36Z #0121] source_extractor -> Qwen | waiting | Still waiting: Qwen #49: source_extractor; 5s elapsed
+[LIVE 02:41:45Z #0122] Qwen -> source_extractor | model_returned | Qwen #49 returned after 14.2s; validation pending
+Saved McDonalds_048: 2 claims
+Extracting McDonalds_049...
+[LIVE 02:41:45Z #0123] source_extractor -> Qwen | call_started | Qwen #50: source_extractor
+[LIVE 02:42:02Z #0124] Qwen -> source_extractor | model_returned | Qwen #50 returned after 17.2s; validation pending
+Saved McDonalds_049: 3 claims
+Extracting McDonalds_050...
+[LIVE 02:42:02Z #0125] source_extractor -> Qwen | call_started | Qwen #51: source_extractor
+[LIVE 02:42:06Z #0126] source_extractor -> Qwen | waiting | Still waiting: Qwen #51: source_extractor; 4s elapsed
+[LIVE 02:42:16Z #0127] Qwen -> source_extractor | model_returned | Qwen #51 returned after 13.8s; validation pending
+Saved McDonalds_050: 2 claims
+Extracting McDonalds_051...
+[LIVE 02:42:16Z #0128] source_extractor -> Qwen | call_started | Qwen #52: source_extractor
+[LIVE 02:42:31Z #0129] Qwen -> source_extractor | model_returned | Qwen #52 returned after 15.7s; validation pending
+Saved McDonalds_051: 2 claims
+Extracting McDonalds_052...
+[LIVE 02:42:31Z #0130] source_extractor -> Qwen | call_started | Qwen #53: source_extractor
+[LIVE 02:42:36Z #0131] source_extractor -> Qwen | waiting | Still waiting: Qwen #53: source_extractor; 5s elapsed
+[LIVE 02:42:41Z #0132] Qwen -> source_extractor | model_returned | Qwen #53 returned after 10.1s; validation pending
+Saved McDonalds_052: 1 claims
+Extracting McDonalds_053...
+[LIVE 02:42:41Z #0133] source_extractor -> Qwen | call_started | Qwen #54: source_extractor
+[LIVE 02:42:59Z #0134] Qwen -> source_extractor | model_returned | Qwen #54 returned after 17.5s; validation pending
+Saved McDonalds_053: 2 claims
+Extracting McDonalds_054...
+[LIVE 02:42:59Z #0135] source_extractor -> Qwen | call_started | Qwen #55: source_extractor
+[LIVE 02:43:06Z #0136] source_extractor -> Qwen | waiting | Still waiting: Qwen #55: source_extractor; 7s elapsed
+[LIVE 02:43:10Z #0137] Qwen -> source_extractor | model_returned | Qwen #55 returned after 10.8s; validation pending
+Saved McDonalds_054: 1 claims
+Extracting McDonalds_055...
+[LIVE 02:43:10Z #0138] source_extractor -> Qwen | call_started | Qwen #56: source_extractor
+[LIVE 02:43:20Z #0139] Qwen -> source_extractor | model_returned | Qwen #56 returned after 10.0s; validation pending
+Saved McDonalds_055: 1 claims
+Extracting McDonalds_056...
+[LIVE 02:43:20Z #0140] source_extractor -> Qwen | call_started | Qwen #57: source_extractor
+[LIVE 02:43:33Z #0141] Qwen -> source_extractor | model_returned | Qwen #57 returned after 13.3s; validation pending
+Saved McDonalds_056: 2 claims
+Extracting McDonalds_057...
+[LIVE 02:43:33Z #0142] source_extractor -> Qwen | call_started | Qwen #58: source_extractor
+[LIVE 02:43:36Z #0143] source_extractor -> Qwen | waiting | Still waiting: Qwen #58: source_extractor; 3s elapsed
+[LIVE 02:43:48Z #0144] Qwen -> source_extractor | model_returned | Qwen #58 returned after 14.8s; validation pending
+Saved McDonalds_057: 2 claims
+Extracting McDonalds_058...
+[LIVE 02:43:48Z #0145] source_extractor -> Qwen | call_started | Qwen #59: source_extractor
+[LIVE 02:44:00Z #0146] Qwen -> source_extractor | model_returned | Qwen #59 returned after 12.6s; validation pending
+Saved McDonalds_058: 1 claims
+Extracting McDonalds_059...
+[LIVE 02:44:00Z #0147] source_extractor -> Qwen | call_started | Qwen #60: source_extractor
+[LIVE 02:44:06Z #0148] source_extractor -> Qwen | waiting | Still waiting: Qwen #60: source_extractor; 6s elapsed
+[LIVE 02:44:16Z #0149] Qwen -> source_extractor | model_returned | Qwen #60 returned after 16.2s; validation pending
+Saved McDonalds_059: 2 claims
+Extracting McDonalds_060...
+[LIVE 02:44:16Z #0150] source_extractor -> Qwen | call_started | Qwen #61: source_extractor
+[LIVE 02:44:28Z #0151] Qwen -> source_extractor | model_returned | Qwen #61 returned after 11.1s; validation pending
+Saved McDonalds_060: 1 claims
+Extracting McDonalds_061...
+[LIVE 02:44:28Z #0152] source_extractor -> Qwen | call_started | Qwen #62: source_extractor
+[LIVE 02:44:36Z #0153] source_extractor -> Qwen | waiting | Still waiting: Qwen #62: source_extractor; 8s elapsed
+[LIVE 02:44:39Z #0154] Qwen -> source_extractor | model_returned | Qwen #62 returned after 11.1s; validation pending
+Saved McDonalds_061: 1 claims
+Extracting McDonalds_062...
+[LIVE 02:44:39Z #0155] source_extractor -> Qwen | call_started | Qwen #63: source_extractor
+[LIVE 02:44:49Z #0156] Qwen -> source_extractor | model_returned | Qwen #63 returned after 10.2s; validation pending
+Saved McDonalds_062: 1 claims
+Extracting McDonalds_063...
+[LIVE 02:44:49Z #0157] source_extractor -> Qwen | call_started | Qwen #64: source_extractor
+[LIVE 02:45:06Z #0158] Qwen -> source_extractor | model_returned | Qwen #64 returned after 16.9s; validation pending
+Saved McDonalds_063: 2 claims
+Extracting McDonalds_064...
+[LIVE 02:45:06Z #0159] source_extractor -> Qwen | call_started | Qwen #65: source_extractor
+[LIVE 02:45:06Z #0160] source_extractor -> Qwen | waiting | Still waiting: Qwen #65: source_extractor; 0s elapsed
+[LIVE 02:45:21Z #0161] Qwen -> source_extractor | model_returned | Qwen #65 returned after 15.6s; validation pending
+Saved McDonalds_064: 2 claims
+Extracting McDonalds_065...
+[LIVE 02:45:21Z #0162] source_extractor -> Qwen | call_started | Qwen #66: source_extractor
+[LIVE 02:45:36Z #0163] source_extractor -> Qwen | waiting | Still waiting: Qwen #66: source_extractor; 14s elapsed
+[LIVE 02:45:37Z #0164] Qwen -> source_extractor | model_returned | Qwen #66 returned after 15.7s; validation pending
+Saved McDonalds_065: 2 claims
+Extracting McDonalds_066...
+[LIVE 02:45:37Z #0165] source_extractor -> Qwen | call_started | Qwen #67: source_extractor
+[LIVE 02:45:47Z #0166] Qwen -> source_extractor | model_returned | Qwen #67 returned after 9.6s; validation pending
+Saved McDonalds_066: 1 claims
+Extracting McDonalds_067...
+[LIVE 02:45:47Z #0167] source_extractor -> Qwen | call_started | Qwen #68: source_extractor
+[LIVE 02:45:57Z #0168] Qwen -> source_extractor | model_returned | Qwen #68 returned after 10.1s; validation pending
+Saved McDonalds_067: 1 claims
+Extracting McDonalds_068...
+[LIVE 02:45:57Z #0169] source_extractor -> Qwen | call_started | Qwen #69: source_extractor
+[LIVE 02:46:06Z #0170] source_extractor -> Qwen | waiting | Still waiting: Qwen #69: source_extractor; 9s elapsed
+[LIVE 02:46:11Z #0171] Qwen -> source_extractor | model_returned | Qwen #69 returned after 13.7s; validation pending
+Saved McDonalds_068: 2 claims
+Extracting McDonalds_069...
+[LIVE 02:46:11Z #0172] source_extractor -> Qwen | call_started | Qwen #70: source_extractor
+[LIVE 02:46:22Z #0173] Qwen -> source_extractor | model_returned | Qwen #70 returned after 11.3s; validation pending
+Saved McDonalds_069: 1 claims
+Extracting McDonalds_070...
+[LIVE 02:46:22Z #0174] source_extractor -> Qwen | call_started | Qwen #71: source_extractor
+[LIVE 02:46:36Z #0175] source_extractor -> Qwen | waiting | Still waiting: Qwen #71: source_extractor; 14s elapsed
+[LIVE 02:46:39Z #0176] Qwen -> source_extractor | model_returned | Qwen #71 returned after 16.7s; validation pending
+Saved McDonalds_070: 2 claims
+Extracting McDonalds_071...
+[LIVE 02:46:39Z #0177] source_extractor -> Qwen | call_started | Qwen #72: source_extractor
+[LIVE 02:46:49Z #0178] Qwen -> source_extractor | model_returned | Qwen #72 returned after 10.1s; validation pending
+Saved McDonalds_071: 1 claims
+Extracting McDonalds_072...
+[LIVE 02:46:49Z #0179] source_extractor -> Qwen | call_started | Qwen #73: source_extractor
+[LIVE 02:47:04Z #0180] Qwen -> source_extractor | model_returned | Qwen #73 returned after 14.9s; validation pending
+Saved McDonalds_072: 2 claims
+Extracting McDonalds_073...
+[LIVE 02:47:04Z #0181] source_extractor -> Qwen | call_started | Qwen #74: source_extractor
+[LIVE 02:47:06Z #0182] source_extractor -> Qwen | waiting | Still waiting: Qwen #74: source_extractor; 2s elapsed
+[LIVE 02:47:13Z #0183] Qwen -> source_extractor | model_returned | Qwen #74 returned after 9.7s; validation pending
+Saved McDonalds_073: 1 claims
+Extracting McDonalds_074...
+[LIVE 02:47:13Z #0184] source_extractor -> Qwen | call_started | Qwen #75: source_extractor
+[LIVE 02:47:23Z #0185] Qwen -> source_extractor | model_returned | Qwen #75 returned after 9.9s; validation pending
+Saved McDonalds_074: 1 claims
+Extracting McDonalds_075...
+[LIVE 02:47:23Z #0186] source_extractor -> Qwen | call_started | Qwen #76: source_extractor
+[LIVE 02:47:36Z #0187] source_extractor -> Qwen | waiting | Still waiting: Qwen #76: source_extractor; 13s elapsed
+[LIVE 02:47:36Z #0188] Qwen -> source_extractor | model_returned | Qwen #76 returned after 13.3s; validation pending
+Saved McDonalds_075: 2 claims
+Extracting McDonalds_076...
+[LIVE 02:47:36Z #0189] source_extractor -> Qwen | call_started | Qwen #77: source_extractor
+[LIVE 02:47:50Z #0190] Qwen -> source_extractor | model_returned | Qwen #77 returned after 13.2s; validation pending
+Saved McDonalds_076: 2 claims
+Extracting McDonalds_077...
+[LIVE 02:47:50Z #0191] source_extractor -> Qwen | call_started | Qwen #78: source_extractor
+[LIVE 02:48:01Z #0192] Qwen -> source_extractor | model_returned | Qwen #78 returned after 11.4s; validation pending
+Saved McDonalds_077: 1 claims
+Extracting McDonalds_078...
+[LIVE 02:48:01Z #0193] source_extractor -> Qwen | call_started | Qwen #79: source_extractor
+[LIVE 02:48:06Z #0194] source_extractor -> Qwen | waiting | Still waiting: Qwen #79: source_extractor; 5s elapsed
+[LIVE 02:48:10Z #0195] Qwen -> source_extractor | model_returned | Qwen #79 returned after 8.8s; validation pending
+Saved McDonalds_078: 1 claims
+Extracting McDonalds_079...
+[LIVE 02:48:10Z #0196] source_extractor -> Qwen | call_started | Qwen #80: source_extractor
+[LIVE 02:48:19Z #0197] Qwen -> source_extractor | model_returned | Qwen #80 returned after 9.2s; validation pending
+Saved McDonalds_079: 1 claims
+Extracting McDonalds_080...
+[LIVE 02:48:19Z #0198] source_extractor -> Qwen | call_started | Qwen #81: source_extractor
+[LIVE 02:48:29Z #0199] Qwen -> source_extractor | model_returned | Qwen #81 returned after 9.9s; validation pending
+Saved McDonalds_080: 1 claims
+Extracting McDonalds_081...
+[LIVE 02:48:29Z #0200] source_extractor -> Qwen | call_started | Qwen #82: source_extractor
+[LIVE 02:48:36Z #0201] source_extractor -> Qwen | waiting | Still waiting: Qwen #82: source_extractor; 7s elapsed
+[LIVE 02:48:39Z #0202] Qwen -> source_extractor | model_returned | Qwen #82 returned after 9.6s; validation pending
+Saved McDonalds_081: 1 claims
+Extracting McDonalds_082...
+[LIVE 02:48:39Z #0203] source_extractor -> Qwen | call_started | Qwen #83: source_extractor
+[LIVE 02:48:53Z #0204] Qwen -> source_extractor | model_returned | Qwen #83 returned after 14.0s; validation pending
+Saved McDonalds_082: 2 claims
+Extracting McDonalds_083...
+[LIVE 02:48:53Z #0205] source_extractor -> Qwen | call_started | Qwen #84: source_extractor
+[LIVE 02:49:06Z #0206] source_extractor -> Qwen | waiting | Still waiting: Qwen #84: source_extractor; 13s elapsed
+[LIVE 02:49:07Z #0207] Qwen -> source_extractor | model_returned | Qwen #84 returned after 14.2s; validation pending
+Saved McDonalds_083: 2 claims
+Extracting McDonalds_084...
+[LIVE 02:49:07Z #0208] source_extractor -> Qwen | call_started | Qwen #85: source_extractor
+[LIVE 02:49:23Z #0209] Qwen -> source_extractor | model_returned | Qwen #85 returned after 16.2s; validation pending
+Saved McDonalds_084: 2 claims
+Extracting McDonalds_085...
+[LIVE 02:49:23Z #0210] source_extractor -> Qwen | call_started | Qwen #86: source_extractor
+[LIVE 02:49:36Z #0211] source_extractor -> Qwen | waiting | Still waiting: Qwen #86: source_extractor; 13s elapsed
+[LIVE 02:49:37Z #0212] Qwen -> source_extractor | model_returned | Qwen #86 returned after 13.8s; validation pending
+Saved McDonalds_085: 2 claims
+Extracting McDonalds_086...
+[LIVE 02:49:37Z #0213] source_extractor -> Qwen | call_started | Qwen #87: source_extractor
+[LIVE 02:49:50Z #0214] Qwen -> source_extractor | model_returned | Qwen #87 returned after 13.4s; validation pending
+Saved McDonalds_086: 2 claims
+Extracting McDonalds_087...
+[LIVE 02:49:50Z #0215] source_extractor -> Qwen | call_started | Qwen #88: source_extractor
+[LIVE 02:50:00Z #0216] Qwen -> source_extractor | model_returned | Qwen #88 returned after 10.1s; validation pending
+Saved McDonalds_087: 1 claims
+Extracting McDonalds_088...
+[LIVE 02:50:00Z #0217] source_extractor -> Qwen | call_started | Qwen #89: source_extractor
+[LIVE 02:50:06Z #0218] source_extractor -> Qwen | waiting | Still waiting: Qwen #89: source_extractor; 6s elapsed
+[LIVE 02:50:13Z #0219] Qwen -> source_extractor | model_returned | Qwen #89 returned after 12.2s; validation pending
+Saved McDonalds_088: 1 claims
+Extracting McDonalds_089...
+[LIVE 02:50:13Z #0220] source_extractor -> Qwen | call_started | Qwen #90: source_extractor
+[LIVE 02:50:27Z #0221] Qwen -> source_extractor | model_returned | Qwen #90 returned after 13.9s; validation pending
+Saved McDonalds_089: 2 claims
+Extracting McDonalds_090...
+[LIVE 02:50:27Z #0222] source_extractor -> Qwen | call_started | Qwen #91: source_extractor
+[LIVE 02:50:36Z #0223] source_extractor -> Qwen | waiting | Still waiting: Qwen #91: source_extractor; 10s elapsed
+[LIVE 02:50:37Z #0224] Qwen -> source_extractor | model_returned | Qwen #91 returned after 10.4s; validation pending
+Saved McDonalds_090: 1 claims
+
+Completed: 90 / 90
+Output: results\source_claims\McDonalds.json
+Unresolved tweets: none.
+[LIVE 02:50:37Z #0225] source_extractor -> ontology_builder | handoff | 90 source checkpoint records ready; RDF validation next
+[3/6] Populating isolated read-only checking evidence
+[LIVE 02:50:37Z #0226] ontology_builder -> summary_generator | handoff | RDF evidence ready: 2579 triples
+[4/6] Preparing five-sentence initial summary
+  Reusing explicitly selected draft: results\agent_laptop_mnli\experiments\20261102T125231Z_be53b260\drafts\ontology_agent_McDonalds_prompt1_seed101.json
+[LIVE 02:50:37Z #0227] summary_generator -> summary_claim_extractor | handoff | Five-sentence draft ready for checking
+[5/6] LangGraph: extract -> facts -> representation -> route -> revision/recheck when justified
+[LIVE 02:50:37Z #0228] orchestrator -> extract_summary_claims | stage_started | Starting extract_summary_claims; revision 0
+[LIVE 02:50:37Z #0229] summary_claim_extractor -> Qwen | call_started | Qwen #92: summary_claim_extractor
+[LIVE 02:50:51Z #0230] Qwen -> summary_claim_extractor | model_returned | Qwen #92 returned after 13.7s; validation pending
+[LIVE 02:50:51Z #0231] summary_claim_extractor -> Qwen | call_started | Qwen #93: summary_claim_extractor
+[LIVE 02:51:03Z #0232] Qwen -> summary_claim_extractor | model_returned | Qwen #93 returned after 12.4s; validation pending
+[LIVE 02:51:03Z #0233] summary_claim_extractor -> Qwen | call_started | Qwen #94: summary_claim_extractor
+[LIVE 02:51:06Z #0234] summary_claim_extractor -> Qwen | waiting | Still waiting: Qwen #94: summary_claim_extractor; 3s elapsed
+[LIVE 02:51:16Z #0235] Qwen -> summary_claim_extractor | model_returned | Qwen #94 returned after 12.9s; validation pending
+[LIVE 02:51:16Z #0236] summary_claim_extractor -> Qwen | call_started | Qwen #95: summary_claim_extractor
+[LIVE 02:51:25Z #0237] Qwen -> summary_claim_extractor | model_returned | Qwen #95 returned after 8.8s; validation pending
+[LIVE 02:51:25Z #0238] summary_claim_extractor -> Qwen | call_started | Qwen #96: summary_claim_extractor
+[LIVE 02:51:36Z #0239] summary_claim_extractor -> Qwen | waiting | Still waiting: Qwen #96: summary_claim_extractor; 11s elapsed
+[LIVE 02:51:40Z #0240] Qwen -> summary_claim_extractor | model_returned | Qwen #96 returned after 15.3s; validation pending
+[LIVE 02:51:40Z #0241] extract_summary_claims -> factual_check | handoff | extract_summary_claims completed: validated claims ready
+[LIVE 02:51:40Z #0242] orchestrator -> factual_check | stage_started | Starting factual_check; revision 0
+[LIVE 02:51:40Z #0243] summary_claim_extractor -> factual_checker | claim_opened | Many users have a strong desire to visit or order from McDonald's
+[LIVE 02:51:40Z #0244] factual_checker -> Qwen | call_started | Qwen #97: factual_checker
+[LIVE 02:52:05Z #0245] Qwen -> factual_checker | model_returned | Qwen #97 returned after 25.1s; validation pending
+[LIVE 02:52:05Z #0246] factual_checker -> tool_guard | decision_validated | S01_C01: lookup_fact; Retrieving the cited tweets and source claims to verify if they support the claim that 'Many users express a strong desire to visit or order from McDonald's'.
+[LIVE 02:52:05Z #0247] factual_checker -> ontology_tools | tool_started | lookup_fact for S01_C01
+[LIVE 02:52:05Z #0248] ontology_tools -> factual_checker | tool_result | lookup_fact: 12 selected evidence items; complete=True
+[LIVE 02:52:05Z #0249] factual_checker -> Qwen | call_started | Qwen #98: factual_checker
+[LIVE 02:52:06Z #0250] factual_checker -> Qwen | waiting | Still waiting: Qwen #98: factual_checker; 1s elapsed
+[LIVE 02:52:36Z #0251] factual_checker -> Qwen | waiting | Still waiting: Qwen #98: factual_checker; 31s elapsed
+[LIVE 02:52:47Z #0252] Qwen -> factual_checker | model_returned | Qwen #98 returned after 41.8s; validation pending
+[LIVE 02:52:47Z #0253] factual_checker -> orchestrator | decision_validated | S01_C01: finalize; Evidence is sufficient to assess the claim based on the retrieved tweets.
+[LIVE 02:52:47Z #0254] summary_claim_extractor -> factual_checker | claim_opened | Users have cravings for specific items including chicken nuggets, McRibs, and ice cream cones
+[LIVE 02:52:47Z #0255] factual_checker -> Qwen | call_started | Qwen #99: factual_checker
+[LIVE 02:53:06Z #0256] factual_checker -> Qwen | waiting | Still waiting: Qwen #99: factual_checker; 19s elapsed
+[LIVE 02:53:06Z #0257] Qwen -> factual_checker | model_returned | Qwen #99 returned after 19.2s; validation pending
+[LIVE 02:53:06Z #0258] factual_checker -> tool_guard | decision_validated | S01_C02: lookup_fact; The summary claim cites five specific source IDs (McDonalds_003, McDonalds_004, McDonalds_026, McDonalds_051, McDonalds_071). I need to retrieve the content of these cited tweets to verify if they explicitly mention cravings for chicken nuggets, McRibs, and ice cream cones.
+[LIVE 02:53:06Z #0259] factual_checker -> ontology_tools | tool_started | lookup_fact for S01_C02
+[LIVE 02:53:06Z #0260] ontology_tools -> factual_checker | tool_result | lookup_fact: 12 selected evidence items; complete=True
+[LIVE 02:53:06Z #0261] factual_checker -> Qwen | call_started | Qwen #100: factual_checker
+[LIVE 02:53:36Z #0262] factual_checker -> Qwen | waiting | Still waiting: Qwen #100: factual_checker; 30s elapsed
+[LIVE 02:53:42Z #0263] Qwen -> factual_checker | model_returned | Qwen #100 returned after 35.7s; validation pending
+[LIVE 02:53:42Z #0264] factual_checker -> orchestrator | decision_validated | S01_C02: finalize; Sufficient evidence found to support the claim.
+[LIVE 02:53:42Z #0265] summary_claim_extractor -> factual_checker | claim_opened | A significant number of tweets highlight dissatisfaction with the dining experience
+[LIVE 02:53:42Z #0266] factual_checker -> Qwen | call_started | Qwen #101: factual_checker
+[LIVE 02:54:02Z #0267] Qwen -> factual_checker | model_returned | Qwen #101 returned after 19.8s; validation pending
+[LIVE 02:54:02Z #0268] factual_checker -> tool_guard | decision_validated | S02_C01: lookup_fact; The summary claim cites four specific source IDs (McDonalds_020, McDonalds_034, McDonalds_076, McDonalds_078) and asserts that a 'significant number' of tweets highlight dissatisfaction. To verify if these cited sources actually contain content supporting the claim about dining
+[LIVE 02:54:02Z #0269] factual_checker -> ontology_tools | tool_started | lookup_fact for S02_C01
+[LIVE 02:54:02Z #0270] ontology_tools -> factual_checker | tool_result | lookup_fact: 11 selected evidence items; complete=True
+[LIVE 02:54:02Z #0271] factual_checker -> Qwen | call_started | Qwen #102: factual_checker
+[LIVE 02:54:06Z #0272] factual_checker -> Qwen | waiting | Still waiting: Qwen #102: factual_checker; 4s elapsed
+[LIVE 02:54:36Z #0273] factual_checker -> Qwen | waiting | Still waiting: Qwen #102: factual_checker; 34s elapsed
+[LIVE 02:54:52Z #0274] Qwen -> factual_checker | model_returned | Qwen #102 returned after 50.4s; validation pending
+[LIVE 02:54:52Z #0275] factual_checker -> orchestrator | decision_validated | S02_C01: finalize; Sufficient evidence has been retrieved to assess the claim.
+[LIVE 02:54:52Z #0276] summary_claim_extractor -> factual_checker | claim_opened | Complaints focus on limited sauce portions and long wait times
+[LIVE 02:54:52Z #0277] factual_checker -> Qwen | call_started | Qwen #103: factual_checker
+[LIVE 02:55:06Z #0278] factual_checker -> Qwen | waiting | Still waiting: Qwen #103: factual_checker; 14s elapsed
+[LIVE 02:55:10Z #0279] Qwen -> factual_checker | model_returned | Qwen #103 returned after 17.8s; validation pending
+[LIVE 02:55:10Z #0280] factual_checker -> tool_guard | decision_validated | S02_C02: lookup_fact; The summary claim cites four specific source IDs (McDonalds_020, McDonalds_034, McDonalds_076, McDonalds_078). I need to retrieve the content of these cited tweets to verify if they explicitly discuss 'limited sauce portions' and 'long wait times'.
+[LIVE 02:55:10Z #0281] factual_checker -> ontology_tools | tool_started | lookup_fact for S02_C02
+[LIVE 02:55:10Z #0282] ontology_tools -> factual_checker | tool_result | lookup_fact: 11 selected evidence items; complete=True
+[LIVE 02:55:10Z #0283] factual_checker -> Qwen | call_started | Qwen #104: factual_checker
+[LIVE 02:55:36Z #0284] factual_checker -> Qwen | waiting | Still waiting: Qwen #104: factual_checker; 26s elapsed
+[LIVE 02:55:49Z #0285] Qwen -> factual_checker | model_returned | Qwen #104 returned after 38.9s; validation pending
+[LIVE 02:55:49Z #0286] factual_checker -> orchestrator | decision_validated | S02_C02: finalize; Sufficient evidence has been retrieved to verify the claim against the cited tweets.
+[LIVE 02:55:49Z #0287] summary_claim_extractor -> factual_checker | claim_opened | Several posts discuss the social aspect of eating at the restaurant
+[LIVE 02:55:49Z #0288] factual_checker -> Qwen | call_started | Qwen #105: factual_checker
+[LIVE 02:56:05Z #0289] Qwen -> factual_checker | model_returned | Qwen #105 returned after 16.3s; validation pending
+[LIVE 02:56:05Z #0290] factual_checker -> tool_guard | decision_validated | S03_C01: lookup_fact; The claim states 'Several posts discuss the social aspect of eating at the restaurant' citing four specific source IDs. To verify if these sources actually contain content about the social aspect of eating, I need to retrieve the cited tweets.
+[LIVE 02:56:05Z #0291] factual_checker -> ontology_tools | tool_started | lookup_fact for S03_C01
+[LIVE 02:56:05Z #0292] ontology_tools -> factual_checker | tool_result | lookup_fact: 12 selected evidence items; complete=True
+[LIVE 02:56:05Z #0293] factual_checker -> Qwen | call_started | Qwen #106: factual_checker
+[LIVE 02:56:06Z #0294] factual_checker -> Qwen | waiting | Still waiting: Qwen #106: factual_checker; 1s elapsed
+[LIVE 02:56:36Z #0295] factual_checker -> Qwen | waiting | Still waiting: Qwen #106: factual_checker; 31s elapsed
+[LIVE 02:56:36Z #0296] Qwen -> factual_checker | model_returned | Qwen #106 returned after 31.1s; validation pending
+[LIVE 02:56:36Z #0297] factual_checker -> orchestrator | decision_validated | S03_C01: finalize; Evidence is sufficient to assess the claim.
+[LIVE 02:56:36Z #0298] summary_claim_extractor -> factual_checker | claim_opened | The social aspect of eating at the restaurant includes going with friends or family and sharing meals
+[LIVE 02:56:36Z #0299] factual_checker -> Qwen | call_started | Qwen #107: factual_checker
+[LIVE 02:56:53Z #0300] Qwen -> factual_checker | model_returned | Qwen #107 returned after 16.7s; validation pending
+[LIVE 02:56:53Z #0301] factual_checker -> tool_guard | decision_validated | S03_C02: lookup_fact; Retrieving the cited tweets and source claims to verify if they explicitly support the claim about going with friends or family and sharing meals.
+[LIVE 02:56:53Z #0302] factual_checker -> ontology_tools | tool_started | lookup_fact for S03_C02
+[LIVE 02:56:53Z #0303] ontology_tools -> factual_checker | tool_result | lookup_fact: 12 selected evidence items; complete=True
+[LIVE 02:56:53Z #0304] factual_checker -> Qwen | call_started | Qwen #108: factual_checker
+[LIVE 02:57:06Z #0305] factual_checker -> Qwen | waiting | Still waiting: Qwen #108: factual_checker; 13s elapsed
+[LIVE 02:57:25Z #0306] Qwen -> factual_checker | model_returned | Qwen #108 returned after 31.7s; validation pending
+[LIVE 02:57:25Z #0307] factual_checker -> orchestrator | decision_validated | S03_C02: finalize; Evidence is sufficient to assess the claim.
+[LIVE 02:57:25Z #0308] summary_claim_extractor -> factual_checker | claim_opened | Confusion exists among respondents regarding store locations, operating hours, and menu availability.
+[LIVE 02:57:25Z #0309] factual_checker -> Qwen | call_started | Qwen #109: factual_checker
+[LIVE 02:57:36Z #0310] factual_checker -> Qwen | waiting | Still waiting: Qwen #109: factual_checker; 11s elapsed
+[LIVE 02:57:43Z #0311] Qwen -> factual_checker | model_returned | Qwen #109 returned after 17.9s; validation pending
+[LIVE 02:57:43Z #0312] factual_checker -> tool_guard | decision_validated | S04_C01: lookup_fact; The summary claim cites four specific source IDs (McDonalds_013, McDonalds_021, McDonalds_042, McDonalds_058). I need to retrieve the content of these tweets to verify if they explicitly contain information about confusion regarding store locations, operating hours, and menu av
+[LIVE 02:57:43Z #0313] factual_checker -> ontology_tools | tool_started | lookup_fact for S04_C01
+[LIVE 02:57:43Z #0314] ontology_tools -> factual_checker | tool_result | lookup_fact: 10 selected evidence items; complete=True
+[LIVE 02:57:43Z #0315] factual_checker -> Qwen | call_started | Qwen #110: factual_checker
+[LIVE 02:58:06Z #0316] factual_checker -> Qwen | waiting | Still waiting: Qwen #110: factual_checker; 23s elapsed
+[LIVE 02:58:15Z #0317] Qwen -> factual_checker | model_returned | Qwen #110 returned after 32.2s; validation pending
+[LIVE 02:58:15Z #0318] factual_checker -> orchestrator | decision_validated | S04_C01: finalize; The evidence has been fully retrieved and analyzed. The claim cannot be supported or contradicted because the cited tweets do not contain information about 'store locations' or 'confusion' among respondents; they discuss service hours, food quality, and personal habits.
+[LIVE 02:58:15Z #0319] summary_claim_extractor -> factual_checker | claim_opened | Some users praise the food as delicious.
+[LIVE 02:58:15Z #0320] factual_checker -> Qwen | call_started | Qwen #111: factual_checker
+[LIVE 02:58:30Z #0321] Qwen -> factual_checker | model_returned | Qwen #111 returned after 14.8s; validation pending
+[LIVE 02:58:30Z #0322] factual_checker -> tool_guard | decision_validated | S05_C01: lookup_fact; Retrieving the cited tweets and source claims to verify if they explicitly support the claim that 'some users praise the food as delicious'.
+[LIVE 02:58:30Z #0323] factual_checker -> ontology_tools | tool_started | lookup_fact for S05_C01
+[LIVE 02:58:30Z #0324] ontology_tools -> factual_checker | tool_result | lookup_fact: 14 selected evidence items; complete=True
+[LIVE 02:58:30Z #0325] factual_checker -> Qwen | call_started | Qwen #112: factual_checker
+[LIVE 02:58:36Z #0326] factual_checker -> Qwen | waiting | Still waiting: Qwen #112: factual_checker; 6s elapsed
+[LIVE 02:58:59Z #0327] Qwen -> factual_checker | model_returned | Qwen #112 returned after 29.0s; validation pending
+[LIVE 02:58:59Z #0328] factual_checker -> orchestrator | decision_validated | S05_C01: finalize; Evidence is sufficient to assess the claim.
+[LIVE 02:58:59Z #0329] summary_claim_extractor -> factual_checker | claim_opened | Others express disgust with the quality of the food.
+[LIVE 02:58:59Z #0330] factual_checker -> Qwen | call_started | Qwen #113: factual_checker
+[LIVE 02:59:06Z #0331] factual_checker -> Qwen | waiting | Still waiting: Qwen #113: factual_checker; 7s elapsed
+[LIVE 02:59:18Z #0332] Qwen -> factual_checker | model_returned | Qwen #113 returned after 18.8s; validation pending
+[LIVE 02:59:18Z #0333] factual_checker -> tool_guard | decision_validated | S05_C02: lookup_fact; The summary claim cites four specific source IDs (McDonalds_001, McDonalds_009, McDonalds_046, McDonalds_056) and asserts that 'others' express disgust. I need to retrieve the content of these cited tweets to verify if they explicitly contain expressions of disgust regarding th
+[LIVE 02:59:18Z #0334] factual_checker -> ontology_tools | tool_started | lookup_fact for S05_C02
+[LIVE 02:59:18Z #0335] ontology_tools -> factual_checker | tool_result | lookup_fact: 14 selected evidence items; complete=True
+[LIVE 02:59:18Z #0336] factual_checker -> Qwen | call_started | Qwen #114: factual_checker
+[LIVE 02:59:36Z #0337] factual_checker -> Qwen | waiting | Still waiting: Qwen #114: factual_checker; 19s elapsed
+[LIVE 03:00:06Z #0338] Qwen -> factual_checker | model_returned | Qwen #114 returned after 48.6s; validation pending
+[LIVE 03:00:06Z #0339] factual_checker -> orchestrator | decision_validated | S05_C02: finalize; Sufficient evidence has been retrieved to assess the claim.
+[LIVE 03:00:06Z #0340] summary_claim_extractor -> factual_checker | claim_opened | Others describe the food as disgusting.
+[LIVE 03:00:06Z #0341] factual_checker -> Qwen | call_started | Qwen #115: factual_checker
+[LIVE 03:00:06Z #0342] factual_checker -> Qwen | waiting | Still waiting: Qwen #115: factual_checker; 0s elapsed
+[LIVE 03:00:20Z #0343] Qwen -> factual_checker | model_returned | Qwen #115 returned after 14.2s; validation pending
+[LIVE 03:00:20Z #0344] factual_checker -> tool_guard | decision_validated | S05_C03: lookup_fact; Investigate the summary claim about others expressing disgust by retrieving cited tweets and source claims.
+[LIVE 03:00:20Z #0345] factual_checker -> ontology_tools | tool_started | lookup_fact for S05_C03
+[LIVE 03:00:20Z #0346] ontology_tools -> factual_checker | tool_result | lookup_fact: 14 selected evidence items; complete=True
+[LIVE 03:00:20Z #0347] factual_checker -> Qwen | call_started | Qwen #116: factual_checker
+[LIVE 03:00:36Z #0348] factual_checker -> Qwen | waiting | Still waiting: Qwen #116: factual_checker; 16s elapsed
+[LIVE 03:00:57Z #0349] Qwen -> factual_checker | model_returned | Qwen #116 returned after 36.2s; validation pending
+[LIVE 03:00:57Z #0350] factual_checker -> orchestrator | decision_validated | S05_C03: finalize; Sufficient evidence to assess the claim.
+[LIVE 03:00:57Z #0351] factual_check -> representation_check | handoff | factual_check completed: UNKNOWN
+[LIVE 03:00:57Z #0352] orchestrator -> representation_check | stage_started | Starting representation_check; revision 0
+Some weights of the model checkpoint at roberta-large-mnli were not used when initializing RobertaForSequenceClassification: ['roberta.pooler.dense.bias', 'roberta.pooler.dense.weight']
+- This IS expected if you are initializing RobertaForSequenceClassification from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPreTraining model).
+- This IS NOT expected if you are initializing RobertaForSequenceClassification from the checkpoint of a model that you expect to be exactly identical (initializing a BertForSequenceClassification model from a BertForSequenceClassification model).
+[LIVE 03:02:14Z #0353] representation_check -> route_checks | handoff | representation_check completed: FAIL
+[LIVE 03:02:15Z #0354] orchestrator -> route_checks | stage_started | Starting route_checks; revision 0
+[LIVE 03:02:15Z #0355] route_checks -> retrieve_revision_evidence | handoff | route_checks completed: confirmed_serious_issues
+[LIVE 03:02:15Z #0356] orchestrator -> retrieve_revision_evidence | stage_started | Starting retrieve_revision_evidence; revision 0
+[LIVE 03:02:15Z #0357] retrieval -> all-minilm | call_started | Embedding 91 texts
+[LIVE 03:02:16Z #0358] all-minilm -> retrieval | embeddings_returned | Received 91 vectors
+[LIVE 03:02:16Z #0359] retrieve_revision_evidence -> revise_summary | handoff | retrieve_revision_evidence completed: retrieved
+[LIVE 03:02:16Z #0360] orchestrator -> revise_summary | stage_started | Starting revise_summary; revision 0
+[LIVE 03:02:16Z #0361] reviser -> Qwen | call_started | Qwen #117: reviser
+[LIVE 03:02:36Z #0362] reviser -> Qwen | waiting | Still waiting: Qwen #117: reviser; 21s elapsed
+[LIVE 03:02:50Z #0363] Qwen -> reviser | model_returned | Qwen #117 returned after 34.0s; validation pending
+[LIVE 03:02:50Z #0364] revise_summary -> extract_summary_claims | handoff | revise_summary completed: revision_requires_rechecking; revision candidate
+[LIVE 03:02:50Z #0365] orchestrator -> extract_summary_claims | stage_started | Starting extract_summary_claims; revision 1
+[LIVE 03:02:50Z #0366] summary_claim_extractor -> Qwen | call_started | Qwen #118: summary_claim_extractor
+[LIVE 03:03:06Z #0367] summary_claim_extractor -> Qwen | waiting | Still waiting: Qwen #118: summary_claim_extractor; 17s elapsed
+[LIVE 03:03:13Z #0368] Qwen -> summary_claim_extractor | model_returned | Qwen #118 returned after 23.4s; validation pending
+[LIVE 03:03:13Z #0369] summary_claim_extractor -> Qwen | call_started | Qwen #119: summary_claim_extractor
+[LIVE 03:03:25Z #0370] Qwen -> summary_claim_extractor | model_returned | Qwen #119 returned after 12.2s; validation pending
+[LIVE 03:03:25Z #0371] summary_claim_extractor -> Qwen | call_started | Qwen #120: summary_claim_extractor
+[LIVE 03:03:36Z #0372] summary_claim_extractor -> Qwen | waiting | Still waiting: Qwen #120: summary_claim_extractor; 11s elapsed
+[LIVE 03:03:38Z #0373] Qwen -> summary_claim_extractor | model_returned | Qwen #120 returned after 12.8s; validation pending
+[LIVE 03:03:38Z #0374] summary_claim_extractor -> Qwen | call_started | Qwen #121: summary_claim_extractor
+[LIVE 03:03:47Z #0375] Qwen -> summary_claim_extractor | model_returned | Qwen #121 returned after 9.0s; validation pending
+[LIVE 03:03:47Z #0376] summary_claim_extractor -> Qwen | call_started | Qwen #122: summary_claim_extractor
+[LIVE 03:04:02Z #0377] Qwen -> summary_claim_extractor | model_returned | Qwen #122 returned after 14.8s; validation pending
+[LIVE 03:04:02Z #0378] extract_summary_claims -> factual_check | handoff | extract_summary_claims completed: validated claims ready
+[LIVE 03:04:02Z #0379] orchestrator -> factual_check | stage_started | Starting factual_check; revision 1
+[LIVE 03:04:02Z #0380] summary_claim_extractor -> factual_checker | claim_opened | Many users have a strong desire to visit or order from McDonald's
+[LIVE 03:04:02Z #0381] factual_checker -> Qwen | call_started | Qwen #123: factual_checker
+[LIVE 03:04:06Z #0382] factual_checker -> Qwen | waiting | Still waiting: Qwen #123: factual_checker; 5s elapsed
+[LIVE 03:04:27Z #0383] Qwen -> factual_checker | model_returned | Qwen #123 returned after 24.7s; validation pending
+[LIVE 03:04:27Z #0384] factual_checker -> tool_guard | decision_validated | S01_C01: lookup_fact; Retrieving the cited tweets and source claims to verify if they support the claim that 'Many users express a strong desire to visit or order from McDonald's'.
+[LIVE 03:04:27Z #0385] factual_checker -> ontology_tools | tool_started | lookup_fact for S01_C01
+[LIVE 03:04:27Z #0386] ontology_tools -> factual_checker | tool_result | lookup_fact: 12 selected evidence items; complete=True
+[LIVE 03:04:27Z #0387] factual_checker -> Qwen | call_started | Qwen #124: factual_checker
+[LIVE 03:04:36Z #0388] factual_checker -> Qwen | waiting | Still waiting: Qwen #124: factual_checker; 10s elapsed
+[LIVE 03:05:06Z #0389] factual_checker -> Qwen | waiting | Still waiting: Qwen #124: factual_checker; 40s elapsed
+[LIVE 03:05:09Z #0390] Qwen -> factual_checker | model_returned | Qwen #124 returned after 42.1s; validation pending
+[LIVE 03:05:09Z #0391] factual_checker -> orchestrator | decision_validated | S01_C01: finalize; Evidence is sufficient to assess the claim based on the retrieved tweets.
+[LIVE 03:05:09Z #0392] summary_claim_extractor -> factual_checker | claim_opened | Users have cravings for specific items including chicken nuggets, McRibs, and ice cream cones
+[LIVE 03:05:09Z #0393] factual_checker -> Qwen | call_started | Qwen #125: factual_checker
+[LIVE 03:05:27Z #0394] Qwen -> factual_checker | model_returned | Qwen #125 returned after 18.8s; validation pending
+[LIVE 03:05:27Z #0395] factual_checker -> tool_guard | decision_validated | S01_C02: lookup_fact; The summary claim cites five specific source IDs (McDonalds_003, McDonalds_004, McDonalds_026, McDonalds_051, McDonalds_071). I need to retrieve the content of these cited tweets to verify if they explicitly mention cravings for chicken nuggets, McRibs, and ice cream cones.
+[LIVE 03:05:27Z #0396] factual_checker -> ontology_tools | tool_started | lookup_fact for S01_C02
+[LIVE 03:05:28Z #0397] ontology_tools -> factual_checker | tool_result | lookup_fact: 12 selected evidence items; complete=True
+[LIVE 03:05:28Z #0398] factual_checker -> Qwen | call_started | Qwen #126: factual_checker
+[LIVE 03:05:36Z #0399] factual_checker -> Qwen | waiting | Still waiting: Qwen #126: factual_checker; 9s elapsed
+[LIVE 03:06:03Z #0400] Qwen -> factual_checker | model_returned | Qwen #126 returned after 35.4s; validation pending
+[LIVE 03:06:03Z #0401] factual_checker -> orchestrator | decision_validated | S01_C02: finalize; Sufficient evidence found to support the claim.
+[LIVE 03:06:03Z #0402] summary_claim_extractor -> factual_checker | claim_opened | A significant number of tweets highlight dissatisfaction with the dining experience
+[LIVE 03:06:03Z #0403] factual_checker -> Qwen | call_started | Qwen #127: factual_checker
+[LIVE 03:06:06Z #0404] factual_checker -> Qwen | waiting | Still waiting: Qwen #127: factual_checker; 3s elapsed
+[LIVE 03:06:22Z #0405] Qwen -> factual_checker | model_returned | Qwen #127 returned after 18.6s; validation pending
+[LIVE 03:06:22Z #0406] factual_checker -> tool_guard | decision_validated | S02_C01: lookup_fact; The summary claim cites four specific source IDs (McDonalds_020, McDonalds_034, McDonalds_076, McDonalds_078) and asserts that a 'significant number' of tweets highlight dissatisfaction. To verify if these cited sources actually contain content supporting the claim about dining
+[LIVE 03:06:22Z #0407] factual_checker -> ontology_tools | tool_started | lookup_fact for S02_C01
+[LIVE 03:06:22Z #0408] ontology_tools -> factual_checker | tool_result | lookup_fact: 11 selected evidence items; complete=True
+[LIVE 03:06:22Z #0409] factual_checker -> Qwen | call_started | Qwen #128: factual_checker
+[LIVE 03:06:36Z #0410] factual_checker -> Qwen | waiting | Still waiting: Qwen #128: factual_checker; 15s elapsed
+[LIVE 03:07:06Z #0411] factual_checker -> Qwen | waiting | Still waiting: Qwen #128: factual_checker; 45s elapsed
+[LIVE 03:07:13Z #0412] Qwen -> factual_checker | model_returned | Qwen #128 returned after 51.0s; validation pending
+[LIVE 03:07:13Z #0413] factual_checker -> orchestrator | decision_validated | S02_C01: finalize; Sufficient evidence has been retrieved to assess the claim.
+[LIVE 03:07:13Z #0414] summary_claim_extractor -> factual_checker | claim_opened | Complaints focus on limited sauce portions and long wait times
+[LIVE 03:07:13Z #0415] factual_checker -> Qwen | call_started | Qwen #129: factual_checker
+[LIVE 03:07:32Z #0416] Qwen -> factual_checker | model_returned | Qwen #129 returned after 19.2s; validation pending
+[LIVE 03:07:32Z #0417] factual_checker -> tool_guard | decision_validated | S02_C02: lookup_fact; The summary claim cites four specific source IDs (McDonalds_020, McDonalds_034, McDonalds_076, McDonalds_078). I need to retrieve the content of these cited tweets to verify if they explicitly discuss 'limited sauce portions' and 'long wait times'.
+[LIVE 03:07:32Z #0418] factual_checker -> ontology_tools | tool_started | lookup_fact for S02_C02
+[LIVE 03:07:32Z #0419] ontology_tools -> factual_checker | tool_result | lookup_fact: 11 selected evidence items; complete=True
+[LIVE 03:07:32Z #0420] factual_checker -> Qwen | call_started | Qwen #130: factual_checker
+[LIVE 03:07:36Z #0421] factual_checker -> Qwen | waiting | Still waiting: Qwen #130: factual_checker; 5s elapsed
+[LIVE 03:08:06Z #0422] factual_checker -> Qwen | waiting | Still waiting: Qwen #130: factual_checker; 35s elapsed
+[LIVE 03:08:10Z #0423] Qwen -> factual_checker | model_returned | Qwen #130 returned after 38.6s; validation pending
+[LIVE 03:08:10Z #0424] factual_checker -> orchestrator | decision_validated | S02_C02: finalize; Sufficient evidence has been retrieved to verify the claim against the cited tweets.
+[LIVE 03:08:10Z #0425] summary_claim_extractor -> factual_checker | claim_opened | Several posts discuss the social aspect of eating at the restaurant
+[LIVE 03:08:10Z #0426] factual_checker -> Qwen | call_started | Qwen #131: factual_checker
+[LIVE 03:08:27Z #0427] Qwen -> factual_checker | model_returned | Qwen #131 returned after 16.2s; validation pending
+[LIVE 03:08:27Z #0428] factual_checker -> tool_guard | decision_validated | S03_C01: lookup_fact; The claim states 'Several posts discuss the social aspect of eating at the restaurant' citing four specific source IDs. To verify if these sources actually contain content about the social aspect of eating, I need to retrieve the cited tweets.
+[LIVE 03:08:27Z #0429] factual_checker -> ontology_tools | tool_started | lookup_fact for S03_C01
+[LIVE 03:08:27Z #0430] ontology_tools -> factual_checker | tool_result | lookup_fact: 12 selected evidence items; complete=True
+[LIVE 03:08:27Z #0431] factual_checker -> Qwen | call_started | Qwen #132: factual_checker
+[LIVE 03:08:36Z #0432] factual_checker -> Qwen | waiting | Still waiting: Qwen #132: factual_checker; 10s elapsed
+[LIVE 03:08:58Z #0433] Qwen -> factual_checker | model_returned | Qwen #132 returned after 31.4s; validation pending
+[LIVE 03:08:58Z #0434] factual_checker -> orchestrator | decision_validated | S03_C01: finalize; Evidence is sufficient to assess the claim.
+[LIVE 03:08:58Z #0435] summary_claim_extractor -> factual_checker | claim_opened | The social aspect of eating at the restaurant includes going with friends or family and sharing meals
+[LIVE 03:08:58Z #0436] factual_checker -> Qwen | call_started | Qwen #133: factual_checker
+[LIVE 03:09:06Z #0437] factual_checker -> Qwen | waiting | Still waiting: Qwen #133: factual_checker; 8s elapsed
+[LIVE 03:09:13Z #0438] Qwen -> factual_checker | model_returned | Qwen #133 returned after 14.6s; validation pending
+[LIVE 03:09:13Z #0439] factual_checker -> tool_guard | decision_validated | S03_C02: lookup_fact; Retrieving the cited tweets and source claims to verify if they explicitly support the claim about going with friends or family and sharing meals.
+[LIVE 03:09:13Z #0440] factual_checker -> ontology_tools | tool_started | lookup_fact for S03_C02
+[LIVE 03:09:13Z #0441] ontology_tools -> factual_checker | tool_result | lookup_fact: 12 selected evidence items; complete=True
+[LIVE 03:09:13Z #0442] factual_checker -> Qwen | call_started | Qwen #134: factual_checker
+[LIVE 03:09:36Z #0443] factual_checker -> Qwen | waiting | Still waiting: Qwen #134: factual_checker; 24s elapsed
+[LIVE 03:09:44Z #0444] Qwen -> factual_checker | model_returned | Qwen #134 returned after 31.5s; validation pending
+[LIVE 03:09:44Z #0445] factual_checker -> orchestrator | decision_validated | S03_C02: finalize; Evidence is sufficient to assess the claim.
+[LIVE 03:09:44Z #0446] summary_claim_extractor -> factual_checker | claim_opened | Confusion exists among respondents regarding store locations, operating hours, and menu availability.
+[LIVE 03:09:44Z #0447] factual_checker -> Qwen | call_started | Qwen #135: factual_checker
+[LIVE 03:10:02Z #0448] Qwen -> factual_checker | model_returned | Qwen #135 returned after 18.2s; validation pending
+[LIVE 03:10:02Z #0449] factual_checker -> tool_guard | decision_validated | S04_C01: lookup_fact; The summary claim cites four specific source IDs (McDonalds_013, McDonalds_021, McDonalds_042, McDonalds_058). I need to retrieve the content of these tweets to verify if they explicitly contain information about confusion regarding store locations, operating hours, and menu av
+[LIVE 03:10:02Z #0450] factual_checker -> ontology_tools | tool_started | lookup_fact for S04_C01
+[LIVE 03:10:02Z #0451] ontology_tools -> factual_checker | tool_result | lookup_fact: 10 selected evidence items; complete=True
+[LIVE 03:10:02Z #0452] factual_checker -> Qwen | call_started | Qwen #136: factual_checker
+[LIVE 03:10:07Z #0453] factual_checker -> Qwen | waiting | Still waiting: Qwen #136: factual_checker; 4s elapsed
+[LIVE 03:10:35Z #0454] Qwen -> factual_checker | model_returned | Qwen #136 returned after 32.3s; validation pending
+[LIVE 03:10:35Z #0455] factual_checker -> orchestrator | decision_validated | S04_C01: finalize; The evidence has been fully retrieved and analyzed. The claim cannot be supported or contradicted because the cited tweets do not contain information about 'store locations' or 'confusion' among respondents; they discuss service hours, food quality, and personal habits.
+[LIVE 03:10:35Z #0456] summary_claim_extractor -> factual_checker | claim_opened | Some users find the food delicious
+[LIVE 03:10:35Z #0457] factual_checker -> Qwen | call_started | Qwen #137: factual_checker
+[LIVE 03:10:37Z #0458] factual_checker -> Qwen | waiting | Still waiting: Qwen #137: factual_checker; 2s elapsed
+[LIVE 03:10:52Z #0459] Qwen -> factual_checker | model_returned | Qwen #137 returned after 16.9s; validation pending
+[LIVE 03:10:52Z #0460] factual_checker -> tool_guard | decision_validated | S05_C01: lookup_fact; The summary claim cites three specific source IDs (McDonalds_082, McDonalds_085, McDonalds_028). I need to retrieve the content of these cited tweets to verify if they contain assertions that users found the food delicious.
+[LIVE 03:10:52Z #0461] factual_checker -> ontology_tools | tool_started | lookup_fact for S05_C01
+[LIVE 03:10:52Z #0462] ontology_tools -> factual_checker | tool_result | lookup_fact: 9 selected evidence items; complete=True
+[LIVE 03:10:52Z #0463] factual_checker -> Qwen | call_started | Qwen #138: factual_checker
+[LIVE 03:11:07Z #0464] factual_checker -> Qwen | waiting | Still waiting: Qwen #138: factual_checker; 15s elapsed
+[LIVE 03:11:17Z #0465] Qwen -> factual_checker | model_returned | Qwen #138 returned after 25.6s; validation pending
+[LIVE 03:11:17Z #0466] factual_checker -> orchestrator | decision_validated | S05_C01: finalize; The evidence has been fully retrieved and analyzed. The claim cannot be verified as supported or contradicted based on the provided tweets.
+[LIVE 03:11:17Z #0467] summary_claim_extractor -> factual_checker | claim_opened | Others express disgust with the quality of the food
+[LIVE 03:11:17Z #0468] factual_checker -> Qwen | call_started | Qwen #139: factual_checker
+[LIVE 03:11:32Z #0469] Qwen -> factual_checker | model_returned | Qwen #139 returned after 15.0s; validation pending
+[LIVE 03:11:32Z #0470] factual_checker -> tool_guard | decision_validated | S05_C02: lookup_fact; Investigate the summary claim about others expressing disgust with McDonald's food quality by retrieving the cited tweets and source claims.
+[LIVE 03:11:32Z #0471] factual_checker -> ontology_tools | tool_started | lookup_fact for S05_C02
+[LIVE 03:11:32Z #0472] ontology_tools -> factual_checker | tool_result | lookup_fact: 9 selected evidence items; complete=True
+[LIVE 03:11:32Z #0473] factual_checker -> Qwen | call_started | Qwen #140: factual_checker
+[LIVE 03:11:37Z #0474] factual_checker -> Qwen | waiting | Still waiting: Qwen #140: factual_checker; 4s elapsed
+[LIVE 03:11:59Z #0475] Qwen -> factual_checker | model_returned | Qwen #140 returned after 26.5s; validation pending
+[LIVE 03:11:59Z #0476] factual_checker -> orchestrator | decision_validated | S05_C02: finalize; Evidence is insufficient to support the claim that others express disgust with the quality of the food.
+[LIVE 03:11:59Z #0477] summary_claim_extractor -> factual_checker | claim_opened | Others describe the food as disgusting
+[LIVE 03:11:59Z #0478] factual_checker -> Qwen | call_started | Qwen #141: factual_checker
+[LIVE 03:12:07Z #0479] factual_checker -> Qwen | waiting | Still waiting: Qwen #141: factual_checker; 8s elapsed
+[LIVE 03:12:16Z #0480] Qwen -> factual_checker | model_returned | Qwen #141 returned after 17.1s; validation pending
+[LIVE 03:12:16Z #0481] factual_checker -> tool_guard | decision_validated | S05_C03: lookup_fact; The summary claim cites three specific source IDs (McDonalds_082, McDonalds_085, McDonalds_028) and asserts that 'others describe the food as disgusting'. I need to retrieve the content of these cited tweets to verify if they explicitly contain descriptions of the food as disgu
+[LIVE 03:12:16Z #0482] factual_checker -> ontology_tools | tool_started | lookup_fact for S05_C03
+[LIVE 03:12:16Z #0483] ontology_tools -> factual_checker | tool_result | lookup_fact: 9 selected evidence items; complete=True
+[LIVE 03:12:16Z #0484] factual_checker -> Qwen | call_started | Qwen #142: factual_checker
+[LIVE 03:12:37Z #0485] factual_checker -> Qwen | waiting | Still waiting: Qwen #142: factual_checker; 21s elapsed
+[LIVE 03:12:44Z #0486] Qwen -> factual_checker | model_returned | Qwen #142 returned after 28.5s; validation pending
+[LIVE 03:12:44Z #0487] factual_checker -> orchestrator | decision_validated | S05_C03: finalize; The evidence has been fully retrieved and analyzed. The claim requires explicit support from the cited tweets, but none of them contain descriptions of the food as disgusting.
+[LIVE 03:12:44Z #0488] factual_check -> representation_check | handoff | factual_check completed: UNKNOWN
+[LIVE 03:12:44Z #0489] orchestrator -> representation_check | stage_started | Starting representation_check; revision 1
+[LIVE 03:13:54Z #0490] representation_check -> route_checks | handoff | representation_check completed: FAIL
+[LIVE 03:13:54Z #0491] orchestrator -> route_checks | stage_started | Starting route_checks; revision 1
+[LIVE 03:13:54Z #0492] route_checks -> retrieve_revision_evidence | handoff | route_checks completed: unsupported_revision; revision rolled_back
+[LIVE 03:13:54Z #0493] orchestrator -> retrieve_revision_evidence | stage_started | Starting retrieve_revision_evidence; revision 1
+[LIVE 03:13:55Z #0494] retrieve_revision_evidence -> revise_summary | handoff | retrieve_revision_evidence completed: retrieved
+[LIVE 03:13:55Z #0495] orchestrator -> revise_summary | stage_started | Starting revise_summary; revision 1
+[LIVE 03:13:55Z #0496] reviser -> Qwen | call_started | Qwen #143: reviser
+[LIVE 03:14:07Z #0497] reviser -> Qwen | waiting | Still waiting: Qwen #143: reviser; 12s elapsed
+[LIVE 03:14:24Z #0498] Qwen -> reviser | model_returned | Qwen #143 returned after 29.6s; validation pending
+[LIVE 03:14:24Z #0499] revise_summary -> extract_summary_claims | handoff | revise_summary completed: revision_requires_rechecking; revision candidate
+[LIVE 03:14:24Z #0500] orchestrator -> extract_summary_claims | stage_started | Starting extract_summary_claims; revision 2
+[LIVE 03:14:24Z #0501] summary_claim_extractor -> Qwen | call_started | Qwen #144: summary_claim_extractor
+[LIVE 03:14:37Z #0502] summary_claim_extractor -> Qwen | waiting | Still waiting: Qwen #144: summary_claim_extractor; 12s elapsed
+[LIVE 03:14:48Z #0503] Qwen -> summary_claim_extractor | model_returned | Qwen #144 returned after 23.7s; validation pending
+[LIVE 03:14:48Z #0504] summary_claim_extractor -> Qwen | call_started | Qwen #145: summary_claim_extractor
+[LIVE 03:15:00Z #0505] Qwen -> summary_claim_extractor | model_returned | Qwen #145 returned after 12.2s; validation pending
+[LIVE 03:15:00Z #0506] summary_claim_extractor -> Qwen | call_started | Qwen #146: summary_claim_extractor
+[LIVE 03:15:07Z #0507] summary_claim_extractor -> Qwen | waiting | Still waiting: Qwen #146: summary_claim_extractor; 7s elapsed
+[LIVE 03:15:13Z #0508] Qwen -> summary_claim_extractor | model_returned | Qwen #146 returned after 12.6s; validation pending
+[LIVE 03:15:13Z #0509] summary_claim_extractor -> Qwen | call_started | Qwen #147: summary_claim_extractor
+[LIVE 03:15:21Z #0510] Qwen -> summary_claim_extractor | model_returned | Qwen #147 returned after 8.7s; validation pending
+[LIVE 03:15:21Z #0511] summary_claim_extractor -> Qwen | call_started | Qwen #148: summary_claim_extractor
+[LIVE 03:15:32Z #0512] Qwen -> summary_claim_extractor | model_returned | Qwen #148 returned after 11.1s; validation pending
+[LIVE 03:15:32Z #0513] extract_summary_claims -> factual_check | handoff | extract_summary_claims completed: validated claims ready
+[LIVE 03:15:32Z #0514] orchestrator -> factual_check | stage_started | Starting factual_check; revision 2
+[LIVE 03:15:32Z #0515] summary_claim_extractor -> factual_checker | claim_opened | Many users have a strong desire to visit or order from McDonald's
+[LIVE 03:15:32Z #0516] factual_checker -> Qwen | call_started | Qwen #149: factual_checker
+[LIVE 03:15:37Z #0517] factual_checker -> Qwen | waiting | Still waiting: Qwen #149: factual_checker; 4s elapsed
+[LIVE 03:15:58Z #0518] Qwen -> factual_checker | model_returned | Qwen #149 returned after 25.4s; validation pending
+[LIVE 03:15:58Z #0519] factual_checker -> tool_guard | decision_validated | S01_C01: lookup_fact; Retrieving the cited tweets and source claims to verify if they support the claim that 'Many users express a strong desire to visit or order from McDonald's'.
+[LIVE 03:15:58Z #0520] factual_checker -> ontology_tools | tool_started | lookup_fact for S01_C01
+[LIVE 03:15:58Z #0521] ontology_tools -> factual_checker | tool_result | lookup_fact: 12 selected evidence items; complete=True
+[LIVE 03:15:58Z #0522] factual_checker -> Qwen | call_started | Qwen #150: factual_checker
+[LIVE 03:16:07Z #0523] factual_checker -> Qwen | waiting | Still waiting: Qwen #150: factual_checker; 9s elapsed
+[LIVE 03:16:37Z #0524] factual_checker -> Qwen | waiting | Still waiting: Qwen #150: factual_checker; 39s elapsed
+[LIVE 03:16:40Z #0525] Qwen -> factual_checker | model_returned | Qwen #150 returned after 42.1s; validation pending
+[LIVE 03:16:40Z #0526] factual_checker -> orchestrator | decision_validated | S01_C01: finalize; Evidence is sufficient to assess the claim based on the retrieved tweets.
+[LIVE 03:16:40Z #0527] summary_claim_extractor -> factual_checker | claim_opened | Users have cravings for specific items including chicken nuggets, McRibs, and ice cream cones
+[LIVE 03:16:40Z #0528] factual_checker -> Qwen | call_started | Qwen #151: factual_checker
+[LIVE 03:17:00Z #0529] Qwen -> factual_checker | model_returned | Qwen #151 returned after 20.5s; validation pending
+[LIVE 03:17:00Z #0530] factual_checker -> tool_guard | decision_validated | S01_C02: lookup_fact; The summary claim cites five specific source IDs (McDonalds_003, McDonalds_004, McDonalds_026, McDonalds_051, McDonalds_071). I need to retrieve the content of these cited tweets to verify if they explicitly mention cravings for chicken nuggets, McRibs, and ice cream cones.
+[LIVE 03:17:00Z #0531] factual_checker -> ontology_tools | tool_started | lookup_fact for S01_C02
+[LIVE 03:17:01Z #0532] ontology_tools -> factual_checker | tool_result | lookup_fact: 12 selected evidence items; complete=True
+[LIVE 03:17:01Z #0533] factual_checker -> Qwen | call_started | Qwen #152: factual_checker
+[LIVE 03:17:07Z #0534] factual_checker -> Qwen | waiting | Still waiting: Qwen #152: factual_checker; 6s elapsed
+[LIVE 03:17:37Z #0535] factual_checker -> Qwen | waiting | Still waiting: Qwen #152: factual_checker; 36s elapsed
+[LIVE 03:17:38Z #0536] Qwen -> factual_checker | model_returned | Qwen #152 returned after 37.3s; validation pending
+[LIVE 03:17:38Z #0537] factual_checker -> orchestrator | decision_validated | S01_C02: finalize; Sufficient evidence found to support the claim.
+[LIVE 03:17:38Z #0538] summary_claim_extractor -> factual_checker | claim_opened | A significant number of tweets highlight dissatisfaction with the dining experience
+[LIVE 03:17:38Z #0539] factual_checker -> Qwen | call_started | Qwen #153: factual_checker
+[LIVE 03:17:58Z #0540] Qwen -> factual_checker | model_returned | Qwen #153 returned after 19.7s; validation pending
+[LIVE 03:17:58Z #0541] factual_checker -> tool_guard | decision_validated | S02_C01: lookup_fact; The summary claim cites four specific source IDs (McDonalds_020, McDonalds_034, McDonalds_076, McDonalds_078) and asserts that a 'significant number' of tweets highlight dissatisfaction. To verify if these cited sources actually contain content supporting the claim about dining
+[LIVE 03:17:58Z #0542] factual_checker -> ontology_tools | tool_started | lookup_fact for S02_C01
+[LIVE 03:17:58Z #0543] ontology_tools -> factual_checker | tool_result | lookup_fact: 11 selected evidence items; complete=True
+[LIVE 03:17:58Z #0544] factual_checker -> Qwen | call_started | Qwen #154: factual_checker
+[LIVE 03:18:07Z #0545] factual_checker -> Qwen | waiting | Still waiting: Qwen #154: factual_checker; 9s elapsed
+[LIVE 03:18:37Z #0546] factual_checker -> Qwen | waiting | Still waiting: Qwen #154: factual_checker; 39s elapsed
+[LIVE 03:18:53Z #0547] Qwen -> factual_checker | model_returned | Qwen #154 returned after 55.0s; validation pending
+[LIVE 03:18:53Z #0548] factual_checker -> orchestrator | decision_validated | S02_C01: finalize; Sufficient evidence has been retrieved to assess the claim.
+[LIVE 03:18:53Z #0549] summary_claim_extractor -> factual_checker | claim_opened | Complaints focus on limited sauce portions and long wait times
+[LIVE 03:18:53Z #0550] factual_checker -> Qwen | call_started | Qwen #155: factual_checker
+[LIVE 03:19:07Z #0551] factual_checker -> Qwen | waiting | Still waiting: Qwen #155: factual_checker; 14s elapsed
+[LIVE 03:19:12Z #0552] Qwen -> factual_checker | model_returned | Qwen #155 returned after 19.4s; validation pending
+[LIVE 03:19:12Z #0553] factual_checker -> tool_guard | decision_validated | S02_C02: lookup_fact; The summary claim cites four specific source IDs (McDonalds_020, McDonalds_034, McDonalds_076, McDonalds_078). I need to retrieve the content of these cited tweets to verify if they explicitly discuss 'limited sauce portions' and 'long wait times'.
+[LIVE 03:19:12Z #0554] factual_checker -> ontology_tools | tool_started | lookup_fact for S02_C02
+[LIVE 03:19:12Z #0555] ontology_tools -> factual_checker | tool_result | lookup_fact: 11 selected evidence items; complete=True
+[LIVE 03:19:12Z #0556] factual_checker -> Qwen | call_started | Qwen #156: factual_checker
+[LIVE 03:19:37Z #0557] factual_checker -> Qwen | waiting | Still waiting: Qwen #156: factual_checker; 25s elapsed
+[LIVE 03:20:01Z #0558] Qwen -> factual_checker | model_returned | Qwen #156 returned after 49.0s; validation pending
+[LIVE 03:20:01Z #0559] factual_checker -> orchestrator | decision_validated | S02_C02: finalize; Sufficient evidence has been retrieved to verify the claim against the cited tweets.
+[LIVE 03:20:01Z #0560] summary_claim_extractor -> factual_checker | claim_opened | Several posts discuss the social aspect of eating at the restaurant
+[LIVE 03:20:01Z #0561] factual_checker -> Qwen | call_started | Qwen #157: factual_checker
+[LIVE 03:20:07Z #0562] factual_checker -> Qwen | waiting | Still waiting: Qwen #157: factual_checker; 6s elapsed
+[LIVE 03:20:20Z #0563] Qwen -> factual_checker | model_returned | Qwen #157 returned after 18.9s; validation pending
+[LIVE 03:20:20Z #0564] factual_checker -> tool_guard | decision_validated | S03_C01: lookup_fact; The claim states 'Several posts discuss the social aspect of eating at the restaurant' citing four specific source IDs. To verify if these sources actually contain content about the social aspect of eating, I need to retrieve the cited tweets.
+[LIVE 03:20:20Z #0565] factual_checker -> ontology_tools | tool_started | lookup_fact for S03_C01
+[LIVE 03:20:20Z #0566] ontology_tools -> factual_checker | tool_result | lookup_fact: 12 selected evidence items; complete=True
+[LIVE 03:20:20Z #0567] factual_checker -> Qwen | call_started | Qwen #158: factual_checker
+[LIVE 03:20:37Z #0568] factual_checker -> Qwen | waiting | Still waiting: Qwen #158: factual_checker; 17s elapsed
+[LIVE 03:20:51Z #0569] Qwen -> factual_checker | model_returned | Qwen #158 returned after 30.8s; validation pending
+[LIVE 03:20:51Z #0570] factual_checker -> orchestrator | decision_validated | S03_C01: finalize; Evidence is sufficient to assess the claim.
+[LIVE 03:20:51Z #0571] summary_claim_extractor -> factual_checker | claim_opened | The social aspect of eating at the restaurant includes going with friends or family and sharing meals
+[LIVE 03:20:51Z #0572] factual_checker -> Qwen | call_started | Qwen #159: factual_checker
+[LIVE 03:21:06Z #0573] Qwen -> factual_checker | model_returned | Qwen #159 returned after 14.9s; validation pending
+[LIVE 03:21:06Z #0574] factual_checker -> tool_guard | decision_validated | S03_C02: lookup_fact; Retrieving the cited tweets and source claims to verify if they explicitly support the claim about going with friends or family and sharing meals.
+[LIVE 03:21:06Z #0575] factual_checker -> ontology_tools | tool_started | lookup_fact for S03_C02
+[LIVE 03:21:06Z #0576] ontology_tools -> factual_checker | tool_result | lookup_fact: 12 selected evidence items; complete=True
+[LIVE 03:21:06Z #0577] factual_checker -> Qwen | call_started | Qwen #160: factual_checker
+[LIVE 03:21:07Z #0578] factual_checker -> Qwen | waiting | Still waiting: Qwen #160: factual_checker; 1s elapsed
+[LIVE 03:21:37Z #0579] factual_checker -> Qwen | waiting | Still waiting: Qwen #160: factual_checker; 31s elapsed
+[LIVE 03:21:37Z #0580] Qwen -> factual_checker | model_returned | Qwen #160 returned after 31.6s; validation pending
+[LIVE 03:21:37Z #0581] factual_checker -> orchestrator | decision_validated | S03_C02: finalize; Evidence is sufficient to assess the claim.
+[LIVE 03:21:37Z #0582] summary_claim_extractor -> factual_checker | claim_opened | Confusion exists among respondents regarding store locations, operating hours, and menu availability.
+[LIVE 03:21:37Z #0583] factual_checker -> Qwen | call_started | Qwen #161: factual_checker
+[LIVE 03:21:56Z #0584] Qwen -> factual_checker | model_returned | Qwen #161 returned after 18.3s; validation pending
+[LIVE 03:21:56Z #0585] factual_checker -> tool_guard | decision_validated | S04_C01: lookup_fact; The summary claim cites four specific source IDs (McDonalds_013, McDonalds_021, McDonalds_042, McDonalds_058). I need to retrieve the content of these tweets to verify if they explicitly contain information about confusion regarding store locations, operating hours, and menu av
+[LIVE 03:21:56Z #0586] factual_checker -> ontology_tools | tool_started | lookup_fact for S04_C01
+[LIVE 03:21:56Z #0587] ontology_tools -> factual_checker | tool_result | lookup_fact: 10 selected evidence items; complete=True
+[LIVE 03:21:56Z #0588] factual_checker -> Qwen | call_started | Qwen #162: factual_checker
+[LIVE 03:22:07Z #0589] factual_checker -> Qwen | waiting | Still waiting: Qwen #162: factual_checker; 11s elapsed
+[LIVE 03:22:28Z #0590] Qwen -> factual_checker | model_returned | Qwen #162 returned after 32.6s; validation pending
+[LIVE 03:22:28Z #0591] factual_checker -> orchestrator | decision_validated | S04_C01: finalize; The evidence has been fully retrieved and analyzed. The claim cannot be supported or contradicted because the cited tweets do not contain information about 'store locations' or 'confusion' among respondents; they discuss service hours, food quality, and personal habits.
+[LIVE 03:22:28Z #0592] summary_claim_extractor -> factual_checker | claim_opened | Some users regret missing specific items such as sweet tea
+[LIVE 03:22:28Z #0593] factual_checker -> Qwen | call_started | Qwen #163: factual_checker
+[LIVE 03:22:37Z #0594] factual_checker -> Qwen | waiting | Still waiting: Qwen #163: factual_checker; 9s elapsed
+[LIVE 03:22:45Z #0595] Qwen -> factual_checker | model_returned | Qwen #163 returned after 17.1s; validation pending
+[LIVE 03:22:45Z #0596] factual_checker -> tool_guard | decision_validated | S05_C01: lookup_fact; The summary claim cites specific source IDs (McDonalds_028, McDonalds_085) and asserts that 'some users' regret missing items like sweet tea. I need to retrieve the content of these cited tweets to verify if they contain assertions about user regret regarding sweet tea.
+[LIVE 03:22:45Z #0597] factual_checker -> ontology_tools | tool_started | lookup_fact for S05_C01
+[LIVE 03:22:45Z #0598] ontology_tools -> factual_checker | tool_result | lookup_fact: 6 selected evidence items; complete=True
+[LIVE 03:22:45Z #0599] factual_checker -> Qwen | call_started | Qwen #164: factual_checker
+[LIVE 03:23:07Z #0600] factual_checker -> Qwen | waiting | Still waiting: Qwen #164: factual_checker; 21s elapsed
+[LIVE 03:23:11Z #0601] Qwen -> factual_checker | model_returned | Qwen #164 returned after 26.0s; validation pending
+[LIVE 03:23:11Z #0602] factual_checker -> orchestrator | decision_validated | S05_C01: finalize; Evidence is sufficient to assess the claim.
+[LIVE 03:23:11Z #0603] summary_claim_extractor -> factual_checker | claim_opened | Others mention enjoying breakfast sammiches
+[LIVE 03:23:11Z #0604] factual_checker -> Qwen | call_started | Qwen #165: factual_checker
+[LIVE 03:23:28Z #0605] Qwen -> factual_checker | model_returned | Qwen #165 returned after 16.1s; validation pending
+[LIVE 03:23:28Z #0606] factual_checker -> tool_guard | decision_validated | S05_C02: lookup_fact; The summary claim cites specific source IDs (McDonalds_028, McDonalds_085) and asserts that 'others' mention enjoying breakfast sammiches. I need to verify if these cited tweets actually contain the mentioned content.
+[LIVE 03:23:28Z #0607] factual_checker -> ontology_tools | tool_started | lookup_fact for S05_C02
+[LIVE 03:23:28Z #0608] ontology_tools -> factual_checker | tool_result | lookup_fact: 6 selected evidence items; complete=True
+[LIVE 03:23:28Z #0609] factual_checker -> Qwen | call_started | Qwen #166: factual_checker
+[LIVE 03:23:37Z #0610] factual_checker -> Qwen | waiting | Still waiting: Qwen #166: factual_checker; 9s elapsed
+[LIVE 03:23:53Z #0611] Qwen -> factual_checker | model_returned | Qwen #166 returned after 25.8s; validation pending
+[LIVE 03:23:53Z #0612] factual_checker -> orchestrator | decision_validated | S05_C02: finalize; Evidence is sufficient to verify the claim against the cited tweets.
+[LIVE 03:23:53Z #0613] factual_check -> representation_check | handoff | factual_check completed: UNKNOWN
+[LIVE 03:23:53Z #0614] orchestrator -> representation_check | stage_started | Starting representation_check; revision 2
+[LIVE 03:25:08Z #0615] representation_check -> route_checks | handoff | representation_check completed: FAIL
+[LIVE 03:25:08Z #0616] orchestrator -> route_checks | stage_started | Starting route_checks; revision 2
+[LIVE 03:25:08Z #0617] route_checks -> retrieve_revision_evidence | handoff | route_checks completed: unsupported_revision; revision rolled_back
+[LIVE 03:25:08Z #0618] orchestrator -> retrieve_revision_evidence | stage_started | Starting retrieve_revision_evidence; revision 2
+[LIVE 03:25:09Z #0619] retrieve_revision_evidence -> revise_summary | handoff | retrieve_revision_evidence completed: retrieved
+[LIVE 03:25:09Z #0620] orchestrator -> revise_summary | stage_started | Starting revise_summary; revision 2
+[LIVE 03:25:09Z #0621] reviser -> Qwen | call_started | Qwen #167: reviser
+[LIVE 03:25:37Z #0622] Qwen -> reviser | model_returned | Qwen #167 returned after 28.3s; validation pending
+[LIVE 03:25:37Z #0623] revise_summary -> extract_summary_claims | handoff | revise_summary completed: revision_requires_rechecking; revision candidate
+[LIVE 03:25:37Z #0624] orchestrator -> extract_summary_claims | stage_started | Starting extract_summary_claims; revision 3
+[LIVE 03:25:37Z #0625] summary_claim_extractor -> Qwen | call_started | Qwen #168: summary_claim_extractor
+[LIVE 03:26:01Z #0626] Qwen -> summary_claim_extractor | model_returned | Qwen #168 returned after 24.2s; validation pending
+[LIVE 03:26:01Z #0627] summary_claim_extractor -> Qwen | call_started | Qwen #169: summary_claim_extractor
+[LIVE 03:26:07Z #0628] summary_claim_extractor -> Qwen | waiting | Still waiting: Qwen #169: summary_claim_extractor; 6s elapsed
+[LIVE 03:26:14Z #0629] Qwen -> summary_claim_extractor | model_returned | Qwen #169 returned after 12.9s; validation pending
+[LIVE 03:26:14Z #0630] summary_claim_extractor -> Qwen | call_started | Qwen #170: summary_claim_extractor
+[LIVE 03:26:27Z #0631] Qwen -> summary_claim_extractor | model_returned | Qwen #170 returned after 12.7s; validation pending
+[LIVE 03:26:27Z #0632] summary_claim_extractor -> Qwen | call_started | Qwen #171: summary_claim_extractor
+[LIVE 03:26:37Z #0633] Qwen -> summary_claim_extractor | model_returned | Qwen #171 returned after 10.0s; validation pending
+[LIVE 03:26:37Z #0634] summary_claim_extractor -> Qwen | call_started | Qwen #172: summary_claim_extractor
+[LIVE 03:26:37Z #0635] summary_claim_extractor -> Qwen | waiting | Still waiting: Qwen #172: summary_claim_extractor; 0s elapsed
+[LIVE 03:26:48Z #0636] Qwen -> summary_claim_extractor | model_returned | Qwen #172 returned after 11.2s; validation pending
+[LIVE 03:26:48Z #0637] extract_summary_claims -> factual_check | handoff | extract_summary_claims completed: validated claims ready
+[LIVE 03:26:48Z #0638] orchestrator -> factual_check | stage_started | Starting factual_check; revision 3
+[LIVE 03:26:48Z #0639] summary_claim_extractor -> factual_checker | claim_opened | Many users have a strong desire to visit or order from McDonald's
+[LIVE 03:26:48Z #0640] factual_checker -> Qwen | call_started | Qwen #173: factual_checker
+[LIVE 03:27:07Z #0641] factual_checker -> Qwen | waiting | Still waiting: Qwen #173: factual_checker; 19s elapsed
+[LIVE 03:27:14Z #0642] Qwen -> factual_checker | model_returned | Qwen #173 returned after 25.7s; validation pending
+[LIVE 03:27:14Z #0643] factual_checker -> tool_guard | decision_validated | S01_C01: lookup_fact; Retrieving the cited tweets and source claims to verify if they support the claim that 'Many users express a strong desire to visit or order from McDonald's'.
+[LIVE 03:27:14Z #0644] factual_checker -> ontology_tools | tool_started | lookup_fact for S01_C01
+[LIVE 03:27:14Z #0645] ontology_tools -> factual_checker | tool_result | lookup_fact: 12 selected evidence items; complete=True
+[LIVE 03:27:14Z #0646] factual_checker -> Qwen | call_started | Qwen #174: factual_checker
+[LIVE 03:27:37Z #0647] factual_checker -> Qwen | waiting | Still waiting: Qwen #174: factual_checker; 23s elapsed
+[LIVE 03:27:57Z #0648] Qwen -> factual_checker | model_returned | Qwen #174 returned after 43.0s; validation pending
+[LIVE 03:27:57Z #0649] factual_checker -> orchestrator | decision_validated | S01_C01: finalize; Evidence is sufficient to assess the claim based on the retrieved tweets.
+[LIVE 03:27:57Z #0650] summary_claim_extractor -> factual_checker | claim_opened | Users have cravings for specific items including chicken nuggets, McRibs, and ice cream cones
+[LIVE 03:27:57Z #0651] factual_checker -> Qwen | call_started | Qwen #175: factual_checker
+[LIVE 03:28:07Z #0652] factual_checker -> Qwen | waiting | Still waiting: Qwen #175: factual_checker; 10s elapsed
+[LIVE 03:28:17Z #0653] Qwen -> factual_checker | model_returned | Qwen #175 returned after 20.6s; validation pending
+[LIVE 03:28:17Z #0654] factual_checker -> tool_guard | decision_validated | S01_C02: lookup_fact; The summary claim cites five specific source IDs (McDonalds_003, McDonalds_004, McDonalds_026, McDonalds_051, McDonalds_071). I need to retrieve the content of these cited tweets to verify if they explicitly mention cravings for chicken nuggets, McRibs, and ice cream cones.
+[LIVE 03:28:17Z #0655] factual_checker -> ontology_tools | tool_started | lookup_fact for S01_C02
+[LIVE 03:28:17Z #0656] ontology_tools -> factual_checker | tool_result | lookup_fact: 12 selected evidence items; complete=True
+[LIVE 03:28:17Z #0657] factual_checker -> Qwen | call_started | Qwen #176: factual_checker
+[LIVE 03:28:37Z #0658] factual_checker -> Qwen | waiting | Still waiting: Qwen #176: factual_checker; 19s elapsed
+[LIVE 03:28:52Z #0659] Qwen -> factual_checker | model_returned | Qwen #176 returned after 34.9s; validation pending
+[LIVE 03:28:52Z #0660] factual_checker -> orchestrator | decision_validated | S01_C02: finalize; Sufficient evidence found to support the claim.
+[LIVE 03:28:52Z #0661] summary_claim_extractor -> factual_checker | claim_opened | A significant number of tweets highlight dissatisfaction with the dining experience
+[LIVE 03:28:52Z #0662] factual_checker -> Qwen | call_started | Qwen #177: factual_checker
+[LIVE 03:29:07Z #0663] factual_checker -> Qwen | waiting | Still waiting: Qwen #177: factual_checker; 15s elapsed
+[LIVE 03:29:11Z #0664] Qwen -> factual_checker | model_returned | Qwen #177 returned after 18.3s; validation pending
+[LIVE 03:29:11Z #0665] factual_checker -> tool_guard | decision_validated | S02_C01: lookup_fact; The summary claim cites four specific source IDs (McDonalds_020, McDonalds_034, McDonalds_076, McDonalds_078) and asserts that a 'significant number' of tweets highlight dissatisfaction. To verify if these cited sources actually contain content supporting the claim about dining
+[LIVE 03:29:11Z #0666] factual_checker -> ontology_tools | tool_started | lookup_fact for S02_C01
+[LIVE 03:29:11Z #0667] ontology_tools -> factual_checker | tool_result | lookup_fact: 11 selected evidence items; complete=True
+[LIVE 03:29:11Z #0668] factual_checker -> Qwen | call_started | Qwen #178: factual_checker
+[LIVE 03:29:37Z #0669] factual_checker -> Qwen | waiting | Still waiting: Qwen #178: factual_checker; 26s elapsed
+[LIVE 03:30:01Z #0670] Qwen -> factual_checker | model_returned | Qwen #178 returned after 50.3s; validation pending
+[LIVE 03:30:01Z #0671] factual_checker -> orchestrator | decision_validated | S02_C01: finalize; Sufficient evidence has been retrieved to assess the claim.
+[LIVE 03:30:01Z #0672] summary_claim_extractor -> factual_checker | claim_opened | Complaints focus on limited sauce portions and long wait times
+[LIVE 03:30:01Z #0673] factual_checker -> Qwen | call_started | Qwen #179: factual_checker
+[LIVE 03:30:07Z #0674] factual_checker -> Qwen | waiting | Still waiting: Qwen #179: factual_checker; 6s elapsed
+[LIVE 03:30:19Z #0675] Qwen -> factual_checker | model_returned | Qwen #179 returned after 18.1s; validation pending
+[LIVE 03:30:19Z #0676] factual_checker -> tool_guard | decision_validated | S02_C02: lookup_fact; The summary claim cites four specific source IDs (McDonalds_020, McDonalds_034, McDonalds_076, McDonalds_078). I need to retrieve the content of these cited tweets to verify if they explicitly discuss 'limited sauce portions' and 'long wait times'.
+[LIVE 03:30:19Z #0677] factual_checker -> ontology_tools | tool_started | lookup_fact for S02_C02
+[LIVE 03:30:19Z #0678] ontology_tools -> factual_checker | tool_result | lookup_fact: 11 selected evidence items; complete=True
+[LIVE 03:30:19Z #0679] factual_checker -> Qwen | call_started | Qwen #180: factual_checker
+[LIVE 03:30:37Z #0680] factual_checker -> Qwen | waiting | Still waiting: Qwen #180: factual_checker; 18s elapsed
+[LIVE 03:30:57Z #0681] Qwen -> factual_checker | model_returned | Qwen #180 returned after 38.3s; validation pending
+[LIVE 03:30:57Z #0682] factual_checker -> orchestrator | decision_validated | S02_C02: finalize; Sufficient evidence has been retrieved to verify the claim against the cited tweets.
+[LIVE 03:30:57Z #0683] summary_claim_extractor -> factual_checker | claim_opened | Several posts discuss the social aspect of eating at the restaurant
+[LIVE 03:30:57Z #0684] factual_checker -> Qwen | call_started | Qwen #181: factual_checker
+[LIVE 03:31:07Z #0685] factual_checker -> Qwen | waiting | Still waiting: Qwen #181: factual_checker; 10s elapsed
+[LIVE 03:31:14Z #0686] Qwen -> factual_checker | model_returned | Qwen #181 returned after 16.6s; validation pending
+[LIVE 03:31:14Z #0687] factual_checker -> tool_guard | decision_validated | S03_C01: lookup_fact; The claim states 'Several posts discuss the social aspect of eating at the restaurant' citing four specific source IDs. To verify if these sources actually contain content about the social aspect of eating, I need to retrieve the cited tweets.
+[LIVE 03:31:14Z #0688] factual_checker -> ontology_tools | tool_started | lookup_fact for S03_C01
+[LIVE 03:31:14Z #0689] ontology_tools -> factual_checker | tool_result | lookup_fact: 12 selected evidence items; complete=True
+[LIVE 03:31:14Z #0690] factual_checker -> Qwen | call_started | Qwen #182: factual_checker
+[LIVE 03:31:37Z #0691] factual_checker -> Qwen | waiting | Still waiting: Qwen #182: factual_checker; 23s elapsed
+[LIVE 03:31:45Z #0692] Qwen -> factual_checker | model_returned | Qwen #182 returned after 31.5s; validation pending
+[LIVE 03:31:45Z #0693] factual_checker -> orchestrator | decision_validated | S03_C01: finalize; Evidence is sufficient to assess the claim.
+[LIVE 03:31:45Z #0694] summary_claim_extractor -> factual_checker | claim_opened | The social aspect of eating at the restaurant includes going with friends or family and sharing meals
+[LIVE 03:31:45Z #0695] factual_checker -> Qwen | call_started | Qwen #183: factual_checker
+[LIVE 03:32:00Z #0696] Qwen -> factual_checker | model_returned | Qwen #183 returned after 14.6s; validation pending
+[LIVE 03:32:00Z #0697] factual_checker -> tool_guard | decision_validated | S03_C02: lookup_fact; Retrieving the cited tweets and source claims to verify if they explicitly support the claim about going with friends or family and sharing meals.
+[LIVE 03:32:00Z #0698] factual_checker -> ontology_tools | tool_started | lookup_fact for S03_C02
+[LIVE 03:32:00Z #0699] ontology_tools -> factual_checker | tool_result | lookup_fact: 12 selected evidence items; complete=True
+[LIVE 03:32:00Z #0700] factual_checker -> Qwen | call_started | Qwen #184: factual_checker
+[LIVE 03:32:07Z #0701] factual_checker -> Qwen | waiting | Still waiting: Qwen #184: factual_checker; 7s elapsed
+[LIVE 03:32:31Z #0702] Qwen -> factual_checker | model_returned | Qwen #184 returned after 31.2s; validation pending
+[LIVE 03:32:31Z #0703] factual_checker -> orchestrator | decision_validated | S03_C02: finalize; Evidence is sufficient to assess the claim.
+[LIVE 03:32:31Z #0704] summary_claim_extractor -> factual_checker | claim_opened | Confusion exists among respondents regarding store locations, operating hours, and menu availability.
+[LIVE 03:32:31Z #0705] factual_checker -> Qwen | call_started | Qwen #185: factual_checker
+[LIVE 03:32:37Z #0706] factual_checker -> Qwen | waiting | Still waiting: Qwen #185: factual_checker; 6s elapsed
+[LIVE 03:32:50Z #0707] Qwen -> factual_checker | model_returned | Qwen #185 returned after 18.6s; validation pending
+[LIVE 03:32:50Z #0708] factual_checker -> tool_guard | decision_validated | S04_C01: lookup_fact; The summary claim cites four specific source IDs (McDonalds_013, McDonalds_021, McDonalds_042, McDonalds_058). I need to retrieve the content of these tweets to verify if they explicitly contain information about confusion regarding store locations, operating hours, and menu av
+[LIVE 03:32:50Z #0709] factual_checker -> ontology_tools | tool_started | lookup_fact for S04_C01
+[LIVE 03:32:50Z #0710] ontology_tools -> factual_checker | tool_result | lookup_fact: 10 selected evidence items; complete=True
+[LIVE 03:32:50Z #0711] factual_checker -> Qwen | call_started | Qwen #186: factual_checker
+[LIVE 03:33:07Z #0712] factual_checker -> Qwen | waiting | Still waiting: Qwen #186: factual_checker; 17s elapsed
+[LIVE 03:33:22Z #0713] Qwen -> factual_checker | model_returned | Qwen #186 returned after 32.3s; validation pending
+[LIVE 03:33:22Z #0714] factual_checker -> orchestrator | decision_validated | S04_C01: finalize; The evidence has been fully retrieved and analyzed. The claim cannot be supported or contradicted because the cited tweets do not contain information about 'store locations' or 'confusion' among respondents; they discuss service hours, food quality, and personal habits.
+[LIVE 03:33:22Z #0715] summary_claim_extractor -> factual_checker | claim_opened | Some users regret missing specific items like sweet tea
+[LIVE 03:33:22Z #0716] factual_checker -> Qwen | call_started | Qwen #187: factual_checker
+[LIVE 03:33:37Z #0717] factual_checker -> Qwen | waiting | Still waiting: Qwen #187: factual_checker; 15s elapsed
+[LIVE 03:33:39Z #0718] Qwen -> factual_checker | model_returned | Qwen #187 returned after 17.2s; validation pending
+[LIVE 03:33:39Z #0719] factual_checker -> tool_guard | decision_validated | S05_C01: lookup_fact; The summary claim cites specific source IDs (McDonalds_028, McDonalds_085) and asserts that 'some users' regret missing items like sweet tea. I need to retrieve the content of these cited tweets to verify if they explicitly contain this sentiment.
+[LIVE 03:33:39Z #0720] factual_checker -> ontology_tools | tool_started | lookup_fact for S05_C01
+[LIVE 03:33:39Z #0721] ontology_tools -> factual_checker | tool_result | lookup_fact: 6 selected evidence items; complete=True
+[LIVE 03:33:39Z #0722] factual_checker -> Qwen | call_started | Qwen #188: factual_checker
+[LIVE 03:34:02Z #0723] Qwen -> factual_checker | model_returned | Qwen #188 returned after 22.7s; validation pending
+[LIVE 03:34:02Z #0724] factual_checker -> orchestrator | decision_validated | S05_C01: finalize; Evidence is sufficient to assess the claim.
+[LIVE 03:34:02Z #0725] summary_claim_extractor -> factual_checker | claim_opened | Others mention enjoying breakfast sammiches
+[LIVE 03:34:02Z #0726] factual_checker -> Qwen | call_started | Qwen #189: factual_checker
+[LIVE 03:34:07Z #0727] factual_checker -> Qwen | waiting | Still waiting: Qwen #189: factual_checker; 5s elapsed
+[LIVE 03:34:19Z #0728] Qwen -> factual_checker | model_returned | Qwen #189 returned after 16.8s; validation pending
+[LIVE 03:34:19Z #0729] factual_checker -> tool_guard | decision_validated | S05_C02: lookup_fact; The summary claim cites specific source IDs (McDonalds_028, McDonalds_085) and asserts that 'others' mention enjoying breakfast sammiches. I need to verify if these cited tweets actually contain the mentioned content.
+[LIVE 03:34:19Z #0730] factual_checker -> ontology_tools | tool_started | lookup_fact for S05_C02
+[LIVE 03:34:19Z #0731] ontology_tools -> factual_checker | tool_result | lookup_fact: 6 selected evidence items; complete=True
+[LIVE 03:34:19Z #0732] factual_checker -> Qwen | call_started | Qwen #190: factual_checker
+[LIVE 03:34:37Z #0733] factual_checker -> Qwen | waiting | Still waiting: Qwen #190: factual_checker; 18s elapsed
+[LIVE 03:34:45Z #0734] Qwen -> factual_checker | model_returned | Qwen #190 returned after 25.9s; validation pending
+[LIVE 03:34:45Z #0735] factual_checker -> orchestrator | decision_validated | S05_C02: finalize; Evidence is sufficient to verify the claim against the cited tweets.
+[LIVE 03:34:45Z #0736] factual_check -> representation_check | handoff | factual_check completed: UNKNOWN
+[LIVE 03:34:45Z #0737] orchestrator -> representation_check | stage_started | Starting representation_check; revision 3
+[LIVE 03:36:05Z #0738] representation_check -> route_checks | handoff | representation_check completed: FAIL
+[LIVE 03:36:06Z #0739] orchestrator -> route_checks | stage_started | Starting route_checks; revision 3
+[LIVE 03:36:06Z #0740] route_checks -> finalize | handoff | route_checks completed: representation_regression_or_incomparable; revision rolled_back
+[LIVE 03:36:06Z #0741] orchestrator -> finalize | stage_started | Starting finalize; revision 3
+[LIVE 03:36:06Z #0742] finalize -> result_writer | handoff | finalize completed: representation_regression_or_incomparable; revision rolled_back
+[LIVE 03:36:06Z #0743] result_writer -> user | run_completed | stopped_with_issues: representation_regression_or_incomparable
+[6/6] Complete result saved
+Factual: UNKNOWN | SUPPORTED=3 | CONTRADICTED=0 | UNKNOWN=7
+Coverage AA: 1.3% | tweets 30/30
+Coverage Hisp: 1.3% | tweets 30/30
+Coverage White: 0.9% | tweets 30/30
+Representation: FAIL | disparity=0.35255230756901823 | threshold=0.2
+Revisions: 3 attempted | accepted=0 | rejected=0 | rolled_back=3
+Final status: stopped_with_issues | stop reason: representation_regression_or_incomparable
+Uncertainty: factual_uncertainty
+Complete results: results\agent_rerun\McDonalds_prompt1_seed101.json
