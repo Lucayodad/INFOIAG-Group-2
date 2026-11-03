@@ -135,6 +135,16 @@ class SourceQuotationTests(unittest.TestCase):
         result = extract_sentence({"text": original, "source_ids": ["T1"]}, 1, client)
         self.assertEqual(result["claims"][0]["summary_quote"], original)
 
+    def test_summary_extraction_preserves_claim_type(self):
+        original = "The author likes the speech."
+        client = Mock()
+        client.chat.return_value = {"output": [{"content": [{"text": json.dumps({
+            "status": "extracted", "claims": [{"quote": original, "claim": original,
+                "target": "speech", "stance": "positive", "claim_type": "opinion"}],
+        })}]}]}
+        result = extract_sentence({"text": original, "source_ids": ["T1"]}, 1, client)
+        self.assertEqual(result["claims"][0]["claim_type"], "opinion")
+
     def test_retries_copy_exact_source_and_stop_after_validated_success(self):
         tweet = load_tweets('Obama')[29]
         def response(quote):

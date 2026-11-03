@@ -2,11 +2,19 @@
 """Extract claims from an AI-generated five-sentence summary."""
 
 import argparse
+from copy import deepcopy
 import json
 from pathlib import Path
 
 from ollama_backend import OllamaClient
 from source_claims import CLAIM_SCHEMA, find_source_quote
+
+
+SUMMARY_CLAIM_SCHEMA = deepcopy(CLAIM_SCHEMA)
+SUMMARY_CLAIM_SCHEMA["properties"]["claims"]["items"]["properties"]["claim_type"] = {
+    "type": "string",
+    "enum": ["factual", "opinion"],
+}
 
 
 INSTRUCTIONS = """
@@ -20,6 +28,7 @@ For every claim return:
 - claim: one atomic statement supported by that quotation
 - target: the subject of the claim
 - stance: positive, negative, neutral or unclear
+- claim_type: factual for an objective assertion, or opinion for a viewpoint
 
 Do not introduce new information.
 Do not determine whether the summary is factually correct.
@@ -44,7 +53,7 @@ def extract_sentence(sentence, number, client):
             {"role": "system", "content": INSTRUCTIONS},
             {"role": "user", "content": text}
         ],
-        "format": CLAIM_SCHEMA,
+        "format": SUMMARY_CLAIM_SCHEMA,
         "options": {
             "temperature": 0,
             "seed": 42,
@@ -77,19 +86,21 @@ def extract_sentence(sentence, number, client):
     for index, entry in enumerate(entries, 1):
         required = {"quote", "claim", "target", "stance"}
 
-        if not isinstance(entry, dict) or set(entry) != required:
+        if not isinstance(entry, dict) or not required.issubset(entry) or set(entry) - {
+            *required, "claim_type"
+        }:
             raise ValueError(f"Sentence {number}: invalid claim fields")
 
-        if any(
-            not isinstance(entry[key], str) or not entry[key].strip()
-            for key in required
-        ):
+        if any(not isinstance(entry[key], str) or not entry[key].strip() for key in required):
             raise ValueError(f"Sentence {number}: empty claim field")
 
         if entry["stance"] not in {
             "positive", "negative", "neutral", "unclear"
         }:
             raise ValueError(f"Sentence {number}: invalid stance")
+        claim_type = entry.get("claim_type", "factual")
+        if claim_type not in {"factual", "opinion"}:
+            raise ValueError(f"Sentence {number}: invalid claim type")
 
         quote = find_source_quote(entry["quote"], text)
 
@@ -104,6 +115,7 @@ def extract_sentence(sentence, number, client):
             "claim": entry["claim"],
             "target": entry["target"],
             "stance": entry["stance"],
+            "claim_type": claim_type,
             "cited_source_ids": source_ids,
             "verification_status": "unverified"
         })

@@ -49,6 +49,9 @@ Missing assertions or missing entities never establish falsehood.
 Source claims are unverified model interpretations: check them against the
 original tweets. Ontology assertions are stored assertions, not independently
 verified facts. An author's allegation does not establish a real-world fact.
+For a claim with claim_type "opinion", assess whether the cited tweets express
+the same viewpoint, target and attribution; do not require objective
+verification of the viewpoint itself.
 Explicit majority, proportion or whole-corpus claims ('most', 'the majority',
 'all', percentages) need evidence establishing that scope; corpus balance is
 assessed by the separate representation check.
