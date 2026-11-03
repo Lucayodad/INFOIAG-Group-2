@@ -2,11 +2,49 @@
 
 import json
 import math
+from collections import defaultdict
 
 from data_loader import DIALECT_LABELS
 from fact_tools import lookup_fact
 from representation_tools import get_group_claims
 from summary_claims import flatten_summary_claims
+
+
+def _representation_target(summary_claims, factual_results):
+    """Choose the most repairable sentence instead of always reusing the last one."""
+    unresolved = defaultdict(int)
+    for issue in factual_results["issues"]:
+        if issue["severity"] == "unresolved":
+            unresolved[issue["sentence_id"]] += 1
+    if unresolved:
+        return min(unresolved, key=lambda sentence_id: (-unresolved[sentence_id], sentence_id))
+    vacant = [row["sentence_id"] for row in summary_claims if row["status"] == "no_claim"]
+    if vacant:
+        return vacant[-1]
+    return min(summary_claims, key=lambda row: (len(row["claims"]), row["sentence_id"]))["sentence_id"]
+
+
+def _shared_group_viewpoint(group):
+    """Return one ontology viewpoint with at least two supporting tweets."""
+    candidates = defaultdict(list)
+    for claim in group["claims"]:
+        key = (
+            " ".join(claim["claim"].casefold().split()),
+            " ".join(claim["target"].casefold().split()),
+            claim["stance"],
+        )
+        candidates[key].append(claim)
+    eligible = [
+        members for members in candidates.values()
+        if len({member["tweet_id"] for member in members}) >= 2
+    ]
+    if not eligible:
+        return None
+    return max(eligible, key=lambda members: (
+        len({member["tweet_id"] for member in members}),
+        len(members),
+        min(member["claim_id"] for member in members),
+    ))
 
 
 def cosine(left, right):
@@ -58,24 +96,33 @@ def retrieve_revision_evidence(graph, topic, summary_claims, factual_results, re
             labels = sorted({issue["dialect_label"] for issue in representation["representation_issues"]
                              if issue["severity"] == "serious" and "dialect_label" in issue})
             groups = {label: get_group_claims(graph, topic, label) for label in DIALECT_LABELS}
-            for label in labels:
-                target = next(
-                    (row for row in summary_claims if row["status"] == "no_claim"),
-                    summary_claims[-1],
-                )
-                target_text = target["sentence"]
+            label = min(
+                labels,
+                key=lambda value: (
+                    representation["coverage_by_group"][value]["coverage"] is not None,
+                    representation["coverage_by_group"][value]["coverage"] or 0,
+                    value,
+                ),
+            ) if labels else None
+            members = _shared_group_viewpoint(groups[label]) if label else None
+            if members:
+                claim = members[0]
+                target_sentence_id = _representation_target(summary_claims, factual_results)
                 tasks.append({
-                    "task_id": f"representation:{label}:mnli",
+                    "task_id": f"representation:{label}:{claim['claim_id']}",
                     "kind": "representation",
                     "min_source_ids": 2,
-                    "sentence_id": target["sentence_id"],
-                    "query": target_text,
-                    "failed_claim": "The target sentence needs a viewpoint supported by the assigned tweets.",
-                    "failure_explanation": "The group's coverage is below the configured representation threshold.",
+                    "sentence_id": target_sentence_id,
+                    "query": claim["claim"],
+                    "failed_claim": claim["claim"],
+                    "failure_explanation": (
+                        "The group is underrepresented. Add only this repeated viewpoint, "
+                        "which is supported by multiple tweets from the group."
+                    ),
                     "dialect_label": label,
-                    "preferred_ids": [],
-                    "viewpoint_constraint": "Describe only a viewpoint common to the cited tweets.",
-                    "explanation": "Improve the group's MNLI Equal Coverage.",
+                    "preferred_ids": sorted({member["tweet_id"] for member in members}),
+                    "viewpoint_constraint": f"Express only this viewpoint: {claim['claim']}",
+                    "explanation": "Improve the group's MNLI Equal Coverage with one coherent viewpoint.",
                 })
             # The generic ontology-claim branch below cannot select evidence
             # for a metric that intentionally has no claim clusters.
@@ -102,11 +149,9 @@ def retrieve_revision_evidence(graph, topic, summary_claims, factual_results, re
             # whose inclusion leaves the measured disparity unchanged.
             cluster = min(omitted, key=lambda c: (-gain(c), -len(c["supporting_tweet_ids"][label]), c["canonical_claim_id"]))
             member = min((m for m in cluster["members"] if m["dialect_label"] == label), key=lambda m: m["claim_id"])
-            # Reuse a sentence already needing correction; otherwise use the last
-            # no-claim sentence, then the last sentence. Full rechecking guards
-            # against losing an already represented viewpoint.
-            vacant = [r["sentence_id"] for r in summary_claims if r["status"] == "no_claim"]
-            target = factual_targets[0] if factual_targets else (vacant or [r["sentence_id"] for r in summary_claims])[-1]
+            target = factual_targets[0] if factual_targets else _representation_target(
+                summary_claims, factual_results
+            )
             tasks.append({"task_id": f"representation:{label}:{cluster['canonical_claim_id']}",
                           "kind": "representation",
                           "min_source_ids": 2, "sentence_id": target, "query": member["claim"],

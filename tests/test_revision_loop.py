@@ -8,7 +8,12 @@ from unittest.mock import Mock
 from demo_revision_loop import fixture, mock_client, mock_embeddings
 from fact_check import quote_in
 from ontology_tools import NS
-from revision_retrieval import cosine, retrieve_revision_evidence
+from revision_retrieval import (
+    _representation_target,
+    _shared_group_viewpoint,
+    cosine,
+    retrieve_revision_evidence,
+)
 from summary_agent import compare_revision, run_summary_agent
 from summary_revision import _evidence_by_task, revise_summary
 
@@ -71,6 +76,31 @@ class RevisionLoopTests(unittest.TestCase):
                 if task["kind"] == "representation":
                     self.assertTrue(task["evidence_ids"])
                     self.assertTrue(all(by_id[key]["dialect_label"] == task["dialect_label"] for key in task["evidence_ids"]))
+
+    def test_representation_repair_selects_coherent_viewpoint_and_target(self):
+        group = {"claims": [
+            {"claim_id": "C01", "tweet_id": "T01", "claim": "People praise the speech.",
+             "target": "speech", "stance": "positive"},
+            {"claim_id": "C02", "tweet_id": "T02", "claim": "People praise the speech.",
+             "target": "speech", "stance": "positive"},
+            {"claim_id": "C03", "tweet_id": "T03", "claim": "People discuss policy.",
+             "target": "policy", "stance": "neutral"},
+        ]}
+        members = _shared_group_viewpoint(group)
+        self.assertEqual({member["tweet_id"] for member in members}, {"T01", "T02"})
+        self.assertIsNone(_shared_group_viewpoint({"claims": [group["claims"][2]]}))
+
+        summary_claims = [
+            {"sentence_id": "S01", "status": "extracted", "claims": [{}, {}]},
+            {"sentence_id": "S02", "status": "extracted", "claims": [{}]},
+            {"sentence_id": "S03", "status": "extracted", "claims": [{}]},
+        ]
+        factual_results = {"issues": [
+            {"sentence_id": "S01", "severity": "unresolved"},
+            {"sentence_id": "S01", "severity": "unresolved"},
+            {"sentence_id": "S02", "severity": "unresolved"},
+        ]}
+        self.assertEqual(_representation_target(summary_claims, factual_results), "S01")
 
     def test_both_problems_and_exact_preservation_of_unaffected_sentences(self):
         result, _ = self.run_fixture()
