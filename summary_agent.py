@@ -115,7 +115,9 @@ def compare_revision(previous, current, changes):
         return False, "factual_regression"
     same_partition = before["partition"] == after["partition"]
     if before["disparity"] is not None and (
-        after["disparity"] is None or not same_partition or after["disparity"] > before["disparity"] + 1e-12
+        after["disparity"] is None or not same_partition
+        or (after["representation_status"] == "FAIL"
+            and after["disparity"] > before["disparity"] + 1e-12)
     ):
         return False, "representation_regression_or_incomparable"
     if before["representation_status"] != "FAIL" and after["representation_status"] == "FAIL":

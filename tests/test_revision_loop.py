@@ -376,6 +376,20 @@ class RevisionLoopTests(unittest.TestCase):
         after["representation_results"]["matching"]["clusters"][0]["source_claim_ids"].append("fake_partition_change")
         self.assertFalse(compare_revision(before, after, result["revisions"][0]["changes"])[0])
 
+    def test_factual_improvement_is_kept_when_representation_still_passes(self):
+        result, _ = self.run_fixture()
+        before = result["iterations"][0]
+        after = deepcopy(result["iterations"][-1])
+        after["representation_results"]["coverage_by_group"] = {
+            "AA": {"coverage": 0.6},
+            "Hisp": {"coverage": 0.5},
+            "White": {"coverage": 0.3},
+        }
+        after["representation_results"]["status"] = "PASS"
+        accepted, reason = compare_revision(before, after, result["revisions"][0]["changes"])
+        self.assertTrue(accepted)
+        self.assertEqual(reason, "measured_improvement")
+
     def test_complete_ninety_tweet_topic_executes_revision_and_rechecking(self):
         result, _ = self.run_fixture("representation", many=True, per_group=30,
                                      max_revisions=1, disparity_threshold=0.01)
