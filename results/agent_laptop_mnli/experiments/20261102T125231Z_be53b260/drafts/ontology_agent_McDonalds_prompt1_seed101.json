@@ -1,0 +1,84 @@
+{
+  "status": "draft_unchecked",
+  "provider": "ollama",
+  "topic": "McDonalds",
+  "seed": 101,
+  "temperature": 0.7,
+  "summary": "Many users express a strong desire to visit or order from McDonald's, citing cravings for specific items like chicken nuggets, McRibs, and ice cream cones. A significant number of tweets highlight dissatisfaction with the dining experience, focusing on complaints about limited sauce portions and long wait times. Several posts discuss the social aspect of eating at the restaurant, including going with friends or family and sharing meals. There is a recurring theme of confusion regarding store locations, operating hours, and menu availability among the respondents. While some users praise the food as delicious, others express disgust with the quality or describe it as disgusting.",
+  "sentences": [
+    {
+      "text": "Many users express a strong desire to visit or order from McDonald's, citing cravings for specific items like chicken nuggets, McRibs, and ice cream cones.",
+      "source_ids": [
+        "McDonalds_003",
+        "McDonalds_004",
+        "McDonalds_026",
+        "McDonalds_051",
+        "McDonalds_071"
+      ]
+    },
+    {
+      "text": "A significant number of tweets highlight dissatisfaction with the dining experience, focusing on complaints about limited sauce portions and long wait times.",
+      "source_ids": [
+        "McDonalds_020",
+        "McDonalds_034",
+        "McDonalds_076",
+        "McDonalds_078"
+      ]
+    },
+    {
+      "text": "Several posts discuss the social aspect of eating at the restaurant, including going with friends or family and sharing meals.",
+      "source_ids": [
+        "McDonalds_010",
+        "McDonalds_023",
+        "McDonalds_045",
+        "McDonalds_057"
+      ]
+    },
+    {
+      "text": "There is a recurring theme of confusion regarding store locations, operating hours, and menu availability among the respondents.",
+      "source_ids": [
+        "McDonalds_013",
+        "McDonalds_021",
+        "McDonalds_042",
+        "McDonalds_058"
+      ]
+    },
+    {
+      "text": "While some users praise the food as delicious, others express disgust with the quality or describe it as disgusting.",
+      "source_ids": [
+        "McDonalds_001",
+        "McDonalds_009",
+        "McDonalds_046",
+        "McDonalds_056"
+      ]
+    }
+  ],
+  "summary_prompt": "Below are 90 tweets about McDonald's. Write a 5-sentence summary for someone who has not followed this topic, so they get a quick picture of what people are saying.",
+  "requested_model": "qwen3.5:4b",
+  "returned_model": "qwen3.5:4b",
+  "generation_settings": {
+    "temperature": 0.7,
+    "seed": 101,
+    "num_ctx": 16384,
+    "num_predict": 2000
+  },
+  "backend_metadata": {
+    "created_at": "2026-11-02T12:52:40.4290555Z",
+    "total_duration": 7231125500,
+    "load_duration": 5339700,
+    "prompt_eval_duration": 1982736000,
+    "eval_duration": 5051059000,
+    "done_reason": "stop"
+  },
+  "usage": {
+    "input_tokens": 4676,
+    "output_tokens": 360,
+    "total_tokens": 5036
+  },
+  "execution_seconds": 7.232653,
+  "created_at_utc": "2026-11-02T12:52:40.429568+00:00",
+  "input_sha256": "d4e38c6fce50e32132233c825dbbc6e77cf79a9ba8308184e5da3c7d436e20e2",
+  "request_sha256": "d69fc9fcb51976980c6777d0047382543820568dec03758855315e2e6066fa60",
+  "ontology_used": false,
+  "reference_summaries_used": false
+}

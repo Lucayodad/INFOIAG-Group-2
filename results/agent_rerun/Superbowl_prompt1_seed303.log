@@ -1,0 +1,221 @@
+[LIVE 08:59:02Z #0001] user -> orchestrator | run_started | Superbowl, prompt 1; up to 3 revisions
+Live feed: results\agent_rerun\Superbowl_prompt1_seed303_artifacts\live_feed.jsonl
+[1/6] Checking local dependencies, models and tweet data
+[2/6] Source claims: 90 tweets; resume results\source_claims\Superbowl.json
+Skipping Superbowl_001: already saved
+Skipping Superbowl_002: already saved
+Skipping Superbowl_003: already saved
+Skipping Superbowl_004: already saved
+Skipping Superbowl_005: already saved
+Skipping Superbowl_006: already saved
+Skipping Superbowl_007: already saved
+Skipping Superbowl_008: already saved
+Skipping Superbowl_009: already saved
+Skipping Superbowl_010: already saved
+Skipping Superbowl_011: already saved
+Skipping Superbowl_012: already saved
+Skipping Superbowl_013: already saved
+Skipping Superbowl_014: already saved
+Skipping Superbowl_015: already saved
+Skipping Superbowl_016: already saved
+Skipping Superbowl_017: already saved
+Skipping Superbowl_018: already saved
+Skipping Superbowl_019: already saved
+Skipping Superbowl_020: already saved
+Skipping Superbowl_021: already saved
+Skipping Superbowl_022: already saved
+Skipping Superbowl_023: already saved
+Skipping Superbowl_024: already saved
+Skipping Superbowl_025: already saved
+Skipping Superbowl_026: already saved
+Skipping Superbowl_027: already saved
+Skipping Superbowl_028: already saved
+Skipping Superbowl_029: already saved
+Skipping Superbowl_030: already saved
+Skipping Superbowl_031: already saved
+Skipping Superbowl_032: already saved
+Skipping Superbowl_033: already saved
+Skipping Superbowl_034: already saved
+Skipping Superbowl_035: already saved
+Skipping Superbowl_036: already saved
+Skipping Superbowl_037: already saved
+Skipping Superbowl_038: already saved
+Skipping Superbowl_039: already saved
+Skipping Superbowl_040: already saved
+Skipping Superbowl_041: already saved
+Skipping Superbowl_042: already saved
+Skipping Superbowl_043: already saved
+Skipping Superbowl_044: already saved
+Skipping Superbowl_045: already saved
+Skipping Superbowl_046: already saved
+Skipping Superbowl_047: already saved
+Skipping Superbowl_048: already saved
+Skipping Superbowl_049: already saved
+Skipping Superbowl_050: already saved
+Skipping Superbowl_051: already saved
+Skipping Superbowl_052: already saved
+Skipping Superbowl_053: already saved
+Skipping Superbowl_054: already saved
+Skipping Superbowl_055: already saved
+Skipping Superbowl_056: already saved
+Skipping Superbowl_057: already saved
+Skipping Superbowl_058: already saved
+Skipping Superbowl_059: already saved
+Skipping Superbowl_060: already saved
+Skipping Superbowl_061: already saved
+Skipping Superbowl_062: already saved
+Skipping Superbowl_063: already saved
+Skipping Superbowl_064: already saved
+Skipping Superbowl_065: already saved
+Skipping Superbowl_066: already saved
+Skipping Superbowl_067: already saved
+Skipping Superbowl_068: already saved
+Skipping Superbowl_069: already saved
+Skipping Superbowl_070: already saved
+Skipping Superbowl_071: already saved
+Skipping Superbowl_072: already saved
+Skipping Superbowl_073: already saved
+Skipping Superbowl_074: already saved
+Skipping Superbowl_075: already saved
+Skipping Superbowl_076: already saved
+Skipping Superbowl_077: already saved
+Skipping Superbowl_078: already saved
+Skipping Superbowl_079: already saved
+Skipping Superbowl_080: already saved
+Skipping Superbowl_081: already saved
+Skipping Superbowl_082: already saved
+Skipping Superbowl_083: already saved
+Skipping Superbowl_084: already saved
+Skipping Superbowl_085: already saved
+Skipping Superbowl_086: already saved
+Skipping Superbowl_087: already saved
+Skipping Superbowl_088: already saved
+Skipping Superbowl_089: already saved
+Skipping Superbowl_090: already saved
+
+Completed: 90 / 90
+Output: results\source_claims\Superbowl.json
+Unresolved tweets: none.
+[LIVE 08:59:02Z #0002] source_extractor -> ontology_builder | handoff | 90 source checkpoint records ready; RDF validation next
+[3/6] Populating isolated read-only checking evidence
+[LIVE 08:59:02Z #0003] ontology_builder -> summary_generator | handoff | RDF evidence ready: 2713 triples
+[4/6] Preparing five-sentence initial summary
+  Reusing explicitly selected draft: results\agent_pc_mnli\experiments\20261102T131344Z_9116e093\drafts\ontology_agent_Superbowl_prompt1_seed303.json
+[LIVE 08:59:02Z #0004] summary_generator -> summary_claim_extractor | handoff | Five-sentence draft ready for checking
+[5/6] LangGraph: extract -> facts -> representation -> route -> revision/recheck when justified
+[LIVE 08:59:02Z #0005] orchestrator -> extract_summary_claims | stage_started | Starting extract_summary_claims; revision 0
+[LIVE 08:59:02Z #0006] summary_claim_extractor -> Qwen | call_started | Qwen #1: summary_claim_extractor
+[LIVE 08:59:25Z #0007] Qwen -> summary_claim_extractor | model_returned | Qwen #1 returned after 23.3s; validation pending
+[LIVE 08:59:25Z #0008] summary_claim_extractor -> Qwen | call_started | Qwen #2: summary_claim_extractor
+[LIVE 08:59:32Z #0009] summary_claim_extractor -> Qwen | waiting | Still waiting: Qwen #2: summary_claim_extractor; 6s elapsed
+[LIVE 08:59:43Z #0010] Qwen -> summary_claim_extractor | model_returned | Qwen #2 returned after 17.7s; validation pending
+[LIVE 08:59:43Z #0011] summary_claim_extractor -> Qwen | call_started | Qwen #3: summary_claim_extractor
+[LIVE 08:59:52Z #0012] Qwen -> summary_claim_extractor | model_returned | Qwen #3 returned after 9.1s; validation pending
+[LIVE 08:59:52Z #0013] summary_claim_extractor -> Qwen | call_started | Qwen #4: summary_claim_extractor
+[LIVE 09:00:02Z #0014] summary_claim_extractor -> Qwen | waiting | Still waiting: Qwen #4: summary_claim_extractor; 10s elapsed
+[LIVE 09:00:05Z #0015] Qwen -> summary_claim_extractor | model_returned | Qwen #4 returned after 12.7s; validation pending
+[LIVE 09:00:05Z #0016] summary_claim_extractor -> Qwen | call_started | Qwen #5: summary_claim_extractor
+[LIVE 09:00:17Z #0017] Qwen -> summary_claim_extractor | model_returned | Qwen #5 returned after 11.9s; validation pending
+[LIVE 09:00:17Z #0018] extract_summary_claims -> factual_check | handoff | extract_summary_claims completed: validated claims ready
+[LIVE 09:00:17Z #0019] orchestrator -> factual_check | stage_started | Starting factual_check; revision 0
+[LIVE 09:00:17Z #0020] summary_claim_extractor -> factual_checker | claim_opened | Many users expressed strong opinions regarding team advancement or victory in the Super Bowl
+[LIVE 09:00:17Z #0021] factual_checker -> Qwen | call_started | Qwen #6: factual_checker
+[LIVE 09:00:32Z #0022] factual_checker -> Qwen | waiting | Still waiting: Qwen #6: factual_checker; 15s elapsed
+[LIVE 09:00:53Z #0023] Qwen -> factual_checker | model_returned | Qwen #6 returned after 36.5s; validation pending
+[LIVE 09:00:53Z #0024] factual_checker -> tool_guard | decision_validated | S01_C01: lookup_fact; The claim states 'Many users expressed strong opinions...' citing 90 tweets. To verify if 'many' (requiring at least three distinct cited tweets showing the content) and 'strong opinions' are supported, I need to examine the actual content of the cited tweets.
+[LIVE 09:00:53Z #0025] factual_checker -> ontology_tools | tool_started | lookup_fact for S01_C01
+[LIVE 09:00:53Z #0026] ontology_tools -> factual_checker | tool_result | lookup_fact: 16 selected evidence items; complete=True
+[LIVE 09:00:53Z #0027] summary_claim_extractor -> factual_checker | claim_opened | Users frequently debated between the Ravens, Patriots, and 49ers
+[LIVE 09:00:53Z #0028] factual_checker -> Qwen | call_started | Qwen #7: factual_checker
+[LIVE 09:01:02Z #0029] factual_checker -> Qwen | waiting | Still waiting: Qwen #7: factual_checker; 8s elapsed
+[LIVE 09:01:12Z #0030] Qwen -> factual_checker | model_returned | Qwen #7 returned after 18.4s; validation pending
+[LIVE 09:01:12Z #0031] factual_checker -> tool_guard | decision_validated | S01_C02: lookup_fact; The claim states 'frequently debating' which requires evidence of at least three distinct cited tweets explicitly showing this content. I need to inspect the cited sources to verify if such debates are present.
+[LIVE 09:01:12Z #0032] factual_checker -> ontology_tools | tool_started | lookup_fact for S01_C02
+[LIVE 09:01:12Z #0033] ontology_tools -> factual_checker | tool_result | lookup_fact: 16 selected evidence items; complete=True
+[LIVE 09:01:12Z #0034] factual_checker -> Qwen | call_started | Qwen #8: factual_checker
+[LIVE 09:01:32Z #0035] factual_checker -> Qwen | waiting | Still waiting: Qwen #8: factual_checker; 20s elapsed
+[LIVE 09:01:51Z #0036] Qwen -> factual_checker | model_returned | Qwen #8 returned after 38.7s; validation pending
+[LIVE 09:01:51Z #0037] factual_checker -> orchestrator | decision_validated | S01_C02: finalize; Insufficient evidence to establish 'frequently' debating between all three teams (Ravens, Patriots, 49ers). Only two tweets explicitly mention the Patriots alongside the Ravens and 49ers in a debate context. Other tweets focus on single matchups or general sentiments without invol
+[LIVE 09:01:51Z #0038] summary_claim_extractor -> factual_checker | claim_opened | A significant number of participants were uninterested in the game
+[LIVE 09:01:51Z #0039] factual_checker -> Qwen | call_started | Qwen #9: factual_checker
+[LIVE 09:02:00Z #0040] Qwen -> factual_checker | model_returned | Qwen #9 returned after 9.5s; validation pending
+[LIVE 09:02:00Z #0041] factual_checker -> tool_guard | decision_validated | S02_C01: lookup_fact; The summary claim cites multiple source IDs. I need to retrieve the content of these cited tweets to verify if they support the assertion that a significant number of participants were uninterested.
+[LIVE 09:02:00Z #0042] factual_checker -> ontology_tools | tool_started | lookup_fact for S02_C01
+[LIVE 09:02:00Z #0043] ontology_tools -> factual_checker | tool_result | lookup_fact: 16 selected evidence items; complete=True
+[LIVE 09:02:00Z #0044] factual_checker -> Qwen | call_started | Qwen #10: factual_checker
+[LIVE 09:02:02Z #0045] factual_checker -> Qwen | waiting | Still waiting: Qwen #10: factual_checker; 1s elapsed
+[LIVE 09:02:32Z #0046] factual_checker -> Qwen | waiting | Still waiting: Qwen #10: factual_checker; 31s elapsed
+[LIVE 09:02:46Z #0047] Qwen -> factual_checker | model_returned | Qwen #10 returned after 45.8s; validation pending
+[LIVE 09:02:46Z #0048] factual_checker -> orchestrator | decision_validated | S02_C01: finalize; Sufficient evidence has been retrieved to assess the claim.
+[LIVE 09:02:46Z #0049] summary_claim_extractor -> factual_checker | claim_opened | Participants cited fatigue from work or school as a reason for being uninterested in the game
+[LIVE 09:02:46Z #0050] factual_checker -> Qwen | call_started | Qwen #11: factual_checker
+[LIVE 09:02:58Z #0051] Qwen -> factual_checker | model_returned | Qwen #11 returned after 11.5s; validation pending
+[LIVE 09:02:58Z #0052] factual_checker -> tool_guard | decision_validated | S02_C02: lookup_fact; The summary claim cites specific tweet IDs (Superbowl_002 through Superbowl_084) as sources. I need to retrieve the content of these tweets to verify if participants cited fatigue from work or school as a reason for being uninterested in the game.
+[LIVE 09:02:58Z #0053] factual_checker -> ontology_tools | tool_started | lookup_fact for S02_C02
+[LIVE 09:02:58Z #0054] ontology_tools -> factual_checker | tool_result | lookup_fact: 16 selected evidence items; complete=True
+[LIVE 09:02:58Z #0055] factual_checker -> Qwen | call_started | Qwen #12: factual_checker
+[LIVE 09:03:02Z #0056] factual_checker -> Qwen | waiting | Still waiting: Qwen #12: factual_checker; 4s elapsed
+[LIVE 09:03:32Z #0057] factual_checker -> Qwen | waiting | Still waiting: Qwen #12: factual_checker; 34s elapsed
+[LIVE 09:03:44Z #0058] Qwen -> factual_checker | model_returned | Qwen #12 returned after 46.3s; validation pending
+[LIVE 09:03:44Z #0059] factual_checker -> orchestrator | decision_validated | S02_C02: finalize; Evidence is sufficient to assess the claim against the retrieved tweets.
+[LIVE 09:03:44Z #0060] summary_claim_extractor -> factual_checker | claim_opened | Participants preferred to relax with food and television instead of playing the game
+[LIVE 09:03:44Z #0061] factual_checker -> Qwen | call_started | Qwen #13: factual_checker
+[LIVE 09:03:54Z #0062] Qwen -> factual_checker | model_returned | Qwen #13 returned after 10.0s; validation pending
+[LIVE 09:03:54Z #0063] factual_checker -> tool_guard | decision_validated | S02_C03: lookup_fact; The summary claim cites multiple source IDs. I need to retrieve the content of these tweets to verify if they support the assertion that participants preferred relaxing with food and television over playing the game.
+[LIVE 09:03:54Z #0064] factual_checker -> ontology_tools | tool_started | lookup_fact for S02_C03
+[LIVE 09:03:54Z #0065] ontology_tools -> factual_checker | tool_result | lookup_fact: 16 selected evidence items; complete=True
+[LIVE 09:03:54Z #0066] factual_checker -> Qwen | call_started | Qwen #14: factual_checker
+[LIVE 09:04:02Z #0067] factual_checker -> Qwen | waiting | Still waiting: Qwen #14: factual_checker; 8s elapsed
+[LIVE 09:04:28Z #0068] Qwen -> factual_checker | model_returned | Qwen #14 returned after 33.9s; validation pending
+[LIVE 09:04:28Z #0069] factual_checker -> orchestrator | decision_validated | S02_C03: finalize; Evidence is sufficient to assess the claim based on the retrieved tweets.
+[LIVE 09:04:28Z #0070] summary_claim_extractor -> factual_checker | claim_opened | Users debated the performances of artists including Beyoncé, Nicki Minaj, and Rihanna.
+[LIVE 09:04:28Z #0071] factual_checker -> Qwen | call_started | Qwen #15: factual_checker
+[LIVE 09:04:32Z #0072] factual_checker -> Qwen | waiting | Still waiting: Qwen #15: factual_checker; 4s elapsed
+[LIVE 09:04:36Z #0073] Qwen -> factual_checker | model_returned | Qwen #15 returned after 8.0s; validation pending
+[LIVE 09:04:36Z #0074] factual_checker -> tool_guard | decision_validated | S03_C01: lookup_fact; Retrieving the cited tweets and source claims to verify if users debated performances of Beyoncé, Nicki Minaj, and Rihanna.
+[LIVE 09:04:36Z #0075] factual_checker -> ontology_tools | tool_started | lookup_fact for S03_C01
+[LIVE 09:04:36Z #0076] ontology_tools -> factual_checker | tool_result | lookup_fact: 13 selected evidence items; complete=True
+[LIVE 09:04:36Z #0077] factual_checker -> Qwen | call_started | Qwen #16: factual_checker
+[LIVE 09:05:02Z #0078] factual_checker -> Qwen | waiting | Still waiting: Qwen #16: factual_checker; 26s elapsed
+[LIVE 09:05:05Z #0079] Qwen -> factual_checker | model_returned | Qwen #16 returned after 29.5s; validation pending
+[LIVE 09:05:05Z #0080] factual_checker -> orchestrator | decision_validated | S03_C01: finalize; Evidence is sufficient to assess the claim.
+[LIVE 09:05:05Z #0081] summary_claim_extractor -> factual_checker | claim_opened | Users criticized the Super Bowl commercials
+[LIVE 09:05:05Z #0082] factual_checker -> Qwen | call_started | Qwen #17: factual_checker
+[LIVE 09:05:15Z #0083] Qwen -> factual_checker | model_returned | Qwen #17 returned after 9.1s; validation pending
+[LIVE 09:05:15Z #0084] factual_checker -> tool_guard | decision_validated | S04_C01: lookup_fact; The summary claim cites four specific source IDs. I need to retrieve the content of these tweets to verify if they contain criticism of Super Bowl commercials.
+[LIVE 09:05:15Z #0085] factual_checker -> ontology_tools | tool_started | lookup_fact for S04_C01
+[LIVE 09:05:15Z #0086] ontology_tools -> factual_checker | tool_result | lookup_fact: 12 selected evidence items; complete=True
+[LIVE 09:05:15Z #0087] factual_checker -> Qwen | call_started | Qwen #18: factual_checker
+[LIVE 09:05:32Z #0088] factual_checker -> Qwen | waiting | Still waiting: Qwen #18: factual_checker; 17s elapsed
+[LIVE 09:05:46Z #0089] Qwen -> factual_checker | model_returned | Qwen #18 returned after 30.8s; validation pending
+[LIVE 09:05:46Z #0090] factual_checker -> orchestrator | decision_validated | S04_C01: finalize; Sufficient evidence to assess the claim.
+[LIVE 09:05:46Z #0091] summary_claim_extractor -> factual_checker | claim_opened | The logic of scheduling the Pro Bowl before the main event was questioned
+[LIVE 09:05:46Z #0092] factual_checker -> Qwen | call_started | Qwen #19: factual_checker
+[LIVE 09:05:55Z #0093] Qwen -> factual_checker | model_returned | Qwen #19 returned after 9.2s; validation pending
+[LIVE 09:05:55Z #0094] factual_checker -> tool_guard | decision_validated | S04_C02: lookup_fact; Retrieving the cited tweets and source claims to verify if they explicitly support or contradict the claim that the logic of scheduling the Pro Bowl before the main event was questioned.
+[LIVE 09:05:55Z #0095] factual_checker -> ontology_tools | tool_started | lookup_fact for S04_C02
+[LIVE 09:05:55Z #0096] ontology_tools -> factual_checker | tool_result | lookup_fact: 12 selected evidence items; complete=True
+[LIVE 09:05:55Z #0097] factual_checker -> Qwen | call_started | Qwen #20: factual_checker
+[LIVE 09:06:02Z #0098] factual_checker -> Qwen | waiting | Still waiting: Qwen #20: factual_checker; 7s elapsed
+[LIVE 09:06:32Z #0099] factual_checker -> Qwen | waiting | Still waiting: Qwen #20: factual_checker; 37s elapsed
+[LIVE 09:06:37Z #0100] Qwen -> factual_checker | model_returned | Qwen #20 returned after 41.8s; validation pending
+[LIVE 09:06:37Z #0101] factual_checker -> orchestrator | decision_validated | S04_C02: finalize; Sufficient evidence found to support the claim.
+[LIVE 09:06:37Z #0102] factual_check -> representation_check | handoff | factual_check completed: UNKNOWN
+[LIVE 09:06:37Z #0103] orchestrator -> representation_check | stage_started | Starting representation_check; revision 0
+[LIVE 09:06:37Z #0104] representation_check -> route_checks | handoff | representation_check completed: UNKNOWN
+[LIVE 09:06:37Z #0105] orchestrator -> route_checks | stage_started | Starting route_checks; revision 0
+[LIVE 09:06:37Z #0106] route_checks -> finalize | handoff | route_checks completed: uncertainty_only
+[LIVE 09:06:37Z #0107] orchestrator -> finalize | stage_started | Starting finalize; revision 0
+[LIVE 09:06:37Z #0108] finalize -> result_writer | handoff | finalize completed: uncertainty_only
+[LIVE 09:06:37Z #0109] result_writer -> user | run_completed | completed_with_uncertainty: uncertainty_only
+[6/6] Complete result saved
+Factual: UNKNOWN | SUPPORTED=2 | CONTRADICTED=0 | UNKNOWN=6
+Coverage AA: UNKNOWN | tweets 30/30
+Coverage Hisp: UNKNOWN | tweets 30/30
+Coverage White: UNKNOWN | tweets 30/30
+Representation: UNKNOWN | disparity=UNKNOWN | threshold=0.2
+Evidence is incomplete; full-topic representation cannot be determined.
+Revisions: 0 attempted | accepted=0 | rejected=0 | rolled_back=0
+Final status: completed_with_uncertainty | stop reason: uncertainty_only
+Uncertainty: Incomplete summary extraction; factual checking may conceal claims.; factual_uncertainty; incomplete_topic_or_extraction_data; representation_uncertainty; summary_extraction_failed
+Complete results: results\agent_rerun\Superbowl_prompt1_seed303.json

@@ -1,0 +1,264 @@
+{
+  "McDonalds_prompt1_seed101": {
+    "status": "stopped_with_issues",
+    "stop_reason": "representation_regression_or_incomparable",
+    "revisions": {
+      "rolled_back": 3
+    },
+    "verdicts": {
+      "SUPPORTED": 3,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 7
+    },
+    "representation": "FAIL",
+    "disparity": 0.35255230756901823,
+    "changed": false
+  },
+  "McDonalds_prompt1_seed202": {
+    "status": "stopped_with_issues",
+    "stop_reason": "invalid_revision",
+    "revisions": {
+      "rejected": 1
+    },
+    "verdicts": {
+      "SUPPORTED": 2,
+      "CONTRADICTED": 1,
+      "UNKNOWN": 11
+    },
+    "representation": "FAIL",
+    "disparity": 0.22698964157508084,
+    "changed": false
+  },
+  "McDonalds_prompt1_seed303": {
+    "status": "stopped_with_issues",
+    "stop_reason": "representation_regression_or_incomparable",
+    "revisions": {
+      "rolled_back": 3
+    },
+    "verdicts": {
+      "SUPPORTED": 2,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 11
+    },
+    "representation": "FAIL",
+    "disparity": 0.37069650640724183,
+    "changed": false
+  },
+  "McDonalds_prompt2_seed101": {
+    "status": "stopped_with_issues",
+    "stop_reason": "representation_regression_or_incomparable",
+    "revisions": {
+      "accepted": 1,
+      "rolled_back": 2
+    },
+    "verdicts": {
+      "SUPPORTED": 8,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 5
+    },
+    "representation": "FAIL",
+    "disparity": 0.20487607146076392,
+    "changed": true
+  },
+  "McDonalds_prompt2_seed202": {
+    "status": "stopped_with_issues",
+    "stop_reason": "unsupported_revision",
+    "revisions": {
+      "rolled_back": 3
+    },
+    "verdicts": {
+      "SUPPORTED": 5,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 8
+    },
+    "representation": "FAIL",
+    "disparity": 0.3984213520373179,
+    "changed": false
+  },
+  "McDonalds_prompt2_seed303": {
+    "status": "stopped_with_issues",
+    "stop_reason": "representation_regression_or_incomparable",
+    "revisions": {
+      "rolled_back": 3
+    },
+    "verdicts": {
+      "SUPPORTED": 1,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 14
+    },
+    "representation": "FAIL",
+    "disparity": 0.2751380911532674,
+    "changed": false
+  },
+  "Obama_prompt1_seed101": {
+    "status": "stopped_with_issues",
+    "stop_reason": "unsupported_revision",
+    "revisions": {
+      "rolled_back": 3
+    },
+    "verdicts": {
+      "SUPPORTED": 2,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 7
+    },
+    "representation": "FAIL",
+    "disparity": 0.3708998722115251,
+    "changed": false
+  },
+  "Obama_prompt1_seed202": {
+    "status": "stopped_with_issues",
+    "stop_reason": "unsupported_revision",
+    "revisions": {
+      "rolled_back": 3
+    },
+    "verdicts": {
+      "SUPPORTED": 4,
+      "CONTRADICTED": 1,
+      "UNKNOWN": 7
+    },
+    "representation": "PASS",
+    "disparity": 0.17488774880570457,
+    "changed": false
+  },
+  "Obama_prompt1_seed303": {
+    "status": "completed_with_uncertainty",
+    "stop_reason": "uncertainty_only",
+    "revisions": {},
+    "verdicts": {
+      "SUPPORTED": 3,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 9
+    },
+    "representation": "PASS",
+    "disparity": 0.11971605146703335,
+    "changed": false
+  },
+  "Obama_prompt2_seed101": {
+    "status": "stopped_with_issues",
+    "stop_reason": "unsupported_revision",
+    "revisions": {
+      "rolled_back": 3
+    },
+    "verdicts": {
+      "SUPPORTED": 1,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 13
+    },
+    "representation": "FAIL",
+    "disparity": 0.24619181668191437,
+    "changed": false
+  },
+  "Obama_prompt2_seed202": {
+    "status": "stopped_with_issues",
+    "stop_reason": "unsupported_revision",
+    "revisions": {
+      "rolled_back": 3
+    },
+    "verdicts": {
+      "SUPPORTED": 3,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 13
+    },
+    "representation": "FAIL",
+    "disparity": 0.4683104406299319,
+    "changed": false
+  },
+  "Obama_prompt2_seed303": {
+    "status": "completed_with_uncertainty",
+    "stop_reason": "uncertainty_only",
+    "revisions": {},
+    "verdicts": {
+      "SUPPORTED": 4,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 9
+    },
+    "representation": "PASS",
+    "disparity": 0.06588937595758049,
+    "changed": false
+  },
+  "Superbowl_prompt1_seed101": {
+    "status": "completed_with_uncertainty",
+    "stop_reason": "uncertainty_only",
+    "revisions": {},
+    "verdicts": {
+      "SUPPORTED": 1,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 9
+    },
+    "representation": "UNKNOWN",
+    "disparity": null,
+    "changed": false
+  },
+  "Superbowl_prompt1_seed202": {
+    "status": "stopped_with_issues",
+    "stop_reason": "unsupported_revision",
+    "revisions": {
+      "rolled_back": 3
+    },
+    "verdicts": {
+      "SUPPORTED": 3,
+      "CONTRADICTED": 1,
+      "UNKNOWN": 2
+    },
+    "representation": "UNKNOWN",
+    "disparity": null,
+    "changed": false
+  },
+  "Superbowl_prompt1_seed303": {
+    "status": "completed_with_uncertainty",
+    "stop_reason": "uncertainty_only",
+    "revisions": {},
+    "verdicts": {
+      "SUPPORTED": 2,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 6
+    },
+    "representation": "UNKNOWN",
+    "disparity": null,
+    "changed": false
+  },
+  "Superbowl_prompt2_seed101": {
+    "status": "stopped_with_issues",
+    "stop_reason": "invalid_revision",
+    "revisions": {
+      "accepted": 1,
+      "rejected": 1
+    },
+    "verdicts": {
+      "SUPPORTED": 4,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 6
+    },
+    "representation": "FAIL",
+    "disparity": 0.2437591577298749,
+    "changed": true
+  },
+  "Superbowl_prompt2_seed202": {
+    "status": "completed_with_uncertainty",
+    "stop_reason": "uncertainty_only",
+    "revisions": {},
+    "verdicts": {
+      "SUPPORTED": 2,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 4
+    },
+    "representation": "UNKNOWN",
+    "disparity": null,
+    "changed": false
+  },
+  "Superbowl_prompt2_seed303": {
+    "status": "stopped_with_issues",
+    "stop_reason": "unsupported_revision",
+    "revisions": {
+      "rolled_back": 3
+    },
+    "verdicts": {
+      "SUPPORTED": 0,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 12
+    },
+    "representation": "FAIL",
+    "disparity": 0.20354840576906197,
+    "changed": false
+  }
+}

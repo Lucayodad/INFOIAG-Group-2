@@ -1,0 +1,95 @@
+{
+  "status": "draft_unchecked",
+  "provider": "ollama",
+  "topic": "McDonalds",
+  "seed": 303,
+  "temperature": 0.7,
+  "summary": "The provided tweets collectively describe a wide range of interactions and opinions regarding McDonald's, spanning from personal cravings to specific service experiences. Many users express a strong desire to visit the restaurant or consume specific items like nuggets, ice cream, and tea. Some individuals report negative experiences with the quality of food, such as cold items, insufficient sauce packets, or stale products. A significant number of the posts also highlight frustrations with staff behavior, long wait times, and inconvenient store locations. The collection includes varied perspectives on the brand, ranging from viewing it as a necessary comfort food to criticizing its pricing and menu limitations.",
+  "sentences": [
+    {
+      "text": "The provided tweets collectively describe a wide range of interactions and opinions regarding McDonald's, spanning from personal cravings to specific service experiences.",
+      "source_ids": [
+        "McDonalds_001",
+        "McDonalds_002",
+        "McDonalds_003",
+        "McDonalds_004",
+        "McDonalds_005"
+      ]
+    },
+    {
+      "text": "Many users express a strong desire to visit the restaurant or consume specific items like nuggets, ice cream, and tea.",
+      "source_ids": [
+        "McDonalds_003",
+        "McDonalds_006",
+        "McDonalds_010",
+        "McDonalds_014",
+        "McDonalds_021",
+        "McDonalds_026",
+        "McDonalds_054"
+      ]
+    },
+    {
+      "text": "Some individuals report negative experiences with the quality of food, such as cold items, insufficient sauce packets, or stale products.",
+      "source_ids": [
+        "McDonalds_004",
+        "McDonalds_009",
+        "McDonalds_020",
+        "McDonalds_046",
+        "McDonalds_056",
+        "McDonalds_071"
+      ]
+    },
+    {
+      "text": "A significant number of the posts also highlight frustrations with staff behavior, long wait times, and inconvenient store locations.",
+      "source_ids": [
+        "McDonalds_013",
+        "McDonalds_024",
+        "McDonalds_025",
+        "McDonalds_034",
+        "McDonalds_044",
+        "McDonalds_076"
+      ]
+    },
+    {
+      "text": "The collection includes varied perspectives on the brand, ranging from viewing it as a necessary comfort food to criticizing its pricing and menu limitations.",
+      "source_ids": [
+        "McDonalds_012",
+        "McDonalds_038",
+        "McDonalds_040",
+        "McDonalds_055",
+        "McDonalds_070",
+        "McDonalds_086"
+      ]
+    }
+  ],
+  "summary_prompt": "Below are 90 tweets about McDonald's. Write a 5-sentence summary for someone who has not followed this topic, so they get a quick picture of what people are saying.",
+  "requested_model": "qwen3.5:4b",
+  "returned_model": "qwen3.5:4b",
+  "generation_settings": {
+    "temperature": 0.7,
+    "seed": 303,
+    "num_ctx": 16384,
+    "num_predict": 2000
+  },
+  "backend_metadata": {
+    "created_at": "2026-11-02T11:29:24.9142474Z",
+    "total_duration": 11489236500,
+    "load_duration": 4641400,
+    "prompt_eval_duration": 108338000,
+    "eval_duration": 11357490000,
+    "done_reason": "stop"
+  },
+  "usage": {
+    "input_tokens": 4676,
+    "output_tokens": 441,
+    "total_tokens": 5117
+  },
+  "execution_seconds": 11.490704,
+  "created_at_utc": "2026-11-02T11:29:24.915261+00:00",
+  "input_sha256": "d4e38c6fce50e32132233c825dbbc6e77cf79a9ba8308184e5da3c7d436e20e2",
+  "request_sha256": "3fbd3f4391a508a194c7ee7fd2a1222d20e536063aa99e6e414308d284705c02",
+  "ontology_used": false,
+  "reference_summaries_used": false,
+  "system": "baseline",
+  "prompt_id": "1"
+}

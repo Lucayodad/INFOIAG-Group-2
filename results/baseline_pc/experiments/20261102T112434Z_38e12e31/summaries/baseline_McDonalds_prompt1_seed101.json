@@ -1,0 +1,91 @@
+{
+  "status": "draft_unchecked",
+  "provider": "ollama",
+  "topic": "McDonalds",
+  "seed": 101,
+  "temperature": 0.7,
+  "summary": "Social media discussions about McDonald's primarily revolve around immediate cravings for its food items like ice cream, nuggets, and fries. A significant portion of the content highlights specific customer frustrations regarding portion sizes, specifically complaints about receiving only one packet of ranch dressing for large nugget meals. Several posts express dissatisfaction with store operations and employee behavior, including remarks about cashier attitudes, security guards, and the limited hours for breakfast service. There is also considerable debate regarding health concerns, with some users describing the food as disgusting or noting it does not count toward vegetable servings. While some tweets focus on price comparisons and the value of the dollar menu, others touch upon charitable initiatives and the general habit of ordering McDonald's as a routine after exercise or travel.",
+  "sentences": [
+    {
+      "text": "Social media discussions about McDonald's primarily revolve around immediate cravings for its food items like ice cream, nuggets, and fries.",
+      "source_ids": [
+        "McDonalds_001",
+        "McDonalds_003",
+        "McDonalds_004",
+        "McDonalds_006",
+        "McDonalds_026",
+        "McDonalds_036",
+        "McDonalds_051",
+        "McDonalds_052",
+        "McDonalds_054",
+        "McDonalds_074"
+      ]
+    },
+    {
+      "text": "A significant portion of the content highlights specific customer frustrations regarding portion sizes, specifically complaints about receiving only one packet of ranch dressing for large nugget meals.",
+      "source_ids": [
+        "McDonalds_020",
+        "McDonalds_078"
+      ]
+    },
+    {
+      "text": "Several posts express dissatisfaction with store operations and employee behavior, including remarks about cashier attitudes, security guards, and the limited hours for breakfast service.",
+      "source_ids": [
+        "McDonalds_013",
+        "McDonalds_024",
+        "McDonalds_025",
+        "McDonalds_058"
+      ]
+    },
+    {
+      "text": "There is also considerable debate regarding health concerns, with some users describing the food as disgusting or noting it does not count toward vegetable servings.",
+      "source_ids": [
+        "McDonalds_009",
+        "McDonalds_046",
+        "McDonalds_056",
+        "McDonalds_071"
+      ]
+    },
+    {
+      "text": "While some tweets focus on price comparisons and the value of the dollar menu, others touch upon charitable initiatives and the general habit of ordering McDonald's as a routine after exercise or travel.",
+      "source_ids": [
+        "McDonalds_040",
+        "McDonalds_041",
+        "McDonalds_044",
+        "McDonalds_045",
+        "McDonalds_073",
+        "McDonalds_087"
+      ]
+    }
+  ],
+  "summary_prompt": "Below are 90 tweets about McDonald's. Write a 5-sentence summary for someone who has not followed this topic, so they get a quick picture of what people are saying.",
+  "requested_model": "qwen3.5:4b",
+  "returned_model": "qwen3.5:4b",
+  "generation_settings": {
+    "temperature": 0.7,
+    "seed": 101,
+    "num_ctx": 16384,
+    "num_predict": 2000
+  },
+  "backend_metadata": {
+    "created_at": "2026-11-02T11:29:03.307143Z",
+    "total_duration": 16970784000,
+    "load_duration": 4629100,
+    "prompt_eval_duration": 5734560000,
+    "eval_duration": 11131177000,
+    "done_reason": "stop"
+  },
+  "usage": {
+    "input_tokens": 4676,
+    "output_tokens": 431,
+    "total_tokens": 5107
+  },
+  "execution_seconds": 16.97192,
+  "created_at_utc": "2026-11-02T11:29:03.307658+00:00",
+  "input_sha256": "d4e38c6fce50e32132233c825dbbc6e77cf79a9ba8308184e5da3c7d436e20e2",
+  "request_sha256": "d69fc9fcb51976980c6777d0047382543820568dec03758855315e2e6066fa60",
+  "ontology_used": false,
+  "reference_summaries_used": false,
+  "system": "baseline",
+  "prompt_id": "1"
+}

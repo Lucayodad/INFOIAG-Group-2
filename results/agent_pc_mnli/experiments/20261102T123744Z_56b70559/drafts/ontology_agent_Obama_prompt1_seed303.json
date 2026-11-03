@@ -1,0 +1,95 @@
+{
+  "status": "draft_unchecked",
+  "provider": "ollama",
+  "topic": "Obama",
+  "seed": 303,
+  "temperature": 0.7,
+  "summary": "A significant portion of the tweets expresses skepticism or criticism regarding President Obama's policies, frequently referencing his tax increases, gun control proposals, and healthcare legislation. Several comments contain personal attacks and conspiracy theories, with some users alleging that Obama is the Antichrist or a puppet controlled by external forces. The collection of posts includes numerous lighthearted observations and jokes, often mocking Obama's speech style or appearance by comparing him to fictional characters or celebrities. Some tweets focus on the President's family, specifically praising or making jokes about Michelle Obama's fashion and demeanor during public events. While a minority of the tweets offer supportive or neutral commentary, many users discuss the political context of the second term and question whether Obama can achieve significant legislative progress alone.",
+  "sentences": [
+    {
+      "text": "A significant portion of the tweets expresses skepticism or criticism regarding President Obama's policies, frequently referencing his tax increases, gun control proposals, and healthcare legislation.",
+      "source_ids": [
+        "Obama_003",
+        "Obama_014",
+        "Obama_020",
+        "Obama_040",
+        "Obama_058",
+        "Obama_060",
+        "Obama_067",
+        "Obama_070"
+      ]
+    },
+    {
+      "text": "Several comments contain personal attacks and conspiracy theories, with some users alleging that Obama is the Antichrist or a puppet controlled by external forces.",
+      "source_ids": [
+        "Obama_008",
+        "Obama_012",
+        "Obama_044",
+        "Obama_061",
+        "Obama_072"
+      ]
+    },
+    {
+      "text": "The collection of posts includes numerous lighthearted observations and jokes, often mocking Obama's speech style or appearance by comparing him to fictional characters or celebrities.",
+      "source_ids": [
+        "Obama_001",
+        "Obama_010",
+        "Obama_024",
+        "Obama_031",
+        "Obama_051",
+        "Obama_068",
+        "Obama_080"
+      ]
+    },
+    {
+      "text": "Some tweets focus on the President's family, specifically praising or making jokes about Michelle Obama's fashion and demeanor during public events.",
+      "source_ids": [
+        "Obama_002",
+        "Obama_021",
+        "Obama_022",
+        "Obama_047",
+        "Obama_052",
+        "Obama_085"
+      ]
+    },
+    {
+      "text": "While a minority of the tweets offer supportive or neutral commentary, many users discuss the political context of the second term and question whether Obama can achieve significant legislative progress alone.",
+      "source_ids": [
+        "Obama_013",
+        "Obama_023",
+        "Obama_053",
+        "Obama_073",
+        "Obama_074",
+        "Obama_077"
+      ]
+    }
+  ],
+  "summary_prompt": "Below are 90 tweets about Barack Obama. Write a 5-sentence summary for someone who has not followed this topic, so they get a quick picture of what people are saying.",
+  "requested_model": "qwen3.5:4b",
+  "returned_model": "qwen3.5:4b",
+  "generation_settings": {
+    "temperature": 0.7,
+    "seed": 303,
+    "num_ctx": 16384,
+    "num_predict": 2000
+  },
+  "backend_metadata": {
+    "created_at": "2026-11-02T12:48:39.7383742Z",
+    "total_duration": 18302907800,
+    "load_duration": 4805700,
+    "prompt_eval_duration": 5370223000,
+    "eval_duration": 12831768000,
+    "done_reason": "stop"
+  },
+  "usage": {
+    "input_tokens": 4250,
+    "output_tokens": 476,
+    "total_tokens": 4726
+  },
+  "execution_seconds": 18.30403,
+  "created_at_utc": "2026-11-02T12:48:39.738882+00:00",
+  "input_sha256": "2f8c62fc6b98af2dc3bfe6311455b477450237eea22f3ded4edcf8ea28e25c68",
+  "request_sha256": "d7b3dfe1906ee4c950603b3aa5b536cabbb2d5a3c687b6faf40d960ed0c7c312",
+  "ontology_used": false,
+  "reference_summaries_used": false
+}

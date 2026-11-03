@@ -61,7 +61,7 @@ def main() -> None:
                         save_result(result, path)
                         print(f"\n{topic}, prompt {prompt_id}:\n{result['summary']}\nSaved: {path}")
             print("\nNo API calls made; no summaries generated." if args.dry_run else
-                  "\nDraft generation complete. Ontology/bias checking and revision are still pending.")
+                  "\nDraft generation complete. Run summary_agent.py with the saved draft and populated RDF graph for checking and revision.")
         except (DatasetError, GenerationError, OSError) as exc:
             parser.exit(1, f"Draft error: {exc}\n")
         finally:

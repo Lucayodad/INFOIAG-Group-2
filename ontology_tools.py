@@ -14,6 +14,8 @@ from rdflib import BNode, Graph, Literal, Namespace, RDF, RDFS, OWL, URIRef
 ROOT = Path(__file__).resolve().parent
 DEFAULT_ONTOLOGY = ROOT / "ontology" / "group2_Ontology.owl"
 NS = Namespace("http://www.semanticweb.org/group2/ontology#")
+TOPIC_IRIS = {"Obama": NS.Topic_Obama, "McDonalds": NS.Topic_McDonalds,
+              "Superbowl": NS.SuperBowl}
 QUERY_DEFAULTS = {
     "Q1": {"company": "McDonalds"},
     "Q2": {"target": "McDonalds"},
@@ -38,6 +40,25 @@ def copy_graph(source: Graph) -> Graph:
     for triple in source:
         result.add(triple)
     return result
+
+
+def pipeline_base_graph(tools) -> Graph:
+    """Copy schema/domain assertions, excluding base evidence instances and links.
+
+    Named-subclass inference identifies e.g. SportsClaim as Claim. The original
+    asserted/inferred graphs remain intact for standalone ontology inspection.
+    Topic and Source reference individuals remain; run evidence is added later.
+    """
+    excluded = {
+        subject
+        for cls in (NS.Tweet, NS.Claim, NS.ClaimAssessment, NS.Summary)
+        for subject in tools.inferred.subjects(RDF.type, cls)
+    }
+    graph = Graph()
+    for subject, predicate, obj in tools.asserted:
+        if subject not in excluded and obj not in excluded:
+            graph.add((subject, predicate, obj))
+    return graph
 
 
 def limited_closure(source: Graph) -> Graph:
