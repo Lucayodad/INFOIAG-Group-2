@@ -65,6 +65,14 @@ def mock_client(transform_revision=None, no_improvement=False, unknown_matching=
     def chat(payload):
         fields = set(payload["format"]["properties"])
         raw = payload["messages"][-1]["content"]
+        if "rewrites" in fields:
+            body = json.loads(raw)
+            return response({"rewrites": [
+                {"sentence_id": sentence["sentence_id"],
+                 "text": sentence["supported_claims"][0] if sentence["supported_claims"]
+                 else "Some users express a viewpoint about the topic."}
+                for sentence in body["sentences"]
+            ]})
         if "replacements" in fields:
             body = json.loads(payload["messages"][1]["content"])  # original request, also on repair
             by_id = {row["tweet_id"]: row for row in body["original_tweets"]}

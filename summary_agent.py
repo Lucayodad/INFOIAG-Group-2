@@ -20,7 +20,7 @@ from ollama_backend import OllamaClient
 from model_usage import recording_client
 from representation_check import representation_check
 from revision_retrieval import retrieve_revision_evidence
-from summary_revision import revise_summary
+from summary_revision import revise_summary, rewrite_unsupported_sentences
 from summary_claims import extract_sentence, flatten_summary_claims
 from summarizer import GenerationError, digest
 
@@ -206,6 +206,28 @@ def build_summary_agent(graph, client, *, disparity_threshold=None,
                                            embedding_calls=result.get("embedding_call_count", 0)))
 
     def route_checks(state: SummaryAgentState):
+        if (state["revisions"] and state["revisions"][-1]["status"] == "candidate"
+                and "partial_repair" not in state["revisions"][-1]):
+            last = state["revisions"][-1]
+            evidence = {row["tweet_id"]: row for row in state["revision_evidence"].get("tweets", [])}
+            partial = rewrite_unsupported_sentences(
+                state["current_summary"], last["changes"],
+                state["factual_results"].get("assessments", []), evidence, client)
+            if partial["status"] == "candidate":
+                candidate = partial["candidate"]
+                revised_changes = deepcopy(last["changes"])
+                for change in revised_changes:
+                    index = int(change["sentence_id"][1:]) - 1
+                    change["after"] = deepcopy(candidate["sentences"][index])
+                revisions = deepcopy(state["revisions"])
+                revisions[-1].update(candidate=candidate, changes=revised_changes,
+                                     partial_repair=partial)
+                return _update(
+                    state, "route_checks", current_summary=candidate,
+                    summary_versions=state["summary_versions"] + [deepcopy(candidate)],
+                    revisions=revisions, route="extract_summary_claims",
+                    stop_reason="partial_repair_requires_rechecking",
+                    call_counts=_counts(state, model_calls=partial["model_call_count"]))
         checked = {key: deepcopy(state[key]) for key in CHECKED_FIELDS}
         iteration = {**checked, "metrics": _metrics(state), "revision_count": state["revision_count"],
                      "call_counts": dict(state["call_counts"]), "retained": True}
@@ -323,7 +345,8 @@ def build_summary_agent(graph, client, *, disparity_threshold=None,
     builder.add_edge("factual_check", "representation_check")
     builder.add_edge("representation_check", "route_checks")
     builder.add_conditional_edges("route_checks", lambda state: state["route"],
-                                  {"finalize": "finalize", "retrieve_revision_evidence": "retrieve_revision_evidence"})
+                                  {"finalize": "finalize", "retrieve_revision_evidence": "retrieve_revision_evidence",
+                                   "extract_summary_claims": "extract_summary_claims"})
     builder.add_conditional_edges("retrieve_revision_evidence", lambda state: state["route"],
                                   {"finalize": "finalize", "revise_summary": "revise_summary"})
     builder.add_conditional_edges("revise_summary", lambda state: state["route"],
