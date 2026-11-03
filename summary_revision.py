@@ -227,7 +227,7 @@ def _add_usage(total, usage):
 
 
 def rewrite_unsupported_sentences(summary, changes, assessments, evidence, client):
-    """Rewrite changed sentences using only claims that passed rechecking."""
+    """Keep only claim text that the checker explicitly marked supported."""
     by_sentence = {}
     for assessment in assessments:
         by_sentence.setdefault(assessment["sentence_id"], []).append(assessment)
@@ -253,39 +253,21 @@ def rewrite_unsupported_sentences(summary, changes, assessments, evidence, clien
             })
     if not targets:
         return {"status": "unchanged", "model_call_count": 0}
-    schema = {"type": "object", "additionalProperties": False, "required": ["rewrites"],
-              "properties": {"rewrites": {"type": "array", "minItems": len(targets),
-                              "maxItems": len(targets), "items": {
-                                  "type": "object", "additionalProperties": False,
-                                  "required": ["sentence_id", "text"], "properties": {
-                                      "sentence_id": {"type": "string"},
-                                      "text": {"type": "string"}}}}}}
-    body = {"instructions": [
-        "Rewrite each sentence as one natural complete sentence.",
-        "Keep only the supported claims listed for that sentence.",
-        "Remove rejected claims entirely; do not weaken them into new unsupported claims.",
-        "Preserve accurate wording where possible.",
-    ], "sentences": targets}
     try:
-        response = client.chat({"model": "qwen3.5:4b", "stream": False, "think": False,
-                                "messages": [{"role": "system", "content": "Perform a minimal factual cleanup."},
-                                             {"role": "user", "content": json.dumps(body, ensure_ascii=False)}],
-                                "format": schema, "options": {"temperature": 0, "seed": 42, "num_ctx": 16384,
-                                                              "num_predict": 800}})
-        data = json.loads(response["output"][0]["content"][0]["text"])
-        replacements = {row["sentence_id"]: row["text"] for row in data["rewrites"]}
         candidate = deepcopy(summary)
         for target in targets:
-            text = replacements.get(target["sentence_id"])
-            if not isinstance(text, str) or not text.strip() or GROUP_LABEL.search(text):
-                raise ValueError("Malformed partial repair.")
+            text = " ".join(target["supported_claims"]).strip()
+            if len(target["supported_claims"]) > 1:
+                text = text.rstrip(".") + "."
+            if not text or GROUP_LABEL.search(text):
+                raise ValueError("No natural supported partial repair.")
             validate_abstraction(text, [evidence[key]["quote"] for key in
                                         next(t["source_ids"] for t in targets if t["sentence_id"] == target["sentence_id"])])
             index = int(target["sentence_id"][1:]) - 1
             candidate["sentences"][index]["text"] = text
         candidate["summary"] = " ".join(row["text"] for row in candidate["sentences"])
         return {"status": "candidate", "candidate": candidate,
-                "model_call_count": 1, "usage": response.get("usage")}
-    except (KeyError, TypeError, ValueError, json.JSONDecodeError, GenerationError) as exc:
+                "model_call_count": 0}
+    except (KeyError, TypeError, ValueError, GenerationError) as exc:
         return {"status": "rejected", "reason": "partial_repair_invalid", "error": str(exc),
-                "model_call_count": 1}
+                "model_call_count": 0}
