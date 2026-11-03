@@ -59,7 +59,7 @@ def _validate_revision_scope(text: str, source_count: int) -> None:
         raise ValueError("Several, many or frequently requires at least 3 cited source tweets.")
 
 
-def _evidence_by_task(tasks, evidence):
+def _evidence_by_task(tasks):
     return [{
         "task_id": task["task_id"],
         "kind": task["kind"],
@@ -67,7 +67,7 @@ def _evidence_by_task(tasks, evidence):
         "failed_claim": task.get("failed_claim"),
         "failure_explanation": task.get("failure_explanation", task.get("explanation")),
         "required_source_count": task.get("min_source_ids", 1),
-        "evidence": [evidence[tweet_id] for tweet_id in task["evidence_ids"]],
+        "evidence_ids": task["evidence_ids"],
     } for task in tasks]
 
 
@@ -123,7 +123,7 @@ def revise_summary(summary, confirmed_issues, retrieved, client, *, max_input_by
                         "tweet_id": {"type": "string", "enum": list(evidence)}, "quote": {"type": "string"}}}},
             }}}}}
     body = {"summary": summary["sentences"], "confirmed_issues": confirmed_issues,
-            "tasks": tasks, "evidence_by_task": _evidence_by_task(tasks, evidence),
+            "tasks": tasks, "evidence_by_task": _evidence_by_task(tasks),
             "repair_guidance": _repair_guidance(summary, confirmed_issues, tasks),
             "original_tweets": retrieved["tweets"]}
     payload = {"model": "qwen3.5:4b", "stream": False, "think": False,

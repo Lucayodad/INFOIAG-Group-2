@@ -10,7 +10,7 @@ from fact_check import quote_in
 from ontology_tools import NS
 from revision_retrieval import cosine, retrieve_revision_evidence
 from summary_agent import compare_revision, run_summary_agent
-from summary_revision import revise_summary
+from summary_revision import _evidence_by_task, revise_summary
 
 
 class RevisionLoopTests(unittest.TestCase):
@@ -36,6 +36,20 @@ class RevisionLoopTests(unittest.TestCase):
         self.assertEqual(result["revision_count"], 0)
         self.assertEqual(result["revisions"], [])
         client.embed.assert_not_called()
+
+    def test_revision_task_bundle_references_shared_evidence_by_id(self):
+        tasks = [{
+            "task_id": "fact:S01",
+            "kind": "factual",
+            "sentence_id": "S01",
+            "evidence_ids": ["T01"],
+            "failed_claim": "A claim",
+            "failure_explanation": "The claim is unsupported.",
+        }]
+        bundled = _evidence_by_task(tasks)
+        self.assertEqual(bundled[0]["evidence_ids"], ["T01"])
+        self.assertNotIn("evidence", bundled[0])
+        self.assertNotIn("quote", bundled[0])
 
     def test_factual_contradiction_repaired(self):
         result, _ = self.run_fixture("factual")
