@@ -79,7 +79,7 @@ class SummaryAgentTests(unittest.TestCase):
         self.assertEqual(result["revisions"], [])
         self.assertNotIn("retrieve_revision_evidence", [row["node"] for row in result["execution_history"]])
 
-    def test_unknown_alone_finalizes_with_uncertainty(self):
+    def test_unknown_alone_attempts_bounded_factual_repair(self):
         graph, draft = demo_fixture(contradiction=False)
         result = self.run_agent(graph, draft, mock_qwen(draft, ("UNKNOWN",) * 3, "UNKNOWN"),
                                 disparity_threshold=0.25)
@@ -87,7 +87,7 @@ class SummaryAgentTests(unittest.TestCase):
         self.assertEqual(result["representation_results"]["status"], "UNKNOWN")
         self.assertEqual(result["status"], "completed_with_uncertainty")
         self.assertEqual(result["route"], "finalize")
-        self.assertEqual(result["stop_reason"], "uncertainty_only")
+        self.assertEqual(result["stop_reason"], "revision_limit")
         self.assertTrue(result["uncertainty_flags"])
         self.assertEqual(result["revisions"], [])
 

@@ -252,6 +252,8 @@ def build_summary_agent(graph, client, *, disparity_threshold=None,
                                routing_decisions=state["routing_decisions"] + [decision])
         serious = [issue for issue in state["factual_issues"] + state["representation_issues"]
                    if issue["severity"] == "serious"]
+        unresolved = [issue for issue in state["factual_issues"]
+                      if issue["severity"] == "unresolved"]
         flags = []
         if state["extraction_errors"]:
             flags.append("summary_extraction_failed")
@@ -263,15 +265,15 @@ def build_summary_agent(graph, client, *, disparity_threshold=None,
         # A conclusive disparity bound can fail without identifying a single
         # group whose marginal interval is strictly below another's. Honor the
         # checker's FAIL even when its per-group issue list is empty.
-        confirmed = bool(serious) or any(result["status"] == "FAIL" for result in
-                                         (state["factual_results"], representation))
+        confirmed = bool(serious or unresolved) or any(result["status"] == "FAIL" for result in
+                                                       (state["factual_results"], representation))
         if representation["status"] == "UNKNOWN":
             flags.append("representation_uncertainty")
         flags.extend(representation["reasons"])
         if representation["uncertain_claims"]:
             flags.append("uncertain_representation_matches")
         reason = ("revision_limit" if confirmed and state["revision_count"] >= max_revisions else
-                  "confirmed_serious_issues" if confirmed else
+                  "confirmed_issues_or_factual_uncertainty" if confirmed else
                   "uncertainty_only" if flags else "no_confirmed_serious_issues")
         route = "retrieve_revision_evidence" if confirmed and state["revision_count"] < max_revisions else "finalize"
         decision = {"node": "route_checks", "iteration": best, "route": route, "reason": reason, "rolled_back": False}

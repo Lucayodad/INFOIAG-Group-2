@@ -61,7 +61,7 @@ def cosine(left, right):
 def retrieve_revision_evidence(graph, topic, summary_claims, factual_results, representation_results,
                                embedder, *, top_k=3, max_tweets=9, max_evidence_bytes=7000,
                                embedding_cache=None, embedding_model="all-minilm"):
-    """Retrieve for confirmed issues only; similarity is relevance, not entailment.
+    """Retrieve evidence for factual uncertainty and confirmed issues.
 
     Exact cited evidence is prioritized for factual repairs. Representation
     candidates are restricted to supporters of confirmed omitted claims in the
@@ -74,7 +74,7 @@ def retrieve_revision_evidence(graph, topic, summary_claims, factual_results, re
     claims = {c["claim_id"]: c for c in flatten_summary_claims(summary_claims)}
     tasks, direct, tools = [], {}, 0
     for issue in factual_results["issues"]:
-        if issue["severity"] != "serious":
+        if issue["severity"] not in {"serious", "unresolved"}:
             continue
         claim = claims.get(issue["claim_id"])
         if claim is None:
@@ -84,11 +84,23 @@ def retrieve_revision_evidence(graph, topic, summary_claims, factual_results, re
         # Prefer the original sources already inspected by the factual checker.
         direct[issue["claim_id"]] = {row["tweet_id"] for row in cited["tweets"] if row["text"]}
         tasks.append({"task_id": "fact:" + issue["claim_id"], "kind": "factual",
+                      "severity": issue["severity"],
                       "sentence_id": issue["sentence_id"], "query": claim["claim"],
                       "failed_claim": claim["claim"],
                       "failure_explanation": issue["explanation"],
                       "explanation": issue["explanation"], "dialect_label": None,
                       "preferred_ids": sorted(direct[issue["claim_id"]])})
+    unresolved_targets = {
+        issue["sentence_id"] for issue in factual_results["issues"]
+        if issue["severity"] == "unresolved"
+    }
+    if unresolved_targets:
+        target = _representation_target(summary_claims, factual_results)
+        tasks = [
+            task for task in tasks
+            if task["sentence_id"] == target
+            or task.get("severity") == "serious"
+        ]
     factual_targets = sorted({t["sentence_id"] for t in tasks})
     representation = representation_results
     if representation["status"] == "FAIL":
