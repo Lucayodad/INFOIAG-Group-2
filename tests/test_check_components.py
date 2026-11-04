@@ -133,6 +133,12 @@ class FactSummaryTests(unittest.TestCase):
         self.assertTrue(all(item["severity"] == "unresolved" for item in result["issues"]))
         client.chat.assert_not_called()
 
+    def test_unknown_opinion_is_not_reported_as_factual_uncertainty(self):
+        self.summary[2]["claims"][0]["claim_type"] = "opinion"
+        result = fact_check_summary(self.graph, self.summary, factual_client())
+        self.assertEqual(result["verdict_counts"], {"SUPPORTED": 1, "CONTRADICTED": 1, "UNKNOWN": 1})
+        self.assertEqual([issue["claim_id"] for issue in result["issues"]], ["S02_C01"])
+
     def test_summary_format_rejects_missing_sentences_duplicate_ids_and_invented_quotes(self):
         for records in (self.summary[:4], self.summary + [self.summary[0]]):
             with self.assertRaises(ValueError):

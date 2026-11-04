@@ -105,10 +105,15 @@ def compare_revision(previous, current, changes):
         if record["sentence_id"] not in targets:
             continue
         assessments = [a for a in current["factual_results"]["assessments"] if a["sentence_id"] == record["sentence_id"]]
-        if record["status"] != "extracted" or not assessments or any(
-            a["verdict"] != "SUPPORTED" or not a["evidence_complete"] for a in assessments
-        ):
+        if record["status"] != "extracted" or not assessments:
             return False, "unsupported_revision"
+        for assessment in assessments:
+            is_opinion = assessment.get("claim_type", "factual") == "opinion"
+            if not assessment["evidence_complete"] or (
+                assessment["verdict"] == "CONTRADICTED"
+                or (not is_opinion and assessment["verdict"] != "SUPPORTED")
+            ):
+                return False, "unsupported_revision"
     before, after = _metrics(previous), _metrics(current)
     if after["serious_factual_count"] > before["serious_factual_count"] or \
             after["unknown_factual_count"] > before["unknown_factual_count"]:

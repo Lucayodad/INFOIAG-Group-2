@@ -296,9 +296,10 @@ def check_claim(graph, summary_claim, client, entity_id=None):
 def fact_check_summary(graph, summary_claims, client, allowed_entity_ids=None, max_tool_calls=3):
     """Run the existing bounded agent for every extracted claim in five sentences.
 
-    Severity policy: CONTRADICTED -> serious; UNKNOWN/unclear extraction ->
-    unresolved; SUPPORTED -> no issue. Unresolved validation is not a confirmed
-    factual error. All assessments/issues remain unreviewed model judgments.
+    Objective claims use strict factual verification. Opinion claims are
+    checked for cited evidence and contradiction, but an UNKNOWN opinion is
+    not an objective factual failure because viewpoints cannot be established
+    as true or false independently of the source expressing them.
     """
     # Local import avoids the fact_agent -> shared fact_check helpers cycle.
     from fact_agent import run_fact_agent
@@ -313,8 +314,12 @@ def fact_check_summary(graph, summary_claims, client, allowed_entity_ids=None, m
     for claim in claims:
         assessment = run_fact_agent(graph, claim, client, allowed_entity_ids, max_tool_calls)
         assessment["sentence_id"] = claim["sentence_id"]
+        assessment["claim_type"] = claim.get("claim_type", "factual")
         assessments.append(assessment)
-        if assessment["verdict"] != "SUPPORTED":
+        is_opinion = claim.get("claim_type", "factual") == "opinion"
+        if assessment["verdict"] == "CONTRADICTED" or (
+            not is_opinion and assessment["verdict"] == "UNKNOWN"
+        ):
             contradiction = assessment["verdict"] == "CONTRADICTED"
             issues.append({
                 "type": "factual_contradiction" if contradiction else "factual_uncertainty",

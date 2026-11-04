@@ -376,6 +376,19 @@ class RevisionLoopTests(unittest.TestCase):
         after["representation_results"]["matching"]["clusters"][0]["source_claim_ids"].append("fake_partition_change")
         self.assertFalse(compare_revision(before, after, result["revisions"][0]["changes"])[0])
 
+    def test_unknown_opinion_is_allowed_when_evidence_is_complete(self):
+        result, _ = self.run_fixture()
+        before = result["iterations"][0]
+        after = deepcopy(result["iterations"][-1])
+        assessment = after["factual_results"]["assessments"][0]
+        assessment["verdict"] = "UNKNOWN"
+        assessment["claim_type"] = "opinion"
+        assessment["evidence_complete"] = True
+        after["summary_claims"][0]["claims"][0]["claim_type"] = "opinion"
+        accepted, reason = compare_revision(before, after, result["revisions"][0]["changes"])
+        self.assertTrue(accepted)
+        self.assertEqual(reason, "measured_improvement")
+
     def test_factual_improvement_is_kept_when_representation_still_passes(self):
         result, _ = self.run_fixture()
         before = result["iterations"][0]
