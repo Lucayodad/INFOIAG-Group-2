@@ -128,7 +128,7 @@ class SummaryAgentTests(unittest.TestCase):
         graph.add((NS.InvalidExample, NS.aboutTopic, NS.SuperBowl))
         draft["topic"] = "Superbowl"
         result = run_summary_agent(graph, draft, topic="Superbowl", prompt="Synthetic test",
-                                   client=mock_qwen(draft, ("SUPPORTED",) * 3),
+                                   client=mock_qwen(draft, ("SUPPORTED",) * 3), representation_metric="mnli",
                                    expected_group_counts=EXPECTED_COUNTS, disparity_threshold=0.25)
         rep = result["representation_results"]
         self.assertFalse(rep["data_complete"])
@@ -138,7 +138,8 @@ class SummaryAgentTests(unittest.TestCase):
     def test_incomplete_evidence_uses_original_completeness_defaults(self):
         graph, draft = demo_fixture(contradiction=False)
         result = run_summary_agent(graph, draft, topic="Obama", prompt=draft["summary_prompt"],
-                                   client=mock_qwen(draft, ("SUPPORTED",) * 3), disparity_threshold=0.25)
+                                   client=mock_qwen(draft, ("SUPPORTED",) * 3), disparity_threshold=0.25,
+                                   representation_metric="mnli")
         self.assertFalse(result["representation_results"]["data_complete"])
         self.assertEqual(result["representation_results"]["model_call_count"], 0)
         self.assertEqual(result["route"], "finalize")
@@ -195,7 +196,8 @@ class SummaryAgentTests(unittest.TestCase):
             before = graph_file.read_bytes()
             client = mock_qwen(draft)
             arguments = ["summary_agent.py", str(draft_file), "--graph", str(graph_file),
-                         "--topic", "Obama", "--disparity-threshold", "0.4", "--max-revisions", "0", "--output", str(output)]
+                         "--topic", "Obama", "--disparity-threshold", "0.4", "--max-revisions", "0", "--output", str(output),
+                         "--representation-metric", "mnli"]
             with patch("sys.argv", arguments), patch("summary_agent.OllamaClient", return_value=client), \
                  redirect_stdout(io.StringIO()) as printed:
                 main()
@@ -225,15 +227,17 @@ class SummaryAgentTests(unittest.TestCase):
                 with patch("sys.argv", args), patch("summary_agent.DEFAULT_RUN_DIR", folder / "output"), \
                      patch("summary_agent.OllamaClient", return_value=client), redirect_stdout(io.StringIO()) as printed:
                     main()
-                self.assertIn("threshold=0.2", printed.getvalue())
-                self.assertIn("Evidence is incomplete", printed.getvalue())
+                # Default: no group check, dialect labels are evaluation-only.
+                self.assertIn("no group check in the agent", printed.getvalue())
+                self.assertNotIn("Coverage AA", printed.getvalue())
             files = list((folder / "output").glob("Obama_*.json"))
             self.assertEqual(len(files), 2)
             result = json.loads(files[0].read_text(encoding="utf-8"))
             self.assertIn("iterations", result)
             self.assertIn("execution_history", result)
             self.assertIn("initial_summary", result)
-            self.assertEqual(result["representation_results"]["disparity_threshold"], 0.2)
+            self.assertEqual(result["representation_results"]["status"], "NOT_RUN")
+            self.assertNotIn("representation_check", [event["node"] for event in result["execution_history"]])
 
 
 if __name__ == "__main__":

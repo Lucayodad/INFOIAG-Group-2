@@ -1,38 +1,104 @@
-"""Rerun the 18 agent trials with the current agent, reusing each recorded first check.
+"""Rerun the 18 agent trials label-free, reusing each recorded first check.
 
-Every recorded rerun in results/agent_rerun holds its draft, its RDF graph and
-its first check. The draft and graph are reused unchanged. The first check's
-claim extraction and fact verdicts seed the agent's cache: they run at
-temperature 0 and every recorded recheck repeated them identically (133/133),
-so only the representation check, revisions and their rechecks are computed.
-Sentences whose recorded extraction failed are extracted and checked anew.
-Finished trials are skipped, so rerunning the same command resumes.
+Dialect labels are evaluation data, so the agent here never sees one: every
+dialectLabel triple is removed from its in-memory copy of the run graph (the
+file is unchanged), it has no group check (it revises only contradicted
+claims), and LabelFreeClient refuses any Qwen or embedding request that
+carries a label. Labels are joined back only by the final evaluation.
 
-    python run_final_agent.py --out results/agent_final [--trial Obama_prompt1]
+The draft and graph of each recorded run in results/agent_rerun are reused.
+Its first check seeds the agent's cache: claim extraction and fact verdicts
+run at temperature 0, never saw a label (the fact checker's evidence view
+drops it) and repeated identically in every recorded recheck (133/133).
+results/agent_final holds the same first check with failed extractions
+redone; it is preferred when present. Finished trials are skipped, so
+rerunning the same command resumes.
+
+    python run_final_agent.py --out results/agent_compliant [--trial Obama_prompt1]
+
+With --viewpoint-check the agent also repairs a viewpoint of the tweets that
+the summary omits (stances of the extracted tweet claims, no label):
+
+    python run_final_agent.py --viewpoint-check --out results/agent_viewpoint
 """
 
 import argparse
 import json
 from pathlib import Path
+import re
 import time
 import traceback
 
 from rdflib import Graph
 
 from ollama_backend import OllamaClient
+from ontology_tools import NS
 from rerun_agent_trials import summarize
 from summary_agent import print_run_summary, run_summary_agent, seed_check_cache
 
 ROOT = Path(__file__).resolve().parent
 RECORDED = ROOT / "results" / "agent_rerun"
+FIRST_CHECKS = ROOT / "results" / "agent_final"
+LABEL_LEAK = re.compile(r'(?i:dialect)|"(?:AA|Hisp|White)"')
+
+
+class LabelFreeClient:
+    """Refuses every request carrying a dialect label: compliance by check, not trust."""
+
+    def __init__(self, client):
+        self._client = client
+        self.checked_requests = 0
+
+    def _refuse_labels(self, request):
+        self.checked_requests += 1
+        if LABEL_LEAK.search(json.dumps(request, ensure_ascii=False)):
+            raise RuntimeError("A dialect label reached a model request; the run is stopped.")
+
+    def chat(self, payload):
+        self._refuse_labels(payload)
+        return self._client.chat(payload)
+
+    def embed(self, texts, **options):
+        self._refuse_labels(texts)
+        return self._client.embed(texts, **options)
+
+    def __getattr__(self, name):
+        return getattr(self._client, name)
+
+
+def first_check(iteration):
+    """The claims and fact verdicts of a recorded check, without stored dialect_label fields.
+
+    The recorded group check is dropped: only extraction and facts are reused.
+    """
+    return without_labels({key: iteration[key] for key in ("summary_claims", "factual_results")})
+
+
+def without_labels(value):
+    """A recorded value without its stored dialect_label fields (never shown to Qwen)."""
+    if isinstance(value, dict):
+        return {key: without_labels(item) for key, item in value.items() if key != "dialect_label"}
+    if isinstance(value, list):
+        return [without_labels(item) for item in value]
+    return value
+
+
+def label_free_graph(path):
+    """The run graph without its dialectLabel triples (the file is not modified)."""
+    graph = Graph().parse(path, format="turtle")
+    graph.remove((None, NS.dialectLabel, None))
+    if any(True for _ in graph.triples((None, NS.dialectLabel, None))):
+        raise RuntimeError("dialectLabel triples remain in the agent's graph.")
+    return graph
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--out", type=Path, default=ROOT / "results" / "agent_final")
+    parser.add_argument("--out", type=Path, default=ROOT / "results" / "agent_compliant")
     parser.add_argument("--trial", nargs="*", default=[], help="Only trials whose name contains one of these")
-    parser.add_argument("--disparity-threshold", type=float, default=0.2)
     parser.add_argument("--max-revisions", type=int, default=3)
+    parser.add_argument("--viewpoint-check", action="store_true",
+                        help="Also repair an omitted viewpoint (label-free reflection on bias)")
     args = parser.parse_args()
 
     names = sorted(path.stem for path in RECORDED.glob("*_prompt*_seed*.json"))
@@ -41,7 +107,7 @@ def main():
     if args.trial:
         names = [name for name in names if any(part in name for part in args.trial)]
     args.out.mkdir(parents=True, exist_ok=True)
-    client = OllamaClient()
+    backend = OllamaClient()
     failures = []
     for name in names:
         output = args.out / f"{name}.json"
@@ -50,16 +116,21 @@ def main():
             continue
         recorded = json.loads((RECORDED / f"{name}.json").read_text(encoding="utf-8"))
         recorded = recorded.get("agent_result", recorded)
+        first = FIRST_CHECKS / f"{name}.json"
+        checked = first_check(json.loads(first.read_text(encoding="utf-8"))["iterations"][0] if first.exists()
+                              else recorded["iterations"][0])
         graph_path = Path(recorded["pipeline"]["graph"].replace("\\", "/"))  # recorded on Windows
         graph_path = graph_path if graph_path.is_absolute() else ROOT / graph_path
         print(f"Running {name} at {time.strftime('%H:%M')}", flush=True)
         started = time.time()
+        client = LabelFreeClient(backend)
         try:
             result = run_summary_agent(
-                Graph().parse(graph_path, format="turtle"), recorded["initial_summary"],
+                label_free_graph(graph_path), recorded["initial_summary"],
                 topic=recorded["topic"], prompt=recorded["prompt"], client=client,
-                disparity_threshold=args.disparity_threshold, max_revisions=args.max_revisions,
-                check_cache=seed_check_cache(recorded["initial_summary"], recorded["iterations"][0]))
+                max_revisions=args.max_revisions, representation_metric=None,
+                viewpoint_check=args.viewpoint_check,
+                check_cache=seed_check_cache(recorded["initial_summary"], checked))
         except Exception:  # noqa: BLE001 - record and continue with the next trial
             traceback.print_exc()
             failures.append(name)
@@ -70,8 +141,12 @@ def main():
         result["provenance"] = {
             "recorded_run": str((RECORDED / f"{name}.json").relative_to(ROOT)),
             "graph": str(graph_path.relative_to(ROOT)),
-            "first_check": "claim extraction and fact verdicts reused from the recorded run "
-                           "(unclear extractions redone); representation and revisions computed in this run",
+            "first_check": str((first if first.exists() else RECORDED / f"{name}.json").relative_to(ROOT)),
+            "first_check_note": "claim extraction and fact verdicts reused (label-free prompts); "
+                                "unclear extractions redone; revisions and rechecks computed in this run",
+            "dialect_labels": "removed from the agent's graph; no group check; every model request "
+                              f"checked for labels ({client.checked_requests} checked, none found)",
+            "viewpoint_check": args.viewpoint_check,
             "seconds": round(time.time() - started),
         }
         output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

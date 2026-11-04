@@ -91,8 +91,7 @@ def main():
     args = parser.parse_args()
     graph, draft = demo_fixture()
     result = run_summary_agent(graph, draft, topic="Obama", prompt=draft["summary_prompt"],
-                               client=mock_qwen(draft), expected_group_counts=EXPECTED_COUNTS,
-                               disparity_threshold=0.25, max_revisions=0, representation_metric="internal")
+                               client=mock_qwen(draft), max_revisions=0)  # no group check: labels are evaluation-only
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -103,10 +102,7 @@ def main():
         "state_transitions": result["execution_history"],
         "factual_results": {key: result["factual_results"][key] for key in
                             ("status", "claims_examined", "verdict_counts", "model_call_count", "tool_call_count")},
-        "representation_results": {"status": representation["status"],
-                                   "coverage": {key: value["coverage"] for key, value in representation["coverage_by_group"].items()},
-                                   "disparity": representation["disparity"],
-                                   "disparity_threshold": representation["disparity_threshold"]},
+        "representation_results": {"status": representation["status"], "explanation": representation["explanation"]},
         "route": result["route"], "status": result["status"], "stop_reason": result["stop_reason"],
         "revision_count": result["revision_count"], "uncertainty_flags": result["uncertainty_flags"],
     }, indent=2))

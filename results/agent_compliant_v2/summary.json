@@ -1,0 +1,243 @@
+{
+  "McDonalds_prompt1_seed101": {
+    "status": "completed_with_uncertainty",
+    "stop_reason": "uncertainty_only",
+    "revisions": {},
+    "verdicts": {
+      "SUPPORTED": 3,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 7
+    },
+    "representation": "NOT_RUN",
+    "disparity": null,
+    "changed": false
+  },
+  "McDonalds_prompt1_seed202": {
+    "status": "completed_with_uncertainty",
+    "stop_reason": "uncertainty_only",
+    "revisions": {
+      "accepted": 1
+    },
+    "verdicts": {
+      "SUPPORTED": 4,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 12
+    },
+    "representation": "NOT_RUN",
+    "disparity": null,
+    "changed": true
+  },
+  "McDonalds_prompt1_seed303": {
+    "status": "completed_with_uncertainty",
+    "stop_reason": "uncertainty_only",
+    "revisions": {},
+    "verdicts": {
+      "SUPPORTED": 2,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 11
+    },
+    "representation": "NOT_RUN",
+    "disparity": null,
+    "changed": false
+  },
+  "McDonalds_prompt2_seed101": {
+    "status": "completed_with_uncertainty",
+    "stop_reason": "uncertainty_only",
+    "revisions": {},
+    "verdicts": {
+      "SUPPORTED": 6,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 7
+    },
+    "representation": "NOT_RUN",
+    "disparity": null,
+    "changed": false
+  },
+  "McDonalds_prompt2_seed202": {
+    "status": "completed_with_uncertainty",
+    "stop_reason": "uncertainty_only",
+    "revisions": {},
+    "verdicts": {
+      "SUPPORTED": 5,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 8
+    },
+    "representation": "NOT_RUN",
+    "disparity": null,
+    "changed": false
+  },
+  "McDonalds_prompt2_seed303": {
+    "status": "completed_with_uncertainty",
+    "stop_reason": "uncertainty_only",
+    "revisions": {},
+    "verdicts": {
+      "SUPPORTED": 1,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 14
+    },
+    "representation": "NOT_RUN",
+    "disparity": null,
+    "changed": false
+  },
+  "Obama_prompt1_seed101": {
+    "status": "completed_with_uncertainty",
+    "stop_reason": "uncertainty_only",
+    "revisions": {},
+    "verdicts": {
+      "SUPPORTED": 2,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 7
+    },
+    "representation": "NOT_RUN",
+    "disparity": null,
+    "changed": false
+  },
+  "Obama_prompt1_seed202": {
+    "status": "completed_with_uncertainty",
+    "stop_reason": "uncertainty_only",
+    "revisions": {
+      "accepted": 1
+    },
+    "verdicts": {
+      "SUPPORTED": 6,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 6
+    },
+    "representation": "NOT_RUN",
+    "disparity": null,
+    "changed": true
+  },
+  "Obama_prompt1_seed303": {
+    "status": "completed_with_uncertainty",
+    "stop_reason": "uncertainty_only",
+    "revisions": {},
+    "verdicts": {
+      "SUPPORTED": 3,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 9
+    },
+    "representation": "NOT_RUN",
+    "disparity": null,
+    "changed": false
+  },
+  "Obama_prompt2_seed101": {
+    "status": "completed_with_uncertainty",
+    "stop_reason": "uncertainty_only",
+    "revisions": {},
+    "verdicts": {
+      "SUPPORTED": 1,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 13
+    },
+    "representation": "NOT_RUN",
+    "disparity": null,
+    "changed": false
+  },
+  "Obama_prompt2_seed202": {
+    "status": "completed_with_uncertainty",
+    "stop_reason": "uncertainty_only",
+    "revisions": {},
+    "verdicts": {
+      "SUPPORTED": 3,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 13
+    },
+    "representation": "NOT_RUN",
+    "disparity": null,
+    "changed": false
+  },
+  "Obama_prompt2_seed303": {
+    "status": "completed_with_uncertainty",
+    "stop_reason": "uncertainty_only",
+    "revisions": {},
+    "verdicts": {
+      "SUPPORTED": 4,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 9
+    },
+    "representation": "NOT_RUN",
+    "disparity": null,
+    "changed": false
+  },
+  "Superbowl_prompt1_seed101": {
+    "status": "completed_with_uncertainty",
+    "stop_reason": "uncertainty_only",
+    "revisions": {},
+    "verdicts": {
+      "SUPPORTED": 1,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 11
+    },
+    "representation": "NOT_RUN",
+    "disparity": null,
+    "changed": false
+  },
+  "Superbowl_prompt1_seed202": {
+    "status": "completed_with_uncertainty",
+    "stop_reason": "uncertainty_only",
+    "revisions": {
+      "rolled_back": 1,
+      "accepted": 1
+    },
+    "verdicts": {
+      "SUPPORTED": 3,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 3
+    },
+    "representation": "NOT_RUN",
+    "disparity": null,
+    "changed": true
+  },
+  "Superbowl_prompt1_seed303": {
+    "status": "completed_with_uncertainty",
+    "stop_reason": "uncertainty_only",
+    "revisions": {},
+    "verdicts": {
+      "SUPPORTED": 2,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 8
+    },
+    "representation": "NOT_RUN",
+    "disparity": null,
+    "changed": false
+  },
+  "Superbowl_prompt2_seed101": {
+    "status": "completed_with_uncertainty",
+    "stop_reason": "uncertainty_only",
+    "revisions": {},
+    "verdicts": {
+      "SUPPORTED": 2,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 8
+    },
+    "representation": "NOT_RUN",
+    "disparity": null,
+    "changed": false
+  },
+  "Superbowl_prompt2_seed202": {
+    "status": "completed_with_uncertainty",
+    "stop_reason": "uncertainty_only",
+    "revisions": {},
+    "verdicts": {
+      "SUPPORTED": 2,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 4
+    },
+    "representation": "NOT_RUN",
+    "disparity": null,
+    "changed": false
+  },
+  "Superbowl_prompt2_seed303": {
+    "status": "completed_with_uncertainty",
+    "stop_reason": "uncertainty_only",
+    "revisions": {},
+    "verdicts": {
+      "SUPPORTED": 0,
+      "CONTRADICTED": 0,
+      "UNKNOWN": 12
+    },
+    "representation": "NOT_RUN",
+    "disparity": null,
+    "changed": false
+  }
+}

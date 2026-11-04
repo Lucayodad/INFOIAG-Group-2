@@ -16,14 +16,20 @@ Add no unsupported facts, quantities, identities or demographic generalizations.
 Each replacement must be one complete English sentence with valid source_ids.
 Never repeat a sentence already present in the summary.
 Address every task assigned to that sentence. You may remove a refuted assertion
-and replace it with a grounded viewpoint. Do not cite a refuting tweet as support
+and replace it with a grounded viewpoint. Keep the sentence's other, uncontested
+viewpoints together with the tweets that support them. Do not cite a refuting tweet as support
 for an unrelated replacement. Cite only the sentence's allowed evidence_ids;
 for each citation supply an exact nonempty quotation from that original tweet.
-For group-coverage tasks include an assigned tweet from that specific group.
-Never name a dialect or demographic group in the text: the group labels are
-dataset annotations, not identities of the authors. Describe the viewpoint only.
+Never name or guess the ethnicity or any other demographic group of the authors.
+Describe the viewpoint only.
 Do not rewrite unaffected sentences. Return only replacements as specified.
 """
+
+# Profiling (Lecture 5): the reviser's role, written into its prompt. Used
+# with the viewpoint check; the default prompt is unchanged.
+REVISER_PROFILE = ("You are an impartial editor of tweet summaries. You report the viewpoints "
+                   "the tweets express, never take a side yourself, and state only what the cited tweets say.\n")
+PROFILED_REVISION_INSTRUCTIONS = REVISER_PROFILE + REVISION_INSTRUCTIONS
 
 # Group labels leaking into summary text, e.g. "users in the AA group".
 GROUP_LABEL = re.compile(
@@ -32,7 +38,7 @@ GROUP_LABEL = re.compile(
 
 
 def revise_summary(summary, confirmed_issues, retrieved, client, *, max_input_bytes=14000,
-                   temperature=0, seed=42):
+                   temperature=0, seed=42, instructions=REVISION_INSTRUCTIONS):
     """Return an unaccepted candidate; malformed/ungrounded proposals are rejected.
 
     Citation validation proves provenance, not entailment. The controller must
@@ -61,7 +67,7 @@ def revise_summary(summary, confirmed_issues, retrieved, client, *, max_input_by
     body = {"summary": summary["sentences"], "confirmed_issues": confirmed_issues,
             "tasks": tasks, "original_tweets": retrieved["tweets"]}
     payload = {"model": "qwen3.5:4b", "stream": False, "think": False,
-               "messages": [{"role": "system", "content": REVISION_INSTRUCTIONS},
+               "messages": [{"role": "system", "content": instructions},
                             {"role": "user", "content": json.dumps(body, ensure_ascii=False)}],
                "format": schema, "options": {"temperature": temperature, "seed": seed,
                                              "num_ctx": 16384, "num_predict": 1800}}
@@ -90,7 +96,7 @@ def revise_summary(summary, confirmed_issues, retrieved, client, *, max_input_by
                 if key not in targets or key in seen:
                     raise ValueError("Duplicate or unaffected sentence replacement.")
                 if not isinstance(replacement["text"], str) or GROUP_LABEL.search(replacement["text"]):
-                    raise ValueError("The replacement names a dialect group; describe the viewpoint, not the group.")
+                    raise ValueError("The replacement names a demographic group; describe the viewpoint, not the group.")
                 seen.add(key)
                 allowed = {tweet_id for task in tasks if task["sentence_id"] == key for tweet_id in task["evidence_ids"]}
                 ids, references = replacement["source_ids"], replacement["evidence"]
@@ -114,6 +120,9 @@ def revise_summary(summary, confirmed_issues, retrieved, client, *, max_input_by
                 for task in tasks:
                     if task["kind"] == "representation" and task["sentence_id"] == key and not set(ids).intersection(task["evidence_ids"]):
                         raise ValueError("A revision task has no supporting citation.")
+                    if task["kind"] == "viewpoint" and task["sentence_id"] == key and not set(ids).intersection(task["viewpoint_ids"]):
+                        raise ValueError(f"Cite at least one of the tweets expressing the {task['stance']} viewpoint: "
+                                         f"{', '.join(task['viewpoint_ids'])}.")
                 index = int(key[1:]) - 1
                 candidate["sentences"][index] = {"text": replacement["text"], "source_ids": ids}
             if seen != set(targets):

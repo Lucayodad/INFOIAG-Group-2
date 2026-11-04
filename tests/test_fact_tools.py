@@ -52,7 +52,7 @@ class FactRetrievalTests(unittest.TestCase):
         self.assertEqual(tweet["source_file"], "test.txt")
         self.assertEqual(tweet["source_line"], 1)
         self.assertEqual(tweet["topic_uri"], str(NS.Topic_Obama))
-        self.assertEqual(tweet["dialect_label"], "AA")
+        self.assertNotIn("dialect_label", tweet)  # labels are evaluation-only, even when the graph has them
         self.assertEqual(tweet["source_claims"][0], {
             "claim_id": "Obama_001_C01", "claim_uri": str(self.run["claim/1"]),
             "text": "Synthetic interpretation.", "source_quote": "source 1.\nExact spacing.",

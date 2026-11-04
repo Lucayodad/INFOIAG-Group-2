@@ -56,7 +56,9 @@ class RevisionLoopTests(unittest.TestCase):
             for task in retrieval["tasks"]:
                 if task["kind"] == "representation":
                     self.assertTrue(task["evidence_ids"])
-                    self.assertTrue(all(by_id[key]["dialect_label"] == task["dialect_label"] for key in task["evidence_ids"]))
+                    # Rows sent to Qwen carry no label; a group task's preferred IDs are that group's tweets.
+                    self.assertTrue(set(task["evidence_ids"]) <= set(task["preferred_ids"]))
+                    self.assertTrue(all("dialect_label" not in by_id[key] for key in task["evidence_ids"]))
 
     def test_both_problems_and_exact_preservation_of_unaffected_sentences(self):
         result, _ = self.run_fixture()
@@ -183,7 +185,7 @@ class RevisionLoopTests(unittest.TestCase):
             return data
         result, _ = self.run_fixture("factual", client=mock_client(transform_revision=group_label))
         self.assertEqual(result["revisions"][0]["status"], "rejected")
-        self.assertIn("names a dialect group", result["revisions"][0]["error"])
+        self.assertIn("names a demographic group", result["revisions"][0]["error"])
         self.assertEqual(result["current_summary"], result["initial_summary"])
 
     def test_missing_embedding_evidence_stops_without_a_qwen_revision(self):

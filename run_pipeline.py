@@ -145,11 +145,11 @@ def run_pipeline(args, client=None):
                     "draft_reused": args.reuse_draft is not None, "group_counts": counts, "live_feed": str(feed.path)}
         save_json(artifacts / "manifest.json", manifest)
         stage = "agent"
-        print("[5/6] LangGraph: extract -> facts -> representation -> route -> revision/recheck when justified", flush=True)
+        print("[5/6] LangGraph: extract -> facts -> route -> revision/recheck when a claim is contradicted", flush=True)
         result = run_summary_agent(graph, draft, topic=args.topic, prompt=draft.get("summary_prompt") or get_prompt(args.topic, args.prompt_id),
             client=progress, disparity_threshold=args.disparity_threshold, max_revisions=args.max_revisions,
             max_model_calls=args.max_model_calls, max_tool_calls=args.max_tool_calls,
-            representation_metric=getattr(args, "representation_metric", "mnli"))
+            representation_metric=None if getattr(args, "representation_metric", "none") == "none" else args.representation_metric)
         result["pipeline"] = manifest
         save_json(output, result)
         feed.emit("run_completed", "result_writer", "user", f"{result['status']}: {result['stop_reason']}",
@@ -173,7 +173,9 @@ def main(argv=None):
     parser.add_argument("--prompt-id", choices=("1", "2"), default="1")
     parser.add_argument("--disparity-threshold", type=float, default=0.2, help="Max 1 - min/max group coverage; 0.2 is the four-fifths rule")
     parser.add_argument("--max-revisions", type=int, default=3)
-    parser.add_argument("--representation-metric", choices=("mnli", "internal"), default="mnli")
+    parser.add_argument("--representation-metric", choices=("none", "mnli", "internal"), default="none",
+                        help="none (default): no group check, dialect labels are evaluation-only; "
+                             "mnli/internal: the earlier label-based group check")
     parser.add_argument("--output", type=Path, help="New final JSON path; default: unique file under results/evidence/pipeline_runs")
     parser.add_argument("--source-claims", type=Path, help="Checkpoint path; default: results/source_claims/<topic>.json")
     parser.add_argument("--reuse-draft", type=Path, help="Explicitly reuse a saved draft instead of generating a new one")

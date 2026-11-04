@@ -46,6 +46,91 @@ Two behaviour changes followed the first live reruns:
   are dataset annotations, and a replacement naming a group (e.g. "users in
   the AA group") is rejected and repaired.
 
+## Dialect labels are evaluation-only (feedback on Intermediate Report 2)
+
+The graders: the dialect annotations may not be fed to the LLM, and using them
+inside the agent uses test data for training. Every earlier agent run did both:
+the reviser's prompt carried each evidence tweet's `dialect_label` and the task
+"Improve the group's MNLI Equal Coverage", and the online group check that
+routed and accepted revisions was the same `calculate_equal_coverage` with the
+same labels as the final evaluation. Their revision results are therefore not
+reported as agent results.
+
+- **No group check in the agent.** `representation_metric=None` is the default
+  of `build_summary_agent`, `summary_agent.py`, `run_pipeline.py` and
+  `experiment_runner.py`; the graph is extract -> facts -> route -> retrieve ->
+  revise -> recheck. The agent revises only contradicted claims (UNKNOWN alone
+  still never triggers a revision). `mnli`/`internal` keep the earlier
+  label-based check for reproducing the recorded runs only.
+- **No label in the agent's knowledge.** The agent's read-only copy of the RDF
+  graph omits every `dialectLabel` triple; revision evidence is read with a
+  label-free query (`revision_retrieval.topic_tweets`), and no row or task sent
+  to the reviser has a label field. The reviser's instructions name no dialect.
+- **Checked, not trusted.** `run_final_agent.py` passes every Qwen and embedding
+  request through `LabelFreeClient`, which stops the run if a request contains
+  a label (`dialect`, or the string "AA", "Hisp" or "White").
+  `tests/test_label_free.py` pins this on the recorded graphs and first checks.
+- **Labels only at the end.** `evaluate_label_free_run.py` joins the dataset
+  labels after the agent has finished and compares each final summary with its
+  own draft: fact verdicts and MNLI Equal Coverage per dialect group.
+- **Gate.** The summary may gain no contradiction and no issue in total, so a
+  contradiction that becomes UNKNOWN is progress (McDonalds P1 s202 was wrongly
+  rejected for this before).
+- **Repair evidence.** A factual repair gets all of the sentence's own cited
+  tweets (within the 9-tweet and byte limits), not only the 3 most similar to
+  the contradicted claim, and is told to keep the uncontested viewpoints with
+  their support. In the first label-free run (`results/agent_compliant`) the
+  Superbowl P1 s202 repair turned "many" into "some" but lost the tweets behind
+  the sentence's SUPPORTED claim, so it was rightly rejected.
+
+Unchanged and compliant: draft/baseline generation and source-claim extraction
+send Qwen only tweet IDs and texts, and the fact checker's evidence view
+(`compact_evidence`) never included a label. The ontology is populated
+automatically from each run's input tweets by this extraction (claim, target,
+stance and an exact source quote per tweet), not by hand.
+
+## Label-free viewpoint check (optional, `--viewpoint-check`)
+
+The agent's reflection on its own bias (Lecture 5) without dialect labels.
+After the fact check, `viewpoint_check.py` reads the stances of the claims
+extracted from each tweet's text: a viewpoint (positive or negative) held by
+at least 25% of the topic's tweets must be reported by a summary claim that
+is not CONTRADICTED. It is off by default, so the results above reproduce
+unchanged; `results/agent_compliant_v2` was run without it.
+
+- **Open world.** If a sentence's claims could not be extracted, an unreported
+  viewpoint is UNKNOWN, not missing: uncertainty alone never triggers a revision.
+- **Order.** A missing viewpoint is repaired only once no contradiction is left.
+- **Repair.** The rewritten sentence is a no-claim sentence if any, else the one
+  with the fewest SUPPORTED claims, never the only sentence reporting another
+  viewpoint. It keeps its own cited tweets and gains the 3 most similar tweets
+  expressing the viewpoint; the replacement must cite one of them.
+- **Gate.** No reported viewpoint may be lost, and a missing one counts as added
+  only when a SUPPORTED claim reports it. A failed viewpoint repair is retried
+  with that finding (within the 3 attempts).
+- **Profiling.** With the check on, the reviser's prompt starts with a role
+  profile (an impartial editor); the default prompt is unchanged.
+- **Evaluation.** `evaluate_label_free_run.py` recomputes the check for draft and
+  final of any run.
+- **Known flaw, to fix before using it.** The summary side reads the stance of
+  each extracted summary claim, but the extractor labels a claim that *reports*
+  an opinion as neutral ("Some individuals express genuine admiration",
+  "a minority of the tweets offer supportive commentary"). In
+  `results/agent_compliant_v2` the check flags 4 of 18 final summaries, but on
+  reading them only Superbowl P1 s101 truly reports no negative viewpoint;
+  Obama P1 s101, Obama P1 s303 and Superbowl P1 s303 do report the flagged
+  viewpoint. The live trial (Obama P1 s101) confirmed it: Qwen kept the
+  sentence (it already reports admiration) and the gate rightly accepted no
+  rewrite. Fix: classify the viewpoints a sentence reports with a dedicated
+  reflection call instead of the extraction's stance field. Do not report the
+  check's counts until then.
+
+    python run_final_agent.py --viewpoint-check --out results/agent_viewpoint
+    python evaluate_label_free_run.py --run results/agent_viewpoint
+
+`tests/test_viewpoint_check.py` pins the check, the task, the gate and the
+reviser guard, and that the default agent is unchanged.
+
 ## Fixes after the 18-trial rerun (`results/agent_rerun`)
 
 Every failed revision attempt of the rerun (36 attempts) was traced to the

@@ -151,6 +151,10 @@ def node_details(name, state):
         return {"status": report["status"], "coverage": report["coverage_by_group"],
                 "disparity_bounds": report["disparity_bounds"], "reasons": report["reasons"],
                 "model_calls": report["model_call_count"], "embedding_calls": report.get("embedding_call_count", 0)}
+    if name == "viewpoint_check":
+        report = state["viewpoint_results"]
+        return {"status": report["status"], "missing": report["missing"], "uncertain": report["uncertain"],
+                "share_by_stance": report["share_by_stance"]}
     if name == "retrieve_revision_evidence":
         result = state["revision_evidence"]
         return {"status": result["status"], "reason": result["reason"],

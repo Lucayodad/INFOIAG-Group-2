@@ -41,7 +41,7 @@ def lookup_fact(graph: Graph, summary_claim: dict) -> dict:
 
     query = prepareQuery("""
         SELECT ?tweet ?tweet_id ?tweet_text ?source_file ?source_line
-               ?topic ?dialect_label ?extraction_status ?source_claim
+               ?topic ?extraction_status ?source_claim
                ?source_claim_id ?source_claim_text ?source_quote ?target ?stance
         WHERE {
             ?tweet a :Tweet ; :tweetId ?tweet_id .
@@ -49,7 +49,6 @@ def lookup_fact(graph: Graph, summary_claim: dict) -> dict:
             OPTIONAL { ?tweet :sourceFile ?source_file . }
             OPTIONAL { ?tweet :sourceLine ?source_line . }
             OPTIONAL { ?tweet :aboutTopic ?topic . }
-            OPTIONAL { ?tweet :dialectLabel ?dialect_label . }
             OPTIONAL { ?tweet :extractionStatus ?extraction_status . }
             OPTIONAL {
                 ?tweet :containsClaim ?source_claim .
@@ -82,7 +81,6 @@ def lookup_fact(graph: Graph, summary_claim: dict) -> dict:
                     "source_file": data.get("source_file"),
                     "source_line": data.get("source_line"),
                     "topic_uri": data.get("topic"),
-                    "dialect_label": data.get("dialect_label"),
                     "extraction_status": data.get("extraction_status"),
                     "source_claims": [],
                 }

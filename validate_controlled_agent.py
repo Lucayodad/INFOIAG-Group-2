@@ -29,13 +29,12 @@ def main():
     client = VisibleClient(timeout=300)
     try:
         models = client.check_models()
-        graph, draft, counts = fixture('factual')
+        graph, draft, _ = fixture('factual')
         result = run_summary_agent(graph, draft, topic='Obama', prompt=draft['summary_prompt'],
-            client=client, expected_group_counts=counts, representation_metric='internal',
-            disparity_threshold=0.5, max_revisions=1, max_model_calls=12)
+            client=client, max_revisions=1, max_model_calls=12)  # no group check: labels are evaluation-only
         result['validation'] = {'mode': 'synthetic evidence, REAL local Qwen and embeddings',
             'models': models, 'not_a_90_tweet_experiment': True,
-            'threshold': '0.5 controlled fixture only; production default remains 0.25'}
+            'group_check': 'none: dialect labels are used only by the final evaluation'}
         output.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding='utf-8')
         print(json.dumps({'status': result['status'], 'stop_reason': result['stop_reason'],
             'revisions': result['revision_count'], 'usage_complete': result['usage_complete'],

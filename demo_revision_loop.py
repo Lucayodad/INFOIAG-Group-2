@@ -134,10 +134,9 @@ def main():
     parser.add_argument("--output", type=Path, default=Path("results/evidence/revision_demo.json"))
     parser.add_argument("--live", action="store_true", help="One separate live Qwen proposal on controlled evidence")
     args = parser.parse_args()
-    graph, draft, counts = fixture()
-    result = run_summary_agent(graph, draft, topic="Obama", prompt=draft["summary_prompt"],
-                               client=mock_client(), expected_group_counts=counts, disparity_threshold=0.25,
-                               representation_metric="internal")
+    graph, draft, _ = fixture("factual")
+    # No group check: dialect labels are evaluation-only, so the agent repairs the contradiction.
+    result = run_summary_agent(graph, draft, topic="Obama", prompt=draft["summary_prompt"], client=mock_client())
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     report = {"mode": "MOCKED Qwen and gold-topic embeddings; real graph, retrieval and checkers",
@@ -156,7 +155,7 @@ def main():
             retrieved = retrieve_revision_evidence(graph, "Obama", initial["summary_claims"], initial["factual_results"],
                                                    initial["representation_results"], client.embed)
             live = revise_summary(draft, [{"type": "factual_contradiction", "severity": "serious",
-                                          "explanation": "Correct the contradiction and represent the omitted viewpoint."}], retrieved, client)
+                                          "explanation": "Correct the contradiction."}], retrieved, client)
             live["mode"] = "REAL local all-minilm retrieval and one Qwen revision proposal; not an accuracy evaluation"
             live["retrieval"] = retrieved
             path = args.output.with_name("revision_live_probe.json")
