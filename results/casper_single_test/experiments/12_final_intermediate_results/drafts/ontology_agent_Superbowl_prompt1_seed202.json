@@ -1,0 +1,90 @@
+{
+  "status": "draft_unchecked",
+  "provider": "ollama",
+  "topic": "Superbowl",
+  "seed": 202,
+  "temperature": 0.7,
+  "summary": "Fans expressed strong emotional reactions to the Ravens' victory and their qualification for the Super Bowl, with many celebrating the team's potential return to the event. A significant portion of the discussion centered on the prospect of Tom Brady and the Patriots facing off against the Ravens, with some users noting the familial connection between the two coaches. While many users engaged in betting discussions regarding potential outcomes, others explicitly stated that they were not interested in watching the game or following the playoffs. Criticism was directed at various aspects of the event, including the halftime show featuring Beyoncé and Madonna, as well as a perceived lackluster quality of the commercials. In addition to game analysis, numerous tweets focused on planning for Super Bowl viewing activities such as watching the broadcast, eating wings and beer, or purchasing merchandise.",
+  "sentences": [
+    {
+      "text": "Fans expressed strong emotional reactions to the Ravens' victory and their qualification for the Super Bowl, with many celebrating the team's potential return to the event.",
+      "source_ids": [
+        "Superbowl_001",
+        "Superbowl_006",
+        "Superbowl_020",
+        "Superbowl_022",
+        "Superbowl_023",
+        "Superbowl_029"
+      ]
+    },
+    {
+      "text": "A significant portion of the discussion centered on the prospect of Tom Brady and the Patriots facing off against the Ravens, with some users noting the familial connection between the two coaches.",
+      "source_ids": [
+        "Superbowl_016",
+        "Superbowl_033",
+        "Superbowl_038",
+        "Superbowl_052"
+      ]
+    },
+    {
+      "text": "While many users engaged in betting discussions regarding potential outcomes, others explicitly stated that they were not interested in watching the game or following the playoffs.",
+      "source_ids": [
+        "Superbowl_002",
+        "Superbowl_010",
+        "Superbowl_034",
+        "Superbowl_042",
+        "Superbowl_051",
+        "Superbowl_062",
+        "Superbowl_084"
+      ]
+    },
+    {
+      "text": "Criticism was directed at various aspects of the event, including the halftime show featuring Beyoncé and Madonna, as well as a perceived lackluster quality of the commercials.",
+      "source_ids": [
+        "Superbowl_015",
+        "Superbowl_018",
+        "Superbowl_027",
+        "Superbowl_036",
+        "Superbowl_053",
+        "Superbowl_071"
+      ]
+    },
+    {
+      "text": "In addition to game analysis, numerous tweets focused on planning for Super Bowl viewing activities such as watching the broadcast, eating wings and beer, or purchasing merchandise.",
+      "source_ids": [
+        "Superbowl_005",
+        "Superbowl_043",
+        "Superbowl_067",
+        "Superbowl_080"
+      ]
+    }
+  ],
+  "summary_prompt": "Below are 90 tweets about the Super Bowl. Write a 5-sentence summary for someone who has not followed this topic, so they get a quick picture of what people are saying.",
+  "requested_model": "qwen3.5:4b",
+  "returned_model": "qwen3.5:4b",
+  "generation_settings": {
+    "temperature": 0.7,
+    "seed": 202,
+    "num_ctx": 16384,
+    "num_predict": 2000
+  },
+  "backend_metadata": {
+    "created_at": "2026-11-04T00:27:31.0545175Z",
+    "total_duration": 8657316700,
+    "load_duration": 5896900,
+    "prompt_eval_duration": 2017294000,
+    "eval_duration": 6411141000,
+    "done_reason": "stop"
+  },
+  "usage": {
+    "input_tokens": 4823,
+    "output_tokens": 452,
+    "total_tokens": 5275
+  },
+  "execution_seconds": 8.658698,
+  "created_at_utc": "2026-11-04T00:27:31.055582+00:00",
+  "input_sha256": "6941abca46e7cf65f39af66f706138e6e0a1b4d13e836920ce2532ecbd1a64b4",
+  "request_sha256": "9c5e08e19c13eadb45d01a926be24a9a44d81a812905ecba9bbb6a7ff8a02b9f",
+  "ontology_used": false,
+  "reference_summaries_used": false
+}
