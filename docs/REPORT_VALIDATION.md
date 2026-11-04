@@ -17,6 +17,11 @@ revision candidate, including candidates that were later rejected or rolled
 back, together with its status, reason and checked metrics. These candidates
 are diagnostic only and must not be presented as accepted summaries.
 
+Dialect labels remain internal evaluation metadata for Python-side grouping and
+fairness measurement. They are excluded from the factual, representation, and
+revision model payloads; generation receives tweet text, topic/claim evidence,
+and provenance IDs without group labels.
+
 ## Fixes after the 36-trial analysis
 
 The saved 18 agent trials never changed a summary. Three causes were fixed:

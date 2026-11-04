@@ -72,16 +72,17 @@ def _validate_revision_scope(text: str, source_count: int) -> None:
 
 def _evidence_by_task(tasks):
     return [{
-        "task_id": task["task_id"],
+        # Use a payload-local identifier; internal task IDs may encode the
+        # affected group for Python-side retrieval and must not leak it.
+        "task_id": f"task-{index}",
         "kind": task["kind"],
         "sentence_id": task["sentence_id"],
-        "dialect_label": task.get("dialect_label"),
         "failed_claim": task.get("failed_claim"),
         "failure_explanation": task.get("failure_explanation", task.get("explanation")),
         "viewpoint_constraint": task.get("viewpoint_constraint"),
         "required_source_count": task.get("min_source_ids", 1),
         "evidence_ids": task["evidence_ids"],
-    } for task in tasks]
+    } for index, task in enumerate(tasks, 1)]
 
 
 def _repair_guidance(summary, confirmed_issues, tasks):
@@ -144,7 +145,11 @@ def _revision_body(summary, confirmed_issues, tasks, evidence):
         for task in tasks if task.get("kind") == "factual"
     ]
     evidence_ids = {evidence_id for task in tasks for evidence_id in task["evidence_ids"]}
-    original_tweets = [row for row in evidence.values() if row["tweet_id"] in evidence_ids]
+    original_tweets = [
+        {key: row[key] for key in ("tweet_id", "quote", "source_file", "source_line")
+         if key in row}
+        for row in evidence.values() if row["tweet_id"] in evidence_ids
+    ]
     return {
         "target_sentences": target_sentences,
         "sentences": target_sentences,

@@ -54,8 +54,24 @@ class RevisionLoopTests(unittest.TestCase):
         }]
         bundled = _evidence_by_task(tasks)
         self.assertEqual(bundled[0]["evidence_ids"], ["T01"])
+        self.assertEqual(bundled[0]["task_id"], "task-1")
         self.assertNotIn("evidence", bundled[0])
         self.assertNotIn("quote", bundled[0])
+        self.assertNotIn("dialect_label", bundled[0])
+
+    def test_revision_payload_does_not_expose_dialect_labels(self):
+        tasks = [{
+            "task_id": "representation:K001",
+            "kind": "representation",
+            "sentence_id": "S01",
+            "dialect_label": "AA",
+            "evidence_ids": ["T01"],
+            "failed_claim": "A shared viewpoint",
+            "failure_explanation": "The viewpoint is underrepresented.",
+            "viewpoint_constraint": "Express only this viewpoint.",
+        }]
+        body = _evidence_by_task(tasks)[0]
+        self.assertNotIn("AA", json.dumps(body))
 
     def test_source_tweet_fallback_indexes_cited_originals(self):
         graph, _, _ = fixture("factual")
