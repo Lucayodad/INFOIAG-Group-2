@@ -1,0 +1,132 @@
+{
+  "status": "draft_unchecked",
+  "provider": "ollama",
+  "topic": "Obama",
+  "seed": 101,
+  "temperature": 0.7,
+  "summary": "Public reaction to Barack Obama is highly polarized, with a significant number of users expressing strong opposition to his policies and leadership style. Many users allege that Obama's actions regarding healthcare, taxes, and gun control are detrimental or deceptive. A notable portion of the commentary attacks Obama personally, describing him negatively or making offensive comparisons. Conversely, some users praise the First Lady and express interest in her style, while others make light-hearted comments about events. The collection also includes several instances of users making jokes, using internet slang, or posting content intended as humor.",
+  "sentences": [
+    {
+      "text": "Public reaction to Barack Obama is highly polarized, with a significant number of users expressing strong opposition to his policies and leadership style.",
+      "source_ids": [
+        "Obama_003",
+        "Obama_009",
+        "Obama_012",
+        "Obama_014",
+        "Obama_018",
+        "Obama_026",
+        "Obama_030",
+        "Obama_033",
+        "Obama_034",
+        "Obama_040",
+        "Obama_044",
+        "Obama_058",
+        "Obama_060",
+        "Obama_061",
+        "Obama_067",
+        "Obama_070",
+        "Obama_071",
+        "Obama_074",
+        "Obama_076",
+        "Obama_084"
+      ]
+    },
+    {
+      "text": "Many users allege that Obama's actions regarding healthcare, taxes, and gun control are detrimental or deceptive.",
+      "source_ids": [
+        "Obama_014",
+        "Obama_020",
+        "Obama_035",
+        "Obama_046",
+        "Obama_058",
+        "Obama_060",
+        "Obama_070",
+        "Obama_071"
+      ]
+    },
+    {
+      "text": "A notable portion of the commentary attacks Obama personally, describing him negatively or making offensive comparisons.",
+      "source_ids": [
+        "Obama_002",
+        "Obama_004",
+        "Obama_008",
+        "Obama_015",
+        "Obama_024",
+        "Obama_027",
+        "Obama_029",
+        "Obama_030",
+        "Obama_036",
+        "Obama_044",
+        "Obama_045",
+        "Obama_051",
+        "Obama_057",
+        "Obama_078"
+      ]
+    },
+    {
+      "text": "Conversely, some users praise the First Lady and express interest in her style, while others make light-hearted comments about events.",
+      "source_ids": [
+        "Obama_001",
+        "Obama_021",
+        "Obama_032",
+        "Obama_047",
+        "Obama_052",
+        "Obama_080",
+        "Obama_085",
+        "Obama_090"
+      ]
+    },
+    {
+      "text": "The collection also includes several instances of users making jokes, using internet slang, or posting content intended as humor.",
+      "source_ids": [
+        "Obama_001",
+        "Obama_005",
+        "Obama_010",
+        "Obama_016",
+        "Obama_022",
+        "Obama_037",
+        "Obama_039",
+        "Obama_041",
+        "Obama_043",
+        "Obama_050",
+        "Obama_051",
+        "Obama_062",
+        "Obama_073",
+        "Obama_075",
+        "Obama_079",
+        "Obama_081",
+        "Obama_083",
+        "Obama_086",
+        "Obama_089"
+      ]
+    }
+  ],
+  "summary_prompt": "I work in communications and need to decide how to respond to public reaction. Summarize the tweets about Barack Obama in 5 sentences, highlighting the main sentiment and the most important complaints or praise.",
+  "requested_model": "qwen3.5:4b",
+  "returned_model": "qwen3.5:4b",
+  "generation_settings": {
+    "temperature": 0.7,
+    "seed": 101,
+    "num_ctx": 16384,
+    "num_predict": 2000
+  },
+  "backend_metadata": {
+    "created_at": "2026-11-04T02:34:09.1869451Z",
+    "total_duration": 18710027100,
+    "load_duration": 6626300,
+    "prompt_eval_duration": 2059529000,
+    "eval_duration": 15365141000,
+    "done_reason": "stop"
+  },
+  "usage": {
+    "input_tokens": 4341,
+    "output_tokens": 857,
+    "total_tokens": 5198
+  },
+  "execution_seconds": 18.713134,
+  "created_at_utc": "2026-11-04T02:34:09.192987+00:00",
+  "input_sha256": "2f8c62fc6b98af2dc3bfe6311455b477450237eea22f3ded4edcf8ea28e25c68",
+  "request_sha256": "be84d32ab25e4db4419ba8563ba9bafcc189031a485eaaa7b5af41fe8da77d26",
+  "ontology_used": false,
+  "reference_summaries_used": false
+}

@@ -1,0 +1,114 @@
+{
+  "status": "draft_unchecked",
+  "provider": "ollama",
+  "topic": "Obama",
+  "seed": 101,
+  "temperature": 0.7,
+  "summary": "Users frequently commented on President Obama's appearance, noting his speech patterns, facial features, and the outfits worn by him and First Lady Michelle. Several tweets included humorous or mocking remarks about the Obama family, referencing their children and comparing them to other public figures. Criticism was directed toward policies such as gun control and healthcare, with some users arguing that Obama was taking away assault rifles or expanding taxes. A significant portion of the discussion involved negative characterizations, with some users suggesting that Obama was corrupt, deceptive, or aligned with extremist groups. Despite the criticism, some users expressed admiration for Obama's leadership style and highlighted his role in promoting unity during his second term.",
+  "sentences": [
+    {
+      "text": "Users frequently commented on President Obama's appearance, noting his speech patterns, facial features, and the outfits worn by him and First Lady Michelle.",
+      "source_ids": [
+        "Obama_001",
+        "Obama_002",
+        "Obama_003",
+        "Obama_004",
+        "Obama_005",
+        "Obama_006",
+        "Obama_007",
+        "Obama_008",
+        "Obama_010",
+        "Obama_018",
+        "Obama_021",
+        "Obama_022",
+        "Obama_032",
+        "Obama_036",
+        "Obama_047",
+        "Obama_052",
+        "Obama_080",
+        "Obama_085"
+      ]
+    },
+    {
+      "text": "Several tweets included humorous or mocking remarks about the Obama family, referencing their children and comparing them to other public figures.",
+      "source_ids": [
+        "Obama_011",
+        "Obama_024",
+        "Obama_031",
+        "Obama_056",
+        "Obama_079",
+        "Obama_082",
+        "Obama_086"
+      ]
+    },
+    {
+      "text": "Criticism was directed toward policies such as gun control and healthcare, with some users arguing that Obama was taking away assault rifles or expanding taxes.",
+      "source_ids": [
+        "Obama_003",
+        "Obama_014",
+        "Obama_020",
+        "Obama_058",
+        "Obama_060",
+        "Obama_070",
+        "Obama_088"
+      ]
+    },
+    {
+      "text": "A significant portion of the discussion involved negative characterizations, with some users suggesting that Obama was corrupt, deceptive, or aligned with extremist groups.",
+      "source_ids": [
+        "Obama_009",
+        "Obama_012",
+        "Obama_026",
+        "Obama_033",
+        "Obama_034",
+        "Obama_044",
+        "Obama_059",
+        "Obama_061",
+        "Obama_072",
+        "Obama_084"
+      ]
+    },
+    {
+      "text": "Despite the criticism, some users expressed admiration for Obama's leadership style and highlighted his role in promoting unity during his second term.",
+      "source_ids": [
+        "Obama_013",
+        "Obama_025",
+        "Obama_027",
+        "Obama_041",
+        "Obama_046",
+        "Obama_055",
+        "Obama_057",
+        "Obama_069",
+        "Obama_073"
+      ]
+    }
+  ],
+  "summary_prompt": "Below are 90 tweets about Barack Obama. Write a 5-sentence summary for someone who has not followed this topic, so they get a quick picture of what people are saying.",
+  "requested_model": "qwen3.5:4b",
+  "returned_model": "qwen3.5:4b",
+  "generation_settings": {
+    "temperature": 0.7,
+    "seed": 101,
+    "num_ctx": 16384,
+    "num_predict": 2000
+  },
+  "backend_metadata": {
+    "created_at": "2026-11-04T02:03:44.6620675Z",
+    "total_duration": 28286088100,
+    "load_duration": 13127071600,
+    "prompt_eval_duration": 2100632999,
+    "eval_duration": 12996140000,
+    "done_reason": "stop"
+  },
+  "usage": {
+    "input_tokens": 4339,
+    "output_tokens": 715,
+    "total_tokens": 5054
+  },
+  "execution_seconds": 28.29116,
+  "created_at_utc": "2026-11-04T02:03:44.703928+00:00",
+  "input_sha256": "2f8c62fc6b98af2dc3bfe6311455b477450237eea22f3ded4edcf8ea28e25c68",
+  "request_sha256": "3934dccf10113174ad54538517103734e129a4e9eff188e4bc380d59627397a7",
+  "ontology_used": false,
+  "reference_summaries_used": false
+}

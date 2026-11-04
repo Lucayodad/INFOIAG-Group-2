@@ -1,0 +1,92 @@
+{
+  "status": "draft_unchecked",
+  "provider": "ollama",
+  "topic": "Obama",
+  "seed": 303,
+  "temperature": 0.7,
+  "summary": "Some users express admiration for Barack Obama by noting the beauty of his speeches and praising Michelle Obama's fashion choices. A significant number of tweets contain insults directed at the Obamas, including comparisons to the devil or Satan. Several posts criticize Barack Obama's policies, specifically targeting gun control and tax increases. Many tweets use mocking language to describe the Obamas, with references to their physical appearance or personal habits. Other users question the Obamas' authenticity or political influence, suggesting they lack a true American identity.",
+  "sentences": [
+    {
+      "text": "Some users express admiration for Barack Obama by noting the beauty of his speeches and praising Michelle Obama's fashion choices.",
+      "source_ids": [
+        "Obama_001",
+        "Obama_021",
+        "Obama_036",
+        "Obama_047",
+        "Obama_052",
+        "Obama_080"
+      ]
+    },
+    {
+      "text": "A significant number of tweets contain insults directed at the Obamas, including comparisons to the devil or Satan.",
+      "source_ids": [
+        "Obama_008",
+        "Obama_012",
+        "Obama_044",
+        "Obama_061"
+      ]
+    },
+    {
+      "text": "Several posts criticize Barack Obama's policies, specifically targeting gun control and tax increases.",
+      "source_ids": [
+        "Obama_003",
+        "Obama_014",
+        "Obama_020",
+        "Obama_040",
+        "Obama_058",
+        "Obama_070"
+      ]
+    },
+    {
+      "text": "Many tweets use mocking language to describe the Obamas, with references to their physical appearance or personal habits.",
+      "source_ids": [
+        "Obama_002",
+        "Obama_010",
+        "Obama_018",
+        "Obama_024",
+        "Obama_037",
+        "Obama_054"
+      ]
+    },
+    {
+      "text": "Other users question the Obamas' authenticity or political influence, suggesting they lack a true American identity.",
+      "source_ids": [
+        "Obama_004",
+        "Obama_006",
+        "Obama_013",
+        "Obama_015",
+        "Obama_019",
+        "Obama_028",
+        "Obama_076"
+      ]
+    }
+  ],
+  "summary_prompt": "I work in communications and need to decide how to respond to public reaction. Summarize the tweets about Barack Obama in 5 sentences, highlighting the main sentiment and the most important complaints or praise.",
+  "requested_model": "qwen3.5:4b",
+  "returned_model": "qwen3.5:4b",
+  "generation_settings": {
+    "temperature": 0.7,
+    "seed": 303,
+    "num_ctx": 16384,
+    "num_predict": 2000
+  },
+  "backend_metadata": {
+    "created_at": "2026-11-04T03:00:10.6807811Z",
+    "total_duration": 12106156800,
+    "load_duration": 7052500,
+    "prompt_eval_duration": 2065268999,
+    "eval_duration": 8754661000,
+    "done_reason": "stop"
+  },
+  "usage": {
+    "input_tokens": 4341,
+    "output_tokens": 485,
+    "total_tokens": 4826
+  },
+  "execution_seconds": 12.107961,
+  "created_at_utc": "2026-11-04T03:00:10.684123+00:00",
+  "input_sha256": "2f8c62fc6b98af2dc3bfe6311455b477450237eea22f3ded4edcf8ea28e25c68",
+  "request_sha256": "7848c6f62e09f9485da9bc50b2c11bcf55e30689ea36d82d75440c03f614b6a0",
+  "ontology_used": false,
+  "reference_summaries_used": false
+}

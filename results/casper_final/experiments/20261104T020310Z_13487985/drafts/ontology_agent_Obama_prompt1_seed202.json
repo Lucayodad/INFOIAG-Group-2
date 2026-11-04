@@ -1,0 +1,81 @@
+{
+  "status": "draft_unchecked",
+  "provider": "ollama",
+  "topic": "Obama",
+  "seed": 202,
+  "temperature": 0.7,
+  "summary": "Some users found the speeches delivered by President Obama to be lengthy or difficult to follow. A number of tweets focused on specific events such as the inauguration, with many users expressing strong opinions about his attire and demeanor. Several comments contained negative characterizations of Obama, including comparisons to the devil or suggestions that he is a puppet. Opposing viewpoints addressed policy issues, specifically debating the impact of his tax proposals and proposed gun control measures. There were also numerous observations regarding the influence of Michelle Obama on public perception and her fashion choices.",
+  "sentences": [
+    {
+      "text": "Some users found the speeches delivered by President Obama to be lengthy or difficult to follow.",
+      "source_ids": [
+        "Obama_001",
+        "Obama_054"
+      ]
+    },
+    {
+      "text": "A number of tweets focused on specific events such as the inauguration, with many users expressing strong opinions about his attire and demeanor.",
+      "source_ids": [
+        "Obama_002",
+        "Obama_005",
+        "Obama_018",
+        "Obama_047"
+      ]
+    },
+    {
+      "text": "Several comments contained negative characterizations of Obama, including comparisons to the devil or suggestions that he is a puppet.",
+      "source_ids": [
+        "Obama_008",
+        "Obama_012",
+        "Obama_034",
+        "Obama_044"
+      ]
+    },
+    {
+      "text": "Opposing viewpoints addressed policy issues, specifically debating the impact of his tax proposals and proposed gun control measures.",
+      "source_ids": [
+        "Obama_003",
+        "Obama_014",
+        "Obama_020",
+        "Obama_060"
+      ]
+    },
+    {
+      "text": "There were also numerous observations regarding the influence of Michelle Obama on public perception and her fashion choices.",
+      "source_ids": [
+        "Obama_021",
+        "Obama_029",
+        "Obama_036",
+        "Obama_085"
+      ]
+    }
+  ],
+  "summary_prompt": "Below are 90 tweets about Barack Obama. Write a 5-sentence summary for someone who has not followed this topic, so they get a quick picture of what people are saying.",
+  "requested_model": "qwen3.5:4b",
+  "returned_model": "qwen3.5:4b",
+  "generation_settings": {
+    "temperature": 0.7,
+    "seed": 202,
+    "num_ctx": 16384,
+    "num_predict": 2000
+  },
+  "backend_metadata": {
+    "created_at": "2026-11-04T02:17:48.3364796Z",
+    "total_duration": 10661425400,
+    "load_duration": 7037000,
+    "prompt_eval_duration": 2189881000,
+    "eval_duration": 7156079000,
+    "done_reason": "stop"
+  },
+  "usage": {
+    "input_tokens": 4339,
+    "output_tokens": 390,
+    "total_tokens": 4729
+  },
+  "execution_seconds": 10.663615,
+  "created_at_utc": "2026-11-04T02:17:48.339894+00:00",
+  "input_sha256": "2f8c62fc6b98af2dc3bfe6311455b477450237eea22f3ded4edcf8ea28e25c68",
+  "request_sha256": "0b0c61232dbdbed7aeddc2de713025329b8d6fd9ab2865da42fec54c19901013",
+  "ontology_used": false,
+  "reference_summaries_used": false
+}

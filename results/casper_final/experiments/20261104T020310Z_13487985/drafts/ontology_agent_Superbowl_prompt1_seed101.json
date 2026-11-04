@@ -1,0 +1,95 @@
+{
+  "status": "draft_unchecked",
+  "provider": "ollama",
+  "topic": "Superbowl",
+  "seed": 101,
+  "temperature": 0.7,
+  "summary": "A significant portion of users expressed indifference toward the Super Bowl, citing boredom, fatigue, or a lack of interest in football as reasons for not watching. While some viewers remained disengaged, others actively tracked the game's progress, with several fans celebrating their teams' advancement to the Super Bowl. Many tweets focused on the potential matchup between the two brother coaches, the Ravens and the 49ers, generating specific excitement among fans. Beyond the game itself, discussions frequently turned to the Halftime Show, with some users praising performances while others criticized artists like Beyoncé or Nicki Minaj. The Super Bowl also served as a platform for broader commentary, including critiques of commercials, historical comparisons regarding past winning teams, and humorous observations about player performance.",
+  "sentences": [
+    {
+      "text": "A significant portion of users expressed indifference toward the Super Bowl, citing boredom, fatigue, or a lack of interest in football as reasons for not watching.",
+      "source_ids": [
+        "Superbowl_002",
+        "Superbowl_003",
+        "Superbowl_010",
+        "Superbowl_018",
+        "Superbowl_054",
+        "Superbowl_062",
+        "Superbowl_084"
+      ]
+    },
+    {
+      "text": "While some viewers remained disengaged, others actively tracked the game's progress, with several fans celebrating their teams' advancement to the Super Bowl.",
+      "source_ids": [
+        "Superbowl_006",
+        "Superbowl_008",
+        "Superbowl_020",
+        "Superbowl_023",
+        "Superbowl_026",
+        "Superbowl_029",
+        "Superbowl_057"
+      ]
+    },
+    {
+      "text": "Many tweets focused on the potential matchup between the two brother coaches, the Ravens and the 49ers, generating specific excitement among fans.",
+      "source_ids": [
+        "Superbowl_016",
+        "Superbowl_022",
+        "Superbowl_038",
+        "Superbowl_057",
+        "Superbowl_069"
+      ]
+    },
+    {
+      "text": "Beyond the game itself, discussions frequently turned to the Halftime Show, with some users praising performances while others criticized artists like Beyoncé or Nicki Minaj.",
+      "source_ids": [
+        "Superbowl_015",
+        "Superbowl_027",
+        "Superbowl_030",
+        "Superbowl_056",
+        "Superbowl_071"
+      ]
+    },
+    {
+      "text": "The Super Bowl also served as a platform for broader commentary, including critiques of commercials, historical comparisons regarding past winning teams, and humorous observations about player performance.",
+      "source_ids": [
+        "Superbowl_004",
+        "Superbowl_007",
+        "Superbowl_019",
+        "Superbowl_032",
+        "Superbowl_036",
+        "Superbowl_039",
+        "Superbowl_041",
+        "Superbowl_078"
+      ]
+    }
+  ],
+  "summary_prompt": "Below are 90 tweets about the Super Bowl. Write a 5-sentence summary for someone who has not followed this topic, so they get a quick picture of what people are saying.",
+  "requested_model": "qwen3.5:4b",
+  "returned_model": "qwen3.5:4b",
+  "generation_settings": {
+    "temperature": 0.7,
+    "seed": 101,
+    "num_ctx": 16384,
+    "num_predict": 2000
+  },
+  "backend_metadata": {
+    "created_at": "2026-11-04T03:12:25.8419534Z",
+    "total_duration": 15093977700,
+    "load_duration": 7881100,
+    "prompt_eval_duration": 2230143000,
+    "eval_duration": 11647550000,
+    "done_reason": "stop"
+  },
+  "usage": {
+    "input_tokens": 4823,
+    "output_tokens": 626,
+    "total_tokens": 5449
+  },
+  "execution_seconds": 15.096321,
+  "created_at_utc": "2026-11-04T03:12:25.845340+00:00",
+  "input_sha256": "6941abca46e7cf65f39af66f706138e6e0a1b4d13e836920ce2532ecbd1a64b4",
+  "request_sha256": "e1271950b9619e336792230dd3339453904472159df1b58d1a13530a6213f287",
+  "ontology_used": false,
+  "reference_summaries_used": false
+}
