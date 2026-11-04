@@ -19,8 +19,10 @@ are diagnostic only and must not be presented as accepted summaries.
 
 Dialect labels remain internal evaluation metadata for Python-side grouping and
 fairness measurement. They are excluded from the factual, representation, and
-revision model payloads; generation receives tweet text, topic/claim evidence,
-and provenance IDs without group labels.
+revision model payloads. Revision evidence is selected from the complete topic
+corpus by semantic similarity and repeated viewpoints; it is not selected by
+the lowest-coverage group or any other dialect annotation. Generation receives
+tweet text, topic/claim evidence, and provenance IDs without group labels.
 
 ## Fixes after the 36-trial analysis
 
