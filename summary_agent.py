@@ -49,6 +49,8 @@ class SummaryAgentState(TypedDict):
     summary_versions: list[dict]
     iterations: list[dict]
     best_iteration: int
+    best_summary: dict
+    best_metrics: dict
     routing_decisions: list[dict]
     call_counts: dict[str, int]
     status: str
@@ -341,7 +343,10 @@ def build_summary_agent(graph, client, *, disparity_threshold=None,
                         (state["factual_results"], state["representation_results"]))
         status = ("stopped_with_issues" if remaining else
                   "completed_with_uncertainty" if state["uncertainty_flags"] else "completed")
-        return _update(state, "finalize", status=status)
+        best = state["iterations"][state["best_iteration"]]
+        return _update(state, "finalize", status=status,
+                       best_summary=deepcopy(best["current_summary"]),
+                       best_metrics=deepcopy(best["metrics"]))
 
     builder = StateGraph(SummaryAgentState)
     for name, function in (("extract_summary_claims", extract_claims), ("factual_check", check_facts),
@@ -395,6 +400,7 @@ def run_summary_agent(graph, initial_summary, *, topic, prompt, client=None, **c
         "execution_history": [], "uncertainty_flags": [], "route": None,
         "revision_evidence": {}, "retrieval_history": [], "revisions": [],
         "summary_versions": [deepcopy(initial_summary)], "iterations": [], "best_iteration": 0,
+        "best_summary": deepcopy(initial_summary), "best_metrics": {},
         "routing_decisions": [], "call_counts": {"model_calls": 0, "tool_calls": 0, "embedding_calls": 0},
         "status": "running", "stop_reason": None,
     }

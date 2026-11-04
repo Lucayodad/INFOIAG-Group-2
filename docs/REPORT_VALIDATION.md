@@ -7,6 +7,12 @@ A run that finishes with UNKNOWN claims is an uncertainty result, not a verified
 summary. A small Equal Coverage deviation does not prove that a summary covers
 any group well.
 
+Agent outputs retain two summary views: `current_summary` is the official
+result after rollback and stopping rules, while `best_summary` is the
+best-retained checked iteration identified by `best_iteration`, with its
+corresponding `best_metrics`. The latter is diagnostic evidence of progress
+and is not an alternative accepted result.
+
 ## Fixes after the 36-trial analysis
 
 The saved 18 agent trials never changed a summary. Three causes were fixed:

@@ -426,6 +426,15 @@ class RevisionLoopTests(unittest.TestCase):
         self.assertEqual(result["current_summary"], result["summary_versions"][1])
         self.assertNotEqual(result["current_summary"], result["initial_summary"])
         self.assertEqual(result["best_iteration"], 1)
+        self.assertEqual(result["best_summary"], result["current_summary"])
+        self.assertEqual(result["best_metrics"], result["iterations"][1]["metrics"])
+
+    def test_best_summary_exposes_improvement_without_replacing_final_summary(self):
+        result, _ = self.run_fixture("representation", many=True, disparity_threshold=0.01,
+                                     client=mock_client(transform_revision=lambda data: data))
+        self.assertEqual(result["best_iteration"], 3)
+        self.assertEqual(result["best_summary"], result["current_summary"])
+        self.assertEqual(result["best_metrics"], result["iterations"][3]["metrics"])
 
     def test_retrieval_is_deterministic_bounded_and_never_invents_original_text(self):
         result, _ = self.run_fixture()
