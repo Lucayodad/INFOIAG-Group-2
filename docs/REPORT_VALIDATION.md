@@ -12,6 +12,10 @@ result after rollback and stopping rules, while `best_summary` is the
 best-retained checked iteration identified by `best_iteration`, with its
 corresponding `best_metrics`. The latter is diagnostic evidence of progress
 and is not an alternative accepted result.
+The `attempted_candidates` output additionally records every generated
+revision candidate, including candidates that were later rejected or rolled
+back, together with its status, reason and checked metrics. These candidates
+are diagnostic only and must not be presented as accepted summaries.
 
 ## Fixes after the 36-trial analysis
 

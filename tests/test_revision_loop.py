@@ -436,6 +436,15 @@ class RevisionLoopTests(unittest.TestCase):
         self.assertEqual(result["best_summary"], result["current_summary"])
         self.assertEqual(result["best_metrics"], result["iterations"][3]["metrics"])
 
+    def test_attempted_candidates_expose_rejected_summaries_without_retaining_them(self):
+        result, _ = self.run_fixture("representation", client=mock_client(no_improvement=True))
+        self.assertEqual(len(result["attempted_candidates"]), 1)
+        rejected = result["attempted_candidates"]
+        self.assertEqual(rejected[0]["status"], "rolled_back")
+        self.assertTrue(all(item["summary"]["sentences"] for item in rejected))
+        self.assertEqual(result["current_summary"], result["best_summary"])
+        self.assertNotEqual(result["current_summary"], rejected[-1]["summary"])
+
     def test_retrieval_is_deterministic_bounded_and_never_invents_original_text(self):
         result, _ = self.run_fixture()
         graph, _, _ = fixture()
