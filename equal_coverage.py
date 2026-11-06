@@ -1,4 +1,4 @@
-"""MNLI-based Equal Coverage for the planned dialect-fairness evaluation."""
+"""MNLI-based Equal Coverage for the final dialect-fairness evaluation."""
 
 from __future__ import annotations
 
@@ -88,12 +88,7 @@ def _default_scorer() -> EntailmentScorer:
 
 
 class CachedScorer:
-    """Score each (tweet, sentence) pair once per agent run.
-
-    A revision changes one sentence, so a recheck needs 90 new pairs, not 450.
-    Reusing the first scores also keeps unchanged pairs bit-identical across
-    the checks whose coverages the acceptance gate compares.
-    """
+    """Score each (tweet, sentence) pair once: a draft and its final summary share most sentences."""
 
     def __init__(self, scorer: EntailmentScorer | None = None):
         self._scorer = scorer
@@ -164,28 +159,17 @@ def calculate_equal_coverage(
 
     overall = sum(all_scores) / len(all_scores) if all_scores else 0.0
     ec = sum(abs(group_scores[label] - overall) for label in DIALECT_LABELS) / len(DIALECT_LABELS)
-    gap = max(group_scores.values()) - min(group_scores.values())
     return {
         "metric": "mnli_equal_coverage",
         "model": MODEL_NAME,
         "coverage_by_group": {
-            label: {
-                "coverage": group_scores[label],
-                "lower": group_scores[label],
-                "upper": group_scores[label],
-                "tweet_count": len(tweets_by_group[label]),
-                "pair_count": pair_counts[label],
-                "total_weight": len(tweets_by_group[label]),
-            }
+            label: {"coverage": group_scores[label], "tweet_count": len(tweets_by_group[label]),
+                    "pair_count": pair_counts[label]}
             for label in DIALECT_LABELS
         },
         "overall_coverage": overall,
         "equal_coverage": ec,
-        "entailment_coverage_gap": gap,
-        "hypothesis_unit": "summary_sentence",
         "metric_version": "mnli_sentence_mean_v1",
-        "summary_claim_count": len(hypotheses),
         "summary_sentence_count": len(hypotheses),
         "pair_count": len(all_scores),
-        "status": "measured",
     }

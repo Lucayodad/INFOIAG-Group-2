@@ -5,10 +5,10 @@
 Candidates are ranked by the sum of two ranks: all-minilm cosine to the claim
 and idf-weighted word overlap (both computed without any label).
 """
-import collections, html, json, math, re, sys, time
+import collections, hashlib, html, json, math, re, sys, time
 from pathlib import Path
 
-import lab_run  # sets sys.path and the working directory
+import lab_run  # makes the repository modules importable
 from lab_run import REPO, HERE, ReplayFirstTurn, first_turn, OllamaClient, LabelFreeClient, label_free_graph, first_check
 from lab_run import flatten_summary_claims, fact_check_v, fact_agent_v, configs
 from data_loader import load_tweets
@@ -40,6 +40,40 @@ def candidates(claim_text, cited, topic, tweets, vectors, claim_vector, k):
                                              row[0]))
     rank = {row[0]: by_vector.index(row) + by_words.index(row) for row in pool}
     return sorted(rank, key=lambda key: (rank[key], key))[:k]
+
+
+def cache_embeddings():
+    """Prepare the fixed local embedding input needed for the reported top-5 probe.
+
+    Uses embeddings only, never Qwen or a new factual verdict. Existing caches
+    are preserved; remove explicitly to regenerate with a different model.
+    """
+    path = HERE / "embeddings.json"
+    if path.exists():
+        print(f"Embedding cache already exists: {path}")
+        return
+    claims = json.loads((HERE / "claims.json").read_text(encoding="utf-8"))
+    texts = {t.id: html.unescape(t.text) for topic in ("McDonalds", "Obama", "Superbowl") for t in load_tweets(topic)}
+    texts.update({claim["key"]: claim["claim"] for claim in claims})
+    backend = OllamaClient(timeout=600)
+    models = backend.check_models(("all-minilm",))
+    client = LabelFreeClient(backend)
+    vectors = {}
+    keys = list(texts)
+    try:
+        for start in range(0, len(keys), 32):
+            batch = keys[start:start + 32]
+            encoded = client.embed([texts[key] for key in batch], model="all-minilm")
+            vectors.update(zip(batch, encoded))
+            print(f"Embeddings: {min(start + 32, len(keys))}/{len(keys)}", flush=True)
+    finally:
+        backend.close()
+    path.write_text(json.dumps(vectors), encoding="utf-8")
+    metadata = {"mode": "local embedding-only regeneration for the report's retrieval diagnostic",
+                "models": models, "items": len(vectors), "model_calls_to_qwen": 0,
+                "input_sha256": hashlib.sha256(json.dumps(texts, sort_keys=True).encode()).hexdigest()}
+    path.with_suffix(".metadata.json").write_text(json.dumps(metadata, indent=2), encoding="utf-8")
+    print(f"Saved {path}")
 
 
 def main():
@@ -87,4 +121,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    if sys.argv[1:] == ["--cache-embeddings"]:
+        cache_embeddings()
+    else:
+        main()

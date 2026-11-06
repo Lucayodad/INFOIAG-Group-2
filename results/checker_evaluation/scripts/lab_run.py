@@ -9,10 +9,9 @@ turn is a live Qwen call with the production request settings.
 import json, sys, time, os
 from pathlib import Path
 
-REPO = Path(r"C:\Users\saif-\Desktop\IA\INFOIAG-Group-2")
+REPO = Path(__file__).resolve().parents[3]
 HERE = Path(__file__).resolve().parent
 sys.path[:0] = [str(HERE), str(REPO)]
-os.chdir(REPO)
 
 from ollama_backend import OllamaClient
 from run_final_agent import LabelFreeClient, label_free_graph, first_check

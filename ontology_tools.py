@@ -23,6 +23,9 @@ QUERY_DEFAULTS = {
     "Q4": {"person": "Obama"},
     "Q5": {},
     "Q6": {},
+    "Q7": {"company": "McDonalds"},
+    "Q8": {},
+    "Q9": {},
 }
 EVIDENCE_NOTE = (
     "Results describe the supplied ontology, not independently verified reality. "
@@ -161,9 +164,9 @@ class OntologyTools:
 
     def run_query(self, query_id: str, bindings: dict | None = None,
                   use_inference: bool = True) -> dict:
-        """Execute one of the six local templates, using RDF term bindings."""
+        """Execute one of the nine local templates, using RDF term bindings."""
         if query_id not in QUERY_DEFAULTS:
-            raise OntologyError(f"Unknown query {query_id!r}; choose Q1 through Q6.")
+            raise OntologyError(f"Unknown query {query_id!r}; choose Q1 through Q9.")
         values = dict(QUERY_DEFAULTS[query_id])
         supplied = bindings or {}
         if set(supplied) - set(values):

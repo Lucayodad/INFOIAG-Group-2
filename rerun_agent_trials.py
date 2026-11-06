@@ -23,7 +23,8 @@ TOPIC_ORDER = ("Obama", "McDonalds", "Superbowl")  # Obama first: its extraction
 
 def saved_drafts():
     drafts = {}
-    for path in sorted(ROOT.glob("results/agent_*/experiments/*/drafts/ontology_agent_*.json")):
+    paths = sorted((ROOT / "results/drafts").glob("ontology_agent_*.json"))
+    for path in paths:
         match = PATTERN.search(path.name)
         if match:
             key = match.groups()
@@ -48,7 +49,6 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--out", type=Path, default=ROOT / "results" / "agent_rerun")
     parser.add_argument("--topic", choices=("all", *TOPIC_ORDER), default="all")
-    parser.add_argument("--disparity-threshold", type=float, default=0.2)
     parser.add_argument("--max-revisions", type=int, default=3)
     args = parser.parse_args()
 
@@ -67,7 +67,7 @@ def main():
             continue
         print(f"Running {name} from {draft.relative_to(ROOT)}", flush=True)
         command = [sys.executable, str(ROOT / "run_pipeline.py"), "--topic", topic, "--prompt-id", prompt_id,
-                   "--reuse-draft", str(draft), "--disparity-threshold", str(args.disparity_threshold),
+                   "--reuse-draft", str(draft),
                    "--max-revisions", str(args.max_revisions), "--output", str(output)]
         with open(args.out / f"{name}.log", "w", encoding="utf-8") as log:
             code = subprocess.run(command, cwd=ROOT, stdout=log, stderr=subprocess.STDOUT).returncode

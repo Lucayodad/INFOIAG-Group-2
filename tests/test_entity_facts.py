@@ -4,7 +4,7 @@ import hashlib
 import json
 import unittest
 
-from rdflib import BNode, Graph, Literal, RDF, URIRef, XSD
+from rdflib import BNode, Graph, Literal, URIRef, XSD
 
 from fact_tools import lookup_entity_facts
 from ontology_tools import DEFAULT_ONTOLOGY, NS, OntologyError, OntologyTools

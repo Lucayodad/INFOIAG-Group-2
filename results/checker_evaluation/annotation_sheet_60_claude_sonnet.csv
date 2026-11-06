@@ -1,0 +1,624 @@
+﻿nr,key,claim,cited_tweets,your_verdict,comment
+1,McDonalds_prompt1_seed101|S05_C03,Others describe the food as disgusting.,"McDonalds_001: It's freezing and I'm eating a McDonalds dip come because it's delicious and I'm 21 and I do whatever I want.
+McDonalds_009: S/O to fonky ass McDonalds I been eating et shit for 3 days n mi stomach is still on 10... #yuck
+McDonalds_046: McDonalds makes me sick to my stomach. I don't see how people eat it on the daily.
+McDonalds_056: McDonalds is disgusting. I don't get how people can eat that stuff.",SUPPORTED,056 calls the food disgusting; 'others' needs one tweet.
+2,McDonalds_prompt1_seed202|S01_C02,"many users mention specific desires for items like ice cream cones, chicken nuggets, and fresh coffee","McDonalds_003: I really really want an ice cream cone from McDonalds right now ____
+McDonalds_004: Eating McDonald's.. OMG McDonalds done got Nasty like what is this
+McDonalds_026: I want some chicken nuggets from McDonalds ! ' .
+McDonalds_051: I'm the kind of person who would come out of the gym ... & go straight to McDonalds ^___^ lmao
+McDonalds_074: i just had McDonalds & now i'm hungry again .....",UNKNOWN,"'Many' needs 3 tweets; fresh coffee is not mentioned, nuggets and ice cream only once each."
+3,McDonalds_prompt1_seed202|S02_C01,Some users describe the food as delicious and a source of comfort.,"McDonalds_001: It's freezing and I'm eating a McDonalds dip come because it's delicious and I'm 21 and I do whatever I want.
+McDonalds_005: I ain't making none -_- sorry cus my god father bouts bring me some from McDonalds <3 I got you next time thoe
+McDonalds_046: McDonalds makes me sick to my stomach. I don't see how people eat it on the daily.
+McDonalds_056: McDonalds is disgusting. I don't get how people can eat that stuff.
+McDonalds_071: McDonalds is the nastiest shit I've ever tasted in my life <<<",UNKNOWN,001 says delicious but nothing expresses comfort; list item unsupported.
+4,McDonalds_prompt1_seed202|S02_C03,Others explicitly state that the food makes them sick to their stomach.,"McDonalds_001: It's freezing and I'm eating a McDonalds dip come because it's delicious and I'm 21 and I do whatever I want.
+McDonalds_005: I ain't making none -_- sorry cus my god father bouts bring me some from McDonalds <3 I got you next time thoe
+McDonalds_046: McDonalds makes me sick to my stomach. I don't see how people eat it on the daily.
+McDonalds_056: McDonalds is disgusting. I don't get how people can eat that stuff.
+McDonalds_071: McDonalds is the nastiest shit I've ever tasted in my life <<<",SUPPORTED,046: McDonalds makes me sick to my stomach.
+5,McDonalds_prompt1_seed202|S03_C01,There are multiple posts expressing frustration about the ordering process.,"McDonalds_009: S/O to fonky ass McDonalds I been eating et shit for 3 days n mi stomach is still on 10... #yuck
+McDonalds_022: This McDonalds Frappe run after standing in the book store for over an hour is much needed.
+McDonalds_034: This lady in front of me at McDonalds drive through just dropped the F bomb a solid 7 times because she pulled up too far at the menu.
+McDonalds_058: I hate that McDonalds breakfast ends at 10:30 weekdays and 11:00 weekends -___-
+McDonalds_076: ""Hungry af , but this McDonalds in sunset line too long""",UNKNOWN,"'Multiple' needs 3; only 034 and maybe 076 touch ordering, 058 is about breakfast hours."
+6,McDonalds_prompt1_seed202|S03_C02,Some of these frustrations involve complaints about long lines.,"McDonalds_009: S/O to fonky ass McDonalds I been eating et shit for 3 days n mi stomach is still on 10... #yuck
+McDonalds_022: This McDonalds Frappe run after standing in the book store for over an hour is much needed.
+McDonalds_034: This lady in front of me at McDonalds drive through just dropped the F bomb a solid 7 times because she pulled up too far at the menu.
+McDonalds_058: I hate that McDonalds breakfast ends at 10:30 weekdays and 11:00 weekends -___-
+McDonalds_076: ""Hungry af , but this McDonalds in sunset line too long""",SUPPORTED,076: line too long.
+7,McDonalds_prompt1_seed202|S03_C03,There are complaints regarding limited sauce packets.,"McDonalds_009: S/O to fonky ass McDonalds I been eating et shit for 3 days n mi stomach is still on 10... #yuck
+McDonalds_022: This McDonalds Frappe run after standing in the book store for over an hour is much needed.
+McDonalds_034: This lady in front of me at McDonalds drive through just dropped the F bomb a solid 7 times because she pulled up too far at the menu.
+McDonalds_058: I hate that McDonalds breakfast ends at 10:30 weekdays and 11:00 weekends -___-
+McDonalds_076: ""Hungry af , but this McDonalds in sunset line too long""",UNKNOWN,No cited tweet mentions sauce packets.
+8,McDonalds_prompt1_seed202|S03_C04,Some of these frustrations involve staff interactions.,"McDonalds_009: S/O to fonky ass McDonalds I been eating et shit for 3 days n mi stomach is still on 10... #yuck
+McDonalds_022: This McDonalds Frappe run after standing in the book store for over an hour is much needed.
+McDonalds_034: This lady in front of me at McDonalds drive through just dropped the F bomb a solid 7 times because she pulled up too far at the menu.
+McDonalds_058: I hate that McDonalds breakfast ends at 10:30 weekdays and 11:00 weekends -___-
+McDonalds_076: ""Hungry af , but this McDonalds in sunset line too long""",UNKNOWN,No cited tweet describes an interaction with staff; 034 concerns a customer.
+9,McDonalds_prompt1_seed202|S05_C01,Some users argue that McDonald's products are too expensive.,"McDonalds_013: These folks in McDonalds be actin like its hard to make fresh fries or sumn
+McDonalds_020: McDonalds be stingy af with them sauce packets tho. I buy 40 nuggets...and you give me one ranch dressing. Daduq?
+McDonalds_044: I just spent $30 at Sonic for three meals-_- I could have gotten three meals for 15 at McDonalds #tickedoff
+McDonalds_082: ""It's like the southern version of McDonalds or something, even though there are McDonalds too""
+McDonalds_090: Can we all just admit. McDonalds would suck butt without French fries.",UNKNOWN,No cited tweet says McDonald's is too expensive; 044 points the other way but is not explicit.
+10,McDonalds_prompt1_seed202|S05_C02,Others defend the affordability of McDonald's products compared to competitors.,"McDonalds_013: These folks in McDonalds be actin like its hard to make fresh fries or sumn
+McDonalds_020: McDonalds be stingy af with them sauce packets tho. I buy 40 nuggets...and you give me one ranch dressing. Daduq?
+McDonalds_044: I just spent $30 at Sonic for three meals-_- I could have gotten three meals for 15 at McDonalds #tickedoff
+McDonalds_082: ""It's like the southern version of McDonalds or something, even though there are McDonalds too""
+McDonalds_090: Can we all just admit. McDonalds would suck butt without French fries.",SUPPORTED,044: three meals for 15 at McDonalds versus 30 at Sonic.
+11,McDonalds_prompt1_seed303|S01_C01,Public reactions were diverse.,"McDonalds_001: It's freezing and I'm eating a McDonalds dip come because it's delicious and I'm 21 and I do whatever I want.
+McDonalds_003: I really really want an ice cream cone from McDonalds right now ____
+McDonalds_004: Eating McDonald's.. OMG McDonalds done got Nasty like what is this
+McDonalds_006: If Uu Done Took A Girl To McDonalds Or Ever Bought Her Anything Uu Paid Fa Dat Pussy ! Niggas Can't Say Dey Ain Neva Paid Fa Pussy !
+McDonalds_009: S/O to fonky ass McDonalds I been eating et shit for 3 days n mi stomach is still on 10... #yuck
+McDonalds_012: I swear every crackhead be at McDonalds ..” Ordering off the dollar menu lol
+McDonalds_015: ""Here's how fat I am, on my to picking up the pizza I stopped at McDonalds for a McRib""
+McDonalds_019: That McDonalds commercial of the fish mcbites is annoying as fuck but catchy lol
+McDonalds_020: McDonalds be stingy af with them sauce packets tho. I buy 40 nuggets...and you give me one ranch dressing. Daduq?
+McDonalds_024: Lmao ew wth the cashier at McDonalds gave me and my mom a rapist face
+McDonalds_025: The old ass security guard in McDonalds a bitch !!!!!!
+McDonalds_036: lol I'm totally copying ur video. \nOf the McDonalds icecream cone. Back in summer
+McDonalds_040: You can eat all the food in McDonalds and you would still be skinny. You have a fast metabolism
+McDonalds_043: Ayyooo! This old lady just ate a whole McDonalds meal out the trash ______
+McDonalds_045: ""Aw, I'm gonna miss taking my brother to work and gettin McDonalds every morning :( \nMy body got so used to it I woke up at 5:33 to take him.""
+McDonalds_046: McDonalds makes me sick to my stomach. I don't see how people eat it on the daily.
+McDonalds_047: Will someone pick me up & take me to McDonalds right now?
+McDonalds_048: All this reading about McDonalds makes me want it. -.-
+McDonalds_051: I'm the kind of person who would come out of the gym ... & go straight to McDonalds ^___^ lmao
+McDonalds_052: When I go to McDonalds I like to eat my fries first!.
+McDonalds_053: So the fat girl workin McDonalds just wrote her number on my napkin while I'm with my girlfriend #dumbcornfedgirls
+McDonalds_054: You're not human if you don't crave McDonalds fries every no and then.
+McDonalds_055: Guess that's what imma be doing while we at McDonalds lmaoo making calls & txtn... Somebody gonna have to fedX all his stuff dwn here
+McDonalds_056: McDonalds is disgusting. I don't get how people can eat that stuff.
+McDonalds_057: Babyy ima take you to McDonalds after school ? ;D I'm sorry for what I did niqqa -.-
+McDonalds_058: I hate that McDonalds breakfast ends at 10:30 weekdays and 11:00 weekends -___-
+McDonalds_059: These Hoes #RATCHETTTTT ; In McDonalds On Old Nat !
+McDonalds_060: I don't care how many gross facts you'll tell me about McDonalds I'll still eat it
+McDonalds_061: Bouta go to McDonalds wid this no drivin ass girl (rainaaaaa) .
+McDonalds_062: ""I guess McDonalds french fries don't really count towards a serving of vegetables, huh?""
+McDonalds_063: ""Lol, I remember this dude that worked at McDonalds had a crush on me and he gave me like 10 mcgriddles & some hashbrowns for $5!""
+McDonalds_064: I would ALWAYS get chicken selects at McDonalds and now that they don't sell them anymore I'm not a big fan of McDonalds anymore.......
+McDonalds_065: I hate that McDonalds on 61st !!”girl me to snow and ghetto af
+McDonalds_066: just had some McDonalds with my mother.. shit we need to get our shit together >.< lol
+McDonalds_067: My mom need to hurry up with my McDonalds __
+McDonalds_068: So a little while ago I got McDonalds and I didn't even eat because I'm upset and sad __
+McDonalds_069: My lil brother Boog breaking his neck lookin' at this girl ass in McDonalds lol
+McDonalds_070: Guess I can't call the people at McDonalds retards if I spell like a. 3rd grader. Haha #fail #backfire
+McDonalds_071: McDonalds is the nastiest shit I've ever tasted in my life <<<
+McDonalds_072: ""McDonalds Gave my momma ah stale ass filet o fish..., #She mad Asl #Laughin at her ass""
+McDonalds_073: Man if somebody take me to McDonalds ill buy them anything they want from there ____
+McDonalds_074: i just had McDonalds & now i'm hungry again .....
+McDonalds_075: 11th K99 McDonalds \nDriscoll Children's Hospital Radiothon\n694-6400\n$12 a month for 12 months. Save a South Texas kiddo!!
+McDonalds_076: ""Hungry af , but this McDonalds in sunset line too long""
+McDonalds_077: Funny story: when thru McDonalds Drive thru for breakfast.. The card machine wouldn't take me card.. Because it was an Ulta Gift Card! Lol
+McDonalds_078: ""When McDonalds only give you ONE pack of sauce ... <<< Bitch I ordered a 20 piece nugget meal , THE FUCK ima do with ONE pack !?""
+McDonalds_079: How nice of the people McDonalds to give me Dr.pepper with my large ice. #sarcasm
+McDonalds_080: Damn McDonalds filled my cup with more ice than lemonade -.-t
+McDonalds_081: Sorry ii had McDonalds save yo bullshit for anybody who's hungry
+McDonalds_082: ""It's like the southern version of McDonalds or something, even though there are McDonalds too""
+McDonalds_083: Caught some McDonalds breakfast right before they switched it __ #Bangin
+McDonalds_084: Just like McDonalds.it's just a better grade of chicken than McDonalds and a worse grade of chicken than what you buy in a store
+McDonalds_085: I need a beer before I get a hang over. Already got my McDonalds breakfast sammiches.
+McDonalds_086: Anyone comes to McDonalds tonight ill prolly kill you! ________ #hatemyjob
+McDonalds_087: The day McDonalds does home delivery will be the happiest day of my life
+McDonalds_088: A In n Out Burger & McDonalds fries and Vanilla Bean is a perfect meal
+McDonalds_089: My boo gave me $6 to go eat at McDonalds while he takes his girlfriend out to dinner.
+McDonalds_090: Can we all just admit. McDonalds would suck butt without French fries.",SUPPORTED,003 craving for ice cream versus 056 calling the food disgusting: clearly different reactions.
+12,McDonalds_prompt1_seed303|S01_C03,Some public reactions included complaints about the quality of food and service.,"McDonalds_001: It's freezing and I'm eating a McDonalds dip come because it's delicious and I'm 21 and I do whatever I want.
+McDonalds_003: I really really want an ice cream cone from McDonalds right now ____
+McDonalds_004: Eating McDonald's.. OMG McDonalds done got Nasty like what is this
+McDonalds_006: If Uu Done Took A Girl To McDonalds Or Ever Bought Her Anything Uu Paid Fa Dat Pussy ! Niggas Can't Say Dey Ain Neva Paid Fa Pussy !
+McDonalds_009: S/O to fonky ass McDonalds I been eating et shit for 3 days n mi stomach is still on 10... #yuck
+McDonalds_012: I swear every crackhead be at McDonalds ..” Ordering off the dollar menu lol
+McDonalds_015: ""Here's how fat I am, on my to picking up the pizza I stopped at McDonalds for a McRib""
+McDonalds_019: That McDonalds commercial of the fish mcbites is annoying as fuck but catchy lol
+McDonalds_020: McDonalds be stingy af with them sauce packets tho. I buy 40 nuggets...and you give me one ranch dressing. Daduq?
+McDonalds_024: Lmao ew wth the cashier at McDonalds gave me and my mom a rapist face
+McDonalds_025: The old ass security guard in McDonalds a bitch !!!!!!
+McDonalds_036: lol I'm totally copying ur video. \nOf the McDonalds icecream cone. Back in summer
+McDonalds_040: You can eat all the food in McDonalds and you would still be skinny. You have a fast metabolism
+McDonalds_043: Ayyooo! This old lady just ate a whole McDonalds meal out the trash ______
+McDonalds_045: ""Aw, I'm gonna miss taking my brother to work and gettin McDonalds every morning :( \nMy body got so used to it I woke up at 5:33 to take him.""
+McDonalds_046: McDonalds makes me sick to my stomach. I don't see how people eat it on the daily.
+McDonalds_047: Will someone pick me up & take me to McDonalds right now?
+McDonalds_048: All this reading about McDonalds makes me want it. -.-
+McDonalds_051: I'm the kind of person who would come out of the gym ... & go straight to McDonalds ^___^ lmao
+McDonalds_052: When I go to McDonalds I like to eat my fries first!.
+McDonalds_053: So the fat girl workin McDonalds just wrote her number on my napkin while I'm with my girlfriend #dumbcornfedgirls
+McDonalds_054: You're not human if you don't crave McDonalds fries every no and then.
+McDonalds_055: Guess that's what imma be doing while we at McDonalds lmaoo making calls & txtn... Somebody gonna have to fedX all his stuff dwn here
+McDonalds_056: McDonalds is disgusting. I don't get how people can eat that stuff.
+McDonalds_057: Babyy ima take you to McDonalds after school ? ;D I'm sorry for what I did niqqa -.-
+McDonalds_058: I hate that McDonalds breakfast ends at 10:30 weekdays and 11:00 weekends -___-
+McDonalds_059: These Hoes #RATCHETTTTT ; In McDonalds On Old Nat !
+McDonalds_060: I don't care how many gross facts you'll tell me about McDonalds I'll still eat it
+McDonalds_061: Bouta go to McDonalds wid this no drivin ass girl (rainaaaaa) .
+McDonalds_062: ""I guess McDonalds french fries don't really count towards a serving of vegetables, huh?""
+McDonalds_063: ""Lol, I remember this dude that worked at McDonalds had a crush on me and he gave me like 10 mcgriddles & some hashbrowns for $5!""
+McDonalds_064: I would ALWAYS get chicken selects at McDonalds and now that they don't sell them anymore I'm not a big fan of McDonalds anymore.......
+McDonalds_065: I hate that McDonalds on 61st !!”girl me to snow and ghetto af
+McDonalds_066: just had some McDonalds with my mother.. shit we need to get our shit together >.< lol
+McDonalds_067: My mom need to hurry up with my McDonalds __
+McDonalds_068: So a little while ago I got McDonalds and I didn't even eat because I'm upset and sad __
+McDonalds_069: My lil brother Boog breaking his neck lookin' at this girl ass in McDonalds lol
+McDonalds_070: Guess I can't call the people at McDonalds retards if I spell like a. 3rd grader. Haha #fail #backfire
+McDonalds_071: McDonalds is the nastiest shit I've ever tasted in my life <<<
+McDonalds_072: ""McDonalds Gave my momma ah stale ass filet o fish..., #She mad Asl #Laughin at her ass""
+McDonalds_073: Man if somebody take me to McDonalds ill buy them anything they want from there ____
+McDonalds_074: i just had McDonalds & now i'm hungry again .....
+McDonalds_075: 11th K99 McDonalds \nDriscoll Children's Hospital Radiothon\n694-6400\n$12 a month for 12 months. Save a South Texas kiddo!!
+McDonalds_076: ""Hungry af , but this McDonalds in sunset line too long""
+McDonalds_077: Funny story: when thru McDonalds Drive thru for breakfast.. The card machine wouldn't take me card.. Because it was an Ulta Gift Card! Lol
+McDonalds_078: ""When McDonalds only give you ONE pack of sauce ... <<< Bitch I ordered a 20 piece nugget meal , THE FUCK ima do with ONE pack !?""
+McDonalds_079: How nice of the people McDonalds to give me Dr.pepper with my large ice. #sarcasm
+McDonalds_080: Damn McDonalds filled my cup with more ice than lemonade -.-t
+McDonalds_081: Sorry ii had McDonalds save yo bullshit for anybody who's hungry
+McDonalds_082: ""It's like the southern version of McDonalds or something, even though there are McDonalds too""
+McDonalds_083: Caught some McDonalds breakfast right before they switched it __ #Bangin
+McDonalds_084: Just like McDonalds.it's just a better grade of chicken than McDonalds and a worse grade of chicken than what you buy in a store
+McDonalds_085: I need a beer before I get a hang over. Already got my McDonalds breakfast sammiches.
+McDonalds_086: Anyone comes to McDonalds tonight ill prolly kill you! ________ #hatemyjob
+McDonalds_087: The day McDonalds does home delivery will be the happiest day of my life
+McDonalds_088: A In n Out Burger & McDonalds fries and Vanilla Bean is a perfect meal
+McDonalds_089: My boo gave me $6 to go eat at McDonalds while he takes his girlfriend out to dinner.
+McDonalds_090: Can we all just admit. McDonalds would suck butt without French fries.",SUPPORTED,"Food quality: 071, 072; service: 020 sauce packets, 024 cashier, 080 ice."
+13,McDonalds_prompt1_seed303|S02_C04,Criticism is frequently directed toward the inconsistency of meal quality,"McDonalds_002: ""I can't say McDonalds should serve breakfast all day, but at least until noon.""
+McDonalds_008: The New McDonalds On Ocean & Parkside >>>>>”Wat u doing on my side Bai ???
+McDonalds_013: These folks in McDonalds be actin like its hard to make fresh fries or sumn
+McDonalds_016: better not let Nicki see that McDonalds lol u better ate it in the car
+McDonalds_021: I'm always at McDonalds I need to change my diet __
+McDonalds_027: ""Getting in trouble for having McDonalds in school because its not \fair\""""""""""
+McDonalds_033: Why does McDonalds have to be on the other side of the island.
+McDonalds_034: This lady in front of me at McDonalds drive through just dropped the F bomb a solid 7 times because she pulled up too far at the menu.
+McDonalds_035: McDonalds gone give me a large cup half full of soda tf wrong w they ass
+McDonalds_042: McDonalds serve coffee at this time? I ain't know that! :O So mamy times I wanted and went to DD instead thinking McDonalds ain't have -___-
+McDonalds_058: I hate that McDonalds breakfast ends at 10:30 weekdays and 11:00 weekends -___-
+McDonalds_062: ""I guess McDonalds french fries don't really count towards a serving of vegetables, huh?""
+McDonalds_071: McDonalds is the nastiest shit I've ever tasted in my life <<<
+McDonalds_072: ""McDonalds Gave my momma ah stale ass filet o fish..., #She mad Asl #Laughin at her ass""
+McDonalds_078: ""When McDonalds only give you ONE pack of sauce ... <<< Bitch I ordered a 20 piece nugget meal , THE FUCK ima do with ONE pack !?""
+McDonalds_083: Caught some McDonalds breakfast right before they switched it __ #Bangin",UNKNOWN,'Frequently' needs 3; no tweet speaks of inconsistent quality.
+14,McDonalds_prompt1_seed303|S03_C01,Many users express strong negative sentiments regarding the taste of the food,"McDonalds_004: Eating McDonald's.. OMG McDonalds done got Nasty like what is this
+McDonalds_009: S/O to fonky ass McDonalds I been eating et shit for 3 days n mi stomach is still on 10... #yuck
+McDonalds_015: ""Here's how fat I am, on my to picking up the pizza I stopped at McDonalds for a McRib""
+McDonalds_046: McDonalds makes me sick to my stomach. I don't see how people eat it on the daily.
+McDonalds_056: McDonalds is disgusting. I don't get how people can eat that stuff.
+McDonalds_071: McDonalds is the nastiest shit I've ever tasted in my life <<<",SUPPORTED,"004, 056 and 071 are three strong negative taste reactions."
+15,McDonalds_prompt1_seed303|S05_C01,The collection includes anecdotes about personal interactions with employees,"McDonalds_011: McDonalds or something before you get out so that you could drink that while going to the doctor to get your medicine so that
+McDonalds_025: The old ass security guard in McDonalds a bitch !!!!!!
+McDonalds_034: This lady in front of me at McDonalds drive through just dropped the F bomb a solid 7 times because she pulled up too far at the menu.
+McDonalds_049: i went on a search for a 2 story McDonalds and ate at Del Taco. My life is insane.
+McDonalds_053: So the fat girl workin McDonalds just wrote her number on my napkin while I'm with my girlfriend #dumbcornfedgirls
+McDonalds_061: Bouta go to McDonalds wid this no drivin ass girl (rainaaaaa) .
+McDonalds_070: Guess I can't call the people at McDonalds retards if I spell like a. 3rd grader. Haha #fail #backfire
+McDonalds_075: 11th K99 McDonalds \nDriscoll Children's Hospital Radiothon\n694-6400\n$12 a month for 12 months. Save a South Texas kiddo!!
+McDonalds_081: Sorry ii had McDonalds save yo bullshit for anybody who's hungry
+McDonalds_082: ""It's like the southern version of McDonalds or something, even though there are McDonalds too""
+McDonalds_084: Just like McDonalds.it's just a better grade of chicken than McDonalds and a worse grade of chicken than what you buy in a store
+McDonalds_089: My boo gave me $6 to go eat at McDonalds while he takes his girlfriend out to dinner.",SUPPORTED,053: worker wrote her number on his napkin.
+16,McDonalds_prompt1_seed303|S05_C03,The collection includes comparisons to other fast food chains,"McDonalds_011: McDonalds or something before you get out so that you could drink that while going to the doctor to get your medicine so that
+McDonalds_025: The old ass security guard in McDonalds a bitch !!!!!!
+McDonalds_034: This lady in front of me at McDonalds drive through just dropped the F bomb a solid 7 times because she pulled up too far at the menu.
+McDonalds_049: i went on a search for a 2 story McDonalds and ate at Del Taco. My life is insane.
+McDonalds_053: So the fat girl workin McDonalds just wrote her number on my napkin while I'm with my girlfriend #dumbcornfedgirls
+McDonalds_061: Bouta go to McDonalds wid this no drivin ass girl (rainaaaaa) .
+McDonalds_070: Guess I can't call the people at McDonalds retards if I spell like a. 3rd grader. Haha #fail #backfire
+McDonalds_075: 11th K99 McDonalds \nDriscoll Children's Hospital Radiothon\n694-6400\n$12 a month for 12 months. Save a South Texas kiddo!!
+McDonalds_081: Sorry ii had McDonalds save yo bullshit for anybody who's hungry
+McDonalds_082: ""It's like the southern version of McDonalds or something, even though there are McDonalds too""
+McDonalds_084: Just like McDonalds.it's just a better grade of chicken than McDonalds and a worse grade of chicken than what you buy in a store
+McDonalds_089: My boo gave me $6 to go eat at McDonalds while he takes his girlfriend out to dinner.",SUPPORTED,082 and 084 compare other places or chicken to McDonalds.
+17,McDonalds_prompt2_seed101|S01_C02,Expressions of intense craving are described in tweets about McDonald's,"McDonalds_001: It's freezing and I'm eating a McDonalds dip come because it's delicious and I'm 21 and I do whatever I want.
+McDonalds_002: ""I can't say McDonalds should serve breakfast all day, but at least until noon.""
+McDonalds_003: I really really want an ice cream cone from McDonalds right now ____
+McDonalds_004: Eating McDonald's.. OMG McDonalds done got Nasty like what is this
+McDonalds_005: I ain't making none -_- sorry cus my god father bouts bring me some from McDonalds <3 I got you next time thoe
+McDonalds_008: The New McDonalds On Ocean & Parkside >>>>>”Wat u doing on my side Bai ???
+McDonalds_010: ""Jast came from McDonalds with Scotty , McChicken a Rocket""
+McDonalds_012: I swear every crackhead be at McDonalds ..” Ordering off the dollar menu lol
+McDonalds_014: I think I'm fenna make a trip to McDonalds drive thru
+McDonalds_019: That McDonalds commercial of the fish mcbites is annoying as fuck but catchy lol",SUPPORTED,003: 'I really really want an ice cream cone'.
+18,McDonalds_prompt2_seed101|S04_C01,The text mentions negative experiences with employees.,"McDonalds_024: Lmao ew wth the cashier at McDonalds gave me and my mom a rapist face
+McDonalds_025: The old ass security guard in McDonalds a bitch !!!!!!",SUPPORTED,024: cashier gave a rapist face; 025 insults a guard.
+19,McDonalds_prompt2_seed101|S05_C01,Many users continue to visit the chain.,"McDonalds_013: These folks in McDonalds be actin like its hard to make fresh fries or sumn
+McDonalds_040: You can eat all the food in McDonalds and you would still be skinny. You have a fast metabolism
+McDonalds_054: You're not human if you don't crave McDonalds fries every no and then.
+McDonalds_060: I don't care how many gross facts you'll tell me about McDonalds I'll still eat it
+McDonalds_087: The day McDonalds does home delivery will be the happiest day of my life",UNKNOWN,'Many' needs 3 showing continued visits; only 060 clearly does.
+20,McDonalds_prompt2_seed202|S01_C03,"Some people have strong complaints about McDonald's food quality, pricing, and service","McDonalds_001: It's freezing and I'm eating a McDonalds dip come because it's delicious and I'm 21 and I do whatever I want.
+McDonalds_003: I really really want an ice cream cone from McDonalds right now ____
+McDonalds_004: Eating McDonald's.. OMG McDonalds done got Nasty like what is this
+McDonalds_009: S/O to fonky ass McDonalds I been eating et shit for 3 days n mi stomach is still on 10... #yuck
+McDonalds_020: McDonalds be stingy af with them sauce packets tho. I buy 40 nuggets...and you give me one ranch dressing. Daduq?
+McDonalds_046: McDonalds makes me sick to my stomach. I don't see how people eat it on the daily.
+McDonalds_056: McDonalds is disgusting. I don't get how people can eat that stuff.
+McDonalds_071: McDonalds is the nastiest shit I've ever tasted in my life <<<",UNKNOWN,Pricing complaint not present in cited tweets; list item unsupported.
+21,McDonalds_prompt2_seed202|S02_C02,Users expressed dissatisfaction with the small amount of sauce provided,"McDonalds_002: ""I can't say McDonalds should serve breakfast all day, but at least until noon.""
+McDonalds_004: Eating McDonald's.. OMG McDonalds done got Nasty like what is this
+McDonalds_020: McDonalds be stingy af with them sauce packets tho. I buy 40 nuggets...and you give me one ranch dressing. Daduq?
+McDonalds_034: This lady in front of me at McDonalds drive through just dropped the F bomb a solid 7 times because she pulled up too far at the menu.
+McDonalds_044: I just spent $30 at Sonic for three meals-_- I could have gotten three meals for 15 at McDonalds #tickedoff
+McDonalds_058: I hate that McDonalds breakfast ends at 10:30 weekdays and 11:00 weekends -___-
+McDonalds_076: ""Hungry af , but this McDonalds in sunset line too long""",SUPPORTED,"020: stingy with sauce packets, one ranch for 40 nuggets."
+22,McDonalds_prompt2_seed202|S03_C01,Negative sentiment was directed toward specific employees including rude cashiers and security guards,"McDonalds_004: Eating McDonald's.. OMG McDonalds done got Nasty like what is this
+McDonalds_024: Lmao ew wth the cashier at McDonalds gave me and my mom a rapist face
+McDonalds_025: The old ass security guard in McDonalds a bitch !!!!!!
+McDonalds_065: I hate that McDonalds on 61st !!”girl me to snow and ghetto af
+McDonalds_071: McDonalds is the nastiest shit I've ever tasted in my life <<<
+McDonalds_072: ""McDonalds Gave my momma ah stale ass filet o fish..., #She mad Asl #Laughin at her ass""",SUPPORTED,024 cashier and 025 security guard are insulted.
+23,McDonalds_prompt2_seed202|S03_C02,Negative sentiment was directed toward the general taste of certain menu items,"McDonalds_004: Eating McDonald's.. OMG McDonalds done got Nasty like what is this
+McDonalds_024: Lmao ew wth the cashier at McDonalds gave me and my mom a rapist face
+McDonalds_025: The old ass security guard in McDonalds a bitch !!!!!!
+McDonalds_065: I hate that McDonalds on 61st !!”girl me to snow and ghetto af
+McDonalds_071: McDonalds is the nastiest shit I've ever tasted in my life <<<
+McDonalds_072: ""McDonalds Gave my momma ah stale ass filet o fish..., #She mad Asl #Laughin at her ass""",SUPPORTED,071 and 004 are strongly negative about taste; 072 stale fish.
+24,McDonalds_prompt2_seed202|S05_C02,Some users found the brand annoying,"McDonalds_009: S/O to fonky ass McDonalds I been eating et shit for 3 days n mi stomach is still on 10... #yuck
+McDonalds_013: These folks in McDonalds be actin like its hard to make fresh fries or sumn
+McDonalds_019: That McDonalds commercial of the fish mcbites is annoying as fuck but catchy lol
+McDonalds_042: McDonalds serve coffee at this time? I ain't know that! :O So mamy times I wanted and went to DD instead thinking McDonalds ain't have -___-
+McDonalds_082: ""It's like the southern version of McDonalds or something, even though there are McDonalds too""
+McDonalds_087: The day McDonalds does home delivery will be the happiest day of my life
+McDonalds_090: Can we all just admit. McDonalds would suck butt without French fries.",SUPPORTED,019 finds the commercial annoying; 013 annoyed at staff.
+25,McDonalds_prompt2_seed303|S04_C02,Many people admit a strong craving for McDonald's food despite concerns about health.,"McDonalds_015: ""Here's how fat I am, on my to picking up the pizza I stopped at McDonalds for a McRib""
+McDonalds_021: I'm always at McDonalds I need to change my diet __
+McDonalds_040: You can eat all the food in McDonalds and you would still be skinny. You have a fast metabolism
+McDonalds_048: All this reading about McDonalds makes me want it. -.-
+McDonalds_051: I'm the kind of person who would come out of the gym ... & go straight to McDonalds ^___^ lmao
+McDonalds_054: You're not human if you don't crave McDonalds fries every no and then.",SUPPORTED,"Craving in 048, 054; diet or weight worry in 021, 015; four tweets."
+26,Obama_prompt1_seed101|S01_C01,A significant portion of the tweets express skepticism toward President Obama's leadership,"Obama_003: Obama isn't going to take away guns he is going to take away assault rifles what the fuck do you need an assault rifle anyways
+Obama_012: We knew that was coming.  Scary Obama emperor for life.
+Obama_033: Listen to the tone Obama is the chief divider in this country he will never be the work together president
+Obama_054: Obama a bit repetitive and boring. Needs rest and inspiration IMO
+Obama_060: I really don't like this law Obama just passed.... Smh
+Obama_074: They're trying to impeach President Obama over gun control...for real?! C'mon son...",UNKNOWN,'Significant portion' is a proportion claim.
+27,Obama_prompt1_seed101|S03_C01,"Michelle Obama's appearance, style, and presence at public events are the subject of recurring mockery.","Obama_001: Obama speeches make my head spin ! Mandela  is beautiful!. Obama when he talks.It's ROUND n Round we go.
+Obama_021: I love the gown the Michelle Obama wore she looking stunning !!
+Obama_022: B also took out her Obama ornament and put it on display for the inauguration today. ________
+Obama_047: Watching the Inauguration before I head out! Michelle Obama looks GREAT!
+Obama_052: ""I love Michelle Obama. I love everything about her. The way she carry herself, her style and her love for the president.""
+Obama_080: Obama dancing mad gangsta at the inaugural ball ! First Lady look beautiful in her red dress __
+Obama_085: Hopefully Obama will put some braces on Michelle this Term . No shade just wanna see her smile bright like a Diamond.
+Obama_090: Michelle Obama Getting Her Nicki Minaj On By Tha Head",UNKNOWN,'Recurring' needs 3 mocking tweets; cited tweets mostly praise.
+28,Obama_prompt1_seed202|S03_C03,Others dismiss these laws as lies,"Obama_013: Teabaggers/RWNJs just can't stand that President Obama won a second term. Bless their tiny little hating heats.
+Obama_020: Obamacare = The Affordable Care Act...\n\nThe clowns who wrote that must have a fairly tenuous connection with reality.
+Obama_058: The US is falling behind in the most prosperous countries because of our wild west guns and awful healthcare. Show us some change Obama
+Obama_060: I really don't like this law Obama just passed.... Smh
+Obama_070: ""Obama is regulating gun control to protect the innocent people, yet he believes that woman can kill their own innocent children? #DamnLibs""",UNKNOWN,No cited tweet calls the laws lies.
+29,Obama_prompt1_seed202|S04_C02,Comments regarding the First Lady's fashion choices exist,"Obama_021: I love the gown the Michelle Obama wore she looking stunning !!
+Obama_036: I'm On A Mission To Get Obama Oldest Daughter . .  She Is Gorgeous ! __
+Obama_047: Watching the Inauguration before I head out! Michelle Obama looks GREAT!
+Obama_052: ""I love Michelle Obama. I love everything about her. The way she carry herself, her style and her love for the president.""
+Obama_080: Obama dancing mad gangsta at the inaugural ball ! First Lady look beautiful in her red dress __",SUPPORTED,021 praises the gown Michelle Obama wore.
+30,Obama_prompt1_seed303|S02_C01,Some comments contain personal attacks and conspiracy theories,"Obama_008: Obama looks just like the devil check out his eyes same video on U Tube speaking in Hollywood. Anti Christ ???__
+Obama_012: We knew that was coming.  Scary Obama emperor for life.
+Obama_044: I'm telling y'all Obama is the Devil dude and all y'all bitches voted for him
+Obama_061: #ObamaIsNotSatan Yes he is. Just a little bit dark. And convincing.
+Obama_072: ""Obama is steal President, regardless we have to accept it, but God is still in charge...""",SUPPORTED,008 and 044 call him the devil/Anti Christ; 061 Satan.
+31,Obama_prompt1_seed303|S04_C02,Michelle Obama's fashion and demeanor during public events are the subject of praise or jokes in some tweets,"Obama_002: Talm Bout Everybody Finna Get Bangs Cuz Of Michelle Obama ..Umm No! Mfs Been Wearing Them
+Obama_021: I love the gown the Michelle Obama wore she looking stunning !!
+Obama_022: B also took out her Obama ornament and put it on display for the inauguration today. ________
+Obama_047: Watching the Inauguration before I head out! Michelle Obama looks GREAT!
+Obama_052: ""I love Michelle Obama. I love everything about her. The way she carry herself, her style and her love for the president.""
+Obama_085: Hopefully Obama will put some braces on Michelle this Term . No shade just wanna see her smile bright like a Diamond.",SUPPORTED,"021 praises the gown, 052 her demeanor; 085 joke."
+32,Obama_prompt1_seed303|S05_C01,A minority of the tweets offer supportive or neutral commentary,"Obama_013: Teabaggers/RWNJs just can't stand that President Obama won a second term. Bless their tiny little hating heats.
+Obama_023: The House has the power to stop Obama's runaway spending. They just need the will. Shut down government. Save the economy. Save America.
+Obama_053: But where was all this anti governmental everything rhetoric before Pres. Obama. He was always aware but not as hateful
+Obama_073: Like frfr we gotta make progress to. Obama cant do it by himself #SIMPLE
+Obama_074: They're trying to impeach President Obama over gun control...for real?! C'mon son...
+Obama_077: Interested to see how President Obama runs this second term. He now has NOTHING to prove & doesn't have re-election in the forefront.",UNKNOWN,'A minority' is a proportion claim.
+33,Obama_prompt2_seed101|S01_C01,There is a wide spectrum of reactions to Barack Obama expressed in the tweets,"Obama_001: Obama speeches make my head spin ! Mandela  is beautiful!. Obama when he talks.It's ROUND n Round we go.
+Obama_005: I wanna go eat but my mom said now until she's done watching Obama. __\n#Inaug2013
+Obama_021: I love the gown the Michelle Obama wore she looking stunning !!
+Obama_047: Watching the Inauguration before I head out! Michelle Obama looks GREAT!
+Obama_080: Obama dancing mad gangsta at the inaugural ball ! First Lady look beautiful in her red dress __",SUPPORTED,"Critical 001, neutral 005, admiring 021/047/080: three different reactions."
+34,Obama_prompt2_seed202|S01_C03,Some reactions involve intense criticism regarding Barack Obama's policies and perceived character,"Obama_001: Obama speeches make my head spin ! Mandela  is beautiful!. Obama when he talks.It's ROUND n Round we go.
+Obama_002: Talm Bout Everybody Finna Get Bangs Cuz Of Michelle Obama ..Umm No! Mfs Been Wearing Them
+Obama_003: Obama isn't going to take away guns he is going to take away assault rifles what the fuck do you need an assault rifle anyways
+Obama_004: A any of yall MF knw Obama @ name on here?
+Obama_005: I wanna go eat but my mom said now until she's done watching Obama. __\n#Inaug2013
+Obama_006: But.... It's Obama free .-. Haha You're right though.. I just wanna leave the Country :p
+Obama_007: Bitch gon ask whats Obama's last name...I told her Williams
+Obama_008: Obama looks just like the devil check out his eyes same video on U Tube speaking in Hollywood. Anti Christ ???__
+Obama_009: Good! They all voted for Obama so let them kill each other! I'm tired of paying for them!
+Obama_010: Obama gotta hurry wit his speech Maury finna cum on
+Obama_011: Obama and Tiger are the biggest uncle toms in the world
+Obama_012: We knew that was coming.  Scary Obama emperor for life.
+Obama_013: Teabaggers/RWNJs just can't stand that President Obama won a second term. Bless their tiny little hating heats.
+Obama_014: ""The SS tax increase was necessary for the life of the program, but isn't it wonderful that it came in Obama's tax bill.""
+Obama_015: You're a good little liberal lap dog! You make me sick! Go ahead a kiss Obamas ring! You already kissed his ass!
+Obama_016: This Barack Obama page on my tl. THEY KNOW GOOD N WELL HE AIN'T GOT NO DOG'ON TWITTER!!!!!
+Obama_017: A Obama para que les arda mas a los gringos lol
+Obama_018: Just saw a sticker on a car that said #ObamaSucks... Made my day.
+Obama_019: You never see a Obama sticker on an American made car? Why is that?
+Obama_020: Obamacare = The Affordable Care Act...\n\nThe clowns who wrote that must have a fairly tenuous connection with reality.
+Obama_021: I love the gown the Michelle Obama wore she looking stunning !!
+Obama_022: B also took out her Obama ornament and put it on display for the inauguration today. ________
+Obama_023: The House has the power to stop Obama's runaway spending. They just need the will. Shut down government. Save the economy. Save America.
+Obama_024: Uncle Obama I like the shape of your banana. Can I give it to my monkey?
+Obama_025: I believe Obama will be the reason I ultimately stop buying shoes. #TakinMoUhMuhMoney
+Obama_026: 4 years from now you'll all regret voting for Obama. #StupidCommie
+Obama_027: ""It's a hip hop event? The Obama girls are dancing up a storm, just NO RESPECT for the moment! This first family is lowering the bar too far!""
+Obama_028: Persons saying they don't like Obama have issues.how can you like or dislike someone you've never met.
+Obama_029: FOR MLK DAY I GOT SOME MLK SPECIAL EDITION KUSH\n\nITS CALLED Michelle Obama ::\n\nGUARANTEED TO HOLD A GOOD NIGGA DOWN LOL::\n\n FWM ::
+Obama_030: Obama in office niggas & bitches get yo act together
+Obama_031: ""Me. J Cole. Bob Marley. President Obama. Check the stats, my team winning.""
+Obama_032: These people talkin bout Michelle Obama and wat she wore omg
+Obama_033: Listen to the tone Obama is the chief divider in this country he will never be the work together president
+Obama_034: And if you really think Obama puppet ass gonna file civil charges then you probably also believe this is a free country smh wake up
+Obama_035: ""ehh, but Obama called you gay. Can't top that bruh""
+Obama_036: I'm On A Mission To Get Obama Oldest Daughter . .  She Is Gorgeous ! __
+Obama_037: Dese MFS on Boondocks talmbout ridin Obama dick .. LMAO
+Obama_038: ""Sr. President Obama, Como ciudadano USA me siento en la obligation ética y moral de exigirle que NO MAS PETROLEO DE VENEZUELA""
+Obama_039: I was lmao In my car when I heard your Obama impression!!
+Obama_040: ""Nobody's getting America's guns, focus on cutting spending & act like a real POTUS, Pinocchio! #ObamaSucks""
+Obama_041: If President Obama ever decide to move on from Michele I will be first in line.
+Obama_042: \rYou should do Obama lifting the ban off women serving in the front line. There are a lot of mixed feelings on this. Thoughts? :)
+Obama_043: Boondocks always making fun somebody.... *sings dick riding Obama lmao
+Obama_044: I'm telling y'all Obama is the Devil dude and all y'all bitches voted for him
+Obama_045: What the fuck is Bill doing there? Obama should be there
+Obama_046: Hoping everyone that voted Obama is enjoying their tax increase!
+Obama_047: Watching the Inauguration before I head out! Michelle Obama looks GREAT!
+Obama_048: ""Except God spoke to Mose and Obama spoke to Holder, huge difference!""
+Obama_049: Now I Know my neighbors aint on no #Domesticviolence sh*t on MLK &&& Obama Day?...Damn....*thrws up hands* ..Ni99as. *sigh*
+Obama_050: Obama was Gona shout my twitter name out but I told him Dnt even wry about it
+Obama_051: The DMV mad hype son lmao…… Ravens won its MLK day and Obamas inaguration is tody
+Obama_052: ""I love Michelle Obama. I love everything about her. The way she carry herself, her style and her love for the president.""
+Obama_053: But where was all this anti governmental everything rhetoric before Pres. Obama. He was always aware but not as hateful
+Obama_054: Obama a bit repetitive and boring. Needs rest and inspiration IMO
+Obama_055: Maybe family night before my stepdad goes to Afghanistan ! Obama send our heros home ! :(
+Obama_056: Te-o deserved the Heisman like Obama deserved the Nobel Peace Prize..
+Obama_057: I wonder if Obama and his wife are fuckin right now ?
+Obama_058: The US is falling behind in the most prosperous countries because of our wild west guns and awful healthcare. Show us some change Obama
+Obama_059: Mom: what's the worst moment in 2012? \n\nDad: Obama getting reelected \n\n#RepublicanProbz
+Obama_060: I really don't like this law Obama just passed.... Smh
+Obama_061: #ObamaIsNotSatan Yes he is. Just a little bit dark. And convincing.
+Obama_062: In other news President Barack Obama got to meet Mario Chalmers today... #CongratsObama
+Obama_063: If you want to protect schools then arm them - Obama protects his kids they have 15 SS officers!
+Obama_064: Hey Piers now that President Obama threw the ball back to the people & the 113th guess what? now nothing will be done as usual!
+Obama_065: I am pretty sure that OBAMA'S FAA/FCC is responsible for this!!! #ObamasAmerica #wifiwalter
+Obama_066: Not much talk about the inauguration today. Oh wait that's right nobody cares about Obama
+Obama_067: WTF is Barack Obama doing trying pass this bill!__\n#immigrationreform #CNNNEWS
+Obama_068: ""The Niners, Tomorrow Obama.....always pick winners...this sprig we have another one #HK""
+Obama_069: President Obama must layout his full agenda 4 the next 2yrs N remain steadfast in his resolve 2 bring it 2 a reality.#FNA
+Obama_070: ""Obama is regulating gun control to protect the innocent people, yet he believes that woman can kill their own innocent children? #DamnLibs""
+Obama_071: Don't your lips ever get tired of kissing Obamas ass! You're not free to speak! You're a left wing puppet!
+Obama_072: ""Obama is steal President, regardless we have to accept it, but God is still in charge...""
+Obama_073: Like frfr we gotta make progress to. Obama cant do it by himself #SIMPLE
+Obama_074: They're trying to impeach President Obama over gun control...for real?! C'mon son...
+Obama_075: I bet half of y'all don't even understand what Obama is saying !!
+Obama_076: What happened to Obama? No one talks about him anymore
+Obama_077: Interested to see how President Obama runs this second term. He now has NOTHING to prove & doesn't have re-election in the forefront.
+Obama_078: I thought Obama shut u up a long time ago?
+Obama_079: Obama tells text me.couz ima take a shit.lol:lol.ur dumm cx
+Obama_080: Obama dancing mad gangsta at the inaugural ball ! First Lady look beautiful in her red dress __
+Obama_081: Obama Got Waves . . . .  ! ! ! ! !
+Obama_082: ""I feel like Obama, sooo much pressure on a nigga now.""
+Obama_083: Comeon Obama get off the tv! I'm missing the price is right
+Obama_084: We don't vote Liberal! That's why! Obama is afraid of the Military! He hates them! Rather feed illegals
+Obama_085: Hopefully Obama will put some braces on Michelle this Term . No shade just wanna see her smile bright like a Diamond.
+Obama_086: Yea your probably right! I swear I probably had a longer more frustrating day than Obama! -.- Haha
+Obama_087: I am so sick and tired of Obama lying about the Republicans he is like a 5 year old
+Obama_088: ""Sorry ladies, gun show got canceled.  Obama's banning assault weapons""
+Obama_089: ""Obama's expression when Steve Kraft asks real dumb, factually inaccurate ?s is perfect. The WTF moment. C'mon Steve. U r missing the mark.""
+Obama_090: Michelle Obama Getting Her Nicki Minaj On By Tha Head",SUPPORTED,"Policy: 040, 046, 087; character: 044 'the Devil', 008 Anti Christ."
+35,Obama_prompt2_seed202|S02_C02,Some users appreciated Obama's physical attractiveness.,"Obama_001: Obama speeches make my head spin ! Mandela  is beautiful!. Obama when he talks.It's ROUND n Round we go.
+Obama_010: Obama gotta hurry wit his speech Maury finna cum on
+Obama_021: I love the gown the Michelle Obama wore she looking stunning !!
+Obama_022: B also took out her Obama ornament and put it on display for the inauguration today. ________
+Obama_036: I'm On A Mission To Get Obama Oldest Daughter . .  She Is Gorgeous ! __
+Obama_047: Watching the Inauguration before I head out! Michelle Obama looks GREAT!
+Obama_052: ""I love Michelle Obama. I love everything about her. The way she carry herself, her style and her love for the president.""
+Obama_080: Obama dancing mad gangsta at the inaugural ball ! First Lady look beautiful in her red dress __
+Obama_085: Hopefully Obama will put some braces on Michelle this Term . No shade just wanna see her smile bright like a Diamond.
+Obama_090: Michelle Obama Getting Her Nicki Minaj On By Tha Head",UNKNOWN,No cited tweet praises Barack Obama's looks; only Michelle and daughter.
+36,Obama_prompt2_seed202|S04_C01,"Multiple tweets raise specific grievances concerning his handling of gun control legislation, tax increases, healthcare reform, and immigration policy","Obama_003: Obama isn't going to take away guns he is going to take away assault rifles what the fuck do you need an assault rifle anyways
+Obama_014: ""The SS tax increase was necessary for the life of the program, but isn't it wonderful that it came in Obama's tax bill.""
+Obama_020: Obamacare = The Affordable Care Act...\n\nThe clowns who wrote that must have a fairly tenuous connection with reality.
+Obama_038: ""Sr. President Obama, Como ciudadano USA me siento en la obligation ética y moral de exigirle que NO MAS PETROLEO DE VENEZUELA""
+Obama_058: The US is falling behind in the most prosperous countries because of our wild west guns and awful healthcare. Show us some change Obama
+Obama_060: I really don't like this law Obama just passed.... Smh
+Obama_067: WTF is Barack Obama doing trying pass this bill!__\n#immigrationreform #CNNNEWS
+Obama_070: ""Obama is regulating gun control to protect the innocent people, yet he believes that woman can kill their own innocent children? #DamnLibs""
+Obama_088: ""Sorry ladies, gun show got canceled.  Obama's banning assault weapons""",SUPPORTED,"Guns 070/088, tax 014, health 020/058, immigration 067; over 3 tweets."
+37,Obama_prompt2_seed202|S04_C02,These actions are often contrasted with perceived Republican or American interests,"Obama_003: Obama isn't going to take away guns he is going to take away assault rifles what the fuck do you need an assault rifle anyways
+Obama_014: ""The SS tax increase was necessary for the life of the program, but isn't it wonderful that it came in Obama's tax bill.""
+Obama_020: Obamacare = The Affordable Care Act...\n\nThe clowns who wrote that must have a fairly tenuous connection with reality.
+Obama_038: ""Sr. President Obama, Como ciudadano USA me siento en la obligation ética y moral de exigirle que NO MAS PETROLEO DE VENEZUELA""
+Obama_058: The US is falling behind in the most prosperous countries because of our wild west guns and awful healthcare. Show us some change Obama
+Obama_060: I really don't like this law Obama just passed.... Smh
+Obama_067: WTF is Barack Obama doing trying pass this bill!__\n#immigrationreform #CNNNEWS
+Obama_070: ""Obama is regulating gun control to protect the innocent people, yet he believes that woman can kill their own innocent children? #DamnLibs""
+Obama_088: ""Sorry ladies, gun show got canceled.  Obama's banning assault weapons""",UNKNOWN,'Often' needs 3; no tweet contrasts his actions with Republican or American interests.
+38,Obama_prompt2_seed202|S05_C01,There are numerous posts featuring humorous or surreal observations about the inauguration.,"Obama_002: Talm Bout Everybody Finna Get Bangs Cuz Of Michelle Obama ..Umm No! Mfs Been Wearing Them
+Obama_005: I wanna go eat but my mom said now until she's done watching Obama. __\n#Inaug2013
+Obama_010: Obama gotta hurry wit his speech Maury finna cum on
+Obama_024: Uncle Obama I like the shape of your banana. Can I give it to my monkey?
+Obama_029: FOR MLK DAY I GOT SOME MLK SPECIAL EDITION KUSH\n\nITS CALLED Michelle Obama ::\n\nGUARANTEED TO HOLD A GOOD NIGGA DOWN LOL::\n\n FWM ::
+Obama_031: ""Me. J Cole. Bob Marley. President Obama. Check the stats, my team winning.""
+Obama_037: Dese MFS on Boondocks talmbout ridin Obama dick .. LMAO
+Obama_039: I was lmao In my car when I heard your Obama impression!!
+Obama_050: Obama was Gona shout my twitter name out but I told him Dnt even wry about it
+Obama_055: Maybe family night before my stepdad goes to Afghanistan ! Obama send our heros home ! :(
+Obama_062: In other news President Barack Obama got to meet Mario Chalmers today... #CongratsObama
+Obama_080: Obama dancing mad gangsta at the inaugural ball ! First Lady look beautiful in her red dress __
+Obama_083: Comeon Obama get off the tv! I'm missing the price is right",UNKNOWN,'Numerous' needs 3; only 005 and 080 explicitly concern the inauguration.
+39,Obama_prompt2_seed202|S05_C03,The posts feature personal interactions involving his family members.,"Obama_002: Talm Bout Everybody Finna Get Bangs Cuz Of Michelle Obama ..Umm No! Mfs Been Wearing Them
+Obama_005: I wanna go eat but my mom said now until she's done watching Obama. __\n#Inaug2013
+Obama_010: Obama gotta hurry wit his speech Maury finna cum on
+Obama_024: Uncle Obama I like the shape of your banana. Can I give it to my monkey?
+Obama_029: FOR MLK DAY I GOT SOME MLK SPECIAL EDITION KUSH\n\nITS CALLED Michelle Obama ::\n\nGUARANTEED TO HOLD A GOOD NIGGA DOWN LOL::\n\n FWM ::
+Obama_031: ""Me. J Cole. Bob Marley. President Obama. Check the stats, my team winning.""
+Obama_037: Dese MFS on Boondocks talmbout ridin Obama dick .. LMAO
+Obama_039: I was lmao In my car when I heard your Obama impression!!
+Obama_050: Obama was Gona shout my twitter name out but I told him Dnt even wry about it
+Obama_055: Maybe family night before my stepdad goes to Afghanistan ! Obama send our heros home ! :(
+Obama_062: In other news President Barack Obama got to meet Mario Chalmers today... #CongratsObama
+Obama_080: Obama dancing mad gangsta at the inaugural ball ! First Lady look beautiful in her red dress __
+Obama_083: Comeon Obama get off the tv! I'm missing the price is right",UNKNOWN,No tweet shows a personal interaction with his family members.
+40,Obama_prompt2_seed303|S01_C01,There are expressions of admiration for Barack Obama's speech skills and appearance.,"Obama_001: Obama speeches make my head spin ! Mandela  is beautiful!. Obama when he talks.It's ROUND n Round we go.
+Obama_003: Obama isn't going to take away guns he is going to take away assault rifles what the fuck do you need an assault rifle anyways
+Obama_005: I wanna go eat but my mom said now until she's done watching Obama. __\n#Inaug2013
+Obama_020: Obamacare = The Affordable Care Act...\n\nThe clowns who wrote that must have a fairly tenuous connection with reality.
+Obama_021: I love the gown the Michelle Obama wore she looking stunning !!
+Obama_047: Watching the Inauguration before I head out! Michelle Obama looks GREAT!
+Obama_058: The US is falling behind in the most prosperous countries because of our wild west guns and awful healthcare. Show us some change Obama
+Obama_069: President Obama must layout his full agenda 4 the next 2yrs N remain steadfast in his resolve 2 bring it 2 a reality.#FNA",UNKNOWN,No tweet admires his speech skills; 001 criticizes speeches.
+41,Obama_prompt2_seed303|S01_C02,"There are numerous criticisms of Barack Obama's policies on gun control, healthcare, and government spending.","Obama_001: Obama speeches make my head spin ! Mandela  is beautiful!. Obama when he talks.It's ROUND n Round we go.
+Obama_003: Obama isn't going to take away guns he is going to take away assault rifles what the fuck do you need an assault rifle anyways
+Obama_005: I wanna go eat but my mom said now until she's done watching Obama. __\n#Inaug2013
+Obama_020: Obamacare = The Affordable Care Act...\n\nThe clowns who wrote that must have a fairly tenuous connection with reality.
+Obama_021: I love the gown the Michelle Obama wore she looking stunning !!
+Obama_047: Watching the Inauguration before I head out! Michelle Obama looks GREAT!
+Obama_058: The US is falling behind in the most prosperous countries because of our wild west guns and awful healthcare. Show us some change Obama
+Obama_069: President Obama must layout his full agenda 4 the next 2yrs N remain steadfast in his resolve 2 bring it 2 a reality.#FNA",UNKNOWN,"'Numerous' needs 3; nothing about government spending, gun criticism weak."
+42,Obama_prompt2_seed303|S02_C01,A significant portion of the messages express negative sentiment,"Obama_002: Talm Bout Everybody Finna Get Bangs Cuz Of Michelle Obama ..Umm No! Mfs Been Wearing Them
+Obama_007: Bitch gon ask whats Obama's last name...I told her Williams
+Obama_008: Obama looks just like the devil check out his eyes same video on U Tube speaking in Hollywood. Anti Christ ???__
+Obama_009: Good! They all voted for Obama so let them kill each other! I'm tired of paying for them!
+Obama_015: You're a good little liberal lap dog! You make me sick! Go ahead a kiss Obamas ring! You already kissed his ass!
+Obama_016: This Barack Obama page on my tl. THEY KNOW GOOD N WELL HE AIN'T GOT NO DOG'ON TWITTER!!!!!
+Obama_026: 4 years from now you'll all regret voting for Obama. #StupidCommie
+Obama_044: I'm telling y'all Obama is the Devil dude and all y'all bitches voted for him",UNKNOWN,'Significant portion' is a proportion claim.
+43,Obama_prompt2_seed303|S02_C02,Some users use strong language to describe Obama as a puppet,"Obama_002: Talm Bout Everybody Finna Get Bangs Cuz Of Michelle Obama ..Umm No! Mfs Been Wearing Them
+Obama_007: Bitch gon ask whats Obama's last name...I told her Williams
+Obama_008: Obama looks just like the devil check out his eyes same video on U Tube speaking in Hollywood. Anti Christ ???__
+Obama_009: Good! They all voted for Obama so let them kill each other! I'm tired of paying for them!
+Obama_015: You're a good little liberal lap dog! You make me sick! Go ahead a kiss Obamas ring! You already kissed his ass!
+Obama_016: This Barack Obama page on my tl. THEY KNOW GOOD N WELL HE AIN'T GOT NO DOG'ON TWITTER!!!!!
+Obama_026: 4 years from now you'll all regret voting for Obama. #StupidCommie
+Obama_044: I'm telling y'all Obama is the Devil dude and all y'all bitches voted for him",UNKNOWN,"015 calls the addressee a lap dog, not Obama a puppet."
+44,Obama_prompt2_seed303|S02_C04,Some users question Obama's motives,"Obama_002: Talm Bout Everybody Finna Get Bangs Cuz Of Michelle Obama ..Umm No! Mfs Been Wearing Them
+Obama_007: Bitch gon ask whats Obama's last name...I told her Williams
+Obama_008: Obama looks just like the devil check out his eyes same video on U Tube speaking in Hollywood. Anti Christ ???__
+Obama_009: Good! They all voted for Obama so let them kill each other! I'm tired of paying for them!
+Obama_015: You're a good little liberal lap dog! You make me sick! Go ahead a kiss Obamas ring! You already kissed his ass!
+Obama_016: This Barack Obama page on my tl. THEY KNOW GOOD N WELL HE AIN'T GOT NO DOG'ON TWITTER!!!!!
+Obama_026: 4 years from now you'll all regret voting for Obama. #StupidCommie
+Obama_044: I'm telling y'all Obama is the Devil dude and all y'all bitches voted for him",UNKNOWN,No cited tweet questions Obama's motives.
+45,Obama_prompt2_seed303|S03_C01,Several tweets focus specifically on Michelle Obama,"Obama_001: Obama speeches make my head spin ! Mandela  is beautiful!. Obama when he talks.It's ROUND n Round we go.
+Obama_021: I love the gown the Michelle Obama wore she looking stunning !!
+Obama_022: B also took out her Obama ornament and put it on display for the inauguration today. ________
+Obama_036: I'm On A Mission To Get Obama Oldest Daughter . .  She Is Gorgeous ! __
+Obama_047: Watching the Inauguration before I head out! Michelle Obama looks GREAT!
+Obama_052: ""I love Michelle Obama. I love everything about her. The way she carry herself, her style and her love for the president.""
+Obama_080: Obama dancing mad gangsta at the inaugural ball ! First Lady look beautiful in her red dress __
+Obama_085: Hopefully Obama will put some braces on Michelle this Term . No shade just wanna see her smile bright like a Diamond.",SUPPORTED,"021, 047, 052 and 085 are about Michelle Obama."
+46,Obama_prompt2_seed303|S03_C02,The tweets comment on Michelle Obama's fashion choices and style,"Obama_001: Obama speeches make my head spin ! Mandela  is beautiful!. Obama when he talks.It's ROUND n Round we go.
+Obama_021: I love the gown the Michelle Obama wore she looking stunning !!
+Obama_022: B also took out her Obama ornament and put it on display for the inauguration today. ________
+Obama_036: I'm On A Mission To Get Obama Oldest Daughter . .  She Is Gorgeous ! __
+Obama_047: Watching the Inauguration before I head out! Michelle Obama looks GREAT!
+Obama_052: ""I love Michelle Obama. I love everything about her. The way she carry herself, her style and her love for the president.""
+Obama_080: Obama dancing mad gangsta at the inaugural ball ! First Lady look beautiful in her red dress __
+Obama_085: Hopefully Obama will put some braces on Michelle this Term . No shade just wanna see her smile bright like a Diamond.",SUPPORTED,021 gown and 052 style comment on her fashion.
+47,Obama_prompt2_seed303|S03_C03,The remarks offered in the tweets are mostly positive about Michelle Obama,"Obama_001: Obama speeches make my head spin ! Mandela  is beautiful!. Obama when he talks.It's ROUND n Round we go.
+Obama_021: I love the gown the Michelle Obama wore she looking stunning !!
+Obama_022: B also took out her Obama ornament and put it on display for the inauguration today. ________
+Obama_036: I'm On A Mission To Get Obama Oldest Daughter . .  She Is Gorgeous ! __
+Obama_047: Watching the Inauguration before I head out! Michelle Obama looks GREAT!
+Obama_052: ""I love Michelle Obama. I love everything about her. The way she carry herself, her style and her love for the president.""
+Obama_080: Obama dancing mad gangsta at the inaugural ball ! First Lady look beautiful in her red dress __
+Obama_085: Hopefully Obama will put some braces on Michelle this Term . No shade just wanna see her smile bright like a Diamond.",UNKNOWN,'Mostly' is a proportion claim.
+48,Superbowl_prompt1_seed101|S03_C01,The commentary discusses specific individuals' potential involvement in an event,"Superbowl_041: is a total fruad. If u picked ravens to go to superbowl why did u pick pats yesterday. Hindsite is 20-20 but not #freemoney
+Superbowl_042: Idk who gonna win the superbowl and im not goin for no team im just gonna watch
+Superbowl_043: ""Plans for today work, superbowl, sleep that's it...tho its all subject to change""
+Superbowl_044: Fuck every other NFL team that's left in the playoffs.. idgaf who wins the superbowl this year
+Superbowl_045: ""sleepy AF , fcking with that damn superbowl . Ugh""
+Superbowl_046: I need to buy 2 *Raven* beanies for the #superbowl !! Anyone know were!!?? :)
+Superbowl_047: I knoww!:O its going to be my first superbowl with the niners playing& im so totally looking foward for the 3rd #Ninerfaithful
+Superbowl_048: ""If the falcons had a consistent defence, they would be superbowl champs.......easily!""
+Superbowl_049: ""hey, be nice! We are warning up the seats for you to watch the superbowl at home :d""
+Superbowl_050: And it begins all cowboy fans saying superbowl bound chill out its just one game
+Superbowl_051: Yes I'm the only bitch not tweeting about the superbowl! And #IDGAF -.-
+Superbowl_052: ""even if sf49ers reach superbowl ,patriots gonna destroy them bro..""
+Superbowl_053: ""who cares...she might lip sing her way through the superbowl half time 2..\/""""""
+Superbowl_054: Damn my team out tha playoffs now idgaf who go to tha superbowl now
+Superbowl_055: Ok finta go to breakfast den its cracking again #superbowl today #ravens bitch I'm out here
+Superbowl_056: Yesssss Destiny child is back! Will be performin together at superbowl and fina drop a new cd
+Superbowl_057: I hope its 49ers and Ravens superbowl at this point. Anything else would just be unacceptable.
+Superbowl_058: #TOUCHDOWN! it's not over trill the lights go out. #superbowl
+Superbowl_059: Nobody on da 49ers deserve to be in or win da superbowl other den Patrick n Frank
+Superbowl_060: Commercial of the day!!!! I think the Taco Bell one #superbowlcommercials",SUPPORTED,056 Destiny's Child performing; 059 names individuals deserving to be in.
+49,Superbowl_prompt1_seed101|S03_C02,Tom Brady and Nicki Minaj are cited as examples of individuals discussed,"Superbowl_041: is a total fruad. If u picked ravens to go to superbowl why did u pick pats yesterday. Hindsite is 20-20 but not #freemoney
+Superbowl_042: Idk who gonna win the superbowl and im not goin for no team im just gonna watch
+Superbowl_043: ""Plans for today work, superbowl, sleep that's it...tho its all subject to change""
+Superbowl_044: Fuck every other NFL team that's left in the playoffs.. idgaf who wins the superbowl this year
+Superbowl_045: ""sleepy AF , fcking with that damn superbowl . Ugh""
+Superbowl_046: I need to buy 2 *Raven* beanies for the #superbowl !! Anyone know were!!?? :)
+Superbowl_047: I knoww!:O its going to be my first superbowl with the niners playing& im so totally looking foward for the 3rd #Ninerfaithful
+Superbowl_048: ""If the falcons had a consistent defence, they would be superbowl champs.......easily!""
+Superbowl_049: ""hey, be nice! We are warning up the seats for you to watch the superbowl at home :d""
+Superbowl_050: And it begins all cowboy fans saying superbowl bound chill out its just one game
+Superbowl_051: Yes I'm the only bitch not tweeting about the superbowl! And #IDGAF -.-
+Superbowl_052: ""even if sf49ers reach superbowl ,patriots gonna destroy them bro..""
+Superbowl_053: ""who cares...she might lip sing her way through the superbowl half time 2..\/""""""
+Superbowl_054: Damn my team out tha playoffs now idgaf who go to tha superbowl now
+Superbowl_055: Ok finta go to breakfast den its cracking again #superbowl today #ravens bitch I'm out here
+Superbowl_056: Yesssss Destiny child is back! Will be performin together at superbowl and fina drop a new cd
+Superbowl_057: I hope its 49ers and Ravens superbowl at this point. Anything else would just be unacceptable.
+Superbowl_058: #TOUCHDOWN! it's not over trill the lights go out. #superbowl
+Superbowl_059: Nobody on da 49ers deserve to be in or win da superbowl other den Patrick n Frank
+Superbowl_060: Commercial of the day!!!! I think the Taco Bell one #superbowlcommercials",UNKNOWN,Neither Tom Brady nor Nicki Minaj appears in cited tweets.
+50,Superbowl_prompt1_seed202|S01_C01,The subject of public discussion regarding the Super Bowl is often the potential matchup between the Baltimore Ravens and the San Francisco 49ers.,"Superbowl_003: All I see on twitter is something about hockey. What happened did the red wings win the superbowl?
+Superbowl_004: This game is pretty much the superbowl. The winner is winning it all. #RavenNation
+Superbowl_006: PATRIOTS ARE OUT!! Yes!! Dont like the ravens but good game!! Go ravens!! See ya at the superbowl!!
+Superbowl_008: ""Congrats ravens, now kick the 49ers ass in the superbowl #SBXLVII""
+Superbowl_016: Wow the two head coaches are brother and they are playing against each other in the superbowl
+Superbowl_020: San Fran and Baltimore ?? I like this superbowl! But i want Baltimore ... Do it for Ray__
+Superbowl_022: looking like a ravens superbowl ! most vicious team still standing
+Superbowl_026: Its intercepted!! And the ravens are going to the superbowl!! :)
+Superbowl_038: Fuck Atlanta let's go 49ers and ravens superbowl brother vs. Brother
+Superbowl_057: I hope its 49ers and Ravens superbowl at this point. Anything else would just be unacceptable.",SUPPORTED,"008, 038, 057, 020 discuss Ravens versus 49ers."
+51,Superbowl_prompt1_seed303|S05_C01,Some individuals expressed deep affection for their favored teams,"Superbowl_019: was gone gt put out in da 1st round Wat y'all gotta say now\n#superbowl
+Superbowl_053: ""who cares...she might lip sing her way through the superbowl half time 2..\/""""""
+Superbowl_061: was sayin Patriots & Falcons for the superbowl now he looks all Bitchmade rooting for Raven #lol
+Superbowl_085: I fucking hate the patriots but I think their gonna win this superbowl ..",UNKNOWN,No cited tweet shows deep affection for a team.
+52,Superbowl_prompt1_seed303|S05_C02,losing a championship would still be disappointing,"Superbowl_019: was gone gt put out in da 1st round Wat y'all gotta say now\n#superbowl
+Superbowl_053: ""who cares...she might lip sing her way through the superbowl half time 2..\/""""""
+Superbowl_061: was sayin Patriots & Falcons for the superbowl now he looks all Bitchmade rooting for Raven #lol
+Superbowl_085: I fucking hate the patriots but I think their gonna win this superbowl ..",UNKNOWN,No cited tweet says losing would be disappointing.
+53,Superbowl_prompt2_seed101|S03_C01,Several users complained about the halftime show and commercials,"Superbowl_018: oh & the commercials this year SUCKED. like wtf #superbowl?!??!”
+Superbowl_027: Um anyone more than excited that beyonce is the half time show !? #superbowl
+Superbowl_030: Erabody is so excited bout Beyonce performin at the superbowl...unless she popping out a tittie...IDGAF
+Superbowl_036: and they are going to sing this at the superbowl? Pathetic!
+Superbowl_053: ""who cares...she might lip sing her way through the superbowl half time 2..\/""""""
+Superbowl_071: Beyonce and madonna should be banned from future #superbowl halftime show performances.",SUPPORTED,"018 commercials; 071, 053, 036 halftime or performer complaints."
+54,Superbowl_prompt2_seed101|S03_C02,Some users expressed disappointment or skepticism about the performers selected,"Superbowl_018: oh & the commercials this year SUCKED. like wtf #superbowl?!??!”
+Superbowl_027: Um anyone more than excited that beyonce is the half time show !? #superbowl
+Superbowl_030: Erabody is so excited bout Beyonce performin at the superbowl...unless she popping out a tittie...IDGAF
+Superbowl_036: and they are going to sing this at the superbowl? Pathetic!
+Superbowl_053: ""who cares...she might lip sing her way through the superbowl half time 2..\/""""""
+Superbowl_071: Beyonce and madonna should be banned from future #superbowl halftime show performances.",SUPPORTED,071 wants performers banned; 053 doubts lip-syncing; 036 'pathetic'.
+55,Superbowl_prompt2_seed202|S02_C01,The discussion focuses on the Ravens' matchup against the 49ers or the Patriots.,"Superbowl_004: This game is pretty much the superbowl. The winner is winning it all. #RavenNation
+Superbowl_006: PATRIOTS ARE OUT!! Yes!! Dont like the ravens but good game!! Go ravens!! See ya at the superbowl!!
+Superbowl_008: ""Congrats ravens, now kick the 49ers ass in the superbowl #SBXLVII""
+Superbowl_013: #question wheres ny patriots Randy Moss jersey? i wana wear it for the superbowl...
+Superbowl_020: San Fran and Baltimore ?? I like this superbowl! But i want Baltimore ... Do it for Ray__
+Superbowl_057: I hope its 49ers and Ravens superbowl at this point. Anything else would just be unacceptable.",SUPPORTED,008 and 057 discuss Ravens and 49ers.
+56,Superbowl_prompt2_seed303|S01_C03,Some reactions include general disinterest in the event,"Superbowl_001: ""Look at you MSY all snazzed up for the superbowl. If a hurricane won't kick you into shape, football will!""
+Superbowl_002: ""Hey its sunday, the day before school & the superbowl but I ain't gunna act like I even care about it cause I dont lol (:""
+Superbowl_003: All I see on twitter is something about hockey. What happened did the red wings win the superbowl?
+Superbowl_004: This game is pretty much the superbowl. The winner is winning it all. #RavenNation
+Superbowl_005: ""Babysitting 2/2 so no 5k, but I can definitely do the plunge superbowl Sunday !! Who's down?!""",SUPPORTED,002: 'I ain't gunna act like I even care about it'.
+57,Superbowl_prompt2_seed303|S02_C02,Many users were excited if the Ravens advanced,"Superbowl_006: PATRIOTS ARE OUT!! Yes!! Dont like the ravens but good game!! Go ravens!! See ya at the superbowl!!
+Superbowl_007: Did this fool taffe compare this trial to joe namath guaranteeing the superbowl? -______-. Did this dude jus did this?
+Superbowl_008: ""Congrats ravens, now kick the 49ers ass in the superbowl #SBXLVII""
+Superbowl_009: ""I picked Denver .. But if Baltimore wins, it would help me more since everyone who picked the Broncos to the superbowl would get less points""
+Superbowl_010: This superbowl dont even interest me i want sum cookies",UNKNOWN,'Many' needs 3; only 006 and 008 show excitement for Ravens.
+58,Superbowl_prompt2_seed303|S03_C02,The reactions to artists such as Beyoncé and Destiny's Child were mixed.,"Superbowl_011: ""With this game pretty much in san frans hands, I could see tony giving it one more go at a superbowl""
+Superbowl_012: ""Good morning!! Today's a brand new day.. But, still sad that the 49ers lost in the superbowl, but soon I'll get over it""
+Superbowl_015: I wish Nicki Minaj can get on the superbowl again don't nobody got time for Beyonce screaming ass
+Superbowl_016: Wow the two head coaches are brother and they are playing against each other in the superbowl
+Superbowl_018: oh & the commercials this year SUCKED. like wtf #superbowl?!??!”",UNKNOWN,Destiny's Child not in cited tweets; only 015 reacts to Beyonce.
+59,Superbowl_prompt2_seed303|S04_C01,Other NFL teams and the commercials were criticized,"Superbowl_020: San Fran and Baltimore ?? I like this superbowl! But i want Baltimore ... Do it for Ray__
+Superbowl_024: can we please sign Bernard pollard and just sit him on the bench for the rest of Tom Brady's career. #2superbowls #4patriots
+Superbowl_027: Um anyone more than excited that beyonce is the half time show !? #superbowl
+Superbowl_031: Mecum is better trust me if your into car that's our superbowl beside if my team isn't in the superbowl who cares
+Superbowl_036: and they are going to sing this at the superbowl? Pathetic!",UNKNOWN,No cited tweet criticizes commercials or other NFL teams.
+60,Superbowl_prompt2_seed303|S04_C02,Some users questioned the fairness of having a Pro Bowl before the Super Bowl,"Superbowl_020: San Fran and Baltimore ?? I like this superbowl! But i want Baltimore ... Do it for Ray__
+Superbowl_024: can we please sign Bernard pollard and just sit him on the bench for the rest of Tom Brady's career. #2superbowls #4patriots
+Superbowl_027: Um anyone more than excited that beyonce is the half time show !? #superbowl
+Superbowl_031: Mecum is better trust me if your into car that's our superbowl beside if my team isn't in the superbowl who cares
+Superbowl_036: and they are going to sing this at the superbowl? Pathetic!",UNKNOWN,No cited tweet mentions the Pro Bowl.

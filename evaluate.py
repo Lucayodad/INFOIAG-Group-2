@@ -1,21 +1,21 @@
-"""
+"""Summary quality, fairness and cost of saved summaries; dialect labels are read here only.
 
-Metrics (choose with --metrics, default: cost,rouge,gap,ec,bart):
+Metrics (choose with --metrics, default: cost,rouge,ec,bart):
   cost      execution time, tokens and LLM calls, read from the result JSON
   rouge     ROUGE-1/2/L F1 vs. both human abstractive references (mean)
-  gap       group similarity gap (sentence-transformers, all-MiniLM-L6-v2)
   ec        Equal Coverage (Li et al. 2025) with roberta-large-mnli
-  deepeval  DeepEval summarization: alignment + coverage, local Ollama judge
   bart      BARTScore (Yuan et al. 2021) with facebook/bart-large-cnn:
             bart_src = faithfulness to the tweets, bart_ref = F-score vs references
 
 Typical use, from the repository root:
-  python evaluate.py --system baseline --inputs results/drafts/<run-id>
-  python evaluate.py --system agent    --inputs path/to/agent/outputs
+  python evaluate.py --system baseline --inputs results/baseline_pc
+  python evaluate.py --system agent    --inputs results/agent_checker_v2
   python evaluate.py --references          # the two human summaries per topic
   python evaluate.py --report              # mean/std tables from metrics.csv
 
-Every evaluated summary becomes one row in results/eval/metrics.csv.
+An agent output also yields its draft (system "<system>_draft"). Every evaluated
+summary becomes one row in the --out CSV (default results/eval/metrics.csv).
+--cache keeps MNLI and BART scores of identical text pairs between runs.
 """
 
 import argparse
@@ -34,8 +34,8 @@ DATA = ROOT / "data" / "divsumm" / "ready_to_use"
 OUT_DEFAULT = ROOT / "results" / "eval" / "metrics.csv"
 TOPICS = ("Obama", "Superbowl", "McDonalds")
 GROUPS = ("AA", "Hisp", "White")
-ALL_METRICS = ("cost", "rouge", "gap", "ec", "deepeval", "bart")
-DEFAULT_METRICS = tuple(m for m in ALL_METRICS if m != "deepeval")
+ALL_METRICS = ("cost", "rouge", "ec", "bart")
+DEFAULT_METRICS = ALL_METRICS
 
 
 # ---------------------------------------------------------------- data
@@ -96,9 +96,11 @@ def records_from_file(path, system):
     complete = data.get("usage_complete", not agent and system == "baseline")
     initial = data.get("initial_summary") or agent.get("initial_summary") or {}
     prompt = prompt or str(initial.get("prompt_id") or data.get("pipeline", {}).get("prompt_id", ""))
+    # run_final_agent.py records the agent stage's wall time in its provenance.
+    seconds = data.get("execution_seconds", (data.get("provenance") or {}).get("seconds", ""))
     base = {
         "topic": topic, "prompt_id": prompt, "seed": data.get("seed", ""), "file": str(path),
-        "execution_seconds": data.get("execution_seconds", ""),
+        "execution_seconds": seconds,
         "input_tokens": usage.get("input_tokens", "") if complete else "",
         "output_tokens": usage.get("output_tokens", "") if complete else "",
         "usage_complete": complete, "usage_scope": data.get("usage_scope", "legacy_incomplete" if agent else "draft_only"),
@@ -189,70 +191,23 @@ def metric_rouge(rec, refs):
             for k in ("rouge1", "rouge2", "rougeL")}
 
 
-def coverage_by_group(matrix, groups):
-    """matrix[i][j]: score of tweet i vs summary sentence j. Returns per-group
-    means over all (tweet, sentence) pairs, and the overall mean."""
-    def mean_rows(rows):
-        vals = [v for r in rows for v in r]
-        return sum(vals) / len(vals)
-    per_group = {g: mean_rows([row for row, gg in zip(matrix, groups) if gg == g]) for g in GROUPS}
-    return per_group, mean_rows(matrix)
-
-
-def equal_coverage(matrix, groups):
-    per_group, overall = coverage_by_group(matrix, groups)
-    ec = sum(abs(per_group[g] - overall) for g in GROUPS) / len(GROUPS)
-    return ec, per_group, overall
-
-
-def similarity_gap(matrix, groups):
-    sims = {}
-    for g in GROUPS:
-        rows = [max(row) for row, gg in zip(matrix, groups) if gg == g]
-        sims[g] = sum(rows) / len(rows)
-    return max(sims.values()) - min(sims.values()), sims
-
-
-_EMB = None
-def metric_gap(rec, tweets):
-    global _EMB
-    from sentence_transformers import SentenceTransformer, util
-    if _EMB is None:
-        _EMB = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
-    t = _EMB.encode([x["text"] for x in tweets], convert_to_tensor=True)
-    s = _EMB.encode(rec["sentences"], convert_to_tensor=True)
-    matrix = util.cos_sim(t, s).tolist()
-    gap, sims = similarity_gap(matrix, [x["group"] for x in tweets])
-    out = {"sim_gap": round(gap, 4)}
-    out.update({f"sim_{g}": round(v, 4) for g, v in sims.items()})
-    return out
-
-
-def metric_ec(rec, tweets, batch_size=32):
+_MNLI = None
+def metric_ec(rec, tweets):
     """p(d_i, s_j) = probability that tweet d_i (premise) entails summary
     sentence s_j (hypothesis), as in Li et al. (2025), eq. 2-5."""
-    from equal_coverage import calculate_equal_coverage
+    global _MNLI
+    from equal_coverage import CachedScorer, calculate_equal_coverage
+    if _MNLI is None:
+        _MNLI = CachedScorer()
+        _MNLI.cache.update(_CACHE["mnli"])
     result = calculate_equal_coverage(
         {g: [tw for tw in tweets if tw["group"] == g] for g in GROUPS},
-        [{"claim": sentence} for sentence in rec["sentences"]])
+        [{"claim": sentence} for sentence in rec["sentences"]], scorer=_MNLI)
+    _CACHE["mnli"] = _MNLI.cache
     out = {"ec": round(result["equal_coverage"], 4), "cov_all": round(result["overall_coverage"], 4),
            "ec_version": result["metric_version"]}
     out.update({f"cov_{g}": round(result["coverage_by_group"][g]["coverage"], 4) for g in GROUPS})
     return out
-
-
-def metric_deepeval(rec, tweets, judge_model):
-    from deepeval.metrics import SummarizationMetric
-    from deepeval.models import OllamaModel
-    from deepeval.test_case import LLMTestCase
-    judge = OllamaModel(model=judge_model, base_url="http://localhost:11434", temperature=0)
-    metric = SummarizationMetric(model=judge, async_mode=False)
-    source = "\n".join(x["text"] for x in tweets)
-    metric.measure(LLMTestCase(input=source, actual_output=rec["summary"]))
-    breakdown = getattr(metric, "score_breakdown", None) or {}
-    return {"deepeval_score": round(metric.score, 4),
-            "deepeval_alignment": round(breakdown.get("Alignment", getattr(metric, "alignment_score", float("nan"))), 4),
-            "deepeval_coverage": round(breakdown.get("Coverage", getattr(metric, "coverage_score", float("nan"))), 4)}
 
 
 _BART = None
@@ -266,8 +221,29 @@ def _bart():
     return _BART
 
 
+_CACHE = {"mnli": {}, "bart": {}}
+
+
+def load_cache(path):
+    """MNLI pair scores and BART log-likelihoods of earlier runs, keyed by their exact texts."""
+    if path and path.exists():
+        data = json.loads(path.read_text(encoding="utf-8"))
+        if isinstance(data, list):  # a plain MNLI pair cache, as evaluate_label_free_run.py writes
+            data = {"mnli": data, "bart": []}
+        _CACHE["mnli"].update({(p, h): s for p, h, s in data.get("mnli", [])})
+        _CACHE["bart"].update({(src, tgt): s for src, tgt, s in data.get("bart", [])})
+
+
+def save_cache(path):
+    if path:
+        path.write_text(json.dumps({key: [[*pair, score] for pair, score in _CACHE[key].items()]
+                                    for key in ("mnli", "bart")}), encoding="utf-8")
+
+
 def bart_logprob(src, tgt):
     """Average log-likelihood per token of tgt given src (the BARTScore of src -> tgt)."""
+    if (src, tgt) in _CACHE["bart"]:
+        return _CACHE["bart"][(src, tgt)]
     import torch
     tok, model = _bart()
     enc = tok(src, max_length=1024, truncation=True, return_tensors="pt")
@@ -275,7 +251,8 @@ def bart_logprob(src, tgt):
     with torch.no_grad():
         out = model(input_ids=enc["input_ids"], attention_mask=enc["attention_mask"],
                     labels=dec["input_ids"])
-    return -out.loss.item()
+    _CACHE["bart"][(src, tgt)] = -out.loss.item()
+    return _CACHE["bart"][(src, tgt)]
 
 
 def tweet_chunks(tweets, max_tokens=900):
@@ -314,8 +291,6 @@ FIELDS = ["system", "topic", "prompt_id", "seed", "file",
           "summary_sha256", "ec_version", "usage_complete", "usage_scope", "stop_reason",
           "metric_provenance",
           "ec", "cov_AA", "cov_Hisp", "cov_White", "cov_all",
-          "sim_gap", "sim_AA", "sim_Hisp", "sim_White",
-          "deepeval_score", "deepeval_alignment", "deepeval_coverage",
           "bart_src", "bart_ref",
           "rouge1", "rouge2", "rougeL",
           "execution_seconds", "input_tokens", "output_tokens", "llm_calls",
@@ -358,7 +333,7 @@ def append_rows(rows, out):
 def report(out):
     with out.open(encoding="utf-8") as f:
         rows = list(csv.DictReader(f))
-    cols = ["ec", "sim_gap", "deepeval_alignment", "deepeval_coverage", "bart_src", "bart_ref",
+    cols = ["ec", "bart_src", "bart_ref",
             "rouge1", "rouge2", "rougeL", "execution_seconds"]
 
     def fmt(vals):
@@ -385,7 +360,7 @@ def report(out):
             + table(lambda r: f"{r['system']} / {r['topic']} / prompt {r['prompt_id'] or '-'}",
                     "Per system, topic and prompt")
             + table(lambda r: r["system"], "Absolute group coverage and disparity",
-                    ["ec", "cov_AA", "cov_Hisp", "cov_White", "cov_all", "sim_gap"]))
+                    ["ec", "cov_AA", "cov_Hisp", "cov_White", "cov_all"]))
     print(text)
     path = out.with_name("report.md")
     path.write_text(text + "\n", encoding="utf-8")
@@ -401,10 +376,11 @@ def main():
     ap.add_argument("--references", action="store_true", help="Evaluate the human reference summaries.")
     ap.add_argument("--metrics", default=",".join(DEFAULT_METRICS),
                     help="Comma-separated subset of: " + ",".join(ALL_METRICS))
-    ap.add_argument("--judge-model", default="llama3.1:8b", help="Ollama model used as DeepEval judge.")
     ap.add_argument("--out", type=Path, default=OUT_DEFAULT)
     ap.add_argument("--report", action="store_true", help="Print mean/std tables from the CSV.")
+    ap.add_argument("--cache", type=Path, help="JSON file of MNLI and BART scores, reused and updated")
     args = ap.parse_args()
+    load_cache(args.cache)
 
     if args.report:
         report(args.out)
@@ -432,17 +408,14 @@ def main():
         start = time.perf_counter()
         if "rouge" in metrics:
             row.update(metric_rouge(rec, refs))
-        if "gap" in metrics:
-            row.update(metric_gap(rec, tweets))
         if "ec" in metrics:
             row.update(metric_ec(rec, tweets))
-        if "deepeval" in metrics:
-            row.update(metric_deepeval(rec, tweets, args.judge_model))
         if "bart" in metrics:
             row.update(metric_bart(rec, tweets, refs))
         row["eval_seconds"] = round(time.perf_counter() - start, 2)
         print("   ", {k: row[k] for k in FIELDS[5:] if row.get(k) not in (None, "")})
         append_rows([row], args.out)  # saved immediately, so Ctrl+C loses nothing finished
+        save_cache(args.cache)
         rows.append(row)
     print(f"\nAppended {len(rows)} row(s) to {args.out}")
 

@@ -1,0 +1,6 @@
+PREFIX : <http://www.semanticweb.org/group2/ontology#>
+# Report Q9: claims of any type; a SportsClaim is a Claim through subClassOf.
+SELECT DISTINCT ?claim WHERE {
+    ?claim a :Claim .
+}
+ORDER BY ?claim

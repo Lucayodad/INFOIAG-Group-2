@@ -1,4 +1,4 @@
-"""Pilot failure regressions with real validators and deterministic model replies."""
+"""Fact-checker failure regressions from the pilot, with real validators and deterministic model replies."""
 
 from copy import deepcopy
 import json
@@ -8,11 +8,8 @@ from unittest.mock import Mock, patch
 from fact_agent import run_fact_agent, _loop_schema
 from fact_check import MAX_INPUT_BYTES, FactCheckError, compact_evidence, expand_verdict, prepare_assessment
 from fact_tools import lookup_fact
-from representation_check import match_summary_claims
-from representation_tools import get_group_claims
 from test_fact_agent import loop_response
 from test_fact_check import controlled_fixture
-from test_representation_batches import oracle_client, topic_fixture
 
 
 def response(data):
@@ -143,86 +140,6 @@ class FactualReliabilityTests(unittest.TestCase):
             result = run_fact_agent(self.graph, {**self.claim, "claim": text}, client)
             self.assertEqual(result["verdict"], "UNKNOWN")
             self.assertIn("never count against a claim", client.chat.call_args.args[0]["messages"][0]["content"])
-
-
-class RepresentationReliabilityTests(unittest.TestCase):
-    def setUp(self):
-        self.graph, self.summary, self.gold = topic_fixture()
-        self.groups = {g: get_group_claims(self.graph, "Obama", g) for g in ("AA", "Hisp", "White")}
-
-    def run_with_mutation(self, mutation, *, persistent=False, **options):
-        client = oracle_client(self.gold)
-        oracle = client.chat.side_effect
-        failures = 0
-        def respond(payload):
-            nonlocal failures
-            reply = oracle(payload)
-            body = json.loads(payload["messages"][1]["content"])
-            if "candidates" in body and "summary_claims" not in body and (persistent or failures == 0):
-                data = json.loads(reply["output"][0]["content"][0]["text"])
-                mutation(data, body)
-                failures += 1
-                return response(data)
-            return reply
-        client.chat.side_effect = respond
-        return match_summary_claims(self.groups, self.summary, client, **options), client
-
-    def test_incomplete_partition_is_retried_and_repaired(self):
-        report, client = self.run_with_mutation(lambda data, body: data["clusters"].pop(), batch_size=20)
-        self.assertEqual(report["aggregation_status"], "ready")
-        rejected = [e for e in report["execution_trace"] if e["status"] == "rejected"]
-        self.assertEqual(len(rejected), 1)
-        self.assertIn("exactly once", rejected[0]["error"])
-        self.assertEqual(report["model_call_count"], client.chat.call_count)
-
-    def test_persistent_failed_batches_do_not_abort_independent_coverage(self):
-        client = oracle_client(self.gold)
-        oracle = client.chat.side_effect
-        def respond(payload):
-            body = json.loads(payload["messages"][1]["content"])
-            if "incoming" in body and "K002" in body["incoming"]:
-                return response({"decisions": []})
-            return oracle(payload)
-        client.chat.side_effect = respond
-        report = match_summary_claims(self.groups, self.summary, client, batch_size=2)
-        self.assertEqual(report["aggregation_status"], "UNKNOWN")
-        self.assertEqual(len([e for e in report["execution_trace"] if e["status"] == "rejected"]), 2)
-        self.assertTrue(any(e["step"] == "summary_coverage" and e["status"] == "completed" for e in report["execution_trace"]))
-        self.assertTrue(any(c["status"] != "UNKNOWN" for c in report["clusters"]))
-        self.assertEqual({m["claim_id"] for c in report["clusters"] for m in c["members"]}, set(self.gold))
-        self.assertTrue(all(c["status"] == "UNKNOWN" for c in report["clusters"] if "K001" in c["candidate_ids"]))
-
-    def test_invalid_stance_merge_is_rejected_without_accepting_bad_partition(self):
-        def mutate(data, body):
-            data["clusters"] = [{"candidate_ids": list(body["candidates"]), "source_evidence": [
-                {"claim_id": q["claim_id"], "quote": q["source_quote"]}
-                for c in body["candidates"].values() for q in c["source_evidence"]], "explanation": "Same Obama topic."}]
-        report, client = self.run_with_mutation(mutate, persistent=True, batch_size=20)
-        self.assertEqual(report["aggregation_status"], "UNKNOWN")
-        self.assertEqual(client.chat.call_count, 2)
-        self.assertTrue(all(c["status"] == "UNKNOWN" for c in report["clusters"]))
-        self.assertTrue(all("stances cannot be merged" in e["error"] for e in report["execution_trace"]))
-
-    def test_equivalence_and_coverage_have_separate_bounded_inputs(self):
-        client = oracle_client(self.gold)
-        report = match_summary_claims(self.groups, self.summary, client, batch_size=2)
-        for event in report["execution_trace"]:
-            self.assertLessEqual(event["input_bytes"], 12000)
-            self.assertLessEqual(event["request_bytes"], 30000)
-            if event["step"] == "semantic_equivalence":
-                self.assertNotIn("summary_claims", event["input"])
-            if event["step"] == "summary_coverage":
-                data = json.loads(event["raw_response"])
-                self.assertTrue(all(len(c["candidate_ids"]) == 1 for c in data["clusters"]))
-        self.assertTrue(any(e["step"] == "summary_coverage" for e in report["execution_trace"]))
-
-    def test_retry_counts_toward_global_budget_and_unknown_is_conservative(self):
-        report, client = self.run_with_mutation(lambda data, body: data["clusters"].clear(), persistent=True,
-                                                max_model_calls=1, batch_size=2)
-        self.assertLessEqual(client.chat.call_count, 1)
-        self.assertEqual(report["reason"], "model_budget_exhausted")
-        self.assertEqual(report["aggregation_status"], "UNKNOWN")
-        self.assertTrue(all(c["status"] == "UNKNOWN" for c in report["clusters"]))
 
 
 if __name__ == "__main__":

@@ -1,99 +1,65 @@
-"""Offline regressions for report units, missing knowledge and result accounting."""
+"""Offline regressions for the report metrics, the evaluation files and result accounting."""
 
 from contextlib import redirect_stdout
-from copy import deepcopy
 import csv
 import io
 import json
 from pathlib import Path
-from types import SimpleNamespace
 import tempfile
 import unittest
 from unittest.mock import Mock, patch
 
 import evaluate
-import prepare_report
+import evaluate_label_free_run
 from fact_check import FactCheckError, _validate_verdict
 from equal_coverage import calculate_equal_coverage
 from model_usage import RecordingClient
-from representation_check import representation_check
 from summary_agent import run_summary_agent
-from demo_revision_loop import fixture, mock_client
-from test_check_components import complete_check_fixture
+from fakes import fixture, mock_client
+
+SENTENCES = ["The author likes Obama's speech.", "The author dislikes Obama's speech.",
+             "Millions watched the speech.", "End of briefing.", "Further context follows."]
+TWEETS = {g: [{"text": f"{g} tweet {n}"} for n in range(1, 4)] for g in evaluate.GROUPS}
 
 
 class SentenceCoverageTests(unittest.TestCase):
+    """Equal Coverage as the evaluation computes it: one pair per (tweet, summary sentence)."""
+
     def setUp(self):
-        self.graph, self.claims = complete_check_fixture()
         self.scorer = Mock()
         self.scorer.score_pairs.side_effect = lambda pairs: [0.1] * len(pairs)
+        evaluate._MNLI, evaluate._CACHE = None, {"mnli": {}, "bart": {}}
 
-    def check(self, claims=None):
-        return representation_check(self.graph, self.claims if claims is None else claims,
-            Mock(), "Obama", 0.25, expected_group_counts={g: 3 for g in evaluate.GROUPS},
-            mnli_scorer=self.scorer)
+    def coverage(self, by_group):
+        self.scorer.score_pairs.side_effect = lambda pairs: [by_group[pairs[0][0].split()[0]]] * len(pairs)
+        return calculate_equal_coverage(TWEETS, [{"claim": s} for s in SENTENCES], scorer=self.scorer)
 
-    def check_coverages(self, coverages, threshold=0.2):
-        values = iter(coverages)
-        self.scorer.score_pairs.side_effect = lambda pairs: [next(values)] * len(pairs)
-        return representation_check(self.graph, self.claims, Mock(), "Obama", threshold,
-            expected_group_counts={g: 3 for g in evaluate.GROUPS}, mnli_scorer=self.scorer)
-
-    def test_threshold_applies_the_four_fifths_rule(self):
-        # Raw EC 0.022 could never exceed a [0, 1] threshold; AA is at half of White.
-        result = self.check_coverages([0.05, 0.1, 0.1])
+    def test_equal_coverage_is_the_mean_deviation_from_overall_coverage(self):
+        result = self.coverage({"AA": 0.05, "Hisp": 0.1, "White": 0.1})
+        self.assertAlmostEqual(result["overall_coverage"], 0.25 / 3)
         self.assertAlmostEqual(result["equal_coverage"], 0.1 / 4.5)
-        self.assertAlmostEqual(result["disparity"], 0.5)
-        self.assertEqual(result["threshold_metric"], "four_fifths_coverage_ratio")
-        self.assertEqual(result["status"], "FAIL")
-        self.assertEqual(result["representation_issues"][0]["dialect_label"], "AA")
-        self.assertEqual(self.check_coverages([0.125, 0.1, 0.11])["status"], "PASS")  # exactly 4/5
-        self.assertEqual(self.check_coverages([0.125, 0.099, 0.11])["status"], "FAIL")
+        for group, expected in {"AA": 0.05, "Hisp": 0.1, "White": 0.1}.items():
+            self.assertAlmostEqual(result["coverage_by_group"][group]["coverage"], expected)
+        self.assertEqual(result["pair_count"], 45)  # 9 tweets x 5 sentences
+        self.assertEqual(result["metric_version"], "mnli_sentence_mean_v1")
+        self.assertAlmostEqual(self.coverage({"AA": 0.1, "Hisp": 0.1, "White": 0.1})["equal_coverage"], 0)
 
-    def test_failed_extraction_is_still_measured_on_sentence_text(self):
-        # Coverage uses sentence text; the unclear claims stay a factual issue.
-        self.claims[0].update(status="unclear", claims=[])
-        result = self.check()
-        self.assertIn(result["status"], ("PASS", "FAIL"))
-        self.assertTrue(result["data_complete"])
-        self.assertIsNotNone(result["disparity"])
-        self.scorer.score_pairs.assert_called()
+    def test_invalid_scores_are_rejected(self):
+        for values in ([0.1], [float("nan")] * 15, [1.5] * 15):
+            self.scorer.score_pairs.side_effect = lambda pairs, values=values: values
+            with self.subTest(values=values[:1]), self.assertRaises(ValueError):
+                calculate_equal_coverage(TWEETS, [{"claim": s} for s in SENTENCES], scorer=self.scorer)
 
-    def test_empty_input_and_scoring_failure_are_unknown(self):
-        self.assertEqual(self.check([])["status"], "UNKNOWN")
-        self.scorer.score_pairs.side_effect = RuntimeError("model unavailable")
-        result = self.check()
-        self.assertEqual(result["status"], "UNKNOWN")
-        self.assertIn("model unavailable", str(result["reasons"]))
-        self.assertTrue(result["data_complete"])
-        self.assertIn("mnli_scoring_unavailable", result["reasons"])
-        self.assertNotIn("incomplete_topic_or_extraction_data", result["reasons"])
-        self.assertTrue(all(row["coverage"] is None for row in result["coverage_by_group"].values()))
-
-    def test_invalid_scores_are_unknown(self):
-        for values in ([0.1], [float("nan")] * 15):
-            self.scorer.score_pairs.side_effect = lambda pairs: values
-            self.assertEqual(self.check()["status"], "UNKNOWN")
-
-    def test_atomic_decomposition_does_not_change_sentence_metric(self):
-        first = self.check()
-        atomic = deepcopy(self.claims[0]["claims"][0])
-        atomic.update(claim_id="S01_C02", claim="Another extracted proposition.")
-        self.claims[0]["claims"].append(atomic)
-        self.assertEqual(first["equal_coverage"], self.check()["equal_coverage"])
-        self.assertEqual(first["pair_count"], 45)
-        self.assertEqual(first["hypothesis_unit"], "summary_sentence")
-
-    def test_online_and_offline_use_identical_pairs(self):
-        online = self.check()
+    def test_both_evaluations_score_the_same_pairs_and_agree(self):
+        summary = {"sentences": [{"text": s} for s in SENTENCES]}
+        tweets = [{"text": t["text"], "group": g} for g, rows in TWEETS.items() for t in rows]
+        with patch("equal_coverage._default_scorer", return_value=self.scorer):
+            offline = evaluate.metric_ec({"sentences": SENTENCES}, tweets)
         pairs = [call.args[0] for call in self.scorer.score_pairs.call_args_list]
         self.scorer.reset_mock()
-        tweets = [{"text": text, "group": group} for group, batch in zip(evaluate.GROUPS, pairs)
-                  for text, _ in batch[::5]]
-        with patch("equal_coverage._default_scorer", return_value=self.scorer):
-            offline = evaluate.metric_ec({"sentences": [r["sentence"] for r in self.claims]}, tweets)
+        final = evaluate_label_free_run.group_coverage(TWEETS, summary, self.scorer)
         self.assertEqual(pairs, [call.args[0] for call in self.scorer.score_pairs.call_args_list])
-        self.assertAlmostEqual(online["equal_coverage"], offline["ec"])
+        self.assertAlmostEqual(final["equal_coverage"], offline["ec"])
 
     def test_missing_group_is_not_zero_coverage(self):
         with self.assertRaisesRegex(ValueError, "Every group"):
@@ -110,7 +76,7 @@ class AccountingTests(unittest.TestCase):
             "explanation": "Neither SUPPORTED nor CONTRADICTED can be established."}, {})
 
     def test_all_revision_extraction_and_recheck_calls_count_once(self):
-        graph, draft, counts = fixture()
+        graph, draft = fixture()
         backend = mock_client()
         original = backend.chat.side_effect
         def chat(payload):
@@ -119,8 +85,7 @@ class AccountingTests(unittest.TestCase):
             return result
         backend.chat.side_effect = chat
         recorder = RecordingClient(backend)
-        result = run_summary_agent(graph, draft, topic="Obama", prompt=draft["summary_prompt"],
-            client=recorder, expected_group_counts=counts, disparity_threshold=0.25, representation_metric="internal")
+        result = run_summary_agent(graph, draft, topic="Obama", prompt=draft["summary_prompt"], client=recorder)
         self.assertEqual(result["revision_count"], 1)
         self.assertEqual(result["llm_calls"], backend.chat.call_count)
         self.assertEqual(len(result["model_calls"]), result["call_counts"]["model_calls"])
@@ -143,31 +108,6 @@ class AccountingTests(unittest.TestCase):
 
 
 class EvaluationIOTests(unittest.TestCase):
-    def test_saved_scores_require_unchanged_inputs_and_exact_text(self):
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            data = root / "data"
-            data.mkdir()
-            scores = root / "results/eval"
-            scores.mkdir(parents=True)
-            source = root / "Obama.json"
-            source.write_text("{}", encoding="utf-8")
-            header = "system,topic,prompt_id,seed,file,bart_src,bart_ref\n"
-            (scores / "metrics.csv").write_text(header, encoding="utf-8")
-            (scores / "bart.csv").write_text(header + "baseline,Obama,1,101,Obama.json,-3.0,-2.0\n", encoding="utf-8")
-            records = [{"system": "baseline", "topic": "Obama", "prompt_id": "1", "seed": 101,
-                        "file": str(source), "summary": "Original.", "sentences": ["Original."]}]
-            with patch.object(prepare_report, "ROOT", root), patch.object(evaluate, "DATA", data), \
-                 patch("prepare_report.subprocess.run", return_value=SimpleNamespace(returncode=0)):
-                cache, origins = prepare_report.saved_metric_cache(records)
-                self.assertIn(("bart", "Obama", "Original.", ("Original.",), None), cache)
-                self.assertNotIn(("bart", "Obama", "Altered.", ("Altered.",), None), cache)
-                self.assertTrue(next(iter(origins.values()))["mode"].startswith("historical"))
-            with patch.object(prepare_report, "ROOT", root), patch.object(evaluate, "DATA", data), \
-                 patch("prepare_report.subprocess.run", side_effect=[SimpleNamespace(returncode=0), SimpleNamespace(returncode=1)]):
-                with self.assertRaisesRegex(ValueError, "unchanged committed"):
-                    prepare_report.saved_metric_cache(records)
-
     def data(self):
         summary = {"summary": "One. Two. Three. Four. Five.",
                    "sentences": [{"text": x, "source_ids": ["Obama_001"]} for x in ("One.", "Two.", "Three.", "Four.", "Five.")]}
@@ -214,6 +154,33 @@ class EvaluationIOTests(unittest.TestCase):
             with redirect_stdout(io.StringIO()):
                 evaluate.report(path)
             self.assertIn("n=1", path.with_name("report.md").read_text(encoding="utf-8"))
+
+    def test_final_agent_output_reports_its_recorded_cost(self):
+        data = {**self.data(), "llm_calls": 20, "usage_complete": True,
+                "usage": {"input_tokens": 34706, "output_tokens": 3527},
+                "usage_scope": "agent_only_excludes_initial_draft_and_source_extraction",
+                "provenance": {"seconds": 533}}
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "Obama_prompt1_seed101.json"
+            path.write_text(json.dumps(data), encoding="utf-8")
+            final, draft = evaluate.records_from_file(path, "agent")
+        self.assertEqual((final["execution_seconds"], final["llm_calls"], final["input_tokens"]), (533, 20, 34706))
+        self.assertEqual(final["usage_scope"], "agent_only_excludes_initial_draft_and_source_extraction")
+        self.assertEqual((draft["system"], draft["llm_calls"]), ("agent_draft", 1))
+
+    def test_score_cache_round_trip(self):
+        evaluate._CACHE = {"mnli": {("tweet", "sentence"): 0.25}, "bart": {("source", "target"): -3.5}}
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "scores.json"
+            evaluate.save_cache(path)
+            evaluate._CACHE = {"mnli": {}, "bart": {}}
+            evaluate.load_cache(path)
+            self.assertEqual(evaluate._CACHE, {"mnli": {("tweet", "sentence"): 0.25}, "bart": {("source", "target"): -3.5}})
+            self.assertEqual(evaluate.bart_logprob("source", "target"), -3.5)  # served from the cache, no model
+            path.write_text(json.dumps([["tweet", "other sentence", 0.5]]), encoding="utf-8")
+            evaluate.load_cache(path)  # the plain MNLI pair list of evaluate_label_free_run.py
+            self.assertEqual(evaluate._CACHE["mnli"][("tweet", "other sentence")], 0.5)
+        evaluate._CACHE = {"mnli": {}, "bart": {}}
 
     def test_changed_summary_invalidates_old_metrics(self):
         with tempfile.TemporaryDirectory() as directory:

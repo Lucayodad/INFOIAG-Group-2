@@ -14286,43 +14286,43 @@
     "model": "roberta-large-mnli",
     "coverage_by_group": {
       "AA": {
-        "coverage": 0.010964328911698734,
-        "lower": 0.010964328911698734,
-        "upper": 0.010964328911698734,
+        "coverage": 0.010964336666123321,
+        "lower": 0.010964336666123321,
+        "upper": 0.010964336666123321,
         "tweet_count": 30,
         "pair_count": 150,
         "total_weight": 30
       },
       "Hisp": {
-        "coverage": 0.011414279116628071,
-        "lower": 0.011414279116628071,
-        "upper": 0.011414279116628071,
+        "coverage": 0.011414273998622472,
+        "lower": 0.011414273998622472,
+        "upper": 0.011414273998622472,
         "tweet_count": 30,
         "pair_count": 150,
         "total_weight": 30
       },
       "White": {
-        "coverage": 0.012455466612397383,
-        "lower": 0.012455466612397383,
-        "upper": 0.012455466612397383,
+        "coverage": 0.012455454497830943,
+        "lower": 0.012455454497830943,
+        "upper": 0.012455454497830943,
         "tweet_count": 30,
         "pair_count": 150,
         "total_weight": 30
       }
     },
-    "overall_coverage": 0.01161135821357473,
-    "equal_coverage": 0.0005627389325484356,
-    "entailment_coverage_gap": 0.0014911377006986484,
+    "overall_coverage": 0.011611355054192245,
+    "equal_coverage": 0.000562732962425798,
+    "entailment_coverage_gap": 0.0014911178317076213,
     "hypothesis_unit": "summary_sentence",
     "metric_version": "mnli_sentence_mean_v1",
     "summary_claim_count": 5,
     "summary_sentence_count": 5,
     "pair_count": 450,
     "status": "PASS",
-    "disparity": 0.11971753023001674,
+    "disparity": 0.11971605146703335,
     "disparity_bounds": {
-      "lower": 0.11971753023001674,
-      "upper": 0.11971753023001674
+      "lower": 0.11971605146703335,
+      "upper": 0.11971605146703335
     },
     "disparity_threshold": 0.2,
     "matched_claims": [],
@@ -28860,43 +28860,43 @@
         "model": "roberta-large-mnli",
         "coverage_by_group": {
           "AA": {
-            "coverage": 0.010964328911698734,
-            "lower": 0.010964328911698734,
-            "upper": 0.010964328911698734,
+            "coverage": 0.010964336666123321,
+            "lower": 0.010964336666123321,
+            "upper": 0.010964336666123321,
             "tweet_count": 30,
             "pair_count": 150,
             "total_weight": 30
           },
           "Hisp": {
-            "coverage": 0.011414279116628071,
-            "lower": 0.011414279116628071,
-            "upper": 0.011414279116628071,
+            "coverage": 0.011414273998622472,
+            "lower": 0.011414273998622472,
+            "upper": 0.011414273998622472,
             "tweet_count": 30,
             "pair_count": 150,
             "total_weight": 30
           },
           "White": {
-            "coverage": 0.012455466612397383,
-            "lower": 0.012455466612397383,
-            "upper": 0.012455466612397383,
+            "coverage": 0.012455454497830943,
+            "lower": 0.012455454497830943,
+            "upper": 0.012455454497830943,
             "tweet_count": 30,
             "pair_count": 150,
             "total_weight": 30
           }
         },
-        "overall_coverage": 0.01161135821357473,
-        "equal_coverage": 0.0005627389325484356,
-        "entailment_coverage_gap": 0.0014911377006986484,
+        "overall_coverage": 0.011611355054192245,
+        "equal_coverage": 0.000562732962425798,
+        "entailment_coverage_gap": 0.0014911178317076213,
         "hypothesis_unit": "summary_sentence",
         "metric_version": "mnli_sentence_mean_v1",
         "summary_claim_count": 5,
         "summary_sentence_count": 5,
         "pair_count": 450,
         "status": "PASS",
-        "disparity": 0.11971753023001674,
+        "disparity": 0.11971605146703335,
         "disparity_bounds": {
-          "lower": 0.11971753023001674,
-          "upper": 0.11971753023001674
+          "lower": 0.11971605146703335,
+          "upper": 0.11971605146703335
         },
         "disparity_threshold": 0.2,
         "matched_claims": [],
@@ -28930,13 +28930,13 @@
       "metrics": {
         "serious_factual_count": 0,
         "unknown_factual_count": 9,
-        "disparity": 0.11971753023001674,
+        "disparity": 0.11971605146703335,
         "partition": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
         "representation_status": "PASS",
         "coverage": {
-          "AA": 0.010964328911698734,
-          "Hisp": 0.011414279116628071,
-          "White": 0.012455466612397383
+          "AA": 0.010964336666123321,
+          "Hisp": 0.011414273998622472,
+          "White": 0.012455454497830943
         }
       },
       "revision_count": 0,
@@ -28978,9 +28978,9 @@
   "prompt_id": "1",
   "seed": 303,
   "provenance": {
-    "recorded_run": "results/agent_rerun/Obama_prompt1_seed303.json",
-    "graph": "results/agent_rerun/Obama_prompt1_seed303_artifacts/Obama.ttl",
+    "recorded_run": "results\\agent_rerun\\Obama_prompt1_seed303.json",
+    "graph": "results\\agent_rerun\\Obama_prompt1_seed303_artifacts\\Obama.ttl",
     "first_check": "claim extraction and fact verdicts reused from the recorded run (unclear extractions redone); representation and revisions computed in this run",
-    "seconds": 32
+    "seconds": 65
   }
 }

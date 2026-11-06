@@ -6,8 +6,6 @@ import json
 import re
 from rdflib import Graph
 
-from fact_tools import lookup_entity_facts, lookup_fact
-
 
 def quote_in(quote, text):
     """Exact-substring citation check, tolerant only of HTML entities in the
@@ -311,50 +309,6 @@ def apply_verdict(assessment, data):
         **assessment, **data, "decision_source": "model",
         "reason": "model_uncertainty" if data["verdict"] == "UNKNOWN" else "model_verdict",
     }
-
-
-def check_claim(graph, summary_claim, client, entity_id=None):
-    """Retrieve once, then assess one claim; the agent can reuse the pure helpers.
-
-    Missing evidence conservatively returns UNKNOWN without a model call.
-    Invalid output gets one format repair; persistent errors raise FactCheckError.
-    """
-    retrieval = lookup_fact(graph, summary_claim)
-    ontology = lookup_entity_facts(graph, entity_id) if entity_id is not None else None
-    result = prepare_assessment(summary_claim, retrieval, ontology)
-    if not result["evidence_complete"]:
-        return result
-    view = compact_evidence(result)
-    result.update(evidence_id_map=view["evidence_id_map"], evidence_selection=view["selection"])
-    payload = {
-        "model": "qwen3.5:4b", "stream": False, "think": False,
-        "messages": [
-            {"role": "system", "content": INSTRUCTIONS},
-            {"role": "user", "content": json.dumps({
-                "summary_claim": summary_claim,
-                "retrieval_status": retrieval["retrieval_status"],
-                "ontology_entity": ontology["entity"] if ontology else None,
-                "ontology_status": ontology["status"] if ontology else "not_requested",
-                "assessment_scope": result["assessment_scope"], "evidence": view["evidence_catalogue"],
-                "selection": view["selection"],
-            }, ensure_ascii=False)},
-        ],
-        "format": VERDICT_SCHEMA,
-        "options": {"temperature": 0, "seed": 42, "num_ctx": 8192, "num_predict": NUM_PREDICT},
-    }
-    for attempt in range(2):
-        if len(json.dumps(payload["messages"], ensure_ascii=False).encode("utf-8")) > MAX_INPUT_BYTES:
-            raise FactCheckError(f"Factual request exceeds the {MAX_INPUT_BYTES}-byte input limit.")
-        response = client.chat(payload)
-        try:
-            data = json.loads(response["output"][0]["content"][0]["text"])
-            final = apply_verdict(result, expand_verdict(data, view, result))
-            return {**final, "model_call_count": attempt + 1}
-        except (KeyError, IndexError, TypeError, ValueError) as exc:
-            if attempt:
-                raise FactCheckError(f"Invalid verdict after format repair: {exc}") from exc
-            payload["messages"].append({"role": "user", "content":
-                "Repair the verdict format once. Include a nonempty explanation and only supplied evidence IDs and exact quotes. Validation error: " + str(exc)[:300]})
 
 
 def claim_cache_key(claim):

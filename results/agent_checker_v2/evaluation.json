@@ -15,10 +15,6 @@
     "draft": 0.002424789737960814,
     "final": 0.002424789737960814
   },
-  "summaries_missing_a_viewpoint": {
-    "draft": 4,
-    "final": 4
-  },
   "labels_used_by": "this evaluation only (dataset labels joined after the agent finished)",
   "rows": {
     "McDonalds_prompt1_seed101": {
@@ -33,8 +29,6 @@
         "SUPPORTED": 5,
         "UNKNOWN": 5
       },
-      "missing_viewpoints_draft": [],
-      "missing_viewpoints_final": [],
       "draft": {
         "equal_coverage": 0.0020597969821688753,
         "coverage": {
@@ -70,8 +64,6 @@
         "UNKNOWN": 9,
         "SUPPORTED": 5
       },
-      "missing_viewpoints_draft": [],
-      "missing_viewpoints_final": [],
       "draft": {
         "equal_coverage": 0.0004796124519607812,
         "coverage": {
@@ -107,8 +99,6 @@
         "SUPPORTED": 4,
         "UNKNOWN": 9
       },
-      "missing_viewpoints_draft": [],
-      "missing_viewpoints_final": [],
       "draft": {
         "equal_coverage": 0.001040551946627804,
         "coverage": {
@@ -144,8 +134,6 @@
         "SUPPORTED": 10,
         "UNKNOWN": 3
       },
-      "missing_viewpoints_draft": [],
-      "missing_viewpoints_final": [],
       "draft": {
         "equal_coverage": 0.002641994859721442,
         "coverage": {
@@ -181,8 +169,6 @@
         "SUPPORTED": 6,
         "UNKNOWN": 7
       },
-      "missing_viewpoints_draft": [],
-      "missing_viewpoints_final": [],
       "draft": {
         "equal_coverage": 0.0008253127400314918,
         "coverage": {
@@ -218,8 +204,6 @@
         "SUPPORTED": 4,
         "UNKNOWN": 11
       },
-      "missing_viewpoints_draft": [],
-      "missing_viewpoints_final": [],
       "draft": {
         "equal_coverage": 0.0006492822437064241,
         "coverage": {
@@ -255,12 +239,6 @@
         "UNKNOWN": 6,
         "SUPPORTED": 3
       },
-      "missing_viewpoints_draft": [
-        "positive"
-      ],
-      "missing_viewpoints_final": [
-        "positive"
-      ],
       "draft": {
         "equal_coverage": 0.010541185178293814,
         "coverage": {
@@ -296,8 +274,6 @@
         "UNKNOWN": 7,
         "SUPPORTED": 5
       },
-      "missing_viewpoints_draft": [],
-      "missing_viewpoints_final": [],
       "draft": {
         "equal_coverage": 0.0013655574215334608,
         "coverage": {
@@ -333,14 +309,6 @@
         "UNKNOWN": 5,
         "SUPPORTED": 7
       },
-      "missing_viewpoints_draft": [
-        "negative",
-        "positive"
-      ],
-      "missing_viewpoints_final": [
-        "negative",
-        "positive"
-      ],
       "draft": {
         "equal_coverage": 0.000562732962425798,
         "coverage": {
@@ -376,8 +344,6 @@
         "SUPPORTED": 3,
         "UNKNOWN": 11
       },
-      "missing_viewpoints_draft": [],
-      "missing_viewpoints_final": [],
       "draft": {
         "equal_coverage": 0.0005597827386076528,
         "coverage": {
@@ -413,8 +379,6 @@
         "SUPPORTED": 9,
         "UNKNOWN": 7
       },
-      "missing_viewpoints_draft": [],
-      "missing_viewpoints_final": [],
       "draft": {
         "equal_coverage": 0.005978985438295813,
         "coverage": {
@@ -450,8 +414,6 @@
         "UNKNOWN": 9,
         "SUPPORTED": 4
       },
-      "missing_viewpoints_draft": [],
-      "missing_viewpoints_final": [],
       "draft": {
         "equal_coverage": 0.0020471934784479693,
         "coverage": {
@@ -487,12 +449,6 @@
         "SUPPORTED": 4,
         "UNKNOWN": 8
       },
-      "missing_viewpoints_draft": [
-        "negative"
-      ],
-      "missing_viewpoints_final": [
-        "negative"
-      ],
       "draft": {
         "equal_coverage": 0.002282893283258159,
         "coverage": {
@@ -528,8 +484,6 @@
         "SUPPORTED": 3,
         "UNKNOWN": 3
       },
-      "missing_viewpoints_draft": [],
-      "missing_viewpoints_final": [],
       "draft": {
         "equal_coverage": 0.002351759115958379,
         "coverage": {
@@ -565,12 +519,6 @@
         "SUPPORTED": 3,
         "UNKNOWN": 7
       },
-      "missing_viewpoints_draft": [
-        "positive"
-      ],
-      "missing_viewpoints_final": [
-        "positive"
-      ],
       "draft": {
         "equal_coverage": 0.0028017309112301856,
         "coverage": {
@@ -606,8 +554,6 @@
         "UNKNOWN": 6,
         "SUPPORTED": 4
       },
-      "missing_viewpoints_draft": [],
-      "missing_viewpoints_final": [],
       "draft": {
         "equal_coverage": 0.0036836443017064444,
         "coverage": {
@@ -643,8 +589,6 @@
         "UNKNOWN": 5,
         "SUPPORTED": 1
       },
-      "missing_viewpoints_draft": [],
-      "missing_viewpoints_final": [],
       "draft": {
         "equal_coverage": 0.0031965260548275655,
         "coverage": {
@@ -680,8 +624,6 @@
         "SUPPORTED": 3,
         "UNKNOWN": 9
       },
-      "missing_viewpoints_draft": [],
-      "missing_viewpoints_final": [],
       "draft": {
         "equal_coverage": 0.0005776731744926012,
         "coverage": {

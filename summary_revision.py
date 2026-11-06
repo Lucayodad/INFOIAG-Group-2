@@ -26,7 +26,7 @@ Do not rewrite unaffected sentences. Return only replacements as specified.
 """
 
 # Profiling (Lecture 5): the reviser's role, written into its prompt. Used
-# with the viewpoint check or the proportion feedback; the default prompt is unchanged.
+# with the proportion feedback; the default prompt is unchanged.
 REVISER_PROFILE = ("You are an impartial editor of tweet summaries. You report the viewpoints "
                    "the tweets express, never take a side yourself, and state only what the cited tweets say.\n")
 PROFILED_REVISION_INSTRUCTIONS = REVISER_PROFILE + REVISION_INSTRUCTIONS
@@ -42,8 +42,8 @@ def revise_summary(summary, confirmed_issues, retrieved, client, *, max_input_by
     """Return an unaccepted candidate; malformed/ungrounded proposals are rejected.
 
     Citation validation proves provenance, not entailment. The controller must
-    extract and fact-check every changed sentence, and rerun representation
-    checking, before accepting a candidate. A replacement that copies a cited
+    extract and fact-check every changed sentence, and rerun the feedback
+    layer when it is on, before accepting a candidate. A replacement that copies a cited
     tweet is rejected: the gate verifies citations, not summarization. No
     source or prior version is edited.
     """
@@ -118,11 +118,6 @@ def revise_summary(summary, confirmed_issues, retrieved, client, *, max_input_by
                 except GenerationError as exc:
                     raise ValueError(f"{exc} Summarize the viewpoint in your own words.") from exc
                 for task in tasks:
-                    if task["kind"] == "representation" and task["sentence_id"] == key and not set(ids).intersection(task["evidence_ids"]):
-                        raise ValueError("A revision task has no supporting citation.")
-                    if task["kind"] == "viewpoint" and task["sentence_id"] == key and not set(ids).intersection(task["viewpoint_ids"]):
-                        raise ValueError(f"Cite at least one of the tweets expressing the {task['stance']} viewpoint: "
-                                         f"{', '.join(task['viewpoint_ids'])}.")
                     if task["kind"] == "proportion" and task["sentence_id"] == key \
                             and not set(ids).intersection(task["proportion_ids"]):
                         raise ValueError("Cite at least one of the tweets expressing the under-represented "

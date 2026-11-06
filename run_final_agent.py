@@ -17,19 +17,14 @@ the current checker made them (fact_check.CHECKER_VERSION): after the
 extraction is still reused. Finished trials are skipped, so rerunning the
 same command resumes.
 
-    python run_final_agent.py --out results/agent_compliant [--trial Obama_prompt1]
-
-With --viewpoint-check the agent also repairs a viewpoint of the tweets that
-the summary omits (stances of the extracted tweet claims, no label):
-
-    python run_final_agent.py --viewpoint-check --out results/agent_viewpoint
+    python run_final_agent.py --out results/agent_checker_v2 [--trial Obama_prompt1]
 
 With --proportion-check one feedback layer is added on top: Qwen reads every
 tweet of the topic and the summary, judges whether the summary is in
 proportion to all the tweets, and an under-represented viewpoint it names is
 repaired (no label is read or named):
 
-    python run_final_agent.py --proportion-check --out results/agent_proportion
+    python run_final_agent.py --proportion-check --first-checks results/agent_checker_v2 --out results/agent_checker_v2_proportion
 """
 
 import argparse
@@ -105,14 +100,12 @@ def label_free_graph(path):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--out", type=Path, default=ROOT / "results" / "agent_compliant")
+    parser.add_argument("--out", type=Path, default=ROOT / "results" / "agent_checker_v2")
     parser.add_argument("--trial", nargs="*", default=[], help="Only trials whose name contains one of these")
     parser.add_argument("--max-revisions", type=int, default=3)
     parser.add_argument("--first-checks", type=Path, default=FIRST_CHECKS,
                         help="Finished runs whose first check of each draft seeds the cache "
                              "(fact verdicts only from the current checker)")
-    parser.add_argument("--viewpoint-check", action="store_true",
-                        help="Also repair an omitted viewpoint (label-free reflection on bias)")
     parser.add_argument("--proportion-check", action="store_true",
                         help="Add the feedback layer checking the summary is in proportion to all tweets")
     args = parser.parse_args()
@@ -144,15 +137,14 @@ def main():
             result = run_summary_agent(
                 label_free_graph(graph_path), recorded["initial_summary"],
                 topic=recorded["topic"], prompt=recorded["prompt"], client=client,
-                max_revisions=args.max_revisions, representation_metric=None,
-                viewpoint_check=args.viewpoint_check, proportion_check=args.proportion_check,
+                max_revisions=args.max_revisions, proportion_check=args.proportion_check,
                 check_cache=seed_check_cache(recorded["initial_summary"], checked))
-        except Exception:  # noqa: BLE001 - record and continue with the next trial
+        except Exception:
             traceback.print_exc()
             failures.append(name)
             print(f"FAILED {name}; rerun the same command to retry it.", flush=True)
             continue
-        # evaluate.py identifies a trial by topic, prompt and seed.
+        # The evaluation identifies a trial by topic, prompt and seed.
         result["prompt_id"], result["seed"] = name.split("_prompt")[1].split("_seed")[0], int(name.rsplit("_seed", 1)[1])
         result["provenance"] = {
             "recorded_run": str((RECORDED / f"{name}.json").relative_to(ROOT)),
@@ -164,7 +156,6 @@ def main():
             "checker_version": CHECKER_VERSION,
             "dialect_labels": "removed from the agent's graph; no group check; every model request "
                               f"checked for labels ({client.checked_requests} checked, none found)",
-            "viewpoint_check": args.viewpoint_check,
             "proportion_check": args.proportion_check,
             "seconds": round(time.time() - started),
         }

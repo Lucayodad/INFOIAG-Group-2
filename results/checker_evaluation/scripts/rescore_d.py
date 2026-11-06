@@ -6,7 +6,7 @@ import json, sys, collections
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-sys.path[:0] = [str(HERE), r"C:\Users\saif-\Desktop\IA\INFOIAG-Group-2"]
+sys.path[:0] = [str(HERE), str(HERE.parents[2])]
 import fact_agent_v
 from score import load_gold, score
 

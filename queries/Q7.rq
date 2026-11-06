@@ -1,0 +1,9 @@
+PREFIX : <http://www.semanticweb.org/group2/ontology#>
+# Report Q7, with McDonalds replaced by the bound variable ?company.
+# The country is found only through the transitive locatedIn.
+SELECT DISTINCT ?branch ?place WHERE {
+    ?company :hasBranch ?branch .
+    ?branch :locatedIn ?place .
+    ?place a :Country .
+}
+ORDER BY ?branch ?place

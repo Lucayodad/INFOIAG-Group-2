@@ -10,7 +10,7 @@ import tempfile
 import unittest
 from unittest.mock import Mock
 
-from demo_revision_loop import fixture, mock_client
+from fakes import fixture, mock_client
 from live_feed import LiveFeed, bounded, emit_event, observe_node, request_context
 from run_pipeline import ProgressClient
 from summary_agent import run_summary_agent
@@ -126,16 +126,19 @@ class LiveFeedTests(unittest.TestCase):
             finally:
                 feed.close()
 
-    def test_equivalence_and_coverage_have_distinct_labels(self):
-        local = {"format": {"properties": {"clusters": {"items": {"properties": {"candidate_ids": {}}}}}}}
-        self.assertEqual(request_context(local)[0], "equivalence_checker")
-        local["format"]["properties"]["clusters"]["items"]["properties"]["status"] = {}
-        self.assertEqual(request_context(local)[0], "coverage_checker")
+    def test_each_model_request_is_labelled_by_its_actor(self):
+        for fields, actor in ((["sentences"], "summary_generator"), (["action", "verdict"], "factual_checker"),
+                              (["replacements"], "reviser"), (["status", "claims"], "summary_claim_extractor")):
+            payload = {"format": {"properties": dict.fromkeys(fields, {})},
+                       "messages": [{"role": "user", "content": "One summary sentence."}]}
+            self.assertEqual(request_context(payload)[0], actor)
+        tweet = {"format": {"properties": {"status": {}, "claims": {}}},
+                 "messages": [{"role": "user", "content": '{"id": "Obama_001", "text": "A tweet."}'}]}
+        self.assertEqual(request_context(tweet)[0], "source_extractor")
 
     def test_real_graph_revision_and_rechecking_emit_handoffs_without_changing_results(self):
-        graph, draft, counts = fixture()
-        options = dict(topic="Obama", prompt=draft["summary_prompt"], expected_group_counts=counts, disparity_threshold=0.25,
-                       representation_metric="internal")
+        graph, draft = fixture()
+        options = dict(topic="Obama", prompt=draft["summary_prompt"])
         baseline_client = mock_client()
         baseline = run_summary_agent(graph, draft, client=baseline_client, **options)
         with tempfile.TemporaryDirectory() as directory:
@@ -152,22 +155,20 @@ class LiveFeedTests(unittest.TestCase):
                 self.assertIn(("revise_summary", "extract_summary_claims"), pairs)
                 self.assertTrue(any(r["kind"] == "tool_result" for r in rows))
                 self.assertTrue(any(r["kind"] == "decision_validated" for r in rows))
-                self.assertTrue(any(r["kind"] == "assessment_validated" for r in rows))
                 routed = [r for r in rows if r["actor"] == "route_checks" and r["kind"] == "handoff"]
                 self.assertEqual(routed[-1]["details"]["latest_revision"]["status"], "accepted")
             finally:
                 feed.close()
 
     def test_rejected_revision_is_visible_and_remains_rejected(self):
-        graph, draft, counts = fixture()
+        graph, draft = fixture()
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "feed.jsonl"
             feed = LiveFeed(path, "run", console=io.StringIO(), heartbeat_seconds=0)
             try:
                 backend = mock_client(transform_revision=lambda value: {"invalid": True})
                 result = run_summary_agent(graph, draft, topic="Obama", prompt=draft["summary_prompt"],
-                    expected_group_counts=counts, disparity_threshold=0.25, client=ProgressClient(backend, feed),
-                    representation_metric="internal")
+                                           client=ProgressClient(backend, feed))
                 self.assertEqual(result["revisions"][-1]["status"], "rejected")
                 row = next(r for r in self.events(path) if r["actor"] == "revise_summary" and r["kind"] == "handoff")
                 self.assertEqual(row["details"]["latest_revision"]["status"], "rejected")

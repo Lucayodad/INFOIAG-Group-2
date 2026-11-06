@@ -1,0 +1,13 @@
+{
+  "mode": "local embedding-only regeneration for the report's retrieval diagnostic",
+  "models": [
+    {
+      "name": "all-minilm:latest",
+      "digest": "1b226e2802dbb772b5fc32a58f103ca1804ef7501331012de126ab22f67475ef",
+      "modified_at": "2026-11-01T15:21:04.7023166+01:00"
+    }
+  ],
+  "items": 480,
+  "model_calls_to_qwen": 0,
+  "input_sha256": "d3ca3caaeb2dd4ae66a96dcd8e82076f90c889a377950d37e6665378f2374cee"
+}

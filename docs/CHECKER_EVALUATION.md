@@ -20,10 +20,30 @@ SUPPORTED, 116 UNKNOWN, 0 CONTRADICTED; 54 marked low confidence. For each claim
 not supported by its citations, the uncited tweets of the same topic that would
 support it were recorded.
 
-The labels were produced by Claude (an LLM), independently of Qwen's verdicts,
-and are not yet validated by people. reference_labels.csv marks a random sample
-of 60 claims for two team members to label independently; their agreement with
-the reference (Cohen's kappa) must be reported with these results.
+The labels were produced by Claude (an LLM), independently of Qwen's verdicts.
+reference_labels.csv marks a random sample of 60 claims (29 SUPPORTED, 31
+UNKNOWN; 25 McDonalds, 22 Obama, 13 Superbowl). Two further LLM annotators
+labeled this sample blind to the reference, each in its own session that could
+read only GUIDELINE.md and the sheet (annotation_sheet_60.csv): Claude Sonnet 5.5
+(annotation_sheet_60_claude_sonnet.csv) and Claude Opus 5.5, the model that made
+the reference labels (annotation_sheet_60_claude_opus.csv). The first sheet
+listed only the IDs of the 58, 58 and 90 tweets cited by three claims; the sheet
+now writes out every tweet and both annotators re-labeled those three rows.
+
+| Raters (60 claims) | Agreement | Cohen's kappa |
+|---|---|---|
+| Annotator 1 (Sonnet) vs annotator 2 (Opus) | 0.97 | 0.93 |
+| Annotator 1 vs reference | 0.95 | 0.90 |
+| Annotator 2 vs reference | 0.95 | 0.90 |
+| Annotator 1 / 2 vs revised checker (final run) | 0.83 / 0.83 | 0.67 / 0.67 |
+| Annotator 1 / 2 vs original checker | 0.67 / 0.63 | 0.33 / 0.27 |
+
+On the 58 claims where the annotators agree, the revised checker matches them on
+49 (0.84) and the original checker on 38 (0.66); on the 34 held-out claims among
+them, 31 (0.91) and 26 (0.76). `scripts/kappa.py` and
+`scripts/annotators_vs_checkers.py` reproduce these numbers. This shows the
+guideline is applied consistently; it is not a validation by people, and
+annotators of one model family may share blind spots.
 
 ## Protocol
 - Development topic McDonalds (78 claims): every design decision.
@@ -112,8 +132,8 @@ run-to-run noise, since the original verdicts come from an earlier session.
   topic's uncited tweets by embedding similarity plus idf-weighted word overlap
   puts a supporting tweet in the top 5 for 38 of the 58 miscited claims (66%);
   it is not yet implemented in the agent.
-- The reference labels are one annotator's (an LLM's) until the human sample is
-  labeled.
+- The reference labels and both validating annotators are LLMs (two of the
+  three the same model); a human-labeled sample remains to be done.
 - Run-to-run variation of Qwen remains; results come from single runs.
 
 ## Rerun of the 18 trials with the revised checker (2026-11-06)
@@ -147,10 +167,8 @@ assessment): the instructions of design C, the verdict as the last answer field,
 every cited tweet before any interpretation (up to 40 items / 12000 bytes),
 40000-byte requests and 1500 answer tokens, and counting_rule() in
 apply_verdict. Recorded verdicts of the old checker are never reused
-(summary_agent.seed_check_cache); claim extractions are. tests/test_checker_rules.py
-covers the rules, the evidence order, the field order, the limits and the
-version gate. The repository code sends byte-identical requests to the tested
-design on all 210 claims.
+(summary_agent.seed_check_cache); claim extractions are. The repository code
+sends byte-identical requests to the tested design on all 210 claims.
 
 Reproduce the held-out score: in results/checker_evaluation/scripts, score
 runs/test_C.jsonl with guard.final_guard against the gold_*.py labels (score.py).

@@ -1,7 +1,7 @@
 """Populate an isolated RDF graph with saved source-claim extractions.
 
 No model calls, truth assessments, or edits to the base OWL file are made.
-The CLI requires complete topic evidence unless --sample is explicitly used.
+The CLI requires complete topic evidence.
 """
 
 import argparse
@@ -168,31 +168,21 @@ def main() -> None:
     parser.add_argument("--claims", type=Path, help="Default: results/source_claims/<topic>.json")
     parser.add_argument("--ontology-file", type=Path, default=DEFAULT_ONTOLOGY)
     parser.add_argument("--output-dir", type=Path, default=ROOT / "results" / "ontology")
-    parser.add_argument("--sample", action="store_true",
-                        help="Explicitly allow only the tweets present in the extraction file.")
     args = parser.parse_args()
     claims_file = args.claims or ROOT / "results" / "source_claims" / f"{args.topic}.json"
     try:
         tweets = load_tweets(args.topic)
         validate_dataset(tweets)
         records = json.loads(claims_file.read_text(encoding="utf-8"))
-        if args.sample:
-            if not isinstance(records, list) or any(not isinstance(r, dict) for r in records):
-                raise EvidenceError("Extraction records must be a list of objects.")
-            ids = {_text(r.get("tweet_id"), "Extraction tweet ID") for r in records}
-            selected = [tweet for tweet in tweets if tweet.id in ids]
-        else:
-            selected = tweets
         run_id = new_run_id()
-        graph = populate_ontology(selected, records, ontology_file=args.ontology_file, run_id=run_id)
+        graph = populate_ontology(tweets, records, ontology_file=args.ontology_file, run_id=run_id)
         destination = args.output_dir / run_id
         destination.mkdir(parents=True, exist_ok=False)
         graph_file = destination / f"{args.topic}.ttl"
         graph.serialize(destination=graph_file, format="turtle")
         manifest = {
             "run_id": run_id, "graph_iri": str(graph.identifier), "topic": args.topic,
-            "sample": args.sample, "complete_topic": len(selected) == len(tweets),
-            "tweet_count": len(selected), "expected_tweet_count": len(tweets),
+            "complete_topic": True, "tweet_count": len(tweets),
             "claim_count": sum(len(r["claims"]) for r in records),
             "extraction_status_counts": {s: sum(r["status"] == s for r in records) for s in sorted(STATUSES)},
             "claims_file": str(claims_file.resolve()),
@@ -204,8 +194,7 @@ def main() -> None:
             json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     except (EvidenceError, DatasetError, ValueError, OSError) as exc:
         parser.exit(1, f"Population error: {exc}\n")
-    label = "Sample" if args.sample else "Complete topic"
-    print(f"{label}: {len(selected)}/{len(tweets)} tweets, {manifest['claim_count']} claims.")
+    print(f"Complete topic: {len(tweets)} tweets, {manifest['claim_count']} claims.")
     print(f"Saved graph: {graph_file}\nSaved manifest: {destination / 'manifest.json'}")
     print("Extracted statements only; no truth assessments were created.")
 

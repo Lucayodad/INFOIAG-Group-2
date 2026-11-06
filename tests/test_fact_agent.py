@@ -7,7 +7,7 @@ from unittest.mock import Mock, patch
 
 from rdflib import Graph, Literal, RDF, URIRef
 
-from fact_agent import FactAgentError, run_fact_agent, run_fact_tool_step
+from fact_agent import run_fact_agent
 from fact_tools import lookup_entity_facts, lookup_fact
 from ontology_tools import NS
 from data_loader import load_tweets
@@ -39,124 +39,6 @@ class FactAgentTests(unittest.TestCase):
                       "target": "Obama's speech", "stance": "positive",
                       "cited_source_ids": ["Obama_001"], "verification_status": "unverified"}
 
-    def test_lookup_fact_is_selected_and_only_that_tool_executes(self):
-        client = selection_client("lookup_fact")
-        before_graph, before_claim = set(self.graph), deepcopy(self.claim)
-        with patch("fact_agent.lookup_fact", wraps=lookup_fact) as tweets, \
-             patch("fact_agent.lookup_entity_facts") as entities:
-            result = run_fact_tool_step(self.graph, self.claim, client, ["Obama"])
-            tweets.assert_called_once_with(self.graph, self.claim)
-            entities.assert_not_called()
-        self.assertEqual(result["selected_tool"], "lookup_fact")
-        self.assertEqual(result["tool_arguments"], {"summary_claim": self.claim})
-        self.assertEqual(result["retrieved_evidence"]["tweets"][0]["text"], "I like Obama's speech.")
-        self.assertEqual(result["retrieved_evidence"]["tweets"][0]["source_claims"], [])
-        client.chat.assert_called_once()
-        self.assertEqual(set(self.graph), before_graph)
-        self.assertEqual(self.claim, before_claim)
-        json.dumps(result)
-
-    def test_allowed_entity_tool_is_selected_and_only_that_tool_executes(self):
-        client = selection_client("lookup_entity_facts", "Obama")
-        with patch("fact_agent.lookup_fact") as tweets, \
-             patch("fact_agent.lookup_entity_facts", wraps=lookup_entity_facts) as entities:
-            result = run_fact_tool_step(self.graph, self.claim, client, ["Obama"])
-            tweets.assert_not_called()
-            entities.assert_called_once_with(self.graph, "Obama")
-        self.assertEqual(result["selected_tool"], "lookup_entity_facts")
-        self.assertEqual(result["tool_arguments"], {"entity": "Obama"})
-        self.assertEqual(result["retrieved_evidence"]["entity"], str(NS.Obama))
-        self.assertEqual(len(result["retrieved_evidence"]["triples"]), 2)
-
-    def test_no_tool_executes_neither_retrieval_and_records_skip(self):
-        client = selection_client("no_tool", reason="Neither source is appropriate.")
-        with patch("fact_agent.lookup_fact") as tweets, patch("fact_agent.lookup_entity_facts") as entities:
-            result = run_fact_tool_step(self.graph, self.claim, client)
-            tweets.assert_not_called()
-            entities.assert_not_called()
-        self.assertEqual(result["tool_arguments"], {})
-        self.assertIsNone(result["retrieved_evidence"])
-        self.assertEqual(result["selection_reason"], "Neither source is appropriate.")
-        self.assertEqual(result["execution_trace"][-1]["status"], "skipped")
-
-    def test_trace_records_selection_validation_and_actual_result(self):
-        result = run_fact_tool_step(self.graph, self.claim, selection_client("lookup_fact"))
-        trace = result["execution_trace"]
-        self.assertEqual([step["step"] for step in trace],
-                         ["model_selection", "validation", "tool_execution"])
-        self.assertEqual(trace[0]["protocol"], "structured_json_action")
-        self.assertEqual(trace[0]["selection"]["action"], result["selected_tool"])
-        self.assertEqual(trace[1]["status"], "accepted")
-        self.assertEqual(trace[2]["status"], "completed")
-        self.assertEqual(trace[2]["result"], result["retrieved_evidence"])
-
-    def test_invalid_actions_and_unauthorized_entities_execute_nothing(self):
-        for action, entity, allowed in (
-            ("fact_check", None, ["Obama"]), ("__import__", None, []),
-            (["lookup_fact"], None, []), ("lookup_entity_facts", "McDonalds", ["Obama"]),
-            ("lookup_entity_facts", "Obama", None), ("lookup_entity_facts", None, ["Obama"]),
-            ("lookup_entity_facts", str(NS.Obama), ["Obama"]),
-            ("lookup_fact", "Obama", ["Obama"]), ("no_tool", "Obama", ["Obama"]),
-        ):
-            with self.subTest(action=action, entity=entity), \
-                 patch("fact_agent.lookup_fact") as tweets, \
-                 patch("fact_agent.lookup_entity_facts") as entities:
-                with self.assertRaises(FactAgentError):
-                    run_fact_tool_step(self.graph, self.claim, selection_client(action, entity), allowed)
-                tweets.assert_not_called()
-                entities.assert_not_called()
-
-    def test_full_iri_allowed_exactly_and_missing_entity_is_not_a_verdict(self):
-        entity = str(NS.UnknownPerson)
-        result = run_fact_tool_step(self.graph, self.claim,
-                                    selection_client("lookup_entity_facts", entity), [entity])
-        self.assertEqual(result["retrieved_evidence"]["status"], "unknown_entity")
-        self.assertNotIn("verdict", result)
-
-    def test_malformed_responses_are_rejected_before_execution(self):
-        selections = [[], {"action": "lookup_fact"},
-                      {"action": "lookup_fact", "entity_id": None, "reason": " "},
-                      {"action": "lookup_fact", "entity_id": None, "reason": "Text", "arguments": {}},
-                      {"action": "lookup_entity_facts", "entity_id": {}, "reason": "Text"}]
-        responses = [{}, {"output": []}, {"output": [{"content": [{"text": "not JSON"}]}]}]
-        responses += [{"output": [{"content": [{"text": json.dumps(s)}]}]} for s in selections]
-        for response in responses:
-            with self.subTest(response=response), \
-                 patch("fact_agent.lookup_fact") as tweets, \
-                 patch("fact_agent.lookup_entity_facts") as entities:
-                client = Mock()
-                client.chat.return_value = response
-                with self.assertRaises(FactAgentError):
-                    run_fact_tool_step(self.graph, self.claim, client, ["Obama"])
-                tweets.assert_not_called()
-                entities.assert_not_called()
-
-    def test_payload_describes_tools_and_supplies_only_explicit_entity_ids(self):
-        client = selection_client("no_tool")
-        run_fact_tool_step(self.graph, self.claim, client, ("Obama", "Obama"))
-        payload = client.chat.call_args.args[0]
-        body = json.loads(payload["messages"][1]["content"])
-        self.assertEqual(body["allowed_entity_ids"], ["Obama"])
-        self.assertEqual(body["summary_claim"], self.claim)
-        self.assertEqual(set(body["tools"]), {"lookup_fact", "lookup_entity_facts", "no_tool"})
-        self.assertEqual(payload["format"]["properties"]["entity_id"]["anyOf"][1]["enum"], ["Obama"])
-        self.assertNotIn("tools", payload)  # JSON selection, not native tool_calls.
-
-    def test_invalid_inputs_fail_before_model_or_tools_are_called(self):
-        client = selection_client("no_tool")
-        for allowed in ("Obama", ["Obama speeches"], [None], ["https://example.org/Obama"]):
-            with self.subTest(allowed=allowed), self.assertRaises(ValueError):
-                run_fact_tool_step(self.graph, self.claim, client, allowed)
-        for claim in ({}, {**self.claim, "claim": " "}, {**self.claim, "cited_source_ids": "Obama_001"}):
-            with self.subTest(claim=claim), self.assertRaises(ValueError):
-                run_fact_tool_step(self.graph, claim, client)
-        with self.assertRaises(TypeError):
-            run_fact_tool_step(None, self.claim, client)
-        with self.assertRaises(TypeError):
-            run_fact_tool_step(self.graph, [], client)
-        client.chat.assert_not_called()
-
-
 def loop_response(action, entity_id=None, verdict=None, explanation=None, references=None,
                   reason="Choose the next useful investigation action."):
     return {"output": [{"content": [{"text": json.dumps({
@@ -181,7 +63,6 @@ class BoundedFactAgentTests(unittest.TestCase):
         client.chat.side_effect = [loop_response("lookup_fact"), fixture_verdict()]
         before_graph, before_claim = set(self.graph), deepcopy(self.claim)
         with patch("fact_agent.lookup_fact", wraps=lookup_fact) as tweets, \
-             patch("fact_check.lookup_fact", side_effect=AssertionError("Hidden retrieval")), \
              patch("fact_agent.lookup_entity_facts") as entities:
             result = run_fact_agent(self.graph, self.claim, client)
             tweets.assert_called_once_with(self.graph, self.claim)

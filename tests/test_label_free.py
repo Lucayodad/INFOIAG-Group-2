@@ -21,10 +21,9 @@ import zlib
 from rdflib import Graph
 from rdflib.graph import ReadOnlyGraphAggregate
 
-from data_loader import DIALECT_LABELS
+from data_loader import DIALECT_LABELS, load_tweets
 from fact_check import compact_evidence
 from ontology_tools import NS
-from representation_tools import get_group_claims
 from revision_retrieval import retrieve_revision_evidence, topic_tweets
 from run_final_agent import LABEL_LEAK, LabelFreeClient, first_check as reused_check, label_free_graph
 from summary_agent import REPRESENTATION_NOT_RUN, build_summary_agent, compare_revision, run_summary_agent, \
@@ -77,10 +76,9 @@ class LabelFreeAgent(unittest.TestCase):
         self.assertNotIn("representation_check", nodes)
         self.assertTrue({"extract_summary_claims", "factual_check", "route_checks",
                          "retrieve_revision_evidence", "revise_summary", "finalize"} <= nodes)
-        self.assertIn("representation_check", set(build_summary_agent(Graph(), Mock(),
-                                                                      representation_metric="mnli").get_graph().nodes))
-        with self.assertRaises(ValueError):
-            build_summary_agent(Graph(), Mock(), representation_metric="dialect")
+        # There is no option to switch a label-based group check on.
+        with self.assertRaises(TypeError):
+            build_summary_agent(Graph(), Mock(), representation_metric="mnli")
 
     def test_agent_drops_labels_from_any_callers_graph(self):
         # Entry points that pass a labelled graph (run_pipeline, experiment_runner) are covered too.
@@ -101,9 +99,9 @@ class LabelFreeAgent(unittest.TestCase):
         self.assertEqual(before, set(labelled))  # the caller's graph is unchanged
 
     def test_demo_run_output_holds_no_label(self):
-        # demo_revision_loop.py: a labelled synthetic graph, default (label-free) agent.
-        from demo_revision_loop import fixture, mock_client
-        graph, draft, _ = fixture("factual")
+        # A labelled synthetic graph and the agent with its defaults.
+        from fakes import fixture, mock_client
+        graph, draft = fixture("factual")
         self.assertTrue(any(True for _ in graph.triples((None, NS.dialectLabel, None))))
         result = run_summary_agent(graph, draft, topic="Obama", prompt=draft["summary_prompt"], client=mock_client())
         rendered = json.dumps(result, ensure_ascii=False)
@@ -129,12 +127,10 @@ class LabelFreeAgent(unittest.TestCase):
     def test_label_free_tweets_are_the_same_tweets(self):
         for name in ONE_PER_TOPIC:
             topic = recorded(name)["topic"]
-            labelled = Graph().parse(graph_path(name), format="turtle")
-            grouped = {t["tweet_id"]: t["text"] for label in DIALECT_LABELS
-                       for t in get_group_claims(labelled, topic, label)["tweets"]}
+            dataset = {t.id: t.text for t in load_tweets(topic) if t.dialect_label in DIALECT_LABELS}
             tweets, problems = topic_tweets(ReadOnlyGraphAggregate([label_free_graph(graph_path(name))]), topic)
             self.assertEqual([], problems)
-            self.assertEqual(grouped, {t["tweet_id"]: t["text"] for t in tweets})
+            self.assertEqual(dataset, {t["tweet_id"]: t["text"] for t in tweets})
             self.assertEqual(90, len(tweets))
             self.assertTrue(all(set(t) == {"tweet_id", "text", "source_file", "source_line"} for t in tweets))
 
@@ -166,7 +162,7 @@ class LabelFreeAgent(unittest.TestCase):
             run, checked = recorded(name), first_check(name)
             graph = ReadOnlyGraphAggregate([label_free_graph(graph_path(name))])
             retrieved = retrieve_revision_evidence(graph, run["topic"], checked["summary_claims"],
-                                                   checked["factual_results"], deepcopy(REPRESENTATION_NOT_RUN), embed)
+                                                   checked["factual_results"], embed)
             self.assertEqual("ready", retrieved["status"], name)
             self.assertEqual({"factual"}, {task["kind"] for task in retrieved["tasks"]})
             for task in retrieved["tasks"]:
@@ -189,7 +185,7 @@ class LabelFreeAgent(unittest.TestCase):
         run, checked = recorded(name), first_check(name)
         graph = ReadOnlyGraphAggregate([label_free_graph(graph_path(name))])
         retrieved = retrieve_revision_evidence(graph, run["topic"], checked["summary_claims"],
-                                               checked["factual_results"], deepcopy(REPRESENTATION_NOT_RUN), embed)
+                                               checked["factual_results"], embed)
         task = retrieved["tasks"][0]
         cited = run["initial_summary"]["sentences"][int(task["sentence_id"][1:]) - 1]["source_ids"]
         self.assertEqual(set(cited), set(task["evidence_ids"]))

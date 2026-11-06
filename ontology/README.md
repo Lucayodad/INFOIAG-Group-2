@@ -5,7 +5,7 @@ Pipeline execution preserves this file byte-for-byte.
 The namespace is `http://www.semanticweb.org/group2/ontology#`.
 The current loader accepts RDF/XML. It reads a local file and does not fetch imports.
 Its in-memory inference and temporary candidate checks do not change this file.
-See `../docs/SECTION_2.md` for the exact supported reasoning scope.
+See `ontology_tools.py` for the exact supported reasoning scope.
 
 ## Source evidence extension
 
@@ -26,24 +26,24 @@ and one assessment (32 triples). It retains all remaining schema/domain
 assertions and the `SuperBowl` topic and `DivSummDataset` source references.
 Standalone `OntologyTools` still exposes the complete unfiltered file.
 
-`TOPIC_IRIS` in `ontology_tools.py` is shared by population and group retrieval:
+`TOPIC_IRIS` in `ontology_tools.py` is shared by population and revision retrieval:
 `Obama` maps to `Topic_Obama`, `McDonalds` to `Topic_McDonalds`, and the dataset
 key `Superbowl` to the existing `SuperBowl` topic. The existing domain entity
 `SuperBowl1` remains distinct from that topic, as does `Obama` from `Topic_Obama`.
 New topic labels use `hasTopicName`; claims also link through `claimAboutTopic`.
-Group retrieval additionally accepts old saved `Topic_Superbowl` links.
+Revision retrieval additionally accepts old saved `Topic_Superbowl` links.
 Dialect labels are literal
 `dialectLabel` properties on tweets, following the team's architecture decision;
 there is no dialect class, group individual or group-membership object property.
+The agent works on a copy of the graph without them: they are evaluation data.
 Tweet/claim IRIs use a unique run namespace; local IDs are also retained
 as literals. Graph population does not assert that extracted claims are true.
 The saved manifest records `base_evidence_policy` so the filtering policy is
 visible alongside source paths and run counts. Counts describe run evidence,
 not the source file's examples.
 
-The standalone ontology query command loads the complete supplied OWL file. To
-inspect populated evidence, use `../queries/source_evidence.rq` on the returned
-graph or on its saved Turtle file. See the repository README for commands.
+`ontology_tools.py` loads the complete supplied OWL file. See the repository
+README for commands.
 
 Existing Turtle files are not rewritten. Regenerate any graph built from the
 unfiltered updated base before using it for run-wide evidence counts or checks.

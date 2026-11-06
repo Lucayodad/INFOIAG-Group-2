@@ -24,14 +24,12 @@ from rdflib import Graph
 from proportion_check import PROPORTION_INSTRUCTIONS, PROPORTION_NOT_RUN, check_proportion, verify_feedback
 from revision_retrieval import closest_topic_tweets, proportion_task, retrieve_revision_evidence
 from run_final_agent import LABEL_LEAK, label_free_graph
-from summary_agent import REPRESENTATION_NOT_RUN, build_summary_agent, compare_revision, run_summary_agent, \
+from summary_agent import build_summary_agent, compare_revision, run_summary_agent, \
     seed_check_cache
 from summary_revision import REVISER_PROFILE, revise_summary
-from tests import test_viewpoint_check as viewpoint_tests
+from fakes import SUPPORTED_DRAFT, TEXTS, checked, draft_records, record, reviser_reply, rewrite_evidence, topic_graph
 from tests.test_label_free import embed, first_check
 from tests.test_real_pieces import graph_path, recorded
-from tests.test_viewpoint_check import SUPPORTED_DRAFT, TEXTS, checked, draft_records, record, topic_graph
-from viewpoint_check import VIEWPOINT_NOT_RUN
 
 
 SUMMARY = {"sentences": [{"text": f"Sentence {n} summarizes a separate part of the discussion.",
@@ -137,7 +135,7 @@ def failed_feedback(sentence_id="S02"):
 class ProportionRepairTask(unittest.TestCase):
     def setUp(self):
         self.graph = topic_graph()
-        self.state = checked(self.graph, draft_records(), SUPPORTED_DRAFT)
+        self.state = checked(draft_records(), SUPPORTED_DRAFT)
 
     def test_targets_the_sentence_the_feedback_chose(self):
         task = proportion_task(self.state["summary_claims"], self.state["factual_results"], failed_feedback("S04"))
@@ -150,7 +148,7 @@ class ProportionRepairTask(unittest.TestCase):
 
     def test_retrieval_finds_the_closest_tweets_then_keeps_the_sentence_tweets(self):
         retrieved = retrieve_revision_evidence(self.graph, "Obama", self.state["summary_claims"],
-                                               self.state["factual_results"], deepcopy(REPRESENTATION_NOT_RUN), embed,
+                                               self.state["factual_results"], embed,
                                                top_k=2, proportion_results=failed_feedback("S02"))
         self.assertEqual("ready", retrieved["status"])
         [task] = retrieved["tasks"]
@@ -164,15 +162,14 @@ class ProportionRepairTask(unittest.TestCase):
         self.assertIsNone(LABEL_LEAK.search(json.dumps(retrieved)))
 
     def test_contradictions_come_first_and_other_statuses_do_nothing(self):
-        state = checked(self.graph, draft_records(), {**SUPPORTED_DRAFT, "S01_C01": "CONTRADICTED"})
+        state = checked(draft_records(), {**SUPPORTED_DRAFT, "S01_C01": "CONTRADICTED"})
         retrieved = retrieve_revision_evidence(self.graph, "Obama", state["summary_claims"], state["factual_results"],
-                                               deepcopy(REPRESENTATION_NOT_RUN), embed,
+                                               embed,
                                                proportion_results=failed_feedback())
         self.assertEqual({"factual"}, {t["kind"] for t in retrieved["tasks"]})
         for result in (None, PROPORTION_NOT_RUN, {**failed_feedback(), "status": "UNKNOWN"}):
             retrieved = retrieve_revision_evidence(self.graph, "Obama", self.state["summary_claims"],
-                                                   self.state["factual_results"], deepcopy(REPRESENTATION_NOT_RUN),
-                                                   embed, proportion_results=result)
+                                                   self.state["factual_results"], embed, proportion_results=result)
             self.assertEqual([], retrieved["tasks"])
 
 
@@ -202,21 +199,16 @@ class ProportionVerification(unittest.TestCase):
         self.assertIs(passed, verify_feedback(passed, self.facts("SUPPORTED", "x/tweet/Obama_001"), self.CLOSEST))
 
 
-# The gate tests isolate the proportion rule: the viewpoint check is off.
-WITHOUT_VIEWPOINTS = {"viewpoint_results": deepcopy(VIEWPOINT_NOT_RUN), "viewpoint_issues": []}
-
-
 class ProportionGate(unittest.TestCase):
     def setUp(self):
         self.graph = topic_graph()
-        self.before = {**checked(self.graph, draft_records(), SUPPORTED_DRAFT), **WITHOUT_VIEWPOINTS,
+        self.before = {**checked(draft_records(), SUPPORTED_DRAFT),
                        "proportion_results": failed_feedback()}
 
     def after(self, reference):
         records = deepcopy(draft_records())
         records[1] = record("S02", [("neutral", ["Obama_009"]), ("positive", ["Obama_001"])])
-        state = {**checked(self.graph, records, {**SUPPORTED_DRAFT, "S02_C01": "SUPPORTED", "S02_C02": "SUPPORTED"}),
-                 **WITHOUT_VIEWPOINTS}
+        state = checked(records, {**SUPPORTED_DRAFT, "S02_C01": "SUPPORTED", "S02_C02": "SUPPORTED"})
         for assessment in state["factual_results"]["assessments"]:
             assessment["references"] = [{"evidence_id": "http://example.org/run/tweet/Obama_009", "quote": "x"}]
             if assessment["summary_claim_id"] == "S02_C02":
@@ -247,25 +239,25 @@ class ProportionGate(unittest.TestCase):
 
 class ProportionReviser(unittest.TestCase):
     def test_the_replacement_must_cite_a_retrieved_tweet(self):
-        retrieved = viewpoint_tests.ViewpointReviser().retrieved()
+        retrieved = rewrite_evidence()
         retrieved["tasks"] = [{"task_id": "proportion", "kind": "proportion", "sentence_id": "S05",
                                "viewpoint": "praise", "query": "praise", "preferred_ids": ["Obama_001"],
                                "keep_ids": ["Obama_009"], "evidence_ids": ["Obama_009", "Obama_001"],
                                "proportion_ids": ["Obama_001"], "explanation": "add it"}]
         client = Mock()
-        client.chat.side_effect = [viewpoint_tests.ViewpointReviser.reply(["Obama_009"]),
-                                   viewpoint_tests.ViewpointReviser.reply(["Obama_009", "Obama_001"])]
+        client.chat.side_effect = [reviser_reply(["Obama_009"]),
+                                   reviser_reply(["Obama_009", "Obama_001"])]
         result = revise_summary(SUMMARY, [], retrieved, client)
         self.assertEqual("candidate", result["status"])
         self.assertIn("under-represented viewpoint: Obama_001", result["attempt_errors"][0])
 
     def test_the_replacement_must_change_the_text(self):
-        retrieved = viewpoint_tests.ViewpointReviser().retrieved()
+        retrieved = rewrite_evidence()
         retrieved["tasks"] = [{"task_id": "proportion", "kind": "proportion", "sentence_id": "S05",
                                "viewpoint": "praise", "query": "praise", "preferred_ids": ["Obama_001"],
                                "keep_ids": ["Obama_009"], "evidence_ids": ["Obama_009", "Obama_001"],
                                "proportion_ids": ["Obama_001"], "explanation": "add it"}]
-        reply = viewpoint_tests.ViewpointReviser.reply(["Obama_009", "Obama_001"])
+        reply = reviser_reply(["Obama_009", "Obama_001"])
         text = json.loads(reply["output"][0]["content"][0]["text"])["replacements"][0]["text"]
         summary = deepcopy(SUMMARY)
         summary["sentences"][4] = {"text": text, "source_ids": ["Obama_009"]}
@@ -282,8 +274,6 @@ class ProportionAgent(unittest.TestCase):
         graph = build_summary_agent(Graph(), Mock(), proportion_check=True).get_graph()
         edges = {(e.source, e.target) for e in graph.edges}
         self.assertTrue({("factual_check", "proportion_check"), ("proportion_check", "route_checks")} <= edges)
-        both = build_summary_agent(Graph(), Mock(), proportion_check=True, viewpoint_check=True).get_graph()
-        self.assertIn(("viewpoint_check", "proportion_check"), {(e.source, e.target) for e in both.edges})
         with self.assertRaises(ValueError):
             build_summary_agent(Graph(), Mock(), proportion_check=1)
 

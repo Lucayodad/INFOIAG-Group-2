@@ -1,11 +1,7 @@
+"""Extract claims from a five-sentence summary."""
 
-"""Extract claims from an AI-generated five-sentence summary."""
-
-import argparse
 import json
-from pathlib import Path
 
-from ollama_backend import OllamaClient
 from source_claims import CLAIM_SCHEMA, find_source_quote
 
 
@@ -128,17 +124,16 @@ def extract_sentence(sentence, number, client, retry_error=None):
     }
 
 
-def extract_sentence_with_retry(sentence, number, client, extract=None):
+def extract_sentence_with_retry(sentence, number, client):
     """Return (record, model_calls); a failed attempt is retried once with its error.
 
     Source extraction already retries this way. Without it, one paraphrased
     quotation left a sentence's claims unchecked. The final error is raised.
     """
-    extract = extract or extract_sentence
     error = None
     for attempt in (1, 2):
         try:
-            return extract(sentence, number, client, retry_error=error), attempt
+            return extract_sentence(sentence, number, client, retry_error=error), attempt
         except (ValueError, KeyError, IndexError, TypeError) as exc:
             if attempt == 2:
                 raise
@@ -184,52 +179,3 @@ def flatten_summary_claims(records):
                 raise ValueError("Summary quotation is absent from its sentence.")
             claims.append({**claim, "sentence_id": record["sentence_id"]})
     return claims
-
-
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("draft", type=Path)
-    args = parser.parse_args()
-
-    # Load the summary generated earlier.
-    draft = json.loads(
-        args.draft.read_text(encoding="utf-8")
-    )
-
-    sentences = draft["sentences"]
-
-    if not isinstance(sentences, list) or len(sentences) != 5:
-        raise ValueError("Expected a five-sentence summary")
-
-    client = OllamaClient()
-    results = []
-
-    try:
-        for number, sentence in enumerate(sentences, 1):
-            print(f"Extracting claims from sentence {number}...", flush=True)
-
-            result = extract_sentence(sentence, number, client)
-            results.append(result)
-
-            print(f"  Found {len(result['claims'])} claims")
-    finally:
-        client.close()
-
-    # Save the extracted summary claims.
-    output = (
-        Path("results/summary_claims")
-        / f"{args.draft.stem}_claims.json"
-    )
-
-    output.parent.mkdir(parents=True, exist_ok=True)
-
-    output.write_text(
-        json.dumps(results, indent=2, ensure_ascii=False),
-        encoding="utf-8"
-    )
-
-    print(f"\nSaved: {output}")
-
-
-if __name__ == "__main__":
-    main()

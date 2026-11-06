@@ -9,17 +9,16 @@ import subprocess
 import sys
 import tempfile
 import unittest
-from unittest.mock import Mock
 
 from rdflib import Graph, Literal, OWL, RDF, RDFS
 from rdflib.compare import isomorphic
 
 from data_loader import TOPICS, Tweet, load_tweets
-from fact_check import check_claim
+from fact_check import prepare_assessment
 from fact_tools import lookup_fact
 from ontology_tools import DEFAULT_ONTOLOGY, NS, TOPIC_IRIS, OntologyTools, limited_closure, pipeline_base_graph
 from populate_ontology import EVIDENCE_SCHEMA, ROOT, EvidenceError, populate_ontology
-from representation_tools import get_group_claims
+from revision_retrieval import topic_tweets
 
 
 def extraction(tweet, status="extracted"):
@@ -63,30 +62,6 @@ class PopulationTests(unittest.TestCase):
         self.assertFalse(list(graph.subjects(RDF.type, NS.ClaimAssessment)))
         self.assertFalse(list(graph.triples((None, NS.isValid, None))))
 
-    def test_source_evidence_query_keeps_claimless_tweets_and_supporting_ids(self):
-        graph = populate_ontology(self.tweets, self.records)
-        query = (ROOT / "queries" / "source_evidence.rq").read_text(encoding="utf-8")
-        rows = list(graph.query(query, initBindings={"topic": NS.Topic_Obama}))
-        self.assertEqual(len(rows), 3)
-        by_id = {str(row.tweet_id): row for row in rows}
-        first = by_id["T1"]
-        self.assertEqual(str(first.text), self.tweets[0].text)
-        self.assertEqual(str(first.quote), self.tweets[0].text)
-        self.assertEqual(str(first.claim_text), self.records[0]["claims"][0]["claim"])
-        self.assertEqual(str(first.claim_id), "T1_C01")
-        self.assertEqual(str(first.dialect_label), "AA")
-        self.assertEqual(graph.value(first.tweet, NS.dialectLabel), Literal("AA"))
-        self.assertEqual(str(first.target), "Synthetic target")
-        self.assertEqual(str(first.stance), "neutral")
-        self.assertEqual(graph.value(first.tweet, NS.sourceFile), Literal("test.txt"))
-        self.assertEqual(graph.value(first.tweet, NS.sourceLine), Literal(1))
-        for tweet_id, status in (("T2", "unclear"), ("T3", "no_claim")):
-            self.assertEqual(str(by_id[tweet_id].status), status)
-            self.assertIsNone(by_id[tweet_id].claim)
-        filtered = list(graph.query(query, initBindings={
-            "topic": NS.Topic_Obama, "dialect_label": Literal("AA")}))
-        self.assertEqual([str(row.tweet_id) for row in filtered], ["T1"])
-
     def test_quote_uses_actual_source_whitespace(self):
         self.records[0]["claims"][0]["source_quote"] = "opinion. Second line!"
         graph = populate_ontology(self.tweets, self.records)
@@ -101,10 +76,9 @@ class PopulationTests(unittest.TestCase):
                            for i, tweet in enumerate(tweets)]
                 graph = populate_ontology(tweets, records)
                 self.assertEqual(len(set(graph.subjects(RDF.type, NS.Tweet))), 90)
-                for label in ("AA", "Hisp", "White"):
-                    group = get_group_claims(graph, topic, label)
-                    self.assertEqual(group["tweet_count"], 30)
-                    self.assertEqual(group["integrity_issues"], [])
+                for label in ("AA", "Hisp", "White"):  # stored as data for the evaluation only
+                    self.assertEqual(len(set(graph.subjects(NS.dialectLabel, Literal(label)))), 30)
+                self.assertEqual(topic_tweets(graph, topic)[1], [])
                 self.assertEqual(len(list(graph.triples((None, NS.containsClaim, None)))), 30)
                 self.assertEqual(set(graph.objects(None, NS.claimAboutTopic)), {TOPIC_IRIS[topic]})
                 self.assertFalse(list(graph.triples((None, NS.tweetText, None))))
@@ -148,14 +122,13 @@ class PopulationTests(unittest.TestCase):
         # Both spellings with equal values must not inflate tweets or claims.
         graph.add((iri, NS.tweetText, Literal(tweet.text)))
         graph.add((iri, NS.aboutTopic, NS.Topic_Superbowl))
-        group = get_group_claims(graph, "Superbowl", "AA")
-        self.assertEqual((group["tweet_count"], len(group["claims"])), (1, 1))
-        self.assertEqual(group["integrity_issues"], [])
+        tweets, problems = topic_tweets(graph, "Superbowl")
+        self.assertEqual((len(tweets), problems), (1, []))
         self.assertEqual(len(lookup_fact(graph, claim)["tweets"][0]["source_claims"]), 1)
         graph.remove((iri, NS.tweetHasText, None))
         graph.remove((iri, NS.aboutTopic, NS.SuperBowl))
         before = set(graph)
-        self.assertEqual(get_group_claims(graph, "Superbowl", "AA")["tweet_count"], 1)
+        self.assertEqual(len(topic_tweets(graph, "Superbowl")[0]), 1)
         self.assertEqual(lookup_fact(graph, claim)["tweets"][0]["text"], tweet.text)
         self.assertEqual(set(graph), before)
 
@@ -164,17 +137,14 @@ class PopulationTests(unittest.TestCase):
         graph = populate_ontology([tweet], [extraction(tweet)])
         iri = next(graph.subjects(NS.tweetId, Literal(tweet.id)))
         graph.add((iri, NS.tweetText, Literal("Different source text.")))
-        group = get_group_claims(graph, "Obama", "AA")
-        self.assertTrue(any("Conflicting tweet text" in issue for issue in group["integrity_issues"]))
-        client = Mock()
+        self.assertTrue(any("Conflicting tweet text" in issue for issue in topic_tweets(graph, "Obama")[1]))
         claim = {"claim_id": "S01_C01", "claim": "Synthetic summary.",
                  "cited_source_ids": [tweet.id]}
-        result = check_claim(graph, claim, client)
+        result = prepare_assessment(claim, lookup_fact(graph, claim))
         self.assertEqual(result["verdict"], "UNKNOWN")
         self.assertFalse(result["evidence_complete"])
         self.assertEqual(set(result["retrieval"]["tweets"][0]["conflicting_text_values"]),
                          {tweet.text, "Different source text."})
-        client.chat.assert_not_called()
 
     def test_runs_are_isolated_and_inputs_and_source_files_are_unchanged(self):
         before = deepcopy(self.records)
@@ -237,33 +207,31 @@ class PopulationTests(unittest.TestCase):
             with self.subTest(tweets=tweets), self.assertRaises(EvidenceError):
                 populate_ontology(tweets, self.records)
 
-    def test_cli_requires_complete_topic_and_saves_explicit_samples(self):
+    def test_cli_requires_the_complete_topic_and_saves_graph_and_manifest(self):
         # Fixture extractions using real source text; no model is invoked.
-        tweet = load_tweets("Obama")[0]
+        tweets = load_tweets("Obama")
         with tempfile.TemporaryDirectory() as directory:
             folder = Path(directory)
             claims = folder / "claims.json"
-            claims.write_text(json.dumps([extraction(tweet)]), encoding="utf-8")
+            claims.write_text(json.dumps([extraction(tweets[0])]), encoding="utf-8")
             command = [sys.executable, str(ROOT / "populate_ontology.py"), "--topic", "Obama",
                        "--claims", str(claims), "--output-dir", str(folder / "output")]
             incomplete = subprocess.run(command, capture_output=True, text=True)
             self.assertNotEqual(incomplete.returncode, 0)
             self.assertIn("Missing extraction records", incomplete.stderr)
             self.assertFalse((folder / "output").exists())
-            for _ in range(2):
-                sample = subprocess.run(command + ["--sample"], capture_output=True, text=True)
-                self.assertEqual(sample.returncode, 0, sample.stderr)
-                self.assertIn("Sample: 1/90", sample.stdout)
-            manifests = list((folder / "output").glob("*/manifest.json"))
-            self.assertEqual(len(manifests), 2)
-            manifest = json.loads(manifests[0].read_text(encoding="utf-8"))
-            self.assertTrue(manifest["sample"])
-            self.assertFalse(manifest["complete_topic"])
-            self.assertEqual(manifest["tweet_count"], 1)
+            claims.write_text(json.dumps([extraction(tweet) for tweet in tweets]), encoding="utf-8")
+            complete = subprocess.run(command, capture_output=True, text=True)
+            self.assertEqual(complete.returncode, 0, complete.stderr)
+            self.assertIn("Complete topic: 90 tweets", complete.stdout)
+            manifest_file = next((folder / "output").glob("*/manifest.json"))
+            manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
+            self.assertTrue(manifest["complete_topic"])
+            self.assertEqual(manifest["tweet_count"], 90)
             self.assertEqual(manifest["base_evidence_policy"],
                              "exclude_tweets_claims_assessments_summaries")
-            graph = Graph().parse(manifests[0].parent / "Obama.ttl", format="turtle")
-            self.assertEqual(len(set(graph.subjects(RDF.type, NS.Tweet))), 1)
+            graph = Graph().parse(manifest_file.parent / "Obama.ttl", format="turtle")
+            self.assertEqual(len(set(graph.subjects(RDF.type, NS.Tweet))), 90)
 
 
 if __name__ == "__main__":

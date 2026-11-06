@@ -3,7 +3,6 @@
 from contextlib import contextmanager
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
-from pathlib import Path
 import threading
 import unittest
 from urllib.error import URLError
@@ -12,7 +11,7 @@ from unittest.mock import Mock
 from data_loader import load_tweets
 from ollama_backend import OllamaClient
 from prompts import get_prompt
-from summarizer import GenerationError, build_request, generate_summary, make_client
+from summarizer import GenerationError, build_request, generate_summary
 
 
 def fixture():
@@ -96,9 +95,6 @@ class OllamaTests(unittest.TestCase):
         opener.open.side_effect = URLError('fixture: offline')
         with self.assertRaisesRegex(GenerationError, 'ollama serve'):
             generate_summary(self.tweets, self.prompt, client=OllamaClient(opener=opener))
-
-    def test_default_client_requires_no_api_key(self):
-        self.assertIsInstance(make_client(), OllamaClient)
 
     def test_local_embedding_transport_disables_truncation(self):
         with server({"embeddings": [[1, 0], [0, 1]]}) as (client, received):

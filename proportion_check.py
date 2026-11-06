@@ -18,8 +18,8 @@ final evaluation measures coverage itself.
 """
 
 import json
-import re
 
+from fact_check import TWEET_REFERENCE as REFERENCE_TWEET
 from revision_retrieval import topic_tweets
 from summary_revision import GROUP_LABEL
 
@@ -49,9 +49,6 @@ Use only the supplied tweets. When proportional is true, leave the viewpoint emp
 
 SENTENCE_IDS = [f"S{n:02d}" for n in range(1, 6)]
 FIELDS = ("assessment", "proportional", "under_represented_viewpoint", "sentence_id")
-
-# A fact-check reference names a tweet or one of its extracted claims (<tweet id>_C01).
-REFERENCE_TWEET = re.compile(r"/(?:tweet|claim)/([A-Za-z]+_\d+)(?:_C\d+)?$")
 
 
 def quoting_claims(factual_results, tweet_ids, sentence_ids=None):

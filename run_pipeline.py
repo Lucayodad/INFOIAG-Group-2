@@ -88,10 +88,10 @@ def run_pipeline(args, client=None):
     from summarizer import generate_summary, save_result
     from summary_agent import print_run_summary, run_summary_agent
 
-    if not 0 <= args.disparity_threshold <= 1 or not 0 <= args.max_revisions <= 3:
-        raise ValueError("Threshold must be in [0, 1]; max revisions must be in [0, 3].")
-    if args.max_model_calls < 0 or args.max_tool_calls < 0:
-        raise ValueError("Call budgets must be nonnegative.")
+    if not 0 <= args.max_revisions <= 3:
+        raise ValueError("Max revisions must be in [0, 3].")
+    if args.max_tool_calls < 0:
+        raise ValueError("The tool call budget must be nonnegative.")
     run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ") + "_" + uuid4().hex[:8]
     output = args.output or ROOT / "results" / "evidence" / "pipeline_runs" / f"{args.topic}_prompt{args.prompt_id}_{run_id}.json"
     output = output.resolve()
@@ -147,9 +147,7 @@ def run_pipeline(args, client=None):
         stage = "agent"
         print("[5/6] LangGraph: extract -> facts -> route -> revision/recheck when a claim is contradicted", flush=True)
         result = run_summary_agent(graph, draft, topic=args.topic, prompt=draft.get("summary_prompt") or get_prompt(args.topic, args.prompt_id),
-            client=progress, disparity_threshold=args.disparity_threshold, max_revisions=args.max_revisions,
-            max_model_calls=args.max_model_calls, max_tool_calls=args.max_tool_calls,
-            representation_metric=None if getattr(args, "representation_metric", "none") == "none" else args.representation_metric)
+            client=progress, max_revisions=args.max_revisions, max_tool_calls=args.max_tool_calls)
         result["pipeline"] = manifest
         save_json(output, result)
         feed.emit("run_completed", "result_writer", "user", f"{result['status']}: {result['stop_reason']}",
@@ -171,15 +169,10 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--topic", choices=("Obama", "McDonalds", "Superbowl"), required=True)
     parser.add_argument("--prompt-id", choices=("1", "2"), default="1")
-    parser.add_argument("--disparity-threshold", type=float, default=0.2, help="Max 1 - min/max group coverage; 0.2 is the four-fifths rule")
     parser.add_argument("--max-revisions", type=int, default=3)
-    parser.add_argument("--representation-metric", choices=("none", "mnli", "internal"), default="none",
-                        help="none (default): no group check, dialect labels are evaluation-only; "
-                             "mnli/internal: the earlier label-based group check")
     parser.add_argument("--output", type=Path, help="New final JSON path; default: unique file under results/evidence/pipeline_runs")
     parser.add_argument("--source-claims", type=Path, help="Checkpoint path; default: results/source_claims/<topic>.json")
     parser.add_argument("--reuse-draft", type=Path, help="Explicitly reuse a saved draft instead of generating a new one")
-    parser.add_argument("--max-model-calls", type=int, default=64, help="Representation chat budget per checking pass")
     parser.add_argument("--max-tool-calls", type=int, default=3, help="Factual retrieval budget per summary claim")
     args = parser.parse_args(argv)
     try:

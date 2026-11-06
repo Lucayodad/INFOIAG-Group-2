@@ -2,7 +2,6 @@
 
 from argparse import Namespace
 from contextlib import redirect_stdout
-from copy import deepcopy
 import io
 import json
 from pathlib import Path
@@ -11,22 +10,18 @@ import unittest
 from unittest.mock import Mock, patch
 from urllib.error import URLError
 
-from data_loader import Tweet
-from demo_revision_loop import fixture, mock_client
-from demo_summary_agent import response
-from representation_check import match_summary_claims
-from representation_tools import get_group_claims
+from fakes import many_tweets, mock_client, response
 from run_pipeline import main, run_pipeline, validate_reused_draft
-from test_representation_batches import oracle_client, topic_fixture
 
 
 class ReleasePipelineTests(unittest.TestCase):
     def fixture(self):
-        graph, draft, _ = fixture(many=True, per_group=30)
-        groups = {g: get_group_claims(graph, "Obama", g) for g in ("AA", "Hisp", "White")}
-        tweets = [Tweet(t["tweet_id"], "Obama", g, t["text"], "synthetic_release.txt", t["source_line"])
-                  for g, group in groups.items() for t in group["tweets"]]
-        source = {c["tweet_id"]: c for group in groups.values() for c in group["claims"]}
+        """90 synthetic tweets and a draft whose second sentence contradicts the tweet it cites."""
+        tweets, records = many_tweets(per_group=30)
+        source = {record["tweet_id"]: record["claims"][0] for record in records}
+        texts = ["End of briefing 1.", "One author dislikes Obama's speech.", "End of briefing 3.",
+                 "End of briefing 4.", "End of briefing 5."]
+        draft = {"sentences": [{"text": text, "source_ids": ["AA_00"]} for text in texts]}
         client = mock_client()
         agent_chat = client.chat.side_effect
         client.check_models.return_value = [{"name": "qwen3.5:4b"}, {"name": "all-minilm:latest"}]
@@ -50,9 +45,8 @@ class ReleasePipelineTests(unittest.TestCase):
         return tweets, client, calls
 
     def args(self, root, name="result"):
-        return Namespace(topic="Obama", prompt_id="1", disparity_threshold=0.25,
-            max_revisions=1, output=root / f"{name}.json", source_claims=root / "checkpoints/Obama.json",
-            reuse_draft=None, max_model_calls=64, max_tool_calls=3, representation_metric="internal")
+        return Namespace(topic="Obama", prompt_id="1", max_revisions=1, output=root / f"{name}.json",
+                         source_claims=root / "checkpoints/Obama.json", reuse_draft=None, max_tool_calls=3)
 
     def test_raw_tweets_to_revision_rechecking_and_saved_results_then_resume(self):
         tweets, client, sources = self.fixture()
@@ -62,11 +56,13 @@ class ReleasePipelineTests(unittest.TestCase):
                 result = run_pipeline(self.args(root), client)
             self.assertEqual(len(sources), 90)
             self.assertEqual(result["revision_count"], 1)
+            self.assertEqual([r["status"] for r in result["revisions"]], ["accepted"])
+            self.assertEqual(result["factual_results"]["verdict_counts"]["CONTRADICTED"], 0)
             nodes = [e["node"] for e in result["execution_history"]]
             self.assertIn("revise_summary", nodes)
             self.assertEqual(nodes.count("factual_check"), 2)
-            self.assertEqual(nodes.count("representation_check"), 2)
-            self.assertEqual(result["representation_results"]["source_tweet_counts"], {g: 30 for g in ("AA", "Hisp", "White")})
+            self.assertEqual(result["representation_results"]["status"], "NOT_RUN")
+            self.assertEqual(result["pipeline"]["group_counts"], {g: 30 for g in ("AA", "Hisp", "White")})
             self.assertTrue((root / "result_artifacts/Obama.ttl").exists())
             self.assertTrue((root / "result_artifacts/Obama_prompt1.json").exists())
             saved = json.loads((root / "result.json").read_text(encoding="utf-8"))
@@ -102,7 +98,8 @@ class ReleasePipelineTests(unittest.TestCase):
                 main(["--help"])
             self.assertEqual(error.exception.code, 0)
             run.assert_not_called()
-            self.assertIn("--disparity-threshold", console.getvalue())
+            self.assertIn("--max-revisions", console.getvalue())
+            self.assertNotIn("--disparity-threshold", console.getvalue())  # accepted only for old callers
 
     def test_missing_python_dependency_has_install_command(self):
         with patch("run_pipeline.run_pipeline", side_effect=ModuleNotFoundError("No module", name="langgraph")), \
@@ -156,63 +153,6 @@ class ReusedDraftTests(unittest.TestCase):
         self.draft["sentences"][0]["source_ids"] = ["invented"]
         with self.assertRaisesRegex(ValueError, "unknown source"):
             validate_reused_draft(self.draft, "Obama", "1", self.tweets)
-
-
-class ReleaseRepresentationTests(unittest.TestCase):
-    def test_byte_split_small_collection_still_reconciles_global_equivalence(self):
-        graph, summary, gold = topic_fixture()
-        groups = {g: get_group_claims(graph, "Obama", g) for g in ("AA", "Hisp", "White")}
-        client = oracle_client(gold)
-        result = match_summary_claims(groups, summary, client, batch_size=16, max_input_bytes=5000)
-        self.assertEqual(len(result["clusters"]), 3)
-        self.assertEqual(result["aggregation_status"], "ready")
-        self.assertEqual(result["equivalence_scope"], "embedding_shortlist_only")
-        self.assertTrue(all(e["input_bytes"] <= 5000 for e in result["execution_trace"]))
-
-    def test_166_distinct_claims_reach_all_coverage_batches_below_budget(self):
-        graph, summary, gold = topic_fixture(unique=True)
-        groups = {g: get_group_claims(graph, "Obama", g) for g in ("AA", "Hisp", "White")}
-        original = [c for group in groups.values() for c in group["claims"]]
-        for source in original[:76]:
-            claim = deepcopy(source)
-            claim["claim_id"] = source["claim_id"] + "_extra"
-            claim["claim_uri"] += "_extra"
-            claim["claim"] = "The author requests the distinct item " + claim["claim_id"] + " from Obama."
-            gold[claim["claim_id"]] = claim["claim_id"]
-            groups[claim["dialect_label"]]["claims"].append(claim)
-        client = oracle_client(gold)
-        report = match_summary_claims(groups, summary, client)
-        self.assertEqual(len(report["clusters"]), 166)
-        self.assertEqual(report["aggregation_status"], "ready")
-        self.assertEqual(report["model_call_count"], 21)
-        self.assertTrue(all(c["status"] == "NOT_MATCHED" for c in report["clusters"]))
-        self.assertEqual(sum(e["candidate_count"] for e in report["execution_trace"] if e["step"] == "summary_coverage"), 166)
-        self.assertFalse(report["global_equivalence_exhaustive"])
-
-    def test_equivalence_failures_cannot_consume_reserved_coverage_calls(self):
-        graph, summary, gold = topic_fixture()
-        groups = {g: get_group_claims(graph, "Obama", g) for g in ("AA", "Hisp", "White")}
-        client = oracle_client(gold)
-        oracle = client.chat.side_effect
-        def fail_equivalence(payload):
-            return response({"decisions": []}) if "decisions" in payload["format"]["properties"] else oracle(payload)
-        client.chat.side_effect = fail_equivalence
-        result = match_summary_claims(groups, summary, client, batch_size=1, max_model_calls=8)
-        equivalence = [e for e in result["execution_trace"] if e["step"] == "shortlisted_equivalence"]
-        self.assertLessEqual(len(equivalence), 4)
-        self.assertLessEqual(result["model_call_count"], 8)
-        self.assertEqual(result["aggregation_status"], "UNKNOWN")
-
-    def test_failed_embeddings_preserve_unknown_without_chat_or_lexical_fallback(self):
-        graph, summary, gold = topic_fixture()
-        groups = {g: get_group_claims(graph, "Obama", g) for g in ("AA", "Hisp", "White")}
-        client = oracle_client(gold)
-        result = match_summary_claims(groups, summary, client, batch_size=2,
-                                      embedder=lambda texts: [[float("nan")]] * len(texts))
-        self.assertEqual(result["reason"], "embedding_retrieval_failed")
-        self.assertEqual(result["embedding_call_count"], 1)
-        self.assertTrue(all(c["status"] == "UNKNOWN" for c in result["clusters"]))
-        client.chat.assert_not_called()
 
 
 class LocalModelPreflightTests(unittest.TestCase):

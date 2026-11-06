@@ -4,7 +4,6 @@ from dataclasses import asdict
 from datetime import datetime, timezone
 import hashlib
 import json
-import os
 import re
 from pathlib import Path
 from time import perf_counter
@@ -14,7 +13,6 @@ from prompts import SYSTEM_PROMPT
 
 
 DEFAULT_MODEL = "qwen3.5:4b"
-OPENAI_MODEL = "gpt-4.1-mini-2025-04-14"
 
 
 class GenerationError(ValueError):
@@ -48,12 +46,9 @@ def digest(value) -> str:
     return hashlib.sha256(json.dumps(value, ensure_ascii=False, sort_keys=True).encode("utf-8")).hexdigest()
 
 
-def build_request(tweets: list[Tweet], summary_prompt: str,
-                  model: str = DEFAULT_MODEL, provider: str = "ollama") -> dict:
+def build_request(tweets: list[Tweet], summary_prompt: str, model: str = DEFAULT_MODEL) -> dict:
     """All 90 tweet texts are supplied; no vector store or references are read."""
     validate_dataset(tweets)
-    if provider not in {"ollama", "openai"}:
-        raise GenerationError("Provider must be ollama or openai.")
     if not isinstance(summary_prompt, str) or not summary_prompt.strip():
         raise GenerationError("A nonempty summary prompt is required.")
     if not isinstance(model, str) or not model.strip():
@@ -80,27 +75,16 @@ def build_request(tweets: list[Tweet], summary_prompt: str,
     # Dialect labels remain in the local dataset for later coverage checks.
     # The generator receives only original text and stable source IDs.
     source = [{"id": tweet.id, "text": tweet.text} for tweet in tweets]
-    if provider == "ollama":
-        return {
-            "model": model, "stream": False, "think": False,
-            "messages": [
-                {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": summary_prompt +
-                 "\n\nRequired JSON schema:\n" + json.dumps(schema) +
-                 "\n\nSource tweets (JSON data):\n" + json.dumps(source, ensure_ascii=False)},
-            ],
-            "format": schema,
-            "options": {"temperature": 0, "seed": 42, "num_ctx": 16384, "num_predict": 2000},
-        }
     return {
-        "model": model,
-        "instructions": SYSTEM_PROMPT,
-        "input": [{"role": "user", "content": summary_prompt +
-                   "\n\nSource tweets (JSON data):\n" + json.dumps(source, ensure_ascii=False)}],
-        "max_output_tokens": 2000,
-        "store": False,
-        "text": {"format": {"type": "json_schema", "name": "tweet_summary",
-                              "strict": True, "schema": schema}},
+        "model": model, "stream": False, "think": False,
+        "messages": [
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": summary_prompt +
+             "\n\nRequired JSON schema:\n" + json.dumps(schema) +
+             "\n\nSource tweets (JSON data):\n" + json.dumps(source, ensure_ascii=False)},
+        ],
+        "format": schema,
+        "options": {"temperature": 0, "seed": 42, "num_ctx": 16384, "num_predict": 2000},
     }
 
 
@@ -155,65 +139,32 @@ def parse_response(response: dict, tweets: list[Tweet]) -> dict:
     return validate_output("".join(texts), tweets)
 
 
-def make_client(provider: str = "ollama"):
-    if provider == "ollama":
-        from ollama_backend import OllamaClient
-        return OllamaClient()
-    if provider != "openai":
-        raise GenerationError("Provider must be ollama or openai.")
-    return make_openai_client()
-
-
-def make_openai_client():
-    """Read the optional OpenAI key locally; never save it in requests."""
-    api_key = os.environ.get("OPENAI_API_KEY", "").strip()
-    if not api_key:
-        raise GenerationError("Set OPENAI_API_KEY in your terminal, or use --dry-run without a key.")
-    try:
-        from openai import OpenAI
-    except ImportError as exc:
-        raise GenerationError("Install dependencies: python3 -m pip install -r requirements.txt") from exc
-    return OpenAI(api_key=api_key, base_url="https://api.openai.com/v1", timeout=60.0, max_retries=0)
-
-
 def generate_summary(tweets: list[Tweet], summary_prompt: str,
-                     model: str = DEFAULT_MODEL, client=None, provider: str = "ollama") -> dict:
+                     model: str = DEFAULT_MODEL, client=None) -> dict:
     """Take the dataset and prompt as inputs; return an unchecked draft.
 
-    A client can be injected for offline transport tests. With no injected
-    client, this performs one request to the selected backend and closes afterward.
+    With no injected client, this performs one request to the local Ollama
+    model and closes the client afterward.
     """
-    request = build_request(tweets, summary_prompt, model, provider)
+    request = build_request(tweets, summary_prompt, model)
     owns_client = client is None
-    client = make_client(provider) if owns_client else client
+    if owns_client:
+        from ollama_backend import OllamaClient
+        client = OllamaClient()
     start = perf_counter()
     try:
-        if provider == "ollama":
-            response_data = client.chat(request)
-        else:
-            response = client.responses.create(**request)
-            response_data = response.model_dump(mode="json")
+        response_data = client.chat(request)
+    except GenerationError:
+        raise
     except Exception as exc:
-        # Do not echo an arbitrary exception body that could expose credentials.
-        if isinstance(exc, GenerationError):
-            raise
-        if provider == "ollama":
-            raise GenerationError(f"Local generation failed ({type(exc).__name__}); no summary saved.") from exc
-        from openai import APIStatusError, APIConnectionError
-        if isinstance(exc, APIStatusError):
-            hint = {401: "Check your API key.", 403: "Check model/project access.",
-                    429: "Check API quota, billing, or rate limits."}.get(exc.status_code, "Check API availability and request settings.")
-            raise GenerationError(f"OpenAI API returned HTTP {exc.status_code}. {hint}") from exc
-        if isinstance(exc, APIConnectionError):
-            raise GenerationError("Could not reach OpenAI. Check your connection and TLS certificates.") from exc
-        raise GenerationError(f"Generation failed ({type(exc).__name__}); no summary saved.") from exc
+        raise GenerationError(f"Local generation failed ({type(exc).__name__}); no summary saved.") from exc
     finally:
         if owns_client:
             client.close()
     elapsed = perf_counter() - start
     output = parse_response(response_data, tweets)
     return {
-        "status": "draft_unchecked", "provider": provider, "topic": tweets[0].topic,
+        "status": "draft_unchecked", "provider": "ollama", "topic": tweets[0].topic,
         "summary": " ".join(entry["text"].strip() for entry in output["sentences"]),
         "sentences": output["sentences"],
         "summary_prompt": summary_prompt,

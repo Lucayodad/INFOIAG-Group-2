@@ -22,13 +22,10 @@ import zlib
 from rdflib import Graph
 from rdflib.graph import ReadOnlyGraphAggregate
 
-from demo_revision_loop import fixture, mock_client
-from representation_check import representation_check
-from representation_tools import get_group_claims
-from revision_retrieval import cosine, retrieve_revision_evidence
+from fakes import fixture, mock_client
 from summarizer import GenerationError, validate_abstraction
 from equal_coverage import CachedScorer
-from summary_agent import _metrics, _worst_coverage, compare_revision, run_summary_agent, seed_check_cache
+from summary_agent import _metrics, compare_revision, run_summary_agent, seed_check_cache
 from summary_claims import extract_sentence_with_retry
 from summary_revision import revise_summary
 
@@ -108,26 +105,6 @@ class AcceptanceGateOnRecordedCandidates(unittest.TestCase):
         self.assertEqual((accepted, reason), (True, "measured_improvement"))
         self.assertEqual((before["serious_factual_count"], after["serious_factual_count"]), (1, 0))
 
-    def test_scenario_2_group_fix_that_raises_the_worst_group_is_accepted(self):
-        (accepted, _), before, after = self.decide("Obama_prompt2_seed202")
-        self.assertTrue(accepted)
-        self.assertGreater(_worst_coverage(after), _worst_coverage(before))
-
-    def test_fix_that_lifts_every_group_is_accepted_although_the_gap_widens(self):
-        # Four-fifths paradox: Hisp 0.47% -> 1.33% overtakes the others, so
-        # 1 - min/max grows even though every group gained coverage.
-        (accepted, _), before, after = self.decide("McDonalds_prompt1_seed303")
-        self.assertTrue(accepted)
-        self.assertTrue(all(after["coverage"][g] > before["coverage"][g] for g in before["coverage"]))
-        self.assertGreater(after["disparity"], before["disparity"])
-
-    def test_levelling_down_is_rejected_although_disparity_improves(self):
-        # The old gate accepted this: disparity 0.25 -> 0.24 because every group lost coverage.
-        (accepted, reason), before, after = self.decide("Superbowl_prompt2_seed101")
-        self.assertEqual((accepted, reason), (False, "representation_regression_or_incomparable"))
-        self.assertLess(after["disparity"], before["disparity"])
-        self.assertTrue(all(after["coverage"][g] < before["coverage"][g] for g in before["coverage"]))
-
     def test_rewrite_without_any_supported_claim_is_rejected(self):
         # Same UNKNOWN count before and after, citations unrelated: not a repair.
         (accepted, reason), _, _ = self.decide("Obama_prompt1_seed101")
@@ -158,8 +135,10 @@ class AcceptanceGateOnRecordedCandidates(unittest.TestCase):
                     break
                 if reason == "no_improvement":
                     break
-        self.assertEqual(accepted, {"McDonalds_prompt1_seed303": 1, "Obama_prompt1_seed202": 1,
-                                    "Obama_prompt2_seed202": 1, "Superbowl_prompt2_seed303": 1})
+        # The recorded runs also accepted three rewrites that only raised the worst-covered
+        # group's coverage (McDonalds P1 s303, Obama P2 s202, Superbowl P2 s303, no contradiction
+        # before or after); the label-free gate counts only fewer contradictions.
+        self.assertEqual(accepted, {"Obama_prompt1_seed202": 1})
 
 
 class CopyGuardOnRecordedText(unittest.TestCase):
@@ -186,81 +165,6 @@ class CopyGuardOnRecordedText(unittest.TestCase):
         self.assertIn("copies", proposal["error"])
         self.assertEqual(client.chat.call_count, 2)  # one repair request, then rejection
         self.assertIn("own words", client.chat.call_args_list[1].args[0]["messages"][-1]["content"])
-
-
-class GroupCheckOnRecordedSummaries(unittest.TestCase):
-    def test_a_failed_claim_extraction_no_longer_blanks_the_group_check(self):
-        # 4 of 6 Superbowl reruns had representation UNKNOWN only because one
-        # sentence's claim extraction failed; MNLI needs just the sentence text.
-        name = "Superbowl_prompt1_seed101"
-        state = recorded(name)["iterations"][0]
-        self.assertEqual(state["representation_results"]["status"], "UNKNOWN")
-        self.assertTrue(any(r["status"] == "unclear" for r in state["summary_claims"]))
-        scorer = Mock()
-        scorer.score_pairs.side_effect = lambda pairs: [0.05] * len(pairs)
-        result = representation_check(graph(name), state["summary_claims"], Mock(), "Superbowl", 0.2,
-                                      mnli_scorer=scorer)
-        self.assertEqual(result["status"], "PASS")
-        self.assertTrue(result["data_complete"])
-        self.assertEqual(sum(len(call.args[0]) for call in scorer.score_pairs.call_args_list), 90 * 5)
-
-    @live
-    def test_mnli_reproduces_the_recorded_coverage(self):
-        # The gate compares coverages across checks, so the metric must be deterministic.
-        from equal_coverage import TransformersEntailmentScorer
-        name = "Obama_prompt2_seed202"
-        state = recorded(name)["iterations"][0]
-        result = representation_check(graph(name), state["summary_claims"], Mock(), "Obama", 0.2,
-                                      mnli_scorer=TransformersEntailmentScorer())
-        for group, row in state["representation_results"]["coverage_by_group"].items():
-            self.assertAlmostEqual(result["coverage_by_group"][group]["coverage"], row["coverage"], places=4)
-
-
-class GroupRetrievalOnRecordedStates(unittest.TestCase):
-    def group_tasks(self):
-        rows = []
-        for name in trials():
-            run = recorded(name)
-            revision = next((r for r in run["revisions"] if any(
-                t["kind"] == "representation" for t in r["evidence"].get("tasks", []))), None)
-            if revision:
-                task = next(t for t in revision["evidence"]["tasks"] if t["kind"] == "representation")
-                rows.append((name, run, revision, task))
-        return rows
-
-    def test_group_task_searches_the_groups_tweets_with_the_sentence_to_rewrite(self):
-        name = "Obama_prompt2_seed202"
-        state = recorded(name)["iterations"][0]
-        result = retrieve_revision_evidence(graph(name), "Obama", state["summary_claims"], state["factual_results"],
-                                            state["representation_results"], bag_of_words)
-        task = next(t for t in result["tasks"] if t["kind"] == "representation")
-        target = next(r["sentence"] for r in state["summary_claims"] if r["sentence_id"] == task["sentence_id"])
-        self.assertEqual(task["query"], target)
-        # The evidence is the group's tweets closest to that sentence, in order.
-        group = get_group_claims(graph(name), "Obama", task["dialect_label"])["tweets"]
-        query = bag_of_words([target])[0]
-        ranked = sorted(group, key=lambda t: (-cosine(query, bag_of_words([t["text"]])[0]), t["tweet_id"]))
-        self.assertEqual(task["evidence_ids"], [t["tweet_id"] for t in ranked[:len(task["evidence_ids"])]])
-
-    @live
-    def test_sentence_query_finds_group_tweets_on_the_sentence_topic(self):
-        # Recorded evidence came from "Represent viewpoints from the X group."
-        from ollama_backend import OllamaClient
-        client = OllamaClient()
-        better = 0
-        rows = self.group_tasks()
-        for name, run, revision, task in rows:
-            state = run["iterations"][0]
-            target = next(r["sentence"] for r in state["summary_claims"] if r["sentence_id"] == task["sentence_id"])
-            new = retrieve_revision_evidence(graph(name), run["topic"], state["summary_claims"], state["factual_results"],
-                                             state["representation_results"], lambda t: client.embed(t))
-            new_task = next(t for t in new["tasks"] if t["kind"] == "representation")
-            texts = {row["tweet_id"]: row["quote"] for row in new["tweets"] + revision["evidence"]["tweets"]}
-            vectors = client.embed([target] + [texts[i] for i in task["evidence_ids"] + new_task["evidence_ids"]])
-            sims = [cosine(vectors[0], v) for v in vectors[1:]]
-            old, fresh = sims[:len(task["evidence_ids"])], sims[len(task["evidence_ids"]):]
-            better += sum(fresh) / len(fresh) > sum(old) / len(old)
-        self.assertGreaterEqual(better, len(rows) - 1, f"sentence query was more relevant in {better}/{len(rows)}")
 
 
 class SummaryClaimExtraction(unittest.TestCase):
@@ -311,11 +215,9 @@ class RetrySampling(unittest.TestCase):
         def invented(data):
             data["replacements"][0]["text"] = "An invented quantity proves the speech was popular."
             return data
-        graph_, draft, counts = fixture("both")
+        graph_, draft = fixture("both")
         client = mock_client(transform_revision=invented)
-        result = run_summary_agent(graph_, draft, topic="Obama", prompt=draft["summary_prompt"], client=client,
-                                   expected_group_counts=counts, disparity_threshold=0.25,
-                                   representation_metric="internal")
+        result = run_summary_agent(graph_, draft, topic="Obama", prompt=draft["summary_prompt"], client=client)
         self.assertEqual([r["status"] for r in result["revisions"]], ["rolled_back"] * 3)
         options = [(call.args[0]["options"]["temperature"], call.args[0]["options"]["seed"])
                    for call in client.chat.call_args_list
@@ -332,11 +234,9 @@ class CachingReproducesRecordedChecks(unittest.TestCase):
         first = run["iterations"][0]
         client = Mock()
         client.chat.side_effect = AssertionError("an unchanged sentence was sent to Qwen again")
-        scorer = Mock()
-        scorer.score_pairs.side_effect = lambda pairs: [0.05] * len(pairs)
         result = run_summary_agent(Graph().parse(graph_path(name), format="turtle"),
                                    run["initial_summary"], topic="Obama", prompt=run["prompt"], client=client,
-                                   disparity_threshold=0.2, max_revisions=0, mnli_scorer=scorer,
+                                   max_revisions=0,
                                    check_cache=seed_check_cache(run["initial_summary"], first, any_checker=True))
         client.chat.assert_not_called()
         self.assertEqual(result["summary_claims"], first["summary_claims"])
@@ -355,9 +255,8 @@ class CachingReproducesRecordedChecks(unittest.TestCase):
         self.assertEqual(len(cache["extraction"]), 4)  # S04 failed in the recording
 
     def test_a_recheck_only_checks_the_changed_sentence(self):
-        graph_, draft, counts = fixture("factual")
-        result = run_summary_agent(graph_, draft, topic="Obama", prompt=draft["summary_prompt"], client=mock_client(),
-                                   expected_group_counts=counts, disparity_threshold=0.5, representation_metric="internal")
+        graph_, draft = fixture("factual")
+        result = run_summary_agent(graph_, draft, topic="Obama", prompt=draft["summary_prompt"], client=mock_client())
         self.assertEqual(result["revisions"][0]["status"], "accepted")
         changed = {c["sentence_id"] for c in result["revisions"][0]["changes"]}
         recheck = result["iterations"][1]["factual_results"]

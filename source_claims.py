@@ -1,4 +1,3 @@
-
 """
 Source claim extraction for the ontology-driven summarization agent.
 
@@ -10,10 +9,6 @@ import json
 import re
 from html import unescape
 from html.entities import html5
-
-from data_loader import load_tweets
-from ollama_backend import OllamaClient
-from pathlib import Path
 
 # ---------------------------------------------------------
 # 1. OUTPUT SCHEMA
@@ -400,58 +395,3 @@ def extract_one(tweet, client, *, retry_error=None, attempt=1):
         "status": status,
         "claims": claims
     }
-
-
-# ---------------------------------------------------------
-# 6. EXTRACT CLAIMS FROM MULTIPLE TWEETS
-# ---------------------------------------------------------
-
-def extract_source_claims(tweets):
-    """
-    Process tweets individually through one Ollama client.
-
-    Returns one result per input tweet.
-    """
-
-    client = OllamaClient()
-
-    try:
-        results = []
-
-        for tweet in tweets:
-            result = extract_with_retries(tweet, client)
-            results.append(result)
-
-        return results
-
-    finally:
-        client.close()
-
-
-# ---------------------------------------------------------
-# 7. LOCAL TEST
-# ---------------------------------------------------------
-
-if __name__ == "__main__":
-
-    # Load the first three Obama tweets.
-    tweets = load_tweets("Obama")[:3]
-
-    # Extract claims for all three.
-    results = extract_source_claims(tweets)
-
-    # Display each tweet's extraction result.
-    for tweet, result in zip(tweets, results):
-
-        print(f"\n--- {tweet.id} ---")
-        print(f"Original: {tweet.text}")
-
-        print("\nExtraction result:")
-        print(
-            json.dumps(
-                result,
-                indent=2,
-                ensure_ascii=False
-            )
-        )
-

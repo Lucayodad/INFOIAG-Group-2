@@ -123,11 +123,6 @@ def request_context(payload):
         actor = "factual_checker"
     elif "replacements" in fields:
         actor = "reviser"
-    elif "decisions" in fields:
-        actor = "equivalence_checker"
-    elif "clusters" in fields:
-        props = fields["clusters"].get("items", {}).get("properties", {})
-        actor = "coverage_checker" if "status" in props else "equivalence_checker"
     else:
         actor = "source_extractor" if "id" in context else "summary_claim_extractor"
     ids = list(context.get("candidates", context.get("incoming", {})))
@@ -146,15 +141,6 @@ def node_details(name, state):
     if name == "factual_check":
         return {"status": state["factual_results"]["status"],
                 "verdict_counts": state["factual_results"]["verdict_counts"], "issues": state["factual_issues"]}
-    if name == "representation_check":
-        report = state["representation_results"]
-        return {"status": report["status"], "coverage": report["coverage_by_group"],
-                "disparity_bounds": report["disparity_bounds"], "reasons": report["reasons"],
-                "model_calls": report["model_call_count"], "embedding_calls": report.get("embedding_call_count", 0)}
-    if name == "viewpoint_check":
-        report = state["viewpoint_results"]
-        return {"status": report["status"], "missing": report["missing"], "uncertain": report["uncertain"],
-                "share_by_stance": report["share_by_stance"]}
     if name == "proportion_check":
         report = state["proportion_results"]
         return {"status": report["status"], "reason": report["reason"], "assessment": report["assessment"],
@@ -170,8 +156,7 @@ def node_details(name, state):
 
 
 def observe_node(name, function, client):
-    next_node = {"extract_summary_claims": "factual_check", "factual_check": "representation_check",
-                 "representation_check": "route_checks", "finalize": "result_writer"}
+    next_node = {"extract_summary_claims": "factual_check", "finalize": "result_writer"}
     def observed(state):
         if not isinstance(getattr(client, "__dict__", {}).get("live_feed"), LiveFeed):
             return function(state)

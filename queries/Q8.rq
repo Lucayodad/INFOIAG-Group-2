@@ -1,0 +1,10 @@
+PREFIX : <http://www.semanticweb.org/group2/ontology#>
+# Report Q8: what each advertisement promotes, who made it and where it was shown.
+# An ad typed only as TVCommercial is an Advertisement through subClassOf.
+SELECT DISTINCT ?ad ?product ?company ?event WHERE {
+    ?ad a :Advertisement ;
+        :promotes ?product ;
+        :createdBy ?company .
+    OPTIONAL { ?ad :shownAt ?event }
+}
+ORDER BY ?ad

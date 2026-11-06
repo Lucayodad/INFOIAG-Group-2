@@ -1,10 +1,16 @@
 """Executable checks against the real supplied ontology plus isolated fixtures."""
 
 import hashlib
+from pathlib import Path
 import unittest
 
 from rdflib import Literal, RDF, RDFS
-from ontology_tools import DEFAULT_ONTOLOGY, NS, OntologyTools, limited_closure
+from ontology_tools import (DEFAULT_ONTOLOGY, NS, TOPIC_IRIS, OntologyError, OntologyTools, limited_closure,
+                            pipeline_base_graph)
+from fakes import demo_fixture
+from run_queries import with_test_assertions
+
+SOURCE_EVIDENCE = Path(__file__).resolve().parents[1] / "queries" / "source_evidence.rq"
 
 
 def labels(result):
@@ -69,13 +75,60 @@ class OntologyTests(unittest.TestCase):
         graph.add((NS.B, NS.partOf, NS.C))
         self.tools.inferred = limited_closure(graph)
         self.assertIn((NS.A, NS.partOf, NS.C), self.tools.inferred)
+        self.assertIn((NS.TestCondition, RDF.type, NS.Allergy), self.tools.inferred)
         self.assertEqual(labels(self.tools.run_query("Q6"))[0]["entity"], "TestCondition")
+
+    def test_q7_and_q8_need_transitive_and_subclass_inference_on_a_copy(self):
+        before = hashlib.sha256(DEFAULT_ONTOLOGY.read_bytes()).hexdigest()
+        examples = with_test_assertions()
+        self.assertEqual(labels(self.tools.run_query("Q7")), [])
+        self.assertEqual(labels(examples.run_query("Q7", use_inference=False)), [])
+        self.assertEqual(labels(examples.run_query("Q7")), [{"branch": "branch1", "place": "Netherlands"}])
+        self.assertEqual(labels(examples.run_query("Q8", use_inference=False)), [])
+        self.assertEqual(labels(examples.run_query("Q8")), [
+            {"ad": "FishBurgerAd", "product": "FishBurger", "company": "McDonalds"},
+            {"ad": "TacoBellAd", "product": "TacoBellProduct", "company": "TacoBell", "event": "SuperBowl1"}])
+        self.assertEqual(hashlib.sha256(DEFAULT_ONTOLOGY.read_bytes()).hexdigest(), before)
+
+    def test_q9_finds_sports_claims_through_subclass(self):
+        self.assertEqual(labels(self.tools.run_query("Q9", use_inference=False)), [{"claim": "claim1"}])
+        self.assertEqual(labels(self.tools.run_query("Q9")), [{"claim": "claim1"}, {"claim": "claim2"}])
 
     def test_entity_evidence_marks_inferred_relations(self):
         result = self.tools.get_entity_facts("chef1")
         works_for = [t for t in result["triples"] if t["predicate"].get("label") == "worksFor"]
         self.assertEqual(works_for[0]["origin"], "inferred")
         self.assertEqual(self.tools.get_entity_facts("UnknownPerson")["status"], "unknown_entity")
+
+    def test_pipeline_base_excludes_example_evidence_and_never_mutates_the_file(self):
+        before = hashlib.sha256(DEFAULT_ONTOLOGY.read_bytes()).hexdigest()
+        base = pipeline_base_graph(self.tools)
+        for cls in (NS.Tweet, NS.Claim, NS.ClaimAssessment, NS.Summary):
+            for subject in self.tools.inferred.subjects(RDF.type, cls):
+                self.assertFalse(set(base.triples((subject, None, None))), subject)
+        self.assertLess(len(base), len(self.tools.asserted))
+        self.assertIn((NS.Person, RDF.type, self.tools.asserted.value(NS.Person, RDF.type)), base)
+        self.assertEqual(hashlib.sha256(DEFAULT_ONTOLOGY.read_bytes()).hexdigest(), before)
+
+    def test_entity_names_are_validated_not_interpolated(self):
+        self.assertEqual(OntologyTools.entity_iri("Obama"), NS.Obama)
+        self.assertEqual(OntologyTools.entity_iri(str(NS.Obama)), NS.Obama)
+        for bad in ("Obama } DROP", "1abc", 5):
+            with self.subTest(bad=bad), self.assertRaises(OntologyError):
+                OntologyTools.entity_iri(bad)
+
+
+class SourceEvidenceQueryTests(unittest.TestCase):
+    def test_returns_every_tweet_of_the_topic_with_its_claims(self):
+        graph, _ = demo_fixture()
+        rows = list(graph.query(SOURCE_EVIDENCE.read_text(encoding="utf-8"),
+                                initBindings={"topic": TOPIC_IRIS["Obama"]}))
+        self.assertEqual(len(rows), 9)
+        self.assertEqual([str(row.dialect_label) for row in rows], ["AA"] * 3 + ["Hisp"] * 3 + ["White"] * 3)
+        self.assertEqual(str(rows[0].claim_id), "AA_01_C01")
+        self.assertEqual(str(rows[0].claim_text), "The author likes Obama's speech.")
+        self.assertEqual(list(graph.query(SOURCE_EVIDENCE.read_text(encoding="utf-8"),
+                                          initBindings={"topic": TOPIC_IRIS["McDonalds"]})), [])
 
 
 if __name__ == "__main__":

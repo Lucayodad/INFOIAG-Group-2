@@ -1,36 +1,82 @@
-# INFOIAG: ontology-assisted summarization
+# Ontology-Driven Agent for Group-Aware Tweet Summarization
 
-For consistent metrics, report preparation, saved-run limitations and current
-validation commands, see [report validation](docs/REPORT_VALIDATION.md).
+INFOIAG Group 2. A local, label-free agent that summarizes the DivSumm tweets
+on three topics (Obama, McDonalds, Superbowl; 90 tweets each, written in three
+dialect groups: AA, Hisp and White) in five sentences. The agent checks each
+summary claim against the tweets through an RDF knowledge graph and repairs
+contradicted sentences. The model is Qwen3.5-4B, run locally through Ollama.
 
-A local research prototype that summarizes tweets, checks factual support and
-group representation using RDF evidence, and revises/rechecks a five-sentence
-summary when confirmed issues justify it. Supports **Obama, McDonalds and
-Superbowl**, two prompts, and 90 tweets per topic (30 each labelled AA, Hisp and
-White). Luca's original OWL ontology and datasets are preserved. Working software
-does not establish experimentally validated model accuracy or fairness.
+**The dialect labels are used for evaluation only.** They never reach the
+language model or the agent. `run_final_agent.py` removes every `dialectLabel`
+triple from the agent's copy of the graph. It also sends every model request
+through `LabelFreeClient`, which stops the run if a request contains a label.
+`evaluate_label_free_run.py` is the only step that reads the labels, and it runs
+after the agent has finished.
+
+## Architecture
 
 ```mermaid
 flowchart LR
-    A[Tweets] --> B[Resumable source claims]
-    B --> C[Isolated RDF evidence]
-    C --> D[Initial Qwen summary]
-    D --> E[LangGraph: extract summary claims]
-    E --> F[Factual checking]
-    F --> G[Representation and Python coverage]
-    G --> H{Confirmed issues?}
-    H -->|Yes, evidence and budget available| I[Retrieve evidence and revise]
-    I --> E
-    H -->|No, uncertainty only, limit or rollback| J[Saved final result]
+    A[Tweets] --> B[Source claims per tweet]
+    B --> C[RDF graph: ontology + evidence]
+    C --> D[Five-sentence draft with citations]
+    D --> E[Extract summary claims]
+    E --> F[Fact check against cited tweets]
+    F --> G{CONTRADICTED claim?}
+    G -->|yes, within 3 attempts| H[Retrieve evidence and revise]
+    H --> E
+    G -->|no; UNKNOWN alone never revises| I[Final summary]
+    I --> J[Evaluation: labels joined here only]
 ```
 
-## Install from a fresh clone
+| Stage | Files |
+|---|---|
+| Data | `data/divsumm/` (the 270 input tweets), `data_loader.py` |
+| Source claims (Qwen sees tweet ID and text only) | `source_claims.py`, `run_source_extraction.py` |
+| Knowledge graph | `ontology/group2_Ontology.owl`, `ontology/evidence_schema.ttl`, `populate_ontology.py`, `ontology_tools.py` |
+| Ontology queries | `queries/` (Q1-Q9, `source_evidence.rq`), `run_queries.py` |
+| Draft summary | `summarizer.py`, `prompts.py`, `ollama_backend.py` |
+| LangGraph agent | `summary_agent.py`, `summary_claims.py` |
+| Fact checker | `fact_check.py`, `fact_agent.py`, `fact_tools.py` |
+| Revision | `revision_retrieval.py`, `summary_revision.py` |
+| Optional feedback layer | `proportion_check.py` (`--proportion-check`) |
+| Logging | `live_feed.py` (event feed of each run), `model_usage.py` (model-call counts) |
+| Experiment | `experiment_runner.py` (baseline and agent drafts), `rerun_agent_trials.py`, `run_pipeline.py`, `run_final_agent.py` |
+| Evaluation (the only code that reads dialect labels) | `evaluate.py` (ROUGE, BARTScore, Equal Coverage, cost), `evaluate_label_free_run.py` (draft vs final), `equal_coverage.py` (MNLI Equal Coverage) |
+| Tests | `tests/` (unit and integration tests with mocked model replies) |
 
-Use Python **3.10 or newer**. Install and start [Ollama](https://ollama.com/download).
-Windows PowerShell:
+**Fact checker.** Each atomic summary claim is judged against the tweets its
+sentence cites. The verdict is SUPPORTED, CONTRADICTED or UNKNOWN; UNKNOWN is the
+open-world answer when the tweets neither establish nor refute the claim. Two
+rules are applied in code after the model's verdict:
+
+- A share of the whole collection ("most") is never SUPPORTED, and "many" or
+  "several" needs three quoted tweets.
+- A claim about what users say is never CONTRADICTED.
+
+The checker was revised and validated against reference labels; see
+[docs/CHECKER_EVALUATION.md](docs/CHECKER_EVALUATION.md).
+
+**Revision gate.** A rewrite is rechecked and kept only if it adds no
+contradiction and raises no more issues in total; otherwise it is rolled back.
+
+**Proportion feedback layer** (`--proportion-check`). Qwen reads all tweets of
+the topic and judges whether the summary gives each main opinion its weight,
+without any group label. A flagged opinion is first verified with the three
+closest tweets. If a SUPPORTED claim already quotes one of them, nothing is
+rewritten. A rewrite must cite one of those tweets and pass the same gate.
+
+Earlier versions also had a group-coverage check that read the dialect labels,
+and a stance-based viewpoint check. Both were removed: the first broke the
+evaluation-only rule for labels, the second over-flagged (it read reported
+opinions as neutral). They remain in the git history.
+
+## Install
+
+Use Python 3.10 or newer and [Ollama](https://ollama.com/download).
 
 ```powershell
-git clone --branch feature/saif-agent-implementation https://github.com/Lucayodad/INFOIAG-Group-2.git
+git clone --branch checker-v2-final-results https://github.com/Lucayodad/INFOIAG-Group-2.git
 cd INFOIAG-Group-2
 py -3 -m venv .venv
 & .\.venv\Scripts\python.exe -m pip install -r requirements.txt
@@ -38,145 +84,134 @@ ollama pull qwen3.5:4b
 ollama pull all-minilm
 ```
 
-For an existing clone, switch to the feature branch, pull, and reinstall
-requirements. No API key, personal directory, external dependency folder,
-VS Code configuration or pre-generated results are required. If needed, start
-`ollama serve` in another terminal. The runner checks both models before starting
-and prints model installation commands if they are missing.
+On macOS/Linux use `python3 -m venv .venv` and `.venv/bin/python`. The
+fresh metric evaluation downloads `roberta-large-mnli` and
+`facebook/bart-large-cnn` from Hugging Face on first use.
 
-On macOS/Linux, create the environment with `python3 -m venv .venv` and use
-`.venv/bin/python` instead of `.venv\Scripts\python.exe` in the commands below.
-Install requirements with `.venv/bin/python -m pip install -r requirements.txt`.
-The same two `ollama pull` commands apply.
-
-## Run the complete agent
-
-From the repository directory:
+## Reproduce the report from saved results
 
 ```powershell
-& .\.venv\Scripts\python.exe .\run_pipeline.py --topic Obama --prompt-id 1 --disparity-threshold 0.25 --max-revisions 3
-& .\.venv\Scripts\python.exe .\run_pipeline.py --topic McDonalds --prompt-id 1 --disparity-threshold 0.25 --max-revisions 3
-& .\.venv\Scripts\python.exe .\run_pipeline.py --topic Superbowl --prompt-id 1 --disparity-threshold 0.25 --max-revisions 3
+& .\.venv\Scripts\python.exe .\reproduce_report.py
 ```
 
-Use `--prompt-id 2` for the other prompt. **0.25 is exploratory, not a
-paper-established disparity threshold.** Each command runs one topic/prompt,
-not all 36 research experiments. Local runs can take substantial time depending
-on hardware. Stage/call progress and completed-call timings are printed without
-large JSON dumps. Each model request has a 300-second timeout.
+This rebuilds the numerical tables, checker comparisons, statistical tests,
+annotator agreement, ontology query results and Figure 1-3 sources under
+`results/report/`, using the submitted records. It does not call a model.
+The citation-retrieval diagnostic uses the supplied embedding cache and its
+recorded model digest. `numbers.json` retains full precision; `tables.md`
+contains readable tables and `inputs.sha256.json` lists the source checksums.
 
-Options (`python run_pipeline.py --help` lists all arguments):
-
-- `--output results/evidence/my_run.json`: choose a new final JSON path; existing
-  outputs are rejected. Omit it for a unique filename every time.
-- `--source-claims path/to/checkpoint.json`: select a source checkpoint.
-- `--reuse-draft path/to/draft.json`: explicitly reuse a compatible saved draft. Its topic and prompt
-  provenance must match the requested run; conflicting or missing prompt metadata
-  is rejected. Otherwise a new initial summary is generated.
-- `--max-revisions 0`: check-only mode; allowed values are 0 through 3.
-- `--max-model-calls 64`: representation chat budget per pass; half is reserved
-  for coverage. `--max-tool-calls 3`: factual retrieval budget per summary claim.
-
-## Live agent feed
-
-Every complete run prints timestamped `actor -> recipient` events and writes a
-flushed `live_feed.jsonl` inside its artifacts directory. The result manifest
-records that path. It shows actual stage handoffs, model requests and replies,
-validated tool choices, returned evidence, equivalence/coverage validation,
-routing, revision acceptance/rejection/rollback, errors and saved results.
-Model replies are labelled **validation pending** until a checker accepts them.
-Long model calls emit a waiting heartbeat every 30 seconds. These are observable
-structured actions and shared-state transitions; previews are bounded and full
-evidence remains in the normal result. Monitoring does not make additional model
-calls or change judgments.
-
-The feed can be read while the run is active, including by an assistant monitoring
-and relaying entries in chat. To follow the printed feed path in PowerShell:
+For rendered SVG diagrams, install Graphviz with `dot` on PATH, then run:
 
 ```powershell
-Get-Content -LiteralPath "path/to/run_artifacts/live_feed.jsonl" -Tail 10 -Wait
+& .\.venv\Scripts\python.exe .\export_report_figures.py --render
 ```
 
-## Outputs and resuming
+The diagrams are derived from the compiled graph and the ontology; their
+layout may differ from the report artwork. Figure 1 also has a Mermaid source.
 
-The runner creates all directories automatically. Generated artifacts are
-gitignored and are not downloaded by pulling the code:
+## Run
 
-- `results/source_claims/<topic>.json`: source checkpoint, reused across prompts.
-  Saved successful tweets are skipped. Failed tweets receive at most three
-  attempts and are logged in `<topic>.failures.json`; failures are never saved
-  as fabricated claims or `no_claim`.
-- `results/evidence/pipeline_runs/<topic>_prompt<id>_<unique-id>.json`: default
-  complete agent state, evidence, summaries, issues, calls and stop reason.
-- `<final-file-stem>_artifacts/` beside the final JSON: topic RDF `.ttl`, initial
-  summary `.json`/`.txt`, and a manifest with paths, counts and model digests.
-  A failed stage creates `error.json` there.
-
-Rerun the topic command to resume missing source extractions. When `--output`
-is explicit, select a new filename after a completed run. LangGraph restarts its
-checking/revision pass; it has no mid-call resume checkpoint. Review UNKNOWN and
-failed results before using them in the report/poster.
-
-## Tests and controlled demonstration
+One topic and prompt, end to end from the raw tweets:
 
 ```powershell
-& .\.venv\Scripts\python.exe -m unittest discover -s tests -q
-& .\.venv\Scripts\python.exe .\demo_revision_loop.py
+& .\.venv\Scripts\python.exe .\run_pipeline.py --topic Obama --prompt-id 1
 ```
 
-Tests/default demos use complete synthetic evidence with mocked Qwen responses
-and embeddings. They verify fresh-input execution, checkpoint recovery,
-revision/rechecking/rollback, provenance, group weights, conservative uncertainty
-and 166-viewpoint budget behavior. They do not establish real-model accuracy.
-Real-model release verification is recorded in [docs/RELEASE.md](docs/RELEASE.md).
+This writes the source-claim checkpoint to `results/source_claims/`. The run
+result and its artifacts (graph, draft, live feed) go to
+`results/evidence/pipeline_runs/`. Both are gitignored.
 
-## Representation and known limitations
-
-The default is MNLI Equal Coverage over original summary sentence entries,
-using the same implementation as offline evaluation. Incomplete extraction or
-unavailable scoring stays UNKNOWN. Report absolute group coverage alongside
-EC: equally low coverage can produce a small disparity. The 0.25 threshold is
-exploratory. See [report validation](docs/REPORT_VALIDATION.md) for saved results,
-score provenance and current safeguards.
-
-The optional `--representation-metric internal` path works as follows.
-Exact duplicates are grouped deterministically. Larger inputs use local
-`all-minilm` embeddings and in-memory cosine similarity to shortlist at most two
-earlier same-stance candidates (similarity >= 0.8). Small Qwen requests verify
-equivalence; embeddings never authorize a merge. These retrieval parameters are
-engineering choices, not validated research metrics. Every merge requires valid
-source IDs, exact quotations and consistent stance.
-
-Equivalence uses at most half the chat budget; independent coverage tasks follow.
-Invalid tasks get one retry within their budget. Unknown or failed assessments
-remain UNKNOWN. Python preserves distinct-tweet weights and the existing
-coverage/disparity formulas. Unresolved equivalence keeps conservative bounds;
-UNKNOWN is never converted into an omission or measured improvement.
-
-The shortlist is approximate and can miss paraphrases. Numeric coverage is
-conditional on an **unreviewed, retrieval-scoped partition**, not proof of global
-equivalence. Sarcasm, extraction errors, attribution, quantifiers, coverage
-granularity, model-sensitive judgments and local timeouts remain limitations.
-Revision requires validated citations and both checks repeated; unsupported
-changes are rejected/rolled back. Scientific evaluation and human assessment
-remain separate work.
-
-## Existing interfaces
-
-Earlier commands remain available:
+The reported 18 trials use three topics, two prompts and seeds 101, 202 and
+303. Their exact generation drafts are in `results/drafts/`; the per-trial
+RDF graphs and first checks are also supplied. To rerun checking with Qwen,
+use new output folders:
 
 ```powershell
-& .\.venv\Scripts\python.exe .\run_source_extraction.py --topic Obama --limit 90
-& .\.venv\Scripts\python.exe .\populate_ontology.py --topic Obama
-& .\.venv\Scripts\python.exe .\main.py --section draft --topic Obama --prompt-id 1
-& .\.venv\Scripts\python.exe .\summary_agent.py path/to/draft.json --graph path/to/Obama.ttl --topic Obama --disparity-threshold 0.25 --max-revisions 3
+# Check the saved drafts with the revised checker.
+& .\.venv\Scripts\python.exe .\run_final_agent.py --out results/new_agent
+& .\.venv\Scripts\python.exe .\run_final_agent.py --proportion-check --first-checks results/new_agent --out results/new_agent_proportion
+# Evaluate after the agent has finished; labels are joined here only.
+& .\.venv\Scripts\python.exe .\evaluate_label_free_run.py --run results/new_agent
+& .\.venv\Scripts\python.exe .\evaluate_label_free_run.py --run results/new_agent_proportion
+& .\.venv\Scripts\python.exe .\evaluate.py --references --out results/new_metrics.csv
+& .\.venv\Scripts\python.exe .\evaluate.py --system baseline --inputs results/baseline_pc --out results/new_metrics.csv
+& .\.venv\Scripts\python.exe .\evaluate.py --system agent --inputs results/new_agent --out results/new_metrics.csv
+& .\.venv\Scripts\python.exe .\evaluate.py --system agent_proportion --inputs results/new_agent_proportion --out results/new_metrics.csv
+& .\.venv\Scripts\python.exe .\evaluate.py --report --out results/new_metrics.csv
 ```
 
-`summary_agent.py` consumes saved inputs; `run_pipeline.py` creates them. For
-inspection use `python main.py --section data` or `--section ontology`.
-Optional OpenAI initial generation remains explicitly selectable; the full
-pipeline uses local Ollama.
+The ontology queries of the report run separately:
 
-Details: [ontology/query scope](docs/SECTION_2.md), [generation](docs/SECTION_3.md),
-[checkers](docs/CHECK_COMPONENTS.md), [LangGraph/revision](docs/SUMMARY_AGENT.md),
-[dataset provenance](data/divsumm/README.md), [ontology](ontology/README.md).
+```powershell
+# Q1-Q9 on the asserted graph and on the inferred graph (Q1, Q4, Q7 and Q8 need inference;
+#   Q7 and Q8 run on a copy with the test assertions listed in run_queries.py)
+& .\.venv\Scripts\python.exe .\run_queries.py
+# source_evidence on one run graph: tweets and claims per group (evaluation side, reads labels)
+& .\.venv\Scripts\python.exe .\run_queries.py --graph results/agent_rerun/Obama_prompt1_seed101_artifacts/Obama.ttl --topic Obama
+```
+
+`evaluate.py` writes one row per summary to `results/eval/metrics.csv` (an agent
+output also yields its draft, as system `agent_draft`) and the tables to
+`results/eval/report.md`. Add `--cache scores.json` to reuse MNLI and BART
+scores of identical texts; on a CPU BARTScore takes about a minute per summary.
+
+Finished trials are skipped, so rerunning a command resumes it. Qwen through
+Ollama is not reproducible across sessions, even at temperature 0, so a rerun
+can differ in individual verdicts.
+
+## Tests
+
+```powershell
+& .\.venv\Scripts\python.exe -m unittest discover -s tests
+```
+
+The offline tests mock model replies (`tests/fakes.py`); every check,
+tool, graph query and LangGraph transition is the real code. They cover the
+claim extraction and its quotation checks, ontology population, inference and the Q1-Q9 and source_evidence queries,
+`lookup_fact` retrieval, the fact checker's evidence guards, verdict validation
+and counting rules, the bounded revise-recheck-rollback loop, the proportion
+layer, the label-free guarantees (no request carries a label, the agent's graph
+has none), the pipeline end to end from raw tweets to saved results, the metrics
+and cost accounting, and replays of the recorded runs. One test calls the live
+models and runs only with `INFOIAG_LIVE=1`; one documents a known limitation as
+an expected failure.
+
+## Results
+
+| Folder | Contents |
+|---|---|
+| `results/agent_checker_v2/` | **Final run**: 18 trials, revised checker, with `evaluation.json` and `summary.json` |
+| `results/agent_checker_v2_proportion/` | Final run with the proportion feedback layer |
+| `results/eval/` | Summary quality (ROUGE, BARTScore), fairness (Equal Coverage per dialect group) and cost of every system: `metrics.csv` and `report.md` |
+| `results/baseline_pc/` | The 18 baseline summaries (one Qwen call, no agent) |
+| `results/checker_evaluation/` | Checker validation: reference labels, labeling guideline, scored runs, scripts, 60-claim validation sheet with the labels of two LLM annotators (`scripts/kappa.py` computes Cohen's kappa) |
+| `results/agent_compliant_v2/` | Original-checker comparison reported in Tables 13-14 |
+| `results/agent_final/` | Recorded first checks; `run_final_agent.py` reuses their claim extraction |
+| `results/agent_rerun/`, `results/evidence/` | Recorded drafts and per-trial RDF graphs used by `run_final_agent.py` |
+| `results/drafts/` | The 18 exact generation drafts used in the reported trials |
+
+Main findings, detailed in [docs/CHECKER_EVALUATION.md](docs/CHECKER_EVALUATION.md):
+
+- On the held-out topics the revised checker's accuracy is 0.80; the original
+  checker's was 0.69.
+- With the revised checker the 18 drafts contain 0 contradicted claims, so
+  the agent changes 0 of 18 summaries.
+- With the proportion layer one summary changes.
+- Mean dialect Equal Coverage is 0.0024 in both runs.
+- Summary quality is unchanged by the agent (ROUGE-1 0.224, BARTScore
+  faithfulness -3.60, as for its drafts). The agent's checking costs about 24
+  model calls, 53k tokens and 700 s per trial, against one call and 21 s for
+  the draft. See `results/eval/report.md`.
+
+## Limitations
+
+- The checker's reference labels were made by an LLM and validated by two
+  further LLM annotators on a 60-claim sample (Cohen's kappa 0.90 against the
+  reference, 0.93 between them). Validation by people is still open.
+- The checker confirms about 6 in 10 supported claims. A claim with wrong
+  citations stays UNKNOWN.
+- Every result comes from a single run of a 4B model.
+
+Dataset provenance: [data/divsumm/README.md](data/divsumm/README.md). Ontology:
+[ontology/README.md](ontology/README.md).
