@@ -25,18 +25,19 @@ reference_labels.csv marks a random sample of 60 claims (29 SUPPORTED, 31
 UNKNOWN; 25 McDonalds, 22 Obama, 13 Superbowl). Two further LLM annotators
 labeled this sample blind to the reference, each in its own session that could
 read only GUIDELINE.md and the sheet (annotation_sheet_60.csv): Claude Sonnet 5.5
-(annotation_sheet_60_claude_sonnet.csv) and Claude Opus 5.5, the model that made
-the reference labels (annotation_sheet_60_claude_opus.csv). The first sheet
+(annotation_sheet_60_Saif.csv) and Claude Opus 5.5, the model that made
+the reference labels (annotation_sheet_60_Muhire.csv). Saif and Muhire are the
+sheet identifiers; renaming the files does not change the label source. The first sheet
 listed only the IDs of the 58, 58 and 90 tweets cited by three claims; the sheet
 now writes out every tweet and both annotators re-labeled those three rows.
 
 | Raters (60 claims) | Agreement | Cohen's kappa |
 |---|---|---|
-| Annotator 1 (Sonnet) vs annotator 2 (Opus) | 0.97 | 0.93 |
-| Annotator 1 vs reference | 0.95 | 0.90 |
-| Annotator 2 vs reference | 0.95 | 0.90 |
-| Annotator 1 / 2 vs revised checker (final run) | 0.83 / 0.83 | 0.67 / 0.67 |
-| Annotator 1 / 2 vs original checker | 0.67 / 0.63 | 0.33 / 0.27 |
+| Saif sheet vs Muhire sheet | 0.97 | 0.93 |
+| Saif sheet vs reference | 0.95 | 0.90 |
+| Muhire sheet vs reference | 0.95 | 0.90 |
+| Saif / Muhire sheets vs revised checker (final run) | 0.83 / 0.83 | 0.67 / 0.67 |
+| Saif / Muhire sheets vs original checker | 0.67 / 0.63 | 0.33 / 0.27 |
 
 On the 58 claims where the annotators agree, the revised checker matches them on
 49 (0.84) and the original checker on 38 (0.66); on the 34 held-out claims among

@@ -97,10 +97,10 @@ def checker_tables():
     broken = sum(original[k] == labels[k] and final[k] != labels[k] for k in held_out)
     sample = [k for k in claims if reference[k]["in_validation_sample"] == "yes"]
     sheets = {name: {r["key"]: r["your_verdict"] for r in csv_rows(CHECKS / filename)}
-              for name, filename in (("Sonnet", "annotation_sheet_60_claude_sonnet.csv"),
-                                     ("Opus", "annotation_sheet_60_claude_opus.csv"))}
+              for name, filename in (("Saif", "annotation_sheet_60_Saif.csv"),
+                                     ("Muhire", "annotation_sheet_60_Muhire.csv"))}
     agreement = {}
-    for first, second in (("Sonnet", "Opus"), ("Sonnet", "reference"), ("Opus", "reference")):
+    for first, second in (("Saif", "Muhire"), ("Saif", "reference"), ("Muhire", "reference")):
         a, b = sheets[first], labels if second == "reference" else sheets[second]
         if any(k not in a or k not in b or a[k] not in VERDICTS or b[k] not in VERDICTS for k in sample):
             raise ValueError("The annotation sample must contain 60 complete labels per annotator.")
@@ -117,7 +117,7 @@ def checker_tables():
             "mcnemar": {"corrected": corrected, "broken": broken,
                         "p": float(binomtest(min(corrected, broken), corrected + broken).pvalue)},
             "annotation_agreement": agreement,
-            "annotation_provenance": "The supplied filled sheets are labelled Claude Sonnet / Claude Opus, not human raters.",
+            "annotation_provenance": "Saif and Muhire are sheet identifiers; their supplied labels originated from Claude Sonnet and Claude Opus, respectively.",
             "unsupported_claims_with_uncited_support": sum(r["reference_verdict"] == "UNKNOWN" and
                                                          bool(r["supporting_uncited_tweets"].strip()) for r in reference.values())}
 

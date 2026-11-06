@@ -1,6 +1,6 @@
-"""Agreement of the two human annotators with each other and with the reference labels.
+"""Agreement between two annotation sheets and the reference labels.
 
-    python scripts/kappa.py annotation_sheet_60_NAME1.csv annotation_sheet_60_NAME2.csv
+    python scripts/kappa.py annotation_sheet_60_Saif.csv annotation_sheet_60_Muhire.csv
 
 Each file is a filled copy of annotation_sheet_60.csv (column your_verdict: SUPPORTED,
 CONTRADICTED or UNKNOWN). Prints raw agreement and Cohen's kappa for every pair.

@@ -21,7 +21,7 @@ class SubmissionTests(unittest.TestCase):
         self.assertAlmostEqual(result['table12_held_out']['Revised']['accuracy'], 105 / 132)
         self.assertEqual((result['mcnemar']['corrected'], result['mcnemar']['broken']), (21, 7))
         self.assertAlmostEqual(result['mcnemar']['p'], 0.012540951371192932)
-        self.assertAlmostEqual(result['annotation_agreement']['Sonnet vs reference']['kappa'], 0.9)
+        self.assertAlmostEqual(result['annotation_agreement']['Saif vs reference']['kappa'], 0.9)
 
     def test_reported_agent_and_proportion_outcomes_are_preserved(self):
         result = experiment_tables()
