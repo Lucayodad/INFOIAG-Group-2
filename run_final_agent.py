@@ -11,8 +11,11 @@ Its first check seeds the agent's cache: claim extraction and fact verdicts
 run at temperature 0, never saw a label (the fact checker's evidence view
 drops it) and repeated identically in every recorded recheck (133/133).
 results/agent_final holds the same first check with failed extractions
-redone; it is preferred when present. Finished trials are skipped, so
-rerunning the same command resumes.
+redone; it is preferred when present. Fact verdicts are reused only when
+the current checker made them (fact_check.CHECKER_VERSION): after the
+2026-11-05 checker revision every claim is checked anew, while the claim
+extraction is still reused. Finished trials are skipped, so rerunning the
+same command resumes.
 
     python run_final_agent.py --out results/agent_compliant [--trial Obama_prompt1]
 
@@ -20,6 +23,13 @@ With --viewpoint-check the agent also repairs a viewpoint of the tweets that
 the summary omits (stances of the extracted tweet claims, no label):
 
     python run_final_agent.py --viewpoint-check --out results/agent_viewpoint
+
+With --proportion-check one feedback layer is added on top: Qwen reads every
+tweet of the topic and the summary, judges whether the summary is in
+proportion to all the tweets, and an under-represented viewpoint it names is
+repaired (no label is read or named):
+
+    python run_final_agent.py --proportion-check --out results/agent_proportion
 """
 
 import argparse
@@ -31,6 +41,7 @@ import traceback
 
 from rdflib import Graph
 
+from fact_check import CHECKER_VERSION
 from ollama_backend import OllamaClient
 from ontology_tools import NS
 from rerun_agent_trials import summarize
@@ -97,8 +108,13 @@ def main():
     parser.add_argument("--out", type=Path, default=ROOT / "results" / "agent_compliant")
     parser.add_argument("--trial", nargs="*", default=[], help="Only trials whose name contains one of these")
     parser.add_argument("--max-revisions", type=int, default=3)
+    parser.add_argument("--first-checks", type=Path, default=FIRST_CHECKS,
+                        help="Finished runs whose first check of each draft seeds the cache "
+                             "(fact verdicts only from the current checker)")
     parser.add_argument("--viewpoint-check", action="store_true",
                         help="Also repair an omitted viewpoint (label-free reflection on bias)")
+    parser.add_argument("--proportion-check", action="store_true",
+                        help="Add the feedback layer checking the summary is in proportion to all tweets")
     args = parser.parse_args()
 
     names = sorted(path.stem for path in RECORDED.glob("*_prompt*_seed*.json"))
@@ -116,7 +132,7 @@ def main():
             continue
         recorded = json.loads((RECORDED / f"{name}.json").read_text(encoding="utf-8"))
         recorded = recorded.get("agent_result", recorded)
-        first = FIRST_CHECKS / f"{name}.json"
+        first = args.first_checks / f"{name}.json"
         checked = first_check(json.loads(first.read_text(encoding="utf-8"))["iterations"][0] if first.exists()
                               else recorded["iterations"][0])
         graph_path = Path(recorded["pipeline"]["graph"].replace("\\", "/"))  # recorded on Windows
@@ -129,7 +145,7 @@ def main():
                 label_free_graph(graph_path), recorded["initial_summary"],
                 topic=recorded["topic"], prompt=recorded["prompt"], client=client,
                 max_revisions=args.max_revisions, representation_metric=None,
-                viewpoint_check=args.viewpoint_check,
+                viewpoint_check=args.viewpoint_check, proportion_check=args.proportion_check,
                 check_cache=seed_check_cache(recorded["initial_summary"], checked))
         except Exception:  # noqa: BLE001 - record and continue with the next trial
             traceback.print_exc()
@@ -142,11 +158,14 @@ def main():
             "recorded_run": str((RECORDED / f"{name}.json").relative_to(ROOT)),
             "graph": str(graph_path.relative_to(ROOT)),
             "first_check": str((first if first.exists() else RECORDED / f"{name}.json").relative_to(ROOT)),
-            "first_check_note": "claim extraction and fact verdicts reused (label-free prompts); "
-                                "unclear extractions redone; revisions and rechecks computed in this run",
+            "first_check_note": "claim extraction reused (label-free prompts), unclear extractions redone; "
+                                "fact verdicts reused only from the same checker version, otherwise checked "
+                                "anew; revisions and rechecks computed in this run",
+            "checker_version": CHECKER_VERSION,
             "dialect_labels": "removed from the agent's graph; no group check; every model request "
                               f"checked for labels ({client.checked_requests} checked, none found)",
             "viewpoint_check": args.viewpoint_check,
+            "proportion_check": args.proportion_check,
             "seconds": round(time.time() - started),
         }
         output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

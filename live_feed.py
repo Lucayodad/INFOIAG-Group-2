@@ -155,6 +155,10 @@ def node_details(name, state):
         report = state["viewpoint_results"]
         return {"status": report["status"], "missing": report["missing"], "uncertain": report["uncertain"],
                 "share_by_stance": report["share_by_stance"]}
+    if name == "proportion_check":
+        report = state["proportion_results"]
+        return {"status": report["status"], "reason": report["reason"], "assessment": report["assessment"],
+                "under_represented": report["under_represented"], "sentence_id": report["sentence_id"]}
     if name == "retrieve_revision_evidence":
         result = state["revision_evidence"]
         return {"status": result["status"], "reason": result["reason"],

@@ -16,12 +16,13 @@ from typing_extensions import TypedDict
 
 from data_loader import DIALECT_LABELS, TOPICS
 from equal_coverage import CachedScorer
-from fact_check import claim_cache_key, fact_check_summary
+from fact_check import CHECKER_VERSION, claim_cache_key, fact_check_summary
 from ollama_backend import OllamaClient
 from model_usage import recording_client
 from ontology_tools import NS
+from proportion_check import PROPORTION_NOT_RUN, check_proportion, quoting_claims, verify_feedback
 from representation_check import representation_check
-from revision_retrieval import retrieve_revision_evidence
+from revision_retrieval import closest_topic_tweets, retrieve_revision_evidence
 from summary_revision import PROFILED_REVISION_INSTRUCTIONS, REVISION_INSTRUCTIONS, revise_summary
 from summary_claims import extract_sentence, extract_sentence_with_retry, flatten_summary_claims
 from summarizer import GenerationError, digest
@@ -44,6 +45,8 @@ class SummaryAgentState(TypedDict):
     representation_issues: list[dict]
     viewpoint_results: dict
     viewpoint_issues: list[dict]
+    proportion_results: dict
+    proportion_issues: list[dict]
     revision_count: int
     execution_history: list[dict]
     uncertainty_flags: list[str]
@@ -82,7 +85,7 @@ def _update(state, node, **changes):
 
 CHECKED_FIELDS = ("current_summary", "summary_claims", "extraction_errors", "factual_results",
                   "factual_issues", "representation_results", "representation_issues",
-                  "viewpoint_results", "viewpoint_issues")
+                  "viewpoint_results", "viewpoint_issues", "proportion_results", "proportion_issues")
 
 # Dialect labels are evaluation data: by default the agent has no group check,
 # never reads a label and revises only on contradicted claims.
@@ -104,6 +107,7 @@ def _metrics(state):
         for c in rep["matching"]["clusters"])
     # Recorded checks from before the viewpoint check have no viewpoint results.
     views = state.get("viewpoint_results") or VIEWPOINT_NOT_RUN
+    proportion = state.get("proportion_results") or PROPORTION_NOT_RUN
     return {"serious_factual_count": sum(i["severity"] == "serious" for i in facts["issues"]),
             "unknown_factual_count": sum(i["severity"] == "unresolved" for i in facts["issues"]),
             "disparity": rep["disparity"] if measured else None,
@@ -111,7 +115,14 @@ def _metrics(state):
             "coverage": {g: row["coverage"] for g, row in rep["coverage_by_group"].items()},
             "missing_viewpoints": list(views["missing"]),
             "reported_viewpoints": sorted(s for s, ids in views["reported"].items() if ids),
-            "supported_viewpoints": sorted(s for s, ids in views["supported"].items() if ids)}
+            "supported_viewpoints": sorted(s for s, ids in views["supported"].items() if ids),
+            "proportion_status": proportion["status"]}
+
+
+def _proportion_ids(attempt):
+    """The tweets retrieved for the under-represented viewpoint in this revision attempt."""
+    return sorted({key for task in (attempt.get("evidence") or {}).get("tasks", [])
+                   if task["kind"] == "proportion" for key in task.get("proportion_ids", [])})
 
 
 def _sentence_findings(state, sentence_ids):
@@ -129,7 +140,7 @@ def _worst_coverage(metrics):
     return None if metrics["disparity"] is None else min(metrics["coverage"].values())
 
 
-def compare_revision(previous, current, changes):
+def compare_revision(previous, current, changes, proportion_ids=()):
     """Accept a revision only if it is measurably better and nowhere worse.
 
     Changed sentences must be extracted, contain no CONTRADICTED claim, keep at
@@ -140,8 +151,11 @@ def compare_revision(previous, current, changes):
     Only the optional (legacy) group check measures coverage: there the
     worst-covered group's coverage may not fall either. With the viewpoint
     check no reported viewpoint may be lost, and a missing one counts as added
-    only when a SUPPORTED claim reports it. Progress means fewer
-    contradictions, an added viewpoint or a better-covered worst group.
+    only when a SUPPORTED claim reports it. With the proportion feedback, the
+    under-represented viewpoint counts as added only when a SUPPORTED claim of
+    a sentence whose text changed quotes one of proportion_ids, the tweets
+    retrieved for it. Progress
+    means fewer contradictions, an added viewpoint or a better-covered worst group.
     """
     targets = {row["sentence_id"] for row in changes}
     if any(record["sentence_id"] in targets and record["status"] != "extracted"
@@ -166,12 +180,20 @@ def compare_revision(previous, current, changes):
     if before["representation_status"] != "FAIL" and after["representation_status"] == "FAIL":
         return False, "representation_regression_or_incomparable"
     added = set(before["missing_viewpoints"]) & set(after["supported_viewpoints"])
-    improved = (after["serious_factual_count"] < before["serious_factual_count"] or bool(added) or
+    named = set(proportion_ids) if before["proportion_status"] == "FAIL" else set()
+    # Only a sentence whose text changed can add a viewpoint: citations alone are not read.
+    rewritten = {row["sentence_id"] for row in changes
+                 if "before" not in row or row["before"]["text"].strip() != row["after"]["text"].strip()}
+    grounded = bool(named) and bool(quoting_claims(current["factual_results"], named, rewritten))
+    improved = (after["serious_factual_count"] < before["serious_factual_count"] or bool(added) or grounded or
                 worst_before is not None and worst_after > worst_before + 1e-12)
     if not improved and before["missing_viewpoints"]:
         # A failed viewpoint repair, retried with this finding.
         still = set(before["missing_viewpoints"]) - set(after["reported_viewpoints"])
         return False, "viewpoint_still_missing" if still else "viewpoint_not_supported"
+    if not improved and named and not before["serious_factual_count"]:
+        # A failed proportion repair (contradictions are repaired first), retried with this finding.
+        return False, "proportion_not_supported"
     return (True, "measured_improvement") if improved else (False, "no_improvement")
 
 
@@ -183,12 +205,15 @@ def _extraction_key(number, sentence):
     return json.dumps([number, sentence["text"], sentence["source_ids"]], ensure_ascii=False)
 
 
-def seed_check_cache(summary, checked):
+def seed_check_cache(summary, checked, *, any_checker=False):
     """Caches holding a recorded first check of this same draft, to reuse.
 
     Extraction and fact checks run at temperature 0 and repeated identically in
     every recorded recheck. Sentences whose extraction failed are not seeded,
     so they get the current extraction retry; their claims are checked anew.
+    A fact verdict is reused only if the current checker made it (its
+    checker_version); older verdicts are checked anew. any_checker=True
+    reuses them anyway, for replaying a historical run exactly.
     """
     if [record["sentence"] for record in checked["summary_claims"]] != [s["text"] for s in summary["sentences"]]:
         raise ValueError("The recorded check belongs to a different draft.")
@@ -198,7 +223,8 @@ def seed_check_cache(summary, checked):
             cache["extraction"][_extraction_key(number, sentence)] = ("ok", deepcopy(record))
     by_id = {a["summary_claim_id"]: a for a in checked["factual_results"]["assessments"]}
     for claim in flatten_summary_claims(checked["summary_claims"]):
-        if claim["claim_id"] in by_id:
+        if claim["claim_id"] in by_id and (any_checker or
+                                           by_id[claim["claim_id"]].get("checker_version") == CHECKER_VERSION):
             cache["facts"][claim_cache_key(claim)] = deepcopy(by_id[claim["claim_id"]])
     return cache
 
@@ -211,7 +237,8 @@ def build_summary_agent(graph, client, *, disparity_threshold=None,
                         max_revision_tweets=9, revision_evidence_bytes=7000,
                         revision_max_input_bytes=14000, mnli_scorer=None,
                         representation_metric=None, check_cache=None,
-                        viewpoint_check=False, min_viewpoint_share=0.25):
+                        viewpoint_check=False, min_viewpoint_share=0.25,
+                        proportion_check=False):
     """Compile the sequential graph with read-only evidence outside its state.
 
     Serious issues mean conclusive under the existing evidence guards, not
@@ -222,7 +249,11 @@ def build_summary_agent(graph, client, *, disparity_threshold=None,
     viewpoint_check adds the label-free reflection on bias: a viewpoint held by
     at least min_viewpoint_share of the topic's tweets (from the stances of
     their extracted claims) that no summary claim reports is repaired once no
-    contradiction is left, and the reviser gets a role profile. Unchanged
+    contradiction is left, and the reviser gets a role profile.
+    proportion_check adds one label-free feedback layer: Qwen judges whether
+    the summary represents all the topic's tweets in proportion, and an opinion
+    it finds under-represented is repaired the same way, from the topic's
+    tweets closest to it. Unchanged
     sentences are not re-extracted or re-checked: their earlier results in this
     run (or a recorded first check from seed_check_cache) are reused.
     """
@@ -245,6 +276,8 @@ def build_summary_agent(graph, client, *, disparity_threshold=None,
         raise ValueError("viewpoint_check must be True or False.")
     if type(min_viewpoint_share) not in (int, float) or not 0 < min_viewpoint_share <= 1:
         raise ValueError("min_viewpoint_share must be a number in (0, 1].")
+    if type(proportion_check) is not bool:
+        raise ValueError("proportion_check must be True or False.")
     if disparity_threshold is not None and (
         type(disparity_threshold) not in (int, float)
         or not math.isfinite(disparity_threshold) or not 0 <= disparity_threshold <= 1
@@ -266,7 +299,7 @@ def build_summary_agent(graph, client, *, disparity_threshold=None,
     cache.setdefault("extraction", {})
     cache.setdefault("facts", {})
     scorer = CachedScorer(mnli_scorer)
-    embedding_cache = {}
+    embedding_cache, proportion_cache = {}, {}
     embedding_function = embedder if embedder is not None else lambda texts: client.embed(texts, model=embedding_model)
 
     def extract_claims(state: SummaryAgentState):
@@ -318,6 +351,23 @@ def build_summary_agent(graph, client, *, disparity_threshold=None,
                                   min_share=min_viewpoint_share)
         return _update(state, "viewpoint_check", viewpoint_results=result, viewpoint_issues=result["issues"])
 
+    def check_proportions(state: SummaryAgentState):
+        result = check_proportion(evidence, state["topic"], state["current_summary"], client, cache=proportion_cache)
+        calls = 0
+        if result["status"] == "FAIL":
+            # Qwen proposes, the verified evidence decides: an opinion whose closest
+            # tweets a SUPPORTED claim already quotes is already reported.
+            try:
+                closest, calls = closest_topic_tweets(evidence, state["topic"], result["under_represented"]["viewpoint"],
+                                                      embedding_function, top_k=revision_top_k,
+                                                      embedding_cache=embedding_cache, embedding_model=embedding_model)
+                result = verify_feedback(result, state["factual_results"], closest)
+            except (ValueError, TypeError, RuntimeError, OSError) as exc:
+                result = {**result, "status": "UNKNOWN", "reason": "embedding_unavailable_or_invalid", "issues": [],
+                          "error": str(exc)}
+        return _update(state, "proportion_check", proportion_results=result, proportion_issues=result["issues"],
+                       call_counts=_counts(state, model_calls=result["model_call_count"], embedding_calls=calls))
+
     def route_checks(state: SummaryAgentState):
         checked = {key: deepcopy(state[key]) for key in CHECKED_FIELDS}
         iteration = {**checked, "metrics": _metrics(state), "revision_count": state["revision_count"],
@@ -326,7 +376,8 @@ def build_summary_agent(graph, client, *, disparity_threshold=None,
         iterations.append(iteration)
         best = len(iterations) - 1
         if revisions and revisions[-1]["status"] == "candidate":
-            accepted, reason = compare_revision(iterations[state["best_iteration"]], checked, revisions[-1]["changes"])
+            accepted, reason = compare_revision(iterations[state["best_iteration"]], checked, revisions[-1]["changes"],
+                                                _proportion_ids(revisions[-1]))
             revisions[-1].update(status="accepted" if accepted else "rolled_back", reason=reason,
                                   metrics_after=iteration["metrics"], checked_iteration=best)
             if not accepted:
@@ -342,7 +393,7 @@ def build_summary_agent(graph, client, *, disparity_threshold=None,
                                route=route, stop_reason=reason,
                                routing_decisions=state["routing_decisions"] + [decision])
         serious = [issue for issue in state["factual_issues"] + state["representation_issues"]
-                   + state["viewpoint_issues"] if issue["severity"] == "serious"]
+                   + state["viewpoint_issues"] + state["proportion_issues"] if issue["severity"] == "serious"]
         flags = []
         if state["extraction_errors"]:
             flags.append("summary_extraction_failed")
@@ -355,11 +406,14 @@ def build_summary_agent(graph, client, *, disparity_threshold=None,
         # group whose marginal interval is strictly below another's. Honor the
         # checker's FAIL even when its per-group issue list is empty.
         confirmed = bool(serious) or any(result["status"] == "FAIL" for result in
-                                         (state["factual_results"], representation, state["viewpoint_results"]))
+                                         (state["factual_results"], representation, state["viewpoint_results"],
+                                          state["proportion_results"]))
         if representation["status"] == "UNKNOWN":
             flags.append("representation_uncertainty")
         if state["viewpoint_results"]["status"] == "UNKNOWN":
             flags.append("viewpoint_uncertainty")
+        if state["proportion_results"]["status"] == "UNKNOWN":
+            flags.append("proportion_uncertainty")
         flags.extend(representation["reasons"])
         if representation["uncertain_claims"]:
             flags.append("uncertain_representation_matches")
@@ -378,7 +432,7 @@ def build_summary_agent(graph, client, *, disparity_threshold=None,
             state["representation_results"], embedding_function, top_k=revision_top_k,
             max_tweets=max_revision_tweets, max_evidence_bytes=revision_evidence_bytes,
             embedding_cache=embedding_cache, embedding_model=embedding_model,
-            viewpoint_results=state["viewpoint_results"])
+            viewpoint_results=state["viewpoint_results"], proportion_results=state["proportion_results"])
         ready = retrieved["status"] == "ready"
         decision = {"node": "retrieve_revision_evidence", "route": "revise_summary" if ready else "finalize",
                     "reason": retrieved["reason"]}
@@ -393,7 +447,7 @@ def build_summary_agent(graph, client, *, disparity_threshold=None,
     def revise(state: SummaryAgentState):
         issues = [{key: issue[key] for key in ("type", "severity", "explanation")}
                   for issue in state["factual_issues"] + state["representation_issues"] + state["viewpoint_issues"]
-                  if issue["severity"] == "serious"]
+                  + state["proportion_issues"] if issue["severity"] == "serious"]
         last = state["revisions"][-1] if state["revisions"] else None
         if last and last["status"] == "rolled_back":
             checked = state["iterations"][last["checked_iteration"]]["factual_results"]["assessments"]
@@ -413,6 +467,9 @@ def build_summary_agent(graph, client, *, disparity_threshold=None,
                                 f"{after['reported_viewpoints']} (SUPPORTED after: {after['supported_viewpoints']}): "
                                 f"a missing viewpoint counts only when a SUPPORTED claim reports it, "
                                 "and no reported viewpoint may be lost.")
+            if last["reason"].startswith("proportion"):
+                findings.append("The under-represented viewpoint counts only when a SUPPORTED claim of the "
+                                "replacement quotes one of the tweets " + ", ".join(_proportion_ids(last)) + ".")
             issues.append({"type": "rejected_previous_revision", "severity": "serious", "explanation":
                            f"Rechecking rolled back your previous replacement ({last['reason']}): "
                            f"{json.dumps(changed, ensure_ascii=False)}. Findings: {' | '.join(findings)}"})
@@ -425,7 +482,7 @@ def build_summary_agent(graph, client, *, disparity_threshold=None,
         proposal = revise_summary(state["current_summary"], issues, state["revision_evidence"],
                                   client, max_input_bytes=revision_max_input_bytes,
                                   temperature=0.7 if retry else 0, seed=42 + state["revision_count"],
-                                  instructions=PROFILED_REVISION_INSTRUCTIONS if viewpoint_check
+                                  instructions=PROFILED_REVISION_INSTRUCTIONS if viewpoint_check or proportion_check
                                   else REVISION_INSTRUCTIONS)
         attempt = {**proposal, "attempt": state["revision_count"] + 1,
                    "summary_before": deepcopy(state["current_summary"]), "evidence": state["revision_evidence"],
@@ -451,7 +508,8 @@ def build_summary_agent(graph, client, *, disparity_threshold=None,
 
     def finalize(state: SummaryAgentState):
         remaining = any(result["status"] == "FAIL" for result in
-                        (state["factual_results"], state["representation_results"], state["viewpoint_results"]))
+                        (state["factual_results"], state["representation_results"], state["viewpoint_results"],
+                         state["proportion_results"]))
         status = ("stopped_with_issues" if remaining else
                   "completed_with_uncertainty" if state["uncertainty_flags"] else "completed")
         return _update(state, "finalize", status=status)
@@ -464,12 +522,14 @@ def build_summary_agent(graph, client, *, disparity_threshold=None,
         nodes += (("representation_check", check_representation),)
     if viewpoint_check:
         nodes += (("viewpoint_check", check_views),)
+    if proportion_check:
+        nodes += (("proportion_check", check_proportions),)
     for name, function in nodes:
         builder.add_node(name, observe_node(name, function, client))
     builder.add_edge(START, "extract_summary_claims")
     builder.add_edge("extract_summary_claims", "factual_check")
     checks = ["factual_check"] + ["representation_check"] * (representation_metric is not None) \
-        + ["viewpoint_check"] * viewpoint_check + ["route_checks"]
+        + ["viewpoint_check"] * viewpoint_check + ["proportion_check"] * proportion_check + ["route_checks"]
     for left, right in zip(checks, checks[1:]):
         builder.add_edge(left, right)
     builder.add_conditional_edges("route_checks", lambda state: state["route"],
@@ -513,6 +573,7 @@ def run_summary_agent(graph, initial_summary, *, topic, prompt, client=None, **c
         "representation_results": deepcopy(REPRESENTATION_NOT_RUN)
         if check_options.get("representation_metric") is None else {},
         "representation_issues": [], "viewpoint_results": deepcopy(VIEWPOINT_NOT_RUN), "viewpoint_issues": [],
+        "proportion_results": deepcopy(PROPORTION_NOT_RUN), "proportion_issues": [],
         "revision_count": 0,
         "execution_history": [], "uncertainty_flags": [], "route": None,
         "revision_evidence": {}, "retrieval_history": [], "revisions": [],
@@ -557,6 +618,11 @@ def print_run_summary(result, output):
     if views["status"] != "NOT_RUN":
         print(f"Viewpoints: {views['status']} | missing={views['missing'] or 'none'} | "
               f"tweet share {views['share_by_stance']}")
+    proportion = result.get("proportion_results", PROPORTION_NOT_RUN)
+    if proportion["status"] != "NOT_RUN":
+        found = proportion["under_represented"]
+        print(f"Proportion feedback: {proportion['status']} ({proportion['reason']})" +
+              (f' | under-represented: "{found["viewpoint"]}"' if found else ""))
     revision_counts = {status: sum(r["status"] == status for r in result["revisions"])
                        for status in ("accepted", "rejected", "rolled_back")}
     print(f"Revisions: {result['revision_count']} attempted | " +
@@ -581,6 +647,8 @@ def main():
                              "mnli/internal: the earlier label-based group check")
     parser.add_argument("--viewpoint-check", action="store_true",
                         help="Also repair a viewpoint of the tweets that the summary omits (label-free)")
+    parser.add_argument("--proportion-check", action="store_true",
+                        help="Add the feedback layer: Qwen checks the summary is in proportion to all tweets (label-free)")
     parser.add_argument("--embedding-model", default="all-minilm")
     parser.add_argument("--output", type=Path, help="Full JSON result file (default: unique file in results/evidence/agent_runs)")
     args = parser.parse_args()
@@ -589,6 +657,7 @@ def main():
                                topic=args.topic, prompt=args.prompt or draft.get("summary_prompt"),
                                disparity_threshold=args.disparity_threshold, max_revisions=args.max_revisions,
                                embedding_model=args.embedding_model, viewpoint_check=args.viewpoint_check,
+                               proportion_check=args.proportion_check,
                                representation_metric=None if args.representation_metric == "none" else args.representation_metric)
     rendered = json.dumps(result, ensure_ascii=False, indent=2)
     output = args.output or DEFAULT_RUN_DIR / (

@@ -337,7 +337,7 @@ class CachingReproducesRecordedChecks(unittest.TestCase):
         result = run_summary_agent(Graph().parse(graph_path(name), format="turtle"),
                                    run["initial_summary"], topic="Obama", prompt=run["prompt"], client=client,
                                    disparity_threshold=0.2, max_revisions=0, mnli_scorer=scorer,
-                                   check_cache=seed_check_cache(run["initial_summary"], first))
+                                   check_cache=seed_check_cache(run["initial_summary"], first, any_checker=True))
         client.chat.assert_not_called()
         self.assertEqual(result["summary_claims"], first["summary_claims"])
         self.assertEqual(result["factual_results"]["verdict_counts"], first["factual_results"]["verdict_counts"])
@@ -347,11 +347,11 @@ class CachingReproducesRecordedChecks(unittest.TestCase):
     def test_seed_refuses_a_check_of_another_draft(self):
         other = recorded("Obama_prompt1_seed101")["iterations"][0]
         with self.assertRaises(ValueError):
-            seed_check_cache(recorded("Obama_prompt2_seed202")["initial_summary"], other)
+            seed_check_cache(recorded("Obama_prompt2_seed202")["initial_summary"], other, any_checker=True)
 
     def test_failed_extractions_are_not_seeded_so_they_get_the_retry(self):
         run = recorded("Superbowl_prompt1_seed101")
-        cache = seed_check_cache(run["initial_summary"], run["iterations"][0])
+        cache = seed_check_cache(run["initial_summary"], run["iterations"][0], any_checker=True)
         self.assertEqual(len(cache["extraction"]), 4)  # S04 failed in the recording
 
     def test_a_recheck_only_checks_the_changed_sentence(self):

@@ -68,7 +68,7 @@ def dry_run(name, client):
     run = recorded(name)
     return run_summary_agent(label_free_graph(graph_path(name)), run["initial_summary"], topic=run["topic"],
                              prompt=run["prompt"], client=client, embedder=embed,
-                             check_cache=seed_check_cache(run["initial_summary"], first_check(name)))
+                             check_cache=seed_check_cache(run["initial_summary"], first_check(name), any_checker=True))
 
 
 class LabelFreeAgent(unittest.TestCase):
@@ -96,7 +96,7 @@ class LabelFreeAgent(unittest.TestCase):
         with unittest.mock.patch("summary_agent.fact_check_summary", side_effect=spy):
             run_summary_agent(labelled, run["initial_summary"], topic=run["topic"], prompt=run["prompt"],
                               client=RecordingQwen(), embedder=embed, max_revisions=0,
-                              check_cache=seed_check_cache(run["initial_summary"], first_check(name)))
+                              check_cache=seed_check_cache(run["initial_summary"], first_check(name), any_checker=True))
         self.assertEqual([0], seen)
         self.assertEqual(before, set(labelled))  # the caller's graph is unchanged
 
@@ -148,7 +148,7 @@ class LabelFreeAgent(unittest.TestCase):
             self.assertEqual(raw["summary_claims"], cleaned["summary_claims"])
             self.assertEqual([a["verdict"] for a in raw["factual_results"]["assessments"]],
                              [a["verdict"] for a in cleaned["factual_results"]["assessments"]])
-            seed_check_cache(recorded(name)["initial_summary"], cleaned)
+            seed_check_cache(recorded(name)["initial_summary"], cleaned, any_checker=True)
 
     def test_fact_checker_never_showed_qwen_a_label(self):
         # The recorded evidence carries labels; the view sent to Qwen must not.

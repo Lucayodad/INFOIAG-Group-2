@@ -26,7 +26,7 @@ Do not rewrite unaffected sentences. Return only replacements as specified.
 """
 
 # Profiling (Lecture 5): the reviser's role, written into its prompt. Used
-# with the viewpoint check; the default prompt is unchanged.
+# with the viewpoint check or the proportion feedback; the default prompt is unchanged.
 REVISER_PROFILE = ("You are an impartial editor of tweet summaries. You report the viewpoints "
                    "the tweets express, never take a side yourself, and state only what the cited tweets say.\n")
 PROFILED_REVISION_INSTRUCTIONS = REVISER_PROFILE + REVISION_INSTRUCTIONS
@@ -123,6 +123,14 @@ def revise_summary(summary, confirmed_issues, retrieved, client, *, max_input_by
                     if task["kind"] == "viewpoint" and task["sentence_id"] == key and not set(ids).intersection(task["viewpoint_ids"]):
                         raise ValueError(f"Cite at least one of the tweets expressing the {task['stance']} viewpoint: "
                                          f"{', '.join(task['viewpoint_ids'])}.")
+                    if task["kind"] == "proportion" and task["sentence_id"] == key \
+                            and not set(ids).intersection(task["proportion_ids"]):
+                        raise ValueError("Cite at least one of the tweets expressing the under-represented "
+                                         f"viewpoint: {', '.join(task['proportion_ids'])}.")
+                    if task["kind"] == "proportion" and task["sentence_id"] == key \
+                            and replacement["text"].strip() == summary["sentences"][int(key[1:]) - 1]["text"].strip():
+                        raise ValueError("Rewrite the sentence's text so that it reports the under-represented "
+                                         "viewpoint; new citations alone change nothing a reader sees.")
                 index = int(key[1:]) - 1
                 candidate["sentences"][index] = {"text": replacement["text"], "source_ids": ids}
             if seen != set(targets):

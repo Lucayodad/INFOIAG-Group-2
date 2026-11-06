@@ -6,7 +6,7 @@ import unittest
 from unittest.mock import Mock, patch
 
 from fact_agent import run_fact_agent, _loop_schema
-from fact_check import FactCheckError, compact_evidence, expand_verdict, prepare_assessment
+from fact_check import MAX_INPUT_BYTES, FactCheckError, compact_evidence, expand_verdict, prepare_assessment
 from fact_tools import lookup_fact
 from representation_check import match_summary_claims
 from representation_tools import get_group_claims
@@ -106,9 +106,9 @@ class FactualReliabilityTests(unittest.TestCase):
         item = next(v for v in original.values() if v["kind"] == "tweet")
         large = {**self.assessment, "evidence": {f"urn:tweet:{i:03d}": {**item, "tweet_id": f"T{i:03d}"} for i in range(300)}}
         view = compact_evidence(large)
-        self.assertLessEqual(len(view["evidence_catalogue"]), 16)
-        self.assertLessEqual(len(json.dumps(view["evidence_catalogue"], ensure_ascii=False).encode()), 8000)
-        self.assertEqual(view["selection"]["omitted"], 284)
+        self.assertLessEqual(len(view["evidence_catalogue"]), 40)
+        self.assertLessEqual(len(json.dumps(view["evidence_catalogue"], ensure_ascii=False).encode()), 12000)
+        self.assertEqual(view["selection"]["omitted"], 300 - len(view["evidence_catalogue"]))
         later = compact_evidence({**large, "evidence": {**large["evidence"], "urn:extra": item}}, view["all_evidence_id_map"])
         for key, value in view["all_evidence_id_map"].items():
             self.assertEqual(later["all_evidence_id_map"][key], value)
@@ -131,8 +131,9 @@ class FactualReliabilityTests(unittest.TestCase):
         self.assertEqual(len(result["retrieval"]["tweets"]), 200)
         payload = client.chat.call_args.args[0]
         self.assertNotIn('"result":', payload["messages"][-1]["content"])
-        self.assertLessEqual(len(json.dumps(payload["messages"], ensure_ascii=False).encode()), 16000)
-        self.assertEqual(result["evidence_selection"]["shown"], 16)
+        self.assertLessEqual(len(json.dumps({"messages": payload["messages"], "format": payload["format"]},
+                                            ensure_ascii=False).encode()), MAX_INPUT_BYTES)
+        self.assertEqual(result["evidence_selection"]["shown"], 40)
 
     def test_insufficiency_is_not_an_automatic_contradiction(self):
         for text in ("Many users like Obama.", "Some users acknowledge his popularity."):
@@ -141,7 +142,7 @@ class FactualReliabilityTests(unittest.TestCase):
                 explanation="These tweets do not establish the claimed scope or an opposing fact.")]
             result = run_fact_agent(self.graph, {**self.claim, "claim": text}, client)
             self.assertEqual(result["verdict"], "UNKNOWN")
-            self.assertIn("Negative sentiment", client.chat.call_args.args[0]["messages"][0]["content"])
+            self.assertIn("never count against a claim", client.chat.call_args.args[0]["messages"][0]["content"])
 
 
 class RepresentationReliabilityTests(unittest.TestCase):

@@ -45,6 +45,36 @@ def cosine(left, right):
     return sum((x / a) * (y / b) for x, y in zip(left, right))
 
 
+def _store_embeddings(cache, model, texts, vectors):
+    """Validate vectors before filling the cache, including dimensions across calls."""
+    if not isinstance(vectors, list) or len(vectors) != len(texts):
+        raise ValueError("Embedding provider returned the wrong number of vectors.")
+    existing = next(iter(cache.values()), None)
+    reference = existing if existing is not None else vectors[0]
+    for vector in vectors:
+        cosine(reference, vector)
+    cache.update({(model, text): vector for text, vector in zip(texts, vectors)})
+
+
+def closest_topic_tweets(graph, topic, query, embedder, *, top_k=3, embedding_cache=None,
+                         embedding_model="all-minilm"):
+    """The topic's top_k tweets most similar to query, [(tweet_id, similarity)], and the embedding calls made.
+
+    Wherever a tweet is in the list; stable cosine/ID order, the same ranking
+    as a proportion repair's. ValueError if the tweets are missing or ambiguous.
+    """
+    corpus, problems = topic_tweets(graph, topic)
+    if problems or not corpus or len({t["tweet_id"] for t in corpus}) != len(corpus):
+        raise ValueError("The topic's original tweets are missing or ambiguous.")
+    cache = {} if embedding_cache is None else embedding_cache
+    missing = [text for text in sorted({t["text"] for t in corpus} | {query}) if (embedding_model, text) not in cache]
+    if missing:
+        _store_embeddings(cache, embedding_model, missing, embedder(missing))
+    ranked = sorted((-cosine(cache[(embedding_model, query)], cache[(embedding_model, t["text"])]), t["tweet_id"])
+                    for t in corpus)
+    return [(key, -score) for score, key in ranked[:top_k]], int(bool(missing))
+
+
 def viewpoint_task(summary_claims, factual_results, viewpoint_results):
     """A task adding the most widely held missing viewpoint to one sentence, or None.
 
@@ -80,16 +110,54 @@ def viewpoint_task(summary_claims, factual_results, viewpoint_results):
                            "viewpoint, citing a tweet that expresses it, and keep the sentence's own grounded content."}
 
 
+def proportion_task(summary_claims, factual_results, proportion_results):
+    """A task adding the under-represented viewpoint named by the proportion feedback, or None.
+
+    The rewritten sentence is the one the feedback chose when it was extracted
+    or has no claim; otherwise the viewpoint task's rule picks it (a no-claim
+    sentence, else the fewest SUPPORTED claims and most issues, the last on ties).
+    The sentence's own cited tweets stay available for its grounded content.
+    The tweets expressing the viewpoint are found at retrieval (preferred_ids).
+    """
+    found = proportion_results["under_represented"]
+    supported = {r["sentence_id"]: 0 for r in summary_claims}
+    issues = dict(supported)
+    for assessment in factual_results["assessments"]:
+        if assessment["verdict"] == "SUPPORTED" and assessment["sentence_id"] in supported:
+            supported[assessment["sentence_id"]] += 1
+    for issue in factual_results["issues"]:
+        if issue["sentence_id"] in issues:
+            issues[issue["sentence_id"]] += 1
+    candidates = [r for r in summary_claims if r["status"] in ("extracted", "no_claim")]
+    if not candidates:
+        return None
+    chosen = [r for r in candidates if r["sentence_id"] == proportion_results["sentence_id"]]
+    target = chosen[0] if chosen else min(candidates, key=lambda r: (
+        r["status"] != "no_claim", supported[r["sentence_id"]], -issues[r["sentence_id"]], -int(r["sentence_id"][1:])))
+    return {"task_id": "proportion", "kind": "proportion", "sentence_id": target["sentence_id"],
+            "query": found["viewpoint"], "viewpoint": found["viewpoint"], "preferred_ids": [],
+            "keep_ids": sorted({i for c in target["claims"] for i in c["cited_source_ids"]}),
+            "explanation": f'Proportion feedback: the summary under-represents this opinion of the tweets: '
+                           f'"{found["viewpoint"]}". Rewrite this sentence so that it also reports what the '
+                           "retrieved tweets say about it, in your own words and only as far as they express it; "
+                           "do not copy this description. Cite at least one of those tweets, and keep the "
+                           "sentence's own grounded content where it fits."}
+
+
 def retrieve_revision_evidence(graph, topic, summary_claims, factual_results, representation_results,
                                embedder, *, top_k=3, max_tweets=9, max_evidence_bytes=7000,
-                               embedding_cache=None, embedding_model="all-minilm", viewpoint_results=None):
+                               embedding_cache=None, embedding_model="all-minilm", viewpoint_results=None,
+                               proportion_results=None):
     """Retrieve for confirmed issues only; similarity is relevance, not entailment.
 
     Exact cited evidence is prioritized for factual repairs. Representation
     candidates are restricted to supporters of confirmed omitted claims in the
     affected group. A missing viewpoint is repaired only once no contradiction
     is left: the rewritten sentence keeps its own cited tweets and gains the
-    top_k most similar tweets expressing the viewpoint. Stable cosine/ID
+    top_k most similar tweets expressing the viewpoint. An under-represented
+    viewpoint named by the proportion feedback is repaired likewise, also only
+    once no contradiction is left: the topic's top_k tweets closest to the
+    viewpoint come first, then the sentence's own. Stable cosine/ID
     ordering and whole-tweet limits make this reproducible for fixed
     embeddings. No graph or source text is modified.
     """
@@ -172,6 +240,10 @@ def retrieve_revision_evidence(graph, topic, summary_claims, factual_results, re
         task = viewpoint_task(summary_claims, factual_results, viewpoint_results)
         if task is not None:
             tasks.append(task)
+    if not tasks and proportion_results is not None and proportion_results["status"] == "FAIL":
+        task = proportion_task(summary_claims, factual_results, proportion_results)
+        if task is not None:
+            tasks.append(task)
     result = {"status": "insufficient", "reason": "no_actionable_source_evidence", "tasks": tasks,
               "tweets": [], "embedding_model": embedding_model, "embedding_call_count": 0,
               "tool_call_count": tools, "evidence_bytes": 0}
@@ -195,34 +267,37 @@ def retrieve_revision_evidence(graph, topic, summary_claims, factual_results, re
     try:
         if missing:
             result["embedding_call_count"] += 1
-            vectors = embedder(missing)
-            if not isinstance(vectors, list) or len(vectors) != len(missing):
-                raise ValueError("Embedding provider returned the wrong number of vectors.")
-            # Validate before filling the cache, including dimensions across calls.
-            existing = next(iter(cache.values()), None)
-            reference = existing if existing is not None else vectors[0]
-            for vector in vectors:
-                cosine(reference, vector)
-            cache.update({(embedding_model, text): vector for text, vector in zip(missing, vectors)})
+            _store_embeddings(cache, embedding_model, missing, embedder(missing))
         chosen = {}
         for task in tasks:
             # A (legacy) group task's preferred IDs already are that group's tweets;
             # a viewpoint task ranks its sentence's own tweets first.
             first = set(task.get("keep_ids", task["preferred_ids"]))
-            allowed = [tweet for tweet in corpus if task["kind"] == "factual"
+            allowed = [tweet for tweet in corpus if task["kind"] in ("factual", "proportion")
                        or tweet["tweet_id"] in task["preferred_ids"] or tweet["tweet_id"] in first]
+            score = {tweet["tweet_id"]: cosine(cache[(embedding_model, task["query"])],
+                                               cache[(embedding_model, tweet["text"])]) for tweet in allowed}
+            kept = set()
+            if task["kind"] == "proportion":
+                # The topic's tweets closest to the viewpoint come first (wherever they are
+                # in the list; as in closest_topic_tweets), then the sentence's own.
+                closest = sorted((-score[key], key) for key in score)
+                task["preferred_ids"] = [key for _, key in closest[:top_k]]
+                kept, first = first - set(task["preferred_ids"]), set(task["preferred_ids"])
             ranking = []
             for tweet in allowed:
-                score = cosine(cache[(embedding_model, task["query"])], cache[(embedding_model, tweet["text"])])
-                preferred = tweet["tweet_id"] in first
-                if preferred or score > 0:
-                    ranking.append((not preferred, -score, tweet["tweet_id"], tweet))
+                key = tweet["tweet_id"]
+                rank = 0 if key in first else 1 if key in kept else 2
+                if rank == 0 or task["kind"] == "proportion" and rank == 1 \
+                        or task["kind"] != "proportion" and score[key] > 0:
+                    ranking.append((rank, -score[key], key, tweet))
             task["evidence_ids"] = []
             task["similarities"] = {}
             # A factual repair keeps all of the sentence's own cited tweets (within the
             # tweet and byte limits): the claims it does not contest still need their support.
             limit = (max(top_k, len(task["preferred_ids"])) if task["kind"] == "factual" else
-                     len(first) + top_k if task["kind"] == "viewpoint" else top_k)
+                     len(first) + top_k if task["kind"] == "viewpoint" else
+                     len(first) + len(kept) if task["kind"] == "proportion" else top_k)
             for _, negative_score, key, tweet in sorted(ranking, key=lambda item: item[:3]):
                 if len(task["evidence_ids"]) >= limit:
                     break
@@ -235,10 +310,11 @@ def retrieve_revision_evidence(graph, topic, summary_claims, factual_results, re
                 chosen = candidate
                 task["evidence_ids"].append(key)
                 task["similarities"][key] = round(-negative_score, 12)
-            if task["kind"] == "viewpoint":
+            if task["kind"] in ("viewpoint", "proportion"):
                 # The tweets expressing the missing viewpoint, which the replacement must cite.
-                task["viewpoint_ids"] = [key for key in task["evidence_ids"] if key in set(task["preferred_ids"])]
-            if not task["evidence_ids"] or task["kind"] == "viewpoint" and not task["viewpoint_ids"]:
+                task[task["kind"] + "_ids"] = [key for key in task["evidence_ids"] if key in set(task["preferred_ids"])]
+            if not task["evidence_ids"] or task["kind"] in ("viewpoint", "proportion") \
+                    and not task[task["kind"] + "_ids"]:
                 result["reason"] = "evidence_missing_or_budget_exhausted"
                 return result
         result.update(status="ready", reason="retrieved", tweets=list(chosen.values()),

@@ -258,7 +258,7 @@ class ViewpointAgent(unittest.TestCase):
         run, client = recorded(name), RecordingQwen()
         result = run_summary_agent(label_free_graph(graph_path(name)), run["initial_summary"], topic=run["topic"],
                                    prompt=run["prompt"], client=client, embedder=embed,
-                                   check_cache=seed_check_cache(run["initial_summary"], first_check(name)), **options)
+                                   check_cache=seed_check_cache(run["initial_summary"], first_check(name), any_checker=True), **options)
         return result, client
 
     def test_recorded_summary_missing_the_positive_viewpoint(self):

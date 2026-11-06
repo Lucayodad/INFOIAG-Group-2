@@ -1,0 +1,709 @@
+{
+  "trials": 18,
+  "changed": 0,
+  "verdicts": {
+    "draft": {
+      "SUPPORTED": 83,
+      "UNKNOWN": 127
+    },
+    "final": {
+      "SUPPORTED": 83,
+      "UNKNOWN": 127
+    }
+  },
+  "mean_equal_coverage": {
+    "draft": 0.002424789737960814,
+    "final": 0.002424789737960814
+  },
+  "summaries_missing_a_viewpoint": {
+    "draft": 4,
+    "final": 4
+  },
+  "labels_used_by": "this evaluation only (dataset labels joined after the agent finished)",
+  "rows": {
+    "McDonalds_prompt1_seed101": {
+      "changed": false,
+      "revisions": {},
+      "stop_reason": "uncertainty_only",
+      "verdicts_draft": {
+        "SUPPORTED": 5,
+        "UNKNOWN": 5
+      },
+      "verdicts_final": {
+        "SUPPORTED": 5,
+        "UNKNOWN": 5
+      },
+      "missing_viewpoints_draft": [],
+      "missing_viewpoints_final": [],
+      "draft": {
+        "equal_coverage": 0.0020597969821688753,
+        "coverage": {
+          "AA": 0.013247267094363148,
+          "Hisp": 0.013490142195563142,
+          "White": 0.008734161435083175
+        },
+        "worst_group": 0.008734161435083175,
+        "four_fifths_disparity": 0.35255230756901823,
+        "metric_version": "mnli_sentence_mean_v1"
+      },
+      "final": {
+        "equal_coverage": 0.0020597969821688753,
+        "coverage": {
+          "AA": 0.013247267094363148,
+          "Hisp": 0.013490142195563142,
+          "White": 0.008734161435083175
+        },
+        "worst_group": 0.008734161435083175,
+        "four_fifths_disparity": 0.35255230756901823,
+        "metric_version": "mnli_sentence_mean_v1"
+      }
+    },
+    "McDonalds_prompt1_seed202": {
+      "changed": false,
+      "revisions": {},
+      "stop_reason": "uncertainty_only",
+      "verdicts_draft": {
+        "UNKNOWN": 9,
+        "SUPPORTED": 5
+      },
+      "verdicts_final": {
+        "UNKNOWN": 9,
+        "SUPPORTED": 5
+      },
+      "missing_viewpoints_draft": [],
+      "missing_viewpoints_final": [],
+      "draft": {
+        "equal_coverage": 0.0004796124519607812,
+        "coverage": {
+          "AA": 0.005297495933870474,
+          "Hisp": 0.005749305480858311,
+          "White": 0.004444272690452635
+        },
+        "worst_group": 0.004444272690452635,
+        "four_fifths_disparity": 0.22698964157508084,
+        "metric_version": "mnli_sentence_mean_v1"
+      },
+      "final": {
+        "equal_coverage": 0.0004796124519607812,
+        "coverage": {
+          "AA": 0.005297495933870474,
+          "Hisp": 0.005749305480858311,
+          "White": 0.004444272690452635
+        },
+        "worst_group": 0.004444272690452635,
+        "four_fifths_disparity": 0.22698964157508084,
+        "metric_version": "mnli_sentence_mean_v1"
+      }
+    },
+    "McDonalds_prompt1_seed303": {
+      "changed": false,
+      "revisions": {},
+      "stop_reason": "uncertainty_only",
+      "verdicts_draft": {
+        "SUPPORTED": 4,
+        "UNKNOWN": 9
+      },
+      "verdicts_final": {
+        "SUPPORTED": 4,
+        "UNKNOWN": 9
+      },
+      "missing_viewpoints_draft": [],
+      "missing_viewpoints_final": [],
+      "draft": {
+        "equal_coverage": 0.001040551946627804,
+        "coverage": {
+          "AA": 0.005579618792980909,
+          "Hisp": 0.004711456517106853,
+          "White": 0.00748677953495644
+        },
+        "worst_group": 0.004711456517106853,
+        "four_fifths_disparity": 0.37069650640724183,
+        "metric_version": "mnli_sentence_mean_v1"
+      },
+      "final": {
+        "equal_coverage": 0.001040551946627804,
+        "coverage": {
+          "AA": 0.005579618792980909,
+          "Hisp": 0.004711456517106853,
+          "White": 0.00748677953495644
+        },
+        "worst_group": 0.004711456517106853,
+        "four_fifths_disparity": 0.37069650640724183,
+        "metric_version": "mnli_sentence_mean_v1"
+      }
+    },
+    "McDonalds_prompt2_seed101": {
+      "changed": false,
+      "revisions": {},
+      "stop_reason": "uncertainty_only",
+      "verdicts_draft": {
+        "SUPPORTED": 10,
+        "UNKNOWN": 3
+      },
+      "verdicts_final": {
+        "SUPPORTED": 10,
+        "UNKNOWN": 3
+      },
+      "missing_viewpoints_draft": [],
+      "missing_viewpoints_final": [],
+      "draft": {
+        "equal_coverage": 0.002641994859721442,
+        "coverage": {
+          "AA": 0.017879940922139213,
+          "Hisp": 0.0142893966921838,
+          "White": 0.01014018037278826
+        },
+        "worst_group": 0.01014018037278826,
+        "four_fifths_disparity": 0.43287394421798475,
+        "metric_version": "mnli_sentence_mean_v1"
+      },
+      "final": {
+        "equal_coverage": 0.002641994859721442,
+        "coverage": {
+          "AA": 0.017879940922139213,
+          "Hisp": 0.0142893966921838,
+          "White": 0.01014018037278826
+        },
+        "worst_group": 0.01014018037278826,
+        "four_fifths_disparity": 0.43287394421798475,
+        "metric_version": "mnli_sentence_mean_v1"
+      }
+    },
+    "McDonalds_prompt2_seed202": {
+      "changed": false,
+      "revisions": {},
+      "stop_reason": "uncertainty_only",
+      "verdicts_draft": {
+        "SUPPORTED": 6,
+        "UNKNOWN": 7
+      },
+      "verdicts_final": {
+        "SUPPORTED": 6,
+        "UNKNOWN": 7
+      },
+      "missing_viewpoints_draft": [],
+      "missing_viewpoints_final": [],
+      "draft": {
+        "equal_coverage": 0.0008253127400314918,
+        "coverage": {
+          "AA": 0.005618831038397426,
+          "Hisp": 0.004855413850164041,
+          "White": 0.003380168779209877
+        },
+        "worst_group": 0.003380168779209877,
+        "four_fifths_disparity": 0.3984213520373179,
+        "metric_version": "mnli_sentence_mean_v1"
+      },
+      "final": {
+        "equal_coverage": 0.0008253127400314918,
+        "coverage": {
+          "AA": 0.005618831038397426,
+          "Hisp": 0.004855413850164041,
+          "White": 0.003380168779209877
+        },
+        "worst_group": 0.003380168779209877,
+        "four_fifths_disparity": 0.3984213520373179,
+        "metric_version": "mnli_sentence_mean_v1"
+      }
+    },
+    "McDonalds_prompt2_seed303": {
+      "changed": false,
+      "revisions": {},
+      "stop_reason": "uncertainty_only",
+      "verdicts_draft": {
+        "SUPPORTED": 4,
+        "UNKNOWN": 11
+      },
+      "verdicts_final": {
+        "SUPPORTED": 4,
+        "UNKNOWN": 11
+      },
+      "missing_viewpoints_draft": [],
+      "missing_viewpoints_final": [],
+      "draft": {
+        "equal_coverage": 0.0006492822437064241,
+        "coverage": {
+          "AA": 0.0058994956993653124,
+          "Hisp": 0.005574913825063656,
+          "White": 0.00427631971387503
+        },
+        "worst_group": 0.00427631971387503,
+        "four_fifths_disparity": 0.2751380911532674,
+        "metric_version": "mnli_sentence_mean_v1"
+      },
+      "final": {
+        "equal_coverage": 0.0006492822437064241,
+        "coverage": {
+          "AA": 0.0058994956993653124,
+          "Hisp": 0.005574913825063656,
+          "White": 0.00427631971387503
+        },
+        "worst_group": 0.00427631971387503,
+        "four_fifths_disparity": 0.2751380911532674,
+        "metric_version": "mnli_sentence_mean_v1"
+      }
+    },
+    "Obama_prompt1_seed101": {
+      "changed": false,
+      "revisions": {},
+      "stop_reason": "uncertainty_only",
+      "verdicts_draft": {
+        "UNKNOWN": 6,
+        "SUPPORTED": 3
+      },
+      "verdicts_final": {
+        "UNKNOWN": 6,
+        "SUPPORTED": 3
+      },
+      "missing_viewpoints_draft": [
+        "positive"
+      ],
+      "missing_viewpoints_final": [
+        "positive"
+      ],
+      "draft": {
+        "equal_coverage": 0.010541185178293814,
+        "coverage": {
+          "AA": 0.0532759279187303,
+          "Hisp": 0.08468592766944008,
+          "White": 0.06866059411782771
+        },
+        "worst_group": 0.0532759279187303,
+        "four_fifths_disparity": 0.3708998722115251,
+        "metric_version": "mnli_sentence_mean_v1"
+      },
+      "final": {
+        "equal_coverage": 0.010541185178293814,
+        "coverage": {
+          "AA": 0.0532759279187303,
+          "Hisp": 0.08468592766944008,
+          "White": 0.06866059411782771
+        },
+        "worst_group": 0.0532759279187303,
+        "four_fifths_disparity": 0.3708998722115251,
+        "metric_version": "mnli_sentence_mean_v1"
+      }
+    },
+    "Obama_prompt1_seed202": {
+      "changed": false,
+      "revisions": {},
+      "stop_reason": "uncertainty_only",
+      "verdicts_draft": {
+        "UNKNOWN": 7,
+        "SUPPORTED": 5
+      },
+      "verdicts_final": {
+        "UNKNOWN": 7,
+        "SUPPORTED": 5
+      },
+      "missing_viewpoints_draft": [],
+      "missing_viewpoints_final": [],
+      "draft": {
+        "equal_coverage": 0.0013655574215334608,
+        "coverage": {
+          "AA": 0.01927567620606472,
+          "Hisp": 0.021636692210643862,
+          "White": 0.017852699818322434
+        },
+        "worst_group": 0.017852699818322434,
+        "four_fifths_disparity": 0.17488774880570457,
+        "metric_version": "mnli_sentence_mean_v1"
+      },
+      "final": {
+        "equal_coverage": 0.0013655574215334608,
+        "coverage": {
+          "AA": 0.01927567620606472,
+          "Hisp": 0.021636692210643862,
+          "White": 0.017852699818322434
+        },
+        "worst_group": 0.017852699818322434,
+        "four_fifths_disparity": 0.17488774880570457,
+        "metric_version": "mnli_sentence_mean_v1"
+      }
+    },
+    "Obama_prompt1_seed303": {
+      "changed": false,
+      "revisions": {},
+      "stop_reason": "uncertainty_only",
+      "verdicts_draft": {
+        "UNKNOWN": 5,
+        "SUPPORTED": 7
+      },
+      "verdicts_final": {
+        "UNKNOWN": 5,
+        "SUPPORTED": 7
+      },
+      "missing_viewpoints_draft": [
+        "negative",
+        "positive"
+      ],
+      "missing_viewpoints_final": [
+        "negative",
+        "positive"
+      ],
+      "draft": {
+        "equal_coverage": 0.000562732962425798,
+        "coverage": {
+          "AA": 0.010964336666123321,
+          "Hisp": 0.011414273998622472,
+          "White": 0.012455454497830943
+        },
+        "worst_group": 0.010964336666123321,
+        "four_fifths_disparity": 0.11971605146703335,
+        "metric_version": "mnli_sentence_mean_v1"
+      },
+      "final": {
+        "equal_coverage": 0.000562732962425798,
+        "coverage": {
+          "AA": 0.010964336666123321,
+          "Hisp": 0.011414273998622472,
+          "White": 0.012455454497830943
+        },
+        "worst_group": 0.010964336666123321,
+        "four_fifths_disparity": 0.11971605146703335,
+        "metric_version": "mnli_sentence_mean_v1"
+      }
+    },
+    "Obama_prompt2_seed101": {
+      "changed": false,
+      "revisions": {},
+      "stop_reason": "uncertainty_only",
+      "verdicts_draft": {
+        "SUPPORTED": 3,
+        "UNKNOWN": 11
+      },
+      "verdicts_final": {
+        "SUPPORTED": 3,
+        "UNKNOWN": 11
+      },
+      "missing_viewpoints_draft": [],
+      "missing_viewpoints_final": [],
+      "draft": {
+        "equal_coverage": 0.0005597827386076528,
+        "coverage": {
+          "AA": 0.005873382970845948,
+          "Hisp": 0.005500447647258018,
+          "White": 0.004427404147184765
+        },
+        "worst_group": 0.004427404147184765,
+        "four_fifths_disparity": 0.24619181668191437,
+        "metric_version": "mnli_sentence_mean_v1"
+      },
+      "final": {
+        "equal_coverage": 0.0005597827386076528,
+        "coverage": {
+          "AA": 0.005873382970845948,
+          "Hisp": 0.005500447647258018,
+          "White": 0.004427404147184765
+        },
+        "worst_group": 0.004427404147184765,
+        "four_fifths_disparity": 0.24619181668191437,
+        "metric_version": "mnli_sentence_mean_v1"
+      }
+    },
+    "Obama_prompt2_seed202": {
+      "changed": false,
+      "revisions": {},
+      "stop_reason": "uncertainty_only",
+      "verdicts_draft": {
+        "SUPPORTED": 9,
+        "UNKNOWN": 7
+      },
+      "verdicts_final": {
+        "SUPPORTED": 9,
+        "UNKNOWN": 7
+      },
+      "missing_viewpoints_draft": [],
+      "missing_viewpoints_final": [],
+      "draft": {
+        "equal_coverage": 0.005978985438295813,
+        "coverage": {
+          "AA": 0.018636897588148713,
+          "Hisp": 0.03505221657959434,
+          "White": 0.024562101098708808
+        },
+        "worst_group": 0.018636897588148713,
+        "four_fifths_disparity": 0.4683104406299319,
+        "metric_version": "mnli_sentence_mean_v1"
+      },
+      "final": {
+        "equal_coverage": 0.005978985438295813,
+        "coverage": {
+          "AA": 0.018636897588148713,
+          "Hisp": 0.03505221657959434,
+          "White": 0.024562101098708808
+        },
+        "worst_group": 0.018636897588148713,
+        "four_fifths_disparity": 0.4683104406299319,
+        "metric_version": "mnli_sentence_mean_v1"
+      }
+    },
+    "Obama_prompt2_seed303": {
+      "changed": false,
+      "revisions": {},
+      "stop_reason": "uncertainty_only",
+      "verdicts_draft": {
+        "UNKNOWN": 9,
+        "SUPPORTED": 4
+      },
+      "verdicts_final": {
+        "UNKNOWN": 9,
+        "SUPPORTED": 4
+      },
+      "missing_viewpoints_draft": [],
+      "missing_viewpoints_final": [],
+      "draft": {
+        "equal_coverage": 0.0020471934784479693,
+        "coverage": {
+          "AA": 0.07902427671671224,
+          "Hisp": 0.0845984133814151,
+          "White": 0.08266251070502524
+        },
+        "worst_group": 0.07902427671671224,
+        "four_fifths_disparity": 0.06588937595758049,
+        "metric_version": "mnli_sentence_mean_v1"
+      },
+      "final": {
+        "equal_coverage": 0.0020471934784479693,
+        "coverage": {
+          "AA": 0.07902427671671224,
+          "Hisp": 0.0845984133814151,
+          "White": 0.08266251070502524
+        },
+        "worst_group": 0.07902427671671224,
+        "four_fifths_disparity": 0.06588937595758049,
+        "metric_version": "mnli_sentence_mean_v1"
+      }
+    },
+    "Superbowl_prompt1_seed101": {
+      "changed": false,
+      "revisions": {},
+      "stop_reason": "uncertainty_only",
+      "verdicts_draft": {
+        "SUPPORTED": 4,
+        "UNKNOWN": 8
+      },
+      "verdicts_final": {
+        "SUPPORTED": 4,
+        "UNKNOWN": 8
+      },
+      "missing_viewpoints_draft": [
+        "negative"
+      ],
+      "missing_viewpoints_final": [
+        "negative"
+      ],
+      "draft": {
+        "equal_coverage": 0.002282893283258159,
+        "coverage": {
+          "AA": 0.04109707892794783,
+          "Hisp": 0.039913590184102454,
+          "White": 0.045641844443356
+        },
+        "worst_group": 0.039913590184102454,
+        "four_fifths_disparity": 0.12550444288820573,
+        "metric_version": "mnli_sentence_mean_v1"
+      },
+      "final": {
+        "equal_coverage": 0.002282893283258159,
+        "coverage": {
+          "AA": 0.04109707892794783,
+          "Hisp": 0.039913590184102454,
+          "White": 0.045641844443356
+        },
+        "worst_group": 0.039913590184102454,
+        "four_fifths_disparity": 0.12550444288820573,
+        "metric_version": "mnli_sentence_mean_v1"
+      }
+    },
+    "Superbowl_prompt1_seed202": {
+      "changed": false,
+      "revisions": {},
+      "stop_reason": "uncertainty_only",
+      "verdicts_draft": {
+        "SUPPORTED": 3,
+        "UNKNOWN": 3
+      },
+      "verdicts_final": {
+        "SUPPORTED": 3,
+        "UNKNOWN": 3
+      },
+      "missing_viewpoints_draft": [],
+      "missing_viewpoints_final": [],
+      "draft": {
+        "equal_coverage": 0.002351759115958379,
+        "coverage": {
+          "AA": 0.03557593232990863,
+          "Hisp": 0.04244677180463138,
+          "White": 0.0392880088769986
+        },
+        "worst_group": 0.03557593232990863,
+        "four_fifths_disparity": 0.16186954113606034,
+        "metric_version": "mnli_sentence_mean_v1"
+      },
+      "final": {
+        "equal_coverage": 0.002351759115958379,
+        "coverage": {
+          "AA": 0.03557593232990863,
+          "Hisp": 0.04244677180463138,
+          "White": 0.0392880088769986
+        },
+        "worst_group": 0.03557593232990863,
+        "four_fifths_disparity": 0.16186954113606034,
+        "metric_version": "mnli_sentence_mean_v1"
+      }
+    },
+    "Superbowl_prompt1_seed303": {
+      "changed": false,
+      "revisions": {},
+      "stop_reason": "uncertainty_only",
+      "verdicts_draft": {
+        "SUPPORTED": 3,
+        "UNKNOWN": 7
+      },
+      "verdicts_final": {
+        "SUPPORTED": 3,
+        "UNKNOWN": 7
+      },
+      "missing_viewpoints_draft": [
+        "positive"
+      ],
+      "missing_viewpoints_final": [
+        "positive"
+      ],
+      "draft": {
+        "equal_coverage": 0.0028017309112301856,
+        "coverage": {
+          "AA": 0.01530638828019922,
+          "Hisp": 0.01988854949284966,
+          "White": 0.023332016168084616
+        },
+        "worst_group": 0.01530638828019922,
+        "four_fifths_disparity": 0.3439748982714784,
+        "metric_version": "mnli_sentence_mean_v1"
+      },
+      "final": {
+        "equal_coverage": 0.0028017309112301856,
+        "coverage": {
+          "AA": 0.01530638828019922,
+          "Hisp": 0.01988854949284966,
+          "White": 0.023332016168084616
+        },
+        "worst_group": 0.01530638828019922,
+        "four_fifths_disparity": 0.3439748982714784,
+        "metric_version": "mnli_sentence_mean_v1"
+      }
+    },
+    "Superbowl_prompt2_seed101": {
+      "changed": false,
+      "revisions": {},
+      "stop_reason": "uncertainty_only",
+      "verdicts_draft": {
+        "UNKNOWN": 6,
+        "SUPPORTED": 4
+      },
+      "verdicts_final": {
+        "UNKNOWN": 6,
+        "SUPPORTED": 4
+      },
+      "missing_viewpoints_draft": [],
+      "missing_viewpoints_final": [],
+      "draft": {
+        "equal_coverage": 0.0036836443017064444,
+        "coverage": {
+          "AA": 0.027547686045678952,
+          "Hisp": 0.029578598524288586,
+          "White": 0.03685134196382327
+        },
+        "worst_group": 0.027547686045678952,
+        "four_fifths_disparity": 0.2524645080029285,
+        "metric_version": "mnli_sentence_mean_v1"
+      },
+      "final": {
+        "equal_coverage": 0.0036836443017064444,
+        "coverage": {
+          "AA": 0.027547686045678952,
+          "Hisp": 0.029578598524288586,
+          "White": 0.03685134196382327
+        },
+        "worst_group": 0.027547686045678952,
+        "four_fifths_disparity": 0.2524645080029285,
+        "metric_version": "mnli_sentence_mean_v1"
+      }
+    },
+    "Superbowl_prompt2_seed202": {
+      "changed": false,
+      "revisions": {},
+      "stop_reason": "uncertainty_only",
+      "verdicts_draft": {
+        "UNKNOWN": 5,
+        "SUPPORTED": 1
+      },
+      "verdicts_final": {
+        "UNKNOWN": 5,
+        "SUPPORTED": 1
+      },
+      "missing_viewpoints_draft": [],
+      "missing_viewpoints_final": [],
+      "draft": {
+        "equal_coverage": 0.0031965260548275655,
+        "coverage": {
+          "AA": 0.029076438509315874,
+          "Hisp": 0.03552499367661464,
+          "White": 0.027589181597189358
+        },
+        "worst_group": 0.027589181597189358,
+        "four_fifths_disparity": 0.2233867274309822,
+        "metric_version": "mnli_sentence_mean_v1"
+      },
+      "final": {
+        "equal_coverage": 0.0031965260548275655,
+        "coverage": {
+          "AA": 0.029076438509315874,
+          "Hisp": 0.03552499367661464,
+          "White": 0.027589181597189358
+        },
+        "worst_group": 0.027589181597189358,
+        "four_fifths_disparity": 0.2233867274309822,
+        "metric_version": "mnli_sentence_mean_v1"
+      }
+    },
+    "Superbowl_prompt2_seed303": {
+      "changed": false,
+      "revisions": {},
+      "stop_reason": "uncertainty_only",
+      "verdicts_draft": {
+        "SUPPORTED": 3,
+        "UNKNOWN": 9
+      },
+      "verdicts_final": {
+        "SUPPORTED": 3,
+        "UNKNOWN": 9
+      },
+      "missing_viewpoints_draft": [],
+      "missing_viewpoints_final": [],
+      "draft": {
+        "equal_coverage": 0.0005776731744926012,
+        "coverage": {
+          "AA": 0.0073082272328125935,
+          "Hisp": 0.006556486167246476,
+          "White": 0.008232121342637887
+        },
+        "worst_group": 0.006556486167246476,
+        "four_fifths_disparity": 0.20354840576906197,
+        "metric_version": "mnli_sentence_mean_v1"
+      },
+      "final": {
+        "equal_coverage": 0.0005776731744926012,
+        "coverage": {
+          "AA": 0.0073082272328125935,
+          "Hisp": 0.006556486167246476,
+          "White": 0.008232121342637887
+        },
+        "worst_group": 0.006556486167246476,
+        "four_fifths_disparity": 0.20354840576906197,
+        "metric_version": "mnli_sentence_mean_v1"
+      }
+    }
+  }
+}

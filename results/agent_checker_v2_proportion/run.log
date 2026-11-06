@@ -1,0 +1,166 @@
+
+===== 2026-11-06 04:42:48 attempt 1 =====
+Running McDonalds_prompt1_seed101 at 04:42
+Factual: UNKNOWN | SUPPORTED=5 | CONTRADICTED=0 | UNKNOWN=5
+Representation: no group check in the agent (dialect labels are evaluation-only)
+Proportion feedback: UNKNOWN (already_reported) | under-represented: "Many users explicitly state they want chicken nuggets, McRibs, and ice cream cones from McDonald's."
+Revisions: 0 attempted | accepted=0 | rejected=0 | rolled_back=0
+Final status: completed_with_uncertainty | stop reason: uncertainty_only
+Uncertainty: factual_uncertainty; proportion_uncertainty
+Complete results: C:\Users\saif-\Desktop\IA\INFOIAG-Group-2\results\agent_checker_v2_proportion\McDonalds_prompt1_seed101.json
+  McDonalds_prompt1_seed101 took 1.1 min
+Running McDonalds_prompt1_seed202 at 04:43
+Factual: UNKNOWN | SUPPORTED=5 | CONTRADICTED=0 | UNKNOWN=9
+Representation: no group check in the agent (dialect labels are evaluation-only)
+Proportion feedback: UNKNOWN (already_reported) | under-represented: "Many users express a strong craving for McDonald's food and items."
+Revisions: 0 attempted | accepted=0 | rejected=0 | rolled_back=0
+Final status: completed_with_uncertainty | stop reason: uncertainty_only
+Uncertainty: factual_uncertainty; proportion_uncertainty
+Complete results: C:\Users\saif-\Desktop\IA\INFOIAG-Group-2\results\agent_checker_v2_proportion\McDonalds_prompt1_seed202.json
+  McDonalds_prompt1_seed202 took 1.1 min
+Running McDonalds_prompt1_seed303 at 04:45
+Factual: UNKNOWN | SUPPORTED=4 | CONTRADICTED=0 | UNKNOWN=9
+Representation: no group check in the agent (dialect labels are evaluation-only)
+Proportion feedback: PASS (proportional)
+Revisions: 0 attempted | accepted=0 | rejected=0 | rolled_back=0
+Final status: completed_with_uncertainty | stop reason: uncertainty_only
+Uncertainty: factual_uncertainty
+Complete results: C:\Users\saif-\Desktop\IA\INFOIAG-Group-2\results\agent_checker_v2_proportion\McDonalds_prompt1_seed303.json
+  McDonalds_prompt1_seed303 took 0.9 min
+Running McDonalds_prompt2_seed101 at 04:45
+Factual: UNKNOWN | SUPPORTED=10 | CONTRADICTED=0 | UNKNOWN=3
+Representation: no group check in the agent (dialect labels are evaluation-only)
+Proportion feedback: UNKNOWN (already_reported) | under-represented: "Users express intense craving and addiction to McDonald's food."
+Revisions: 0 attempted | accepted=0 | rejected=0 | rolled_back=0
+Final status: completed_with_uncertainty | stop reason: uncertainty_only
+Uncertainty: factual_uncertainty; proportion_uncertainty
+Complete results: C:\Users\saif-\Desktop\IA\INFOIAG-Group-2\results\agent_checker_v2_proportion\McDonalds_prompt2_seed101.json
+  McDonalds_prompt2_seed101 took 0.9 min
+Running McDonalds_prompt2_seed202 at 04:46
+Factual: UNKNOWN | SUPPORTED=6 | CONTRADICTED=0 | UNKNOWN=7
+Representation: no group check in the agent (dialect labels are evaluation-only)
+Proportion feedback: PASS (proportional)
+Revisions: 0 attempted | accepted=0 | rejected=0 | rolled_back=0
+Final status: completed_with_uncertainty | stop reason: uncertainty_only
+Uncertainty: factual_uncertainty
+Complete results: C:\Users\saif-\Desktop\IA\INFOIAG-Group-2\results\agent_checker_v2_proportion\McDonalds_prompt2_seed202.json
+  McDonalds_prompt2_seed202 took 1.0 min
+Running McDonalds_prompt2_seed303 at 04:47
+Factual: UNKNOWN | SUPPORTED=4 | CONTRADICTED=0 | UNKNOWN=11
+Representation: no group check in the agent (dialect labels are evaluation-only)
+Proportion feedback: PASS (proportional)
+Revisions: 0 attempted | accepted=0 | rejected=0 | rolled_back=0
+Final status: completed_with_uncertainty | stop reason: uncertainty_only
+Uncertainty: factual_uncertainty
+Complete results: C:\Users\saif-\Desktop\IA\INFOIAG-Group-2\results\agent_checker_v2_proportion\McDonalds_prompt2_seed303.json
+  McDonalds_prompt2_seed303 took 0.9 min
+Running Obama_prompt1_seed101 at 04:48
+Factual: UNKNOWN | SUPPORTED=3 | CONTRADICTED=0 | UNKNOWN=6
+Representation: no group check in the agent (dialect labels are evaluation-only)
+Proportion feedback: UNKNOWN (already_reported) | under-represented: "Obama is frequently compared to the devil, Satan, or the Anti-Christ."
+Revisions: 0 attempted | accepted=0 | rejected=0 | rolled_back=0
+Final status: completed_with_uncertainty | stop reason: uncertainty_only
+Uncertainty: factual_uncertainty; proportion_uncertainty
+Complete results: C:\Users\saif-\Desktop\IA\INFOIAG-Group-2\results\agent_checker_v2_proportion\Obama_prompt1_seed101.json
+  Obama_prompt1_seed101 took 0.9 min
+Running Obama_prompt1_seed202 at 04:49
+Factual: UNKNOWN | SUPPORTED=5 | CONTRADICTED=0 | UNKNOWN=7
+Representation: no group check in the agent (dialect labels are evaluation-only)
+Proportion feedback: UNKNOWN (invalid_feedback)
+Revisions: 0 attempted | accepted=0 | rejected=0 | rolled_back=0
+Final status: completed_with_uncertainty | stop reason: uncertainty_only
+Uncertainty: factual_uncertainty; proportion_uncertainty
+Complete results: C:\Users\saif-\Desktop\IA\INFOIAG-Group-2\results\agent_checker_v2_proportion\Obama_prompt1_seed202.json
+  Obama_prompt1_seed202 took 1.1 min
+Running Obama_prompt1_seed303 at 04:50
+Factual: UNKNOWN | SUPPORTED=7 | CONTRADICTED=0 | UNKNOWN=5
+Representation: no group check in the agent (dialect labels are evaluation-only)
+Proportion feedback: PASS (proportional)
+Revisions: 0 attempted | accepted=0 | rejected=0 | rolled_back=0
+Final status: completed_with_uncertainty | stop reason: uncertainty_only
+Uncertainty: factual_uncertainty
+Complete results: C:\Users\saif-\Desktop\IA\INFOIAG-Group-2\results\agent_checker_v2_proportion\Obama_prompt1_seed303.json
+  Obama_prompt1_seed303 took 0.8 min
+Running Obama_prompt2_seed101 at 04:51
+Factual: UNKNOWN | SUPPORTED=3 | CONTRADICTED=0 | UNKNOWN=11
+Representation: no group check in the agent (dialect labels are evaluation-only)
+Proportion feedback: UNKNOWN (already_reported) | under-represented: "Many tweets use racial slurs and compare Obama to Satan or the Devil."
+Revisions: 0 attempted | accepted=0 | rejected=0 | rolled_back=0
+Final status: completed_with_uncertainty | stop reason: uncertainty_only
+Uncertainty: factual_uncertainty; proportion_uncertainty
+Complete results: C:\Users\saif-\Desktop\IA\INFOIAG-Group-2\results\agent_checker_v2_proportion\Obama_prompt2_seed101.json
+  Obama_prompt2_seed101 took 0.9 min
+Running Obama_prompt2_seed202 at 04:52
+Factual: UNKNOWN | SUPPORTED=9 | CONTRADICTED=0 | UNKNOWN=7
+Representation: no group check in the agent (dialect labels are evaluation-only)
+Proportion feedback: UNKNOWN (already_reported) | under-represented: "Many tweets accuse Obama of being a puppet, anti-Christ figure, or lacking integrity."
+Revisions: 0 attempted | accepted=0 | rejected=0 | rolled_back=0
+Final status: completed_with_uncertainty | stop reason: uncertainty_only
+Uncertainty: factual_uncertainty; proportion_uncertainty
+Complete results: C:\Users\saif-\Desktop\IA\INFOIAG-Group-2\results\agent_checker_v2_proportion\Obama_prompt2_seed202.json
+  Obama_prompt2_seed202 took 0.9 min
+Running Obama_prompt2_seed303 at 04:53
+Factual: UNKNOWN | SUPPORTED=4 | CONTRADICTED=0 | UNKNOWN=9
+Representation: no group check in the agent (dialect labels are evaluation-only)
+Proportion feedback: UNKNOWN (already_reported) | under-represented: "Many users call Obama a puppet, devil, or communist and question his motives."
+Revisions: 0 attempted | accepted=0 | rejected=0 | rolled_back=0
+Final status: completed_with_uncertainty | stop reason: uncertainty_only
+Uncertainty: factual_uncertainty; proportion_uncertainty
+Complete results: C:\Users\saif-\Desktop\IA\INFOIAG-Group-2\results\agent_checker_v2_proportion\Obama_prompt2_seed303.json
+  Obama_prompt2_seed303 took 0.8 min
+Running Superbowl_prompt1_seed101 at 04:54
+Factual: UNKNOWN | SUPPORTED=4 | CONTRADICTED=0 | UNKNOWN=8
+Representation: no group check in the agent (dialect labels are evaluation-only)
+Proportion feedback: UNKNOWN (already_reported) | under-represented: "Most users are not watching because their teams lost and it is too late."
+Revisions: 0 attempted | accepted=0 | rejected=0 | rolled_back=0
+Final status: completed_with_uncertainty | stop reason: uncertainty_only
+Uncertainty: factual_uncertainty; proportion_uncertainty
+Complete results: C:\Users\saif-\Desktop\IA\INFOIAG-Group-2\results\agent_checker_v2_proportion\Superbowl_prompt1_seed101.json
+  Superbowl_prompt1_seed101 took 0.9 min
+Running Superbowl_prompt1_seed202 at 04:55
+Factual: UNKNOWN | SUPPORTED=3 | CONTRADICTED=0 | UNKNOWN=3
+Representation: no group check in the agent (dialect labels are evaluation-only)
+Proportion feedback: UNKNOWN (invalid_feedback)
+Revisions: 0 attempted | accepted=0 | rejected=0 | rolled_back=0
+Final status: completed_with_uncertainty | stop reason: uncertainty_only
+Uncertainty: factual_uncertainty; proportion_uncertainty; summary_extraction_failed
+Complete results: C:\Users\saif-\Desktop\IA\INFOIAG-Group-2\results\agent_checker_v2_proportion\Superbowl_prompt1_seed202.json
+  Superbowl_prompt1_seed202 took 1.8 min
+Running Superbowl_prompt1_seed303 at 04:56
+Factual: UNKNOWN | SUPPORTED=3 | CONTRADICTED=0 | UNKNOWN=7
+Representation: no group check in the agent (dialect labels are evaluation-only)
+Proportion feedback: FAIL (disproportionate) | under-represented: "Many users expressed no interest in the game due to work, school, or fatigue."
+Revisions: 3 attempted | accepted=0 | rejected=0 | rolled_back=3
+Final status: stopped_with_issues | stop reason: unsupported_revision
+Uncertainty: factual_uncertainty
+Complete results: C:\Users\saif-\Desktop\IA\INFOIAG-Group-2\results\agent_checker_v2_proportion\Superbowl_prompt1_seed303.json
+  Superbowl_prompt1_seed303 took 14.9 min
+Running Superbowl_prompt2_seed101 at 05:11
+Factual: UNKNOWN | SUPPORTED=4 | CONTRADICTED=0 | UNKNOWN=6
+Representation: no group check in the agent (dialect labels are evaluation-only)
+Proportion feedback: UNKNOWN (already_reported) | under-represented: "Many users express indifference or fatigue toward the Super Bowl."
+Revisions: 0 attempted | accepted=0 | rejected=0 | rolled_back=0
+Final status: completed_with_uncertainty | stop reason: uncertainty_only
+Uncertainty: factual_uncertainty; proportion_uncertainty
+Complete results: C:\Users\saif-\Desktop\IA\INFOIAG-Group-2\results\agent_checker_v2_proportion\Superbowl_prompt2_seed101.json
+  Superbowl_prompt2_seed101 took 0.9 min
+Running Superbowl_prompt2_seed202 at 05:12
+Factual: UNKNOWN | SUPPORTED=2 | CONTRADICTED=0 | UNKNOWN=5
+Representation: no group check in the agent (dialect labels are evaluation-only)
+Proportion feedback: UNKNOWN (already_reported) | under-represented: "Many users are debating specific team matchups like Ravens vs 49ers or Patriots."
+Revisions: 1 attempted | accepted=1 | rejected=0 | rolled_back=0
+Final status: completed_with_uncertainty | stop reason: uncertainty_only
+Uncertainty: factual_uncertainty; proportion_uncertainty; summary_extraction_failed
+Complete results: C:\Users\saif-\Desktop\IA\INFOIAG-Group-2\results\agent_checker_v2_proportion\Superbowl_prompt2_seed202.json
+  Superbowl_prompt2_seed202 took 6.0 min
+Running Superbowl_prompt2_seed303 at 05:18
+Factual: UNKNOWN | SUPPORTED=3 | CONTRADICTED=0 | UNKNOWN=9
+Representation: no group check in the agent (dialect labels are evaluation-only)
+Proportion feedback: PASS (proportional)
+Revisions: 0 attempted | accepted=0 | rejected=0 | rolled_back=0
+Final status: completed_with_uncertainty | stop reason: uncertainty_only
+Uncertainty: factual_uncertainty
+Complete results: C:\Users\saif-\Desktop\IA\INFOIAG-Group-2\results\agent_checker_v2_proportion\Superbowl_prompt2_seed303.json
+  Superbowl_prompt2_seed303 took 1.0 min
+
+18/18 finished; 1 summaries changed by an accepted revision.

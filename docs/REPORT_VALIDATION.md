@@ -3,6 +3,13 @@
 Actual final results and the controlled demonstration are recorded in
 [validation results](../results/eval/report_release/validation.md).
 
+**Fact checker revised on 2026-11-05** ([checker evaluation](CHECKER_EVALUATION.md)):
+against reference labels the original checker confirmed 38% of supported claims
+and all 3 of its CONTRADICTED verdicts in `results/agent_compliant_v2` were false;
+the revised checker reaches accuracy 0.80 on held-out topics (was 0.69). Results
+made with the original checker (agent_compliant_v2, the poster) are superseded by
+`results/agent_checker_v2`.
+
 A run that finishes with UNKNOWN claims is an uncertainty result, not a verified
 summary. A small Equal Coverage deviation does not prove that a summary covers
 any group well.
@@ -130,6 +137,82 @@ unchanged; `results/agent_compliant_v2` was run without it.
 
 `tests/test_viewpoint_check.py` pins the check, the task, the gate and the
 reviser guard, and that the default agent is unchanged.
+
+## Proportion feedback layer (optional, `--proportion-check`)
+
+The bias improver asked for at the poster session, done implicitly: no group
+is computed, read or named. After the fact check, `proportion_check.py` gives
+the summary one feedback layer (reflection, Lecture 5): Qwen reads every tweet
+of the topic (ID and text, read label-free from the graph) and the five
+sentences, and judges whether each main viewpoint gets roughly the weight of
+the tweets expressing it. Its prompt says every tweet counts equally, whatever
+its position in the list, length, spelling, slang or grammar. It is off by
+default, so the results above reproduce unchanged.
+
+- **Output.** An assessment written first, then `proportional`. It is false
+  only when Qwen can name a concrete opinion that many tweets hold and no
+  sentence reports; it then states that opinion in at most 15 words and the
+  sentence to rewrite. It names no tweets: in the first live trial it listed
+  Obama_001 to Obama_020, the first 20 of the list (the position bias this
+  layer is meant to remove), and gave a long description that the reviser
+  then copied verbatim. All three rewrites were rightly rolled back.
+- **Open world.** Feedback naming no opinion, or still malformed after one
+  format repair, is UNKNOWN, which never triggers a revision.
+- **Verified before acting.** Qwen proposes, the verified evidence decides:
+  the agent finds the topic's 3 tweets closest to the stated opinion
+  (all-minilm, wherever they are in the list). If a SUPPORTED summary claim
+  already quotes one of them, the summary already reports it: UNKNOWN
+  (`already_reported`), nothing is rewritten. In the second live trial Qwen
+  flagged "Obama is frequently compared to the devil, Satan, or the
+  Anti-Christ", which sentence S02 already reports (claim S02_C02, SUPPORTED,
+  quoting Obama_008, 044 and 061); all three rewrites were rightly rolled
+  back, and this check now stops it before any rewrite.
+- **No group named.** Feedback that names a group of authors or a way of
+  writing is rejected (the reviser's `GROUP_LABEL` guard), and the repair
+  request never echoes it, so `LabelFreeClient` sees no label.
+- **Order.** Contradictions are repaired first, as for the viewpoint check.
+- **Repair.** The feedback's chosen sentence is rewritten (else the least
+  supported one). Evidence is the same 3 closest tweets, then the sentence's
+  own cited tweets. The replacement must
+  cite one of the 3, is told to describe it in its own words and not copy the
+  description, and the reviser gets the role profile.
+- **Gate.** As before, plus: the opinion counts as added only when a
+  SUPPORTED claim of the rewritten sentence quotes one of those 3 tweets
+  (from the fact checker's references), and only when the sentence's text
+  changed: new citations alone change nothing a reader sees (the reviser is
+  told so and retried). Otherwise the attempt is rolled back and retried with
+  that finding (within the 3 attempts). After an accepted rewrite the
+  feedback runs again on the new summary.
+- **Third live trial (before the text-change rule).** Obama P1 s101: the
+  devil finding was `already_reported`, no rewrite, 1.0 min. Superbowl P1
+  s101 (the one draft truly lacking a negative viewpoint): Qwen flagged that
+  most users are not watching because their teams lost; S02 "Several
+  contributors expressed strong opinions about specific teams, ..." became
+  "Some users expressed disinterest in the Super Bowl, citing reasons such as
+  team losses or a desire for other activities like eating cookies."
+  (SUPPORTED claim quoting Superbowl_010, "This superbowl dont even interest
+  me"). A second accepted attempt only added citations to the same text,
+  which the text-change rule now rejects. 9.9 min. Evaluated afterwards with
+  the labels (`evaluate_label_free_run.py`): Equal Coverage 0.0023 -> 0.0004,
+  coverage AA 4.11% -> 4.86%, Hisp 3.99% -> 4.85%, White 4.56% -> 4.76%
+  (worst group 3.99% -> 4.76%, four-fifths disparity 12.6% -> 2.1%),
+  CONTRADICTED 0 -> 0, SUPPORTED 1 -> 2. One trial, so an illustration, not
+  a result. The stance-based viewpoint metric still lists "negative" as
+  missing: its known flaw (a reported opinion is extracted as neutral).
+- **Measurement stays independent.** The agent acts on Qwen's judgment; the
+  report measures Equal Coverage with MNLI and the dialect labels, joined
+  only by `evaluate_label_free_run.py`. Qwen's judgment is not validated
+  against humans; treat it as feedback, not as a measurement.
+- **Cost.** One extra Qwen call over all 90 tweets per check, plus one per
+  candidate rewrite.
+
+    python run_final_agent.py --proportion-check --out results/agent_proportion
+    python evaluate_label_free_run.py --run results/agent_proportion
+
+`tests/test_proportion_check.py` pins the feedback parsing and its open-world
+rule, the label-free request (Qwen names no tweets), the verification
+(including a replay of the second live trial), the task and its retrieval
+order, the gate, the reviser guard, and that the default agent is unchanged.
 
 ## Fixes after the 18-trial rerun (`results/agent_rerun`)
 

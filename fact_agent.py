@@ -11,7 +11,7 @@ from rdflib import Graph
 
 from fact_tools import lookup_entity_facts, lookup_fact
 from fact_check import FactCheckError, INSTRUCTIONS as ASSESSMENT_INSTRUCTIONS
-from fact_check import VERDICT_SCHEMA, apply_verdict, prepare_assessment
+from fact_check import MAX_INPUT_BYTES, NUM_PREDICT, VERDICT_SCHEMA, apply_verdict, prepare_assessment
 from fact_check import compact_evidence, expand_verdict
 from ontology_tools import OntologyTools
 from summarizer import GenerationError
@@ -154,7 +154,7 @@ explanation, references. The three assessment fields are inside that envelope.
 """
 
 
-def _loop_schema(allowed_ids, evidence_ids=None):
+def _decision_schema(allowed_ids, evidence_ids=None):
     schema = {
         "type": "object", "properties": {
             "action": {"type": "string", "enum": [*ACTIONS, "finalize"]},
@@ -198,6 +198,19 @@ def _loop_schema(allowed_ids, evidence_ids=None):
                 "quote": {"type": "string", "enum": [item["quote_text"]]}},
              "required": ["evidence_id", "quote"], "additionalProperties": False}
             for key, item in evidence_ids.items()]}
+    return schema
+
+
+# The model writes its explanation and quotations before the verdict: with the
+# verdict first, it committed before reasoning (development topic: recall 0.62 vs 0.78
+# for rules alone at much lower precision; see docs/CHECKER_EVALUATION.md).
+DECISION_ORDER = ("action", "entity_id", "reason", "explanation", "references", "verdict")
+
+
+def _loop_schema(allowed_ids, evidence_ids=None):
+    schema = _decision_schema(allowed_ids, evidence_ids)
+    schema["properties"] = {key: schema["properties"][key] for key in DECISION_ORDER}
+    schema["required"] = list(DECISION_ORDER)
     return schema
 
 
@@ -313,13 +326,13 @@ def run_fact_agent(graph, summary_claim, client, allowed_entity_ids=None, max_to
         request_schema = _loop_schema(allowed_ids, view["evidence_catalogue"])
         input_bytes = len(json.dumps({"messages": request_messages, "format": request_schema},
                                     ensure_ascii=False).encode("utf-8"))
-        if input_bytes > 16000:
-            return _finish_agent(assessment, trace, "input_limit_exceeded", "Factual request exceeds the 16000-byte input limit.")
+        if input_bytes > MAX_INPUT_BYTES:
+            return _finish_agent(assessment, trace, "input_limit_exceeded", f"Factual request exceeds the {MAX_INPUT_BYTES}-byte input limit.")
         try:
             response = client.chat({
                 "model": "qwen3.5:4b", "stream": False, "think": False,
                 "messages": request_messages, "format": request_schema,
-                "options": {"temperature": 0, "seed": 42, "num_ctx": 16384, "num_predict": 900},
+                "options": {"temperature": 0, "seed": 42, "num_ctx": 16384, "num_predict": NUM_PREDICT},
             })
         except GenerationError as exc:
             trace.append({"step": "model_error", "turn": turn, "error": str(exc), "input_bytes": input_bytes})
